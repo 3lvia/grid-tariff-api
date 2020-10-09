@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Louvre.ImageImportAPI.Controllers
+namespace Kunde.TariffApi.Controllers
 {
     /// <summary>
     /// Ping to validate security

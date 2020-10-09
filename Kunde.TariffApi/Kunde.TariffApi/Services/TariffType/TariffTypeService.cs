@@ -13,6 +13,7 @@ namespace Kunde.TariffApi.Services.TariffType
     {
         private IServiceScopeFactory _scopeFactory;
         private TariffContext _tariffContext;
+        private static string _tableCompany = "Company";
         public TariffTypeService(IServiceScopeFactory scopeFactory, TariffContext tariffContext)
         {
             _scopeFactory = scopeFactory;
@@ -28,7 +29,7 @@ namespace Kunde.TariffApi.Services.TariffType
             {
                 using (var dbContext = scope.ServiceProvider.GetRequiredService<TariffContext>())
                 {
-                    foreach (var tariffType in dbContext.Tarifftype.Include("Company"))
+                    foreach (var tariffType in dbContext.Tarifftype.Include(_tableCompany))
                     {
                         tariffTypeContainer.TariffTypes.Add(new Models.TariffType()
                         {
