@@ -15,6 +15,7 @@ namespace Kunde.TariffApi.EntityFramework
         {
         }
 
+
         public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<Fixedpriceconfig> Fixedpriceconfig { get; set; }
         public virtual DbSet<Fixedpricelevel> Fixedpricelevel { get; set; }

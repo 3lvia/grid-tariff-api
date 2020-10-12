@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Kunde.TariffApi.Config
 {
-    public class SqlServerConfig
+    public class DBConfig
     {
         public string ConnectionString { get; set; }
     }

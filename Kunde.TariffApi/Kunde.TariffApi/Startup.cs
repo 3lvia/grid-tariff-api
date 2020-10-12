@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Elvia.Configuration;
 using Elvia.Telemetry;
+using Kunde.TariffApi.Config;
 using Kunde.TariffApi.EntityFramework;
 using Kunde.TariffApi.Extensions;
 using Kunde.TariffApi.Services.TariffType;
@@ -16,6 +17,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -64,7 +66,12 @@ namespace Kunde.TariffApi
             //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddTransient<ITariffTypeService, TariffTypeService>();
-            services.AddTransient<TariffContext, TariffContext>();
+            //            services.AddTransient<TariffContext, TariffContext>();
+
+
+            DBConfig dBConfig = _configuration.GetSection("DBConfig").Get<DBConfig>();
+            services.AddDbContext<TariffContext>(options => options.UseSqlServer(dBConfig.ConnectionString));
+
 
             //var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
             //services.AddSwaggerConfiguration(swaggerSettings);
