@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: imageimport-api
+data:
+  environment : "Prod"
+  swaggerSettings.useSwaggerUI: "false"
+  importSettings.AllowedCorsOrigins: "https://louvre.elvia.io"

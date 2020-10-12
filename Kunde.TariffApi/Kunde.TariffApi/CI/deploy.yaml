@@ -1,0 +1,138 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imageimport-api
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate 
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: imageimport-api
+  template:
+    metadata:
+      labels:
+        app: imageimport-api
+    spec:
+      serviceAccountName: imageimport-api
+      imagePullSecrets:
+      - name: containerregistryprodsecret
+      dnsConfig:
+        options:
+        - name: single-request-reopen
+      containers:
+      - name: imageimport-api
+        image: containerregistryelvia.azurecr.io/louvre-imageimport-api:imagetag
+        resources:
+          requests:
+            cpu: "300m"
+            memory: "500Mi"
+          limits:
+            cpu: "500m"
+            memory: "2Gi"
+        startupProbe:
+          httpGet:
+            path: /ping
+            port: 80
+          failureThreshold: 40
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 80
+          periodSeconds: 30
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sleep", "15"]
+        env:
+          - name: SwaggerSettings__UseSwaggerUI
+            valueFrom:
+              configMapKeyRef:
+                name: imageimport-api
+                key: swaggerSettings.useSwaggerUI
+          - name: SwaggerSettings__PathPrefix
+            value: "/imageimport"
+          - name: ImportSettings__AllowedCorsOrigins
+            valueFrom:
+              configMapKeyRef:
+                name: imageimport-api
+                key: importSettings.AllowedCorsOrigins
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: imageimport-api
+  name: imageimport-api
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    name: imageimport-api-port
+  selector:
+    app: imageimport-api
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: imageimport-api
+  annotations:
+    traefik.frontend.rule.type: PathPrefixStrip
+    kubernetes.io/ingress.class: traefik
+    # Redirect the /metrics endpoint to /
+    # This ensures that the /metrics endpoint is not open on the internet
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+    traefik.ingress.kubernetes.io/request-modifier: "ReplacePathRegex: ^/metrics(.*) /"
+spec:
+  rules:
+  - host: louvre.:domaintag
+    http: 
+      paths:
+      - path: /imageimport
+        backend:
+          serviceName: imageimport-api
+          servicePort: 80
+---
+kind: ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+metadata:
+  # Prometheus will scrape metrics on the http endpoint, imageimport-api-port
+  name: imageimport-api
+  namespace: louvre
+spec:
+  endpoints:
+  - port: imageimport-api-port
+    interval: 5s
+  selector:
+    matchLabels:
+      app: imageimport-api
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: imageimport-api
+  namespace: louvre
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: imageimport-api
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 50

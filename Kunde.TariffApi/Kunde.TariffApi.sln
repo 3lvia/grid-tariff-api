@@ -5,7 +5,16 @@ VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kunde.TariffApi", "Kunde.TariffApi\Kunde.TariffApi.csproj", "{7409F122-48CE-4333-AE47-E3662A828E6B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CI", "CI", "{1A63B4E4-E9A6-4618-9D17-94B046E0C79F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CI", "CI", "{041DA3EE-5BB6-47A5-B1D5-4E556FC71FFA}"
+	ProjectSection(SolutionItems) = preProject
+		Kunde.TariffApi\CI\azure-pipelines.yaml = Kunde.TariffApi\CI\azure-pipelines.yaml
+		Kunde.TariffApi\CI\config.dev.yaml = Kunde.TariffApi\CI\config.dev.yaml
+		Kunde.TariffApi\CI\config.prod.yaml = Kunde.TariffApi\CI\config.prod.yaml
+		Kunde.TariffApi\CI\config.test.yaml = Kunde.TariffApi\CI\config.test.yaml
+		Kunde.TariffApi\CI\deploy.yaml = Kunde.TariffApi\CI\deploy.yaml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FetchHolidays", "FetchHolidays\FetchHolidays.csproj", "{DAF6CA7E-D47C-4073-839D-09787AB357CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +26,10 @@ Global
 		{7409F122-48CE-4333-AE47-E3662A828E6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7409F122-48CE-4333-AE47-E3662A828E6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7409F122-48CE-4333-AE47-E3662A828E6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAF6CA7E-D47C-4073-839D-09787AB357CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAF6CA7E-D47C-4073-839D-09787AB357CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAF6CA7E-D47C-4073-839D-09787AB357CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAF6CA7E-D47C-4073-839D-09787AB357CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

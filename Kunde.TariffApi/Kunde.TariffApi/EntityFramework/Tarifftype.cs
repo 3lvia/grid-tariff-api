@@ -7,6 +7,7 @@ namespace Kunde.TariffApi.EntityFramework
     {
         public Tarifftype()
         {
+            Fixedpriceconfig = new HashSet<Fixedpriceconfig>();
             Variablepriceconfig = new HashSet<Variablepriceconfig>();
         }
 
@@ -19,6 +20,7 @@ namespace Kunde.TariffApi.EntityFramework
         public string Description { get; set; }
 
         public virtual Company Company { get; set; }
+        public virtual ICollection<Fixedpriceconfig> Fixedpriceconfig { get; set; }
         public virtual ICollection<Variablepriceconfig> Variablepriceconfig { get; set; }
     }
 }
