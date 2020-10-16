@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Kunde.TariffApi.Services.TariffType;
+﻿using Elvia.Telemetry;
 using Kunde.TariffApi.Models;
+using Kunde.TariffApi.Services.TariffType;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -13,18 +11,25 @@ namespace Kunde.TariffApi.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    //    [Authorize]
     public class TariffTypeController : ControllerBase
     {
-        private ITariffTypeService _tariffTypeService;
-        public TariffTypeController(ITariffTypeService tariffTypeService)
+        private readonly ITariffTypeService _tariffTypeService;
+        private readonly ITelemetryInsightsLogger _telemetry;
+        public TariffTypeController(ITariffTypeService tariffTypeService, ITelemetryInsightsLogger telemetry)
         {
             _tariffTypeService = tariffTypeService;
+            _telemetry = telemetry;
         }
         // GET: api/<TariffTypeController>
         [HttpGet]
-        public TariffTypeContainer Get()
+        public IActionResult Get()
         {
-            return _tariffTypeService.GetTariffTypes();
+            var processingTime = Stopwatch.StartNew();
+            TariffTypeContainer tariffTypeContainer = _tariffTypeService.GetTariffTypes();
+            _telemetry.TrackMetric($"TariffAPI|TimeToGetTariffTypesInSeconds", (double)processingTime.ElapsedMilliseconds / 1000);
+
+            return Ok(_tariffTypeService.GetTariffTypes());
         }
 
     }

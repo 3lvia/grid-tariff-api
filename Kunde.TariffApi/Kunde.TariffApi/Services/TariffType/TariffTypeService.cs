@@ -2,10 +2,7 @@
 using Kunde.TariffApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Kunde.TariffApi.Services.TariffType
 {
@@ -25,9 +22,9 @@ namespace Kunde.TariffApi.Services.TariffType
             TariffTypeContainer tariffTypeContainer = new TariffTypeContainer();
             tariffTypeContainer.TariffTypes = new List<Models.TariffType>();
             List<Models.TariffType> retVal = new List<Models.TariffType>();
-            using (var scope = _scopeFactory.CreateScope())
+            using (IServiceScope scope = _scopeFactory.CreateScope())
             {
-                using (var dbContext = scope.ServiceProvider.GetRequiredService<TariffContext>())
+                using (TariffContext dbContext = scope.ServiceProvider.GetRequiredService<TariffContext>())
                 {
                     foreach (var tariffType in dbContext.Tarifftype.Include(_tableCompany))
                     {
@@ -40,7 +37,6 @@ namespace Kunde.TariffApi.Services.TariffType
                             Resolution = tariffType.Resolution,
                             Description = tariffType.Description
                         });
-
                     }
                 };
             };

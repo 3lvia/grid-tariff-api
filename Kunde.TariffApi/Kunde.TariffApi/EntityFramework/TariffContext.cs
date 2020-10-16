@@ -15,17 +15,16 @@ namespace Kunde.TariffApi.EntityFramework
         {
         }
 
-
         public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<Fixedpriceconfig> Fixedpriceconfig { get; set; }
         public virtual DbSet<Fixedpricelevel> Fixedpricelevel { get; set; }
-        public virtual DbSet<Hours> Hours { get; set; }
         public virtual DbSet<Pricelevel> Pricelevel { get; set; }
         public virtual DbSet<Publicholiday> Publicholiday { get; set; }
         public virtual DbSet<Season> Season { get; set; }
         public virtual DbSet<Tarifftype> Tarifftype { get; set; }
         public virtual DbSet<Uom> Uom { get; set; }
         public virtual DbSet<Variablepriceconfig> Variablepriceconfig { get; set; }
+        public virtual DbSet<VariablepriceconfigPrechangetokr> VariablepriceconfigPrechangetokr { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -90,25 +89,25 @@ namespace Kunde.TariffApi.EntityFramework
                     .WithMany(p => p.Fixedpriceconfig)
                     .HasForeignKey(d => d.Pricelevelid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__fixedpric__price__68487DD7");
+                    .HasConstraintName("FK__fixedpric__price__5224328E");
 
                 entity.HasOne(d => d.Season)
                     .WithMany(p => p.Fixedpriceconfig)
                     .HasForeignKey(d => d.Seasonid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__fixedpric__seaso__6754599E");
+                    .HasConstraintName("FK__fixedpric__seaso__531856C7");
 
                 entity.HasOne(d => d.Tarifftype)
                     .WithMany(p => p.Fixedpriceconfig)
                     .HasForeignKey(d => d.Tarifftypeid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__fixedpric__tarif__66603565");
+                    .HasConstraintName("FK__fixedpric__tarif__540C7B00");
 
                 entity.HasOne(d => d.Uom)
                     .WithMany(p => p.Fixedpriceconfig)
                     .HasForeignKey(d => d.Uomid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__fixedpric__uomid__693CA210");
+                    .HasConstraintName("FK__fixedpric__uomid__55009F39");
             });
 
             modelBuilder.Entity<Fixedpricelevel>(entity =>
@@ -116,7 +115,7 @@ namespace Kunde.TariffApi.EntityFramework
                 entity.ToTable("fixedpricelevel");
 
                 entity.HasIndex(e => e.Pricelevel)
-                    .HasName("UQ__fixedpri__EDDD99B6AEC43134")
+                    .HasName("UQ__fixedpri__EDDD99B6130E6CC1")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -134,43 +133,12 @@ namespace Kunde.TariffApi.EntityFramework
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Hours>(entity =>
-            {
-                entity.ToTable("hours");
-
-                entity.HasIndex(e => e.Hour)
-                    .HasName("UQ__hours__7F30AF4E38C64628")
-                    .IsUnique();
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Expiredattext)
-                    .IsRequired()
-                    .HasColumnName("expiredattext")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Hour).HasColumnName("hour");
-
-                entity.Property(e => e.Hourshortname)
-                    .IsRequired()
-                    .HasColumnName("hourshortname")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Starttimetext)
-                    .IsRequired()
-                    .HasColumnName("starttimetext")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<Pricelevel>(entity =>
             {
                 entity.ToTable("pricelevel");
 
                 entity.HasIndex(e => e.Pricelevel1)
-                    .HasName("UQ__pricelev__EDDD99B6F0E3D123")
+                    .HasName("UQ__pricelev__EDDD99B6B060FA0B")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -180,6 +148,8 @@ namespace Kunde.TariffApi.EntityFramework
                     .HasColumnName("pricelevel")
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Sortorder).HasColumnName("sortorder");
             });
 
             modelBuilder.Entity<Publicholiday>(entity =>
@@ -204,7 +174,7 @@ namespace Kunde.TariffApi.EntityFramework
                 entity.ToTable("season");
 
                 entity.HasIndex(e => e.Season1)
-                    .HasName("UQ__season__BC91B1706B5B0E8A")
+                    .HasName("UQ__season__BC91B170D949B744")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -258,7 +228,7 @@ namespace Kunde.TariffApi.EntityFramework
                     .WithMany(p => p.Tarifftype)
                     .HasForeignKey(d => d.Companyid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__tarifftyp__compa__5070F446");
+                    .HasConstraintName("FK__tarifftyp__compa__55F4C372");
             });
 
             modelBuilder.Entity<Uom>(entity =>
@@ -346,25 +316,84 @@ namespace Kunde.TariffApi.EntityFramework
                     .WithMany(p => p.Variablepriceconfig)
                     .HasForeignKey(d => d.Pricelevelid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__variablep__price__6EF57B66");
+                    .HasConstraintName("FK__variablep__price__56E8E7AB");
 
                 entity.HasOne(d => d.Season)
                     .WithMany(p => p.Variablepriceconfig)
                     .HasForeignKey(d => d.Seasonid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__variablep__seaso__6E01572D");
+                    .HasConstraintName("FK__variablep__seaso__57DD0BE4");
 
                 entity.HasOne(d => d.Tarifftype)
                     .WithMany(p => p.Variablepriceconfig)
                     .HasForeignKey(d => d.Tarifftypeid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__variablep__tarif__6D0D32F4");
+                    .HasConstraintName("FK__variablep__tarif__58D1301D");
 
                 entity.HasOne(d => d.Uom)
                     .WithMany(p => p.Variablepriceconfig)
                     .HasForeignKey(d => d.Uomid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__variablep__uomid__6FE99F9F");
+                    .HasConstraintName("FK__variablep__uomid__59C55456");
+            });
+
+            modelBuilder.Entity<VariablepriceconfigPrechangetokr>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("variablepriceconfig_prechangetokr");
+
+                entity.Property(e => e.Energy)
+                    .HasColumnName("energy")
+                    .HasColumnType("decimal(10, 4)");
+
+                entity.Property(e => e.Hours)
+                    .IsRequired()
+                    .HasColumnName("hours")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Monthno).HasColumnName("monthno");
+
+                entity.Property(e => e.Power)
+                    .HasColumnName("power_")
+                    .HasColumnType("decimal(10, 4)");
+
+                entity.Property(e => e.Pricefromdate)
+                    .HasColumnName("pricefromdate")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.Pricelevelid).HasColumnName("pricelevelid");
+
+                entity.Property(e => e.Pricetodate)
+                    .HasColumnName("pricetodate")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.Seasonid).HasColumnName("seasonid");
+
+                entity.Property(e => e.Tarifftypeid).HasColumnName("tarifftypeid");
+
+                entity.Property(e => e.Taxenergy)
+                    .HasColumnName("taxenergy")
+                    .HasColumnType("decimal(10, 4)");
+
+                entity.Property(e => e.Taxenova)
+                    .HasColumnName("taxenova")
+                    .HasColumnType("decimal(10, 4)");
+
+                entity.Property(e => e.Taxmva)
+                    .HasColumnName("taxmva")
+                    .HasColumnType("decimal(10, 4)");
+
+                entity.Property(e => e.Total)
+                    .HasColumnName("total")
+                    .HasColumnType("decimal(10, 4)");
+
+                entity.Property(e => e.Uomid).HasColumnName("uomid");
             });
 
             OnModelCreatingPartial(modelBuilder);

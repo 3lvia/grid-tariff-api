@@ -11,6 +11,7 @@ namespace Kunde.TariffApi.EntityFramework
         }
 
         public int Id { get; set; }
+        public int Sortorder { get; set; }
         public string Pricelevel1 { get; set; }
 
         public virtual ICollection<Variablepriceconfig> Variablepriceconfig { get; set; }

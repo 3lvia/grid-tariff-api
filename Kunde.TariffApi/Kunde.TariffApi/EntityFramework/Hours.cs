@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Kunde.TariffApi.EntityFramework
+﻿namespace Kunde.TariffApi.EntityFramework
 {
     public partial class Hours
     {
