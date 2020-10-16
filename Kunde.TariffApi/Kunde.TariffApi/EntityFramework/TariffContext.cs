@@ -24,7 +24,6 @@ namespace Kunde.TariffApi.EntityFramework
         public virtual DbSet<Tarifftype> Tarifftype { get; set; }
         public virtual DbSet<Uom> Uom { get; set; }
         public virtual DbSet<Variablepriceconfig> Variablepriceconfig { get; set; }
-        public virtual DbSet<VariablepriceconfigPrechangetokr> VariablepriceconfigPrechangetokr { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -337,64 +336,6 @@ namespace Kunde.TariffApi.EntityFramework
                     .HasConstraintName("FK__variablep__uomid__59C55456");
             });
 
-            modelBuilder.Entity<VariablepriceconfigPrechangetokr>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("variablepriceconfig_prechangetokr");
-
-                entity.Property(e => e.Energy)
-                    .HasColumnName("energy")
-                    .HasColumnType("decimal(10, 4)");
-
-                entity.Property(e => e.Hours)
-                    .IsRequired()
-                    .HasColumnName("hours")
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.Monthno).HasColumnName("monthno");
-
-                entity.Property(e => e.Power)
-                    .HasColumnName("power_")
-                    .HasColumnType("decimal(10, 4)");
-
-                entity.Property(e => e.Pricefromdate)
-                    .HasColumnName("pricefromdate")
-                    .HasColumnType("date");
-
-                entity.Property(e => e.Pricelevelid).HasColumnName("pricelevelid");
-
-                entity.Property(e => e.Pricetodate)
-                    .HasColumnName("pricetodate")
-                    .HasColumnType("date");
-
-                entity.Property(e => e.Seasonid).HasColumnName("seasonid");
-
-                entity.Property(e => e.Tarifftypeid).HasColumnName("tarifftypeid");
-
-                entity.Property(e => e.Taxenergy)
-                    .HasColumnName("taxenergy")
-                    .HasColumnType("decimal(10, 4)");
-
-                entity.Property(e => e.Taxenova)
-                    .HasColumnName("taxenova")
-                    .HasColumnType("decimal(10, 4)");
-
-                entity.Property(e => e.Taxmva)
-                    .HasColumnName("taxmva")
-                    .HasColumnType("decimal(10, 4)");
-
-                entity.Property(e => e.Total)
-                    .HasColumnName("total")
-                    .HasColumnType("decimal(10, 4)");
-
-                entity.Property(e => e.Uomid).HasColumnName("uomid");
-            });
 
             OnModelCreatingPartial(modelBuilder);
         }
