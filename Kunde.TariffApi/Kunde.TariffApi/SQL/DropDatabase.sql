@@ -7,7 +7,6 @@ GO
 delete from variablepriceconfig;
 delete from dbo.fixedpriceconfig;
 delete from publicholiday;
-delete from hours;
 delete from tarifftype;
 delete from dbo.fixedpricelevel;
 delete from dbo.company;
@@ -17,7 +16,6 @@ delete from uom;
 
 drop table dbo.fixedpriceconfig;
 drop table dbo.fixedpricelevel;
-drop table hours;
 drop table publicholiday;
 drop table variablepriceconfig;
 drop table tarifftype;

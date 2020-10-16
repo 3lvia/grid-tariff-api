@@ -1124,6 +1124,9 @@ INSERT [dbo].[uom] ([id], [currency], [uom]) VALUES (1, N'NOK', N'kr/mnd')
 GO
 INSERT [dbo].[uom] ([id], [currency], [uom]) VALUES (3, N'NOK', N'øre/kWh')
 GO
+INSERT [dbo].[uom] ([id], [currency], [uom]) VALUES (4, N'NOK', N'kr/hour')
+GO
+
 SET IDENTITY_INSERT [dbo].[uom] OFF
 GO
 SET IDENTITY_INSERT [dbo].[variablepriceconfig] ON 
@@ -1278,14 +1281,6 @@ ALTER TABLE [dbo].[fixedpricelevel] ADD UNIQUE NONCLUSTERED
 (
 	[pricelevel] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-GO
-/****** Object:  Index [UQ__hours__7F30AF4E38C64628]    Script Date: 13.10.2020 09:15:56 ******/
-ALTER TABLE [dbo].[hours] ADD UNIQUE NONCLUSTERED 
-(
-	[hour] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-GO
-SET ANSI_PADDING ON
 GO
 /****** Object:  Index [UQ__pricelev__EDDD99B6F0E3D123]    Script Date: 13.10.2020 09:15:56 ******/
 ALTER TABLE [dbo].[pricelevel] ADD UNIQUE NONCLUSTERED 

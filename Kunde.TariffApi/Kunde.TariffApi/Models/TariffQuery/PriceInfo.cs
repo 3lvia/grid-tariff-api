@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Kunde.TariffApi.Models.TariffQuery
 {
-    public class TariffPrices
+    public class PriceInfo
     {
         public DateTime StartTime { get; set; }
         public DateTime ExpireAt { get; set; }
@@ -12,6 +14,5 @@ namespace Kunde.TariffApi.Models.TariffQuery
         public String PublicHoliday { get; set; }
         public List<FixedPrices> FixedPrices { get; set; }
         public VariablePrice VariablePrice { get; set; }
-
     }
 }
