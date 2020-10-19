@@ -1,5 +1,6 @@
 using Elvia.Configuration;
 using Elvia.Telemetry;
+using IdentityServer4.AccessTokenValidation;
 using Kunde.TariffApi.EntityFramework;
 using Kunde.TariffApi.Extensions;
 using Kunde.TariffApi.Services.TariffQuery;
@@ -28,13 +29,18 @@ namespace Kunde.TariffApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddAuthorization(options =>
+            //{
+            //    var policy = new AuthorizationPolicyBuilder()
+            //        .RequireAuthenticatedUser()
+            //        .RequireAssertion(context => context.HasScope("kunde.nett-tariff-api.machineaccess"))
+            //        .Build();
+            //    options.DefaultPolicy = policy;
+            //});
+
             services.AddAuthorization(options =>
             {
-                var policy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .RequireAssertion(context => context.HasScope("kunde.nett-tariff-api.machineaccess"))
-                    .Build();
-                options.DefaultPolicy = policy;
+                options.DefaultPolicy = ScopePolicy.Create("kunde.nett-tariff-api.machineaccess");
             });
 
             services.AddControllers();
@@ -43,14 +49,21 @@ namespace Kunde.TariffApi
             services.AddStandardElviaTelemetryLogging(instrumentationKey);
 
             var authority = _configuration.EnsureHasValue("kunde:kv:elvid:generic:authority");
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-              .AddJwtBearer(options =>
-              {
-                  options.Authority = authority;
-                  options.TokenValidationParameters.ValidateAudience = false; /*utkommentert fordi vi starter med elvid, ikke hid*/
-                  options.TokenValidationParameters.ValidateIssuer = false;
-              });
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                        .AddIdentityServerAuthentication(options =>
+                        {
+                            options.Authority = authority;
+                        });
+
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //  .AddJwtBearer(options =>
+            //  {
+            //      options.Authority = authority;
+            //      options.TokenValidationParameters.ValidateAudience = false; /*utkommentert fordi vi starter med elvid, ikke hid*/
+            //      options.TokenValidationParameters.ValidateIssuer = false;
+            //  });
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddTransient<ITariffTypeService, TariffTypeService>();
             services.AddTransient<ITariffQueryService, TariffQueryService>();
@@ -75,6 +88,7 @@ namespace Kunde.TariffApi
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
