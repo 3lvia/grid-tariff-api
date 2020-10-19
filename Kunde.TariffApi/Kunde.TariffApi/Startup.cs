@@ -32,7 +32,7 @@ namespace Kunde.TariffApi
             services.AddAuthorization(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
-//                    .RequireAuthenticatedUser()
+                    //                    .RequireAuthenticatedUser()
                     .RequireAssertion(context => context.HasScope("kunde.nett-tariff-api.machineaccess"))
                     .Build();
                 options.DefaultPolicy = policy;
