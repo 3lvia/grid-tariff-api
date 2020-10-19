@@ -244,9 +244,9 @@ SET IDENTITY_INSERT [dbo].[fixedpriceconfig] OFF
 GO
 SET IDENTITY_INSERT [dbo].[fixedpricelevel] ON 
 GO
-INSERT [dbo].[fixedpricelevel] ([id], [pricelevel], [levelinfo]) VALUES (1, N'Level1', N'For alle privatkunder')
+INSERT [dbo].[fixedpricelevel] ([id], [pricelevel], [levelinfo]) VALUES (1, N'Level1', N'For alle privatkunder i Elvia med tariff: Nettleie Elvia sør')
 GO
-INSERT [dbo].[fixedpricelevel] ([id], [pricelevel], [levelinfo]) VALUES (2, N'Level2', N'For alle privatkunder')
+INSERT [dbo].[fixedpricelevel] ([id], [pricelevel], [levelinfo]) VALUES (2, N'Level2', N'For alle privatkunder i Elvia med tariff: Nettleie Rush&Ro eller Nettleie Dag&Natt')
 GO
 INSERT [dbo].[fixedpricelevel] ([id], [pricelevel], [levelinfo]) VALUES (3, N'Level3', N'For kunder med årlig forbruk 15.000-20.000 kWh')
 GO
@@ -1120,7 +1120,7 @@ SET IDENTITY_INSERT [dbo].[uom] ON
 GO
 INSERT [dbo].[uom] ([id], [currency], [uom]) VALUES (2, N'NOK', N'kr/kWh')
 GO
-INSERT [dbo].[uom] ([id], [currency], [uom]) VALUES (1, N'NOK', N'kr/mnd')
+INSERT [dbo].[uom] ([id], [currency], [uom]) VALUES (1, N'NOK', N'kr/month')
 GO
 INSERT [dbo].[uom] ([id], [currency], [uom]) VALUES (3, N'NOK', N'øre/kWh')
 GO

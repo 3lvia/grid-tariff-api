@@ -8,7 +8,7 @@ namespace Kunde.TariffApi.Models.TariffQuery
     public class PriceInfo
     {
         public DateTime StartTime { get; set; }
-        public DateTime ExpireAt { get; set; }
+        public DateTime ExpiredAt { get; set; }
         public String HoursShortName { get; set; }
         public String Season { get; set; }
         public String PublicHoliday { get; set; }

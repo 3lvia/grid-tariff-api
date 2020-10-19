@@ -32,7 +32,7 @@ namespace Kunde.TariffApi
             {
                 var policy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
-                    .RequireAssertion(context => context.HasScope("todo.kunde.netttariff"))         //venter på tilbakemelding fra joachim
+                    .RequireAssertion(context => context.HasScope("kunde.nett-tariff-api.machineaccess"))
                     .Build();
                 options.DefaultPolicy = policy;
             });
@@ -41,30 +41,22 @@ namespace Kunde.TariffApi
 
             var instrumentationKey = _configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key");
             services.AddStandardElviaTelemetryLogging(instrumentationKey);
-            //services.AddStandardElviaTelemetryLogging(instrumentationKey, retainTelemetryWhere: telemetryItem => telemetryItem switch
-            //{
-            //    DependencyTelemetry d => false,
-            //    _ => true,
-            //});
 
             var authority = _configuration.EnsureHasValue("kunde:kv:elvid:generic:authority");
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
               .AddJwtBearer(options =>
               {
                   options.Authority = authority;
-                  //options.TokenValidationParameters.ValidateAudience = false; utkommentert fordi vi starter med elvid, ikke hid
-                  //options.TokenValidationParameters.ValidateIssuer = false;
+                  options.TokenValidationParameters.ValidateAudience = false; /*utkommentert fordi vi starter med elvid, ikke hid*/
+                  options.TokenValidationParameters.ValidateIssuer = false;
               });
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddTransient<ITariffTypeService, TariffTypeService>();
             services.AddTransient<ITariffQueryService, TariffQueryService>();
 
-            //            DBConfig dBConfig = _configuration.GetSection("DBConfig").Get<DBConfig>();
-            //            var connectionString = dBConfig.ConnectionString;
             var connectionString = _configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string");
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(connectionString));
-
 
             //var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
             //services.AddSwaggerConfiguration(swaggerSettings);

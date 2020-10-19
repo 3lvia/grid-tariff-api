@@ -3,6 +3,7 @@ using Kunde.TariffApi.Models;
 using Kunde.TariffApi.Models.TariffQuery;
 using Kunde.TariffApi.Services.TariffQuery;
 using Kunde.TariffApi.Services.TariffType;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Kunde.TariffApi.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    //    [Authorize]
+        [Authorize]
     public class TariffQueryController : ControllerBase
     {
         private readonly ITelemetryInsightsLogger _telemetry;
