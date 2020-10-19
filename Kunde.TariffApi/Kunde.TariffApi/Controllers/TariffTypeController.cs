@@ -1,6 +1,7 @@
 ﻿using Elvia.Telemetry;
 using Kunde.TariffApi.Models;
 using Kunde.TariffApi.Services.TariffType;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -11,7 +12,7 @@ namespace Kunde.TariffApi.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    //    [Authorize]
+    [Authorize]
     public class TariffTypeController : ControllerBase
     {
         private readonly ITariffTypeService _tariffTypeService;

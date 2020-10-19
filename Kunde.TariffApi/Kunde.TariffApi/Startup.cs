@@ -4,6 +4,7 @@ using Kunde.TariffApi.EntityFramework;
 using Kunde.TariffApi.Extensions;
 using Kunde.TariffApi.Services.TariffQuery;
 using Kunde.TariffApi.Services.TariffType;
+using Kunde.TariffApi.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -59,8 +60,8 @@ namespace Kunde.TariffApi
             var connectionString = _configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string");
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(connectionString));
 
-            //var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
-            //services.AddSwaggerConfiguration(swaggerSettings);
+            var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
+            services.AddSwaggerConfiguration(swaggerSettings);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

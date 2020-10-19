@@ -15,7 +15,7 @@ namespace Kunde.TariffApi.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-        [Authorize]
+    [Authorize]
     public class TariffQueryController : ControllerBase
     {
         private readonly ITelemetryInsightsLogger _telemetry;
@@ -28,7 +28,6 @@ namespace Kunde.TariffApi.Controllers
             _tariffTypeService = tariffTypeService;
             _tariffQueryService = tariffQueryService;
         }
-
 
         // GET: api/<TariffQueryController>
         [HttpGet]
@@ -57,7 +56,6 @@ namespace Kunde.TariffApi.Controllers
             return AddDaysUsingQueryRangeParameter(tariffQueryModel, startTime);
         }
 
-
         private DateTime GetEndTime(TariffQueryRequest tariffQueryModel)
         {
             if (tariffQueryModel.EndTime.HasValue)
@@ -81,7 +79,6 @@ namespace Kunde.TariffApi.Controllers
             }
             return dateTime;
         }
-
 
         private string ValidateRequestInput(TariffQueryRequest tariffQueryModel)
         {
