@@ -8,12 +8,9 @@ namespace Kunde.TariffApi.Services.TariffType
 {
     public class TariffTypeService : ITariffTypeService
     {
-        private IServiceScopeFactory _scopeFactory;
         private TariffContext _tariffContext;
-        private static string _tableCompany = "Company";
-        public TariffTypeService(IServiceScopeFactory scopeFactory, TariffContext tariffContext)
+        public TariffTypeService(TariffContext tariffContext)
         {
-            _scopeFactory = scopeFactory;
             _tariffContext = tariffContext;
         }
 
@@ -21,25 +18,19 @@ namespace Kunde.TariffApi.Services.TariffType
         {
             TariffTypeContainer tariffTypeContainer = new TariffTypeContainer();
             tariffTypeContainer.TariffTypes = new List<Models.TariffType>();
-            List<Models.TariffType> retVal = new List<Models.TariffType>();
-            using (IServiceScope scope = _scopeFactory.CreateScope())
+
+            foreach (var tariffType in _tariffContext.Tarifftype.Include(t => t.Company))
             {
-                using (TariffContext dbContext = scope.ServiceProvider.GetRequiredService<TariffContext>())
+                tariffTypeContainer.TariffTypes.Add(new Models.TariffType()
                 {
-                    foreach (var tariffType in dbContext.Tarifftype.Include(_tableCompany))
-                    {
-                        tariffTypeContainer.TariffTypes.Add(new Models.TariffType()
-                        {
-                            TariffKey = tariffType.Tariffkey,
-                            Company = tariffType.Company.Company1,
-                            CustomerType = tariffType.Customertype,
-                            Title = tariffType.Title,
-                            Resolution = tariffType.Resolution,
-                            Description = tariffType.Description
-                        });
-                    }
-                };
-            };
+                    TariffKey = tariffType.Tariffkey,
+                    Company = tariffType.Company.Company1,
+                    CustomerType = tariffType.Customertype,
+                    Title = tariffType.Title,
+                    Resolution = tariffType.Resolution,
+                    Description = tariffType.Description
+                });
+            }
             return tariffTypeContainer;
         }
     }
