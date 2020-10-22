@@ -14,9 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CI", "CI", "{041DA3EE-5BB6-
 		Kunde.TariffApi\CI\deploy.yaml = Kunde.TariffApi\CI\deploy.yaml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FetchHolidays", "FetchHolidays\FetchHolidays.csproj", "{DAF6CA7E-D47C-4073-839D-09787AB357CD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kunde.TariffApiTests", "Kunde.TariffApiTests\Kunde.TariffApiTests.csproj", "{DB0D0D26-5B4C-4ABB-89BE-F0560E1E61E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kunde.TariffApiTests", "Kunde.TariffApiTests\Kunde.TariffApiTests.csproj", "{DB0D0D26-5B4C-4ABB-89BE-F0560E1E61E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,10 +26,6 @@ Global
 		{7409F122-48CE-4333-AE47-E3662A828E6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7409F122-48CE-4333-AE47-E3662A828E6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7409F122-48CE-4333-AE47-E3662A828E6B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DAF6CA7E-D47C-4073-839D-09787AB357CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DAF6CA7E-D47C-4073-839D-09787AB357CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DAF6CA7E-D47C-4073-839D-09787AB357CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DAF6CA7E-D47C-4073-839D-09787AB357CD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DB0D0D26-5B4C-4ABB-89BE-F0560E1E61E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DB0D0D26-5B4C-4ABB-89BE-F0560E1E61E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB0D0D26-5B4C-4ABB-89BE-F0560E1E61E8}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Kunde.TariffApi.Controllers;
+﻿using Kunde.TariffApi.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,7 +15,6 @@ using System.Linq;
 
 namespace Kunde.TariffApi.Controllers.Tests
 {
-    [TestClass()]
     public class TariffTypeControllerTests
     {
         private Mock<ITelemetryInsightsLogger> _mockLogger;
@@ -52,42 +50,34 @@ namespace Kunde.TariffApi.Controllers.Tests
         }
 
 
-        [TestMethod()]
+        [Fact()]
         public void NullPointerTest()
         {
             Setup();
             TestHelper testHelper = new TestHelper();
             TariffTypeContainer tariffTypeContainer = _tariffTypeService.GetTariffTypes();
-            Assert.IsNotNull(tariffTypeContainer);
-            Assert.IsNotNull(tariffTypeContainer.TariffTypes);
+            Assert.NotNull(tariffTypeContainer);
+            Assert.NotNull(tariffTypeContainer.TariffTypes);
             foreach (var tariffTypeResult in tariffTypeContainer.TariffTypes)
             {
-                Assert.IsNotNull(tariffTypeResult);
+                Assert.NotNull(tariffTypeResult);
             }
         }
 
-        [TestMethod()]
+        [Fact()]
         public void ObjectTest()
         {
             Setup();
             TestHelper testHelper = new TestHelper();
             TariffTypeContainer tariffTypeContainer = _tariffTypeService.GetTariffTypes();
-            Assert.AreEqual(2, tariffTypeContainer.TariffTypes.Count);
+            Assert.Equal(2, tariffTypeContainer.TariffTypes.Count);
 
             Tarifftype tariffTypeRush = _tariffContext.Tarifftype.Where(t => t.Tariffkey.Equals("private_tou_rush")).Include(t => t.Company).FirstOrDefault();
-            Assert.IsTrue(testHelper.Contains(tariffTypeContainer.TariffTypes, tariffTypeRush));
+            Assert.True(testHelper.Contains(tariffTypeContainer.TariffTypes, tariffTypeRush));
 
             Tarifftype tariffTypeDayNight = _tariffContext.Tarifftype.Where(t => t.Tariffkey.Equals("private_tou_daynight")).Include(t => t.Company).FirstOrDefault(); ;
-            Assert.IsTrue(testHelper.Contains(tariffTypeContainer.TariffTypes, tariffTypeDayNight));
+            Assert.True(testHelper.Contains(tariffTypeContainer.TariffTypes, tariffTypeDayNight));
         }
     }
 }
-   
 
-namespace Kunde.TariffApiTests.Controllers
-{
-
-    class TariffTypeControllerTests
-    {
-    }
-}
