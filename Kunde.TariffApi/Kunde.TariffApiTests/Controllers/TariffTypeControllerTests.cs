@@ -64,7 +64,6 @@ namespace Kunde.TariffApi.Controllers.Tests
             {
                 Assert.IsNotNull(tariffTypeResult);
             }
-
         }
 
         [TestMethod()]

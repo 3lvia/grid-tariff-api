@@ -84,7 +84,7 @@ namespace Kunde.TariffApi.Controllers
         {
             if (tariffQueryModel == null)
             {
-                return "Missing model)";
+                return "Missing model";
             }
             if (String.IsNullOrEmpty(tariffQueryModel.TariffKey))
             {

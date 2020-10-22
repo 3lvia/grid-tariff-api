@@ -9,107 +9,111 @@ namespace Kunde.TariffApi.Services.TariffQuery
 {
     public class TariffQueryService : ITariffQueryService
     {
-        private readonly IServiceScopeFactory _scopeFactory;
         private readonly TariffContext _tariffContext;
 
         private readonly int _fixedPriceUomId = 4;
         private Uom _fixedPriceUom = null;
         private static string _lowTariffHours = "0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23";
 
-        public TariffQueryService(IServiceScopeFactory scopeFactory, TariffContext tariffContext)
+        public TariffQueryService(TariffContext tariffContext)
         {
-            _scopeFactory = scopeFactory;
             _tariffContext = tariffContext;
         }
 
         public TariffQueryResult QueryTariff(string tariffKey, DateTime paramFromDate, DateTime paramToDate)
         {
             TariffQueryResult tariffQueryResult = new TariffQueryResult();
-            DateTime queryFromDate = new DateTime(paramFromDate.Year, paramFromDate.Month, paramFromDate.Day);
+            DateTime queryFromDate = paramFromDate.Date;
             DateTime queryToDate = new DateTime(paramToDate.Year, paramToDate.Month, paramToDate.Day, 23, 59, 59);
 
-            IEnumerable<int> relevantMonths = Enumerable.Range(0, 13).Select(a => queryFromDate.AddMonths(a))
-                   .TakeWhile(a => a < queryToDate)
-                   .Select(a => a.Month);
-
-            using (IServiceScope scope = _scopeFactory.CreateScope())
+            List<int> relevantMonths = new List<int>();
+            while ((queryFromDate.Year  < queryToDate.Year) || (queryFromDate.Year == queryToDate.Year && queryFromDate.Month <= queryToDate.Month))
             {
-                using (TariffContext dbContext = scope.ServiceProvider.GetRequiredService<TariffContext>())
+                relevantMonths.Add(queryFromDate.Month);
+                queryFromDate = queryFromDate.AddMonths(1);
+            }
+            relevantMonths = relevantMonths.Distinct().ToList();
+            queryFromDate = paramFromDate.Date;
+
+
+            Tarifftype tariffType = _tariffContext.Tarifftype.Where(t => t.Tariffkey.Equals(tariffKey)).FirstOrDefault();
+            Company company = _tariffContext.Company.Where(c => c.Id == tariffType.Companyid).FirstOrDefault();
+
+            Dictionary<int, Uom> uoms = _tariffContext.Uom.ToDictionary(u => u.Id, u => u);
+            _fixedPriceUom = uoms[_fixedPriceUomId];
+
+            Dictionary<DateTime, String> publicHolidays = _tariffContext.Publicholiday.Where(p => p.Holidaydate >= queryFromDate && p.Holidaydate <= queryToDate)
+                .ToDictionary(p => p.Holidaydate, p => p.Description);
+            List<Season> seasons = _tariffContext.Season.ToList();
+
+            List<Fixedpricelevel> fixedPriceLevels = _tariffContext.Fixedpricelevel.ToList();
+            Dictionary<int, Fixedpriceconfig> fixedPrices = _tariffContext.Fixedpriceconfig.
+                Where(f => f.Tarifftype.Tariffkey.Equals(tariffKey)
+                    && f.Pricefromdate < queryToDate
+                    && f.Pricetodate > queryFromDate
+                    && relevantMonths.Contains(f.Monthno)).ToDictionary(f => f.Id, f => f);
+
+            List<Pricelevel> priceLevels = _tariffContext.Pricelevel.ToList();
+            Dictionary<int, Variablepriceconfig> variablePrices = _tariffContext.Variablepriceconfig.
+                Where(v => v.Tarifftype.Tariffkey.Equals(tariffKey)
+                    && v.Pricefromdate < queryToDate
+                    && v.Pricetodate > queryFromDate
+                    && relevantMonths.Contains(v.Monthno)).ToDictionary(v => v.Id, v => v); ;
+
+            tariffQueryResult.GridTariff = new GridTariff
+            {
+                TariffType = new Models.TariffQuery.TariffType()
                 {
-                    Tarifftype tariffType = dbContext.Tarifftype.Where(t => t.Tariffkey.Equals(tariffKey)).FirstOrDefault();
-                    Company company = dbContext.Company.Where(c => c.Id == tariffType.Companyid).FirstOrDefault();
-
-                    Dictionary<int, Uom> uoms = dbContext.Uom.ToDictionary(u => u.Id, u => u);
-                    _fixedPriceUom = uoms[_fixedPriceUomId];
-
-                    Dictionary<DateTime, String> publicHolidays = dbContext.Publicholiday.Where(p => p.Holidaydate >= queryFromDate && p.Holidaydate <= queryToDate)
-                        .ToDictionary(p => p.Holidaydate, p => p.Description);
-                    List<Season> seasons = dbContext.Season.ToList();
-
-                    List<Fixedpricelevel> fixedPriceLevels = dbContext.Fixedpricelevel.ToList();
-                    Dictionary<int, Fixedpriceconfig> fixedPrices = dbContext.Fixedpriceconfig.
-                        Where(f => f.Tarifftype.Tariffkey.Equals(tariffKey)
-                            && f.Pricefromdate < queryToDate
-                            && f.Pricetodate > queryFromDate
-                            && relevantMonths.Contains(f.Monthno)).ToDictionary(f => f.Id, f => f);
-
-                    List<Pricelevel> priceLevels = dbContext.Pricelevel.ToList();
-                    Dictionary<int, Variablepriceconfig> variablePrices = dbContext.Variablepriceconfig.
-                        Where(v => v.Tarifftype.Tariffkey.Equals(tariffKey)
-                            && v.Pricefromdate < queryToDate
-                            && v.Pricetodate > queryFromDate
-                            && relevantMonths.Contains(v.Monthno)).ToDictionary(v => v.Id, v => v); ;
-
-                    tariffQueryResult.GridTariff = new GridTariff
-                    {
-                        TariffType = new Models.TariffQuery.TariffType()
-                        {
-                            Company = tariffType.Company.Company1,
-                            CustomerType = tariffType.Customertype,
-                            Title = tariffType.Title,
-                            Resolution = tariffType.Resolution,
-                            Description = tariffType.Description,
-                        },
-                        TariffPrice = new TariffPrice()
-                        {
-                            PriceInfo = new List<PriceInfo>()
-                        }
-                    };
-
-                    IDictionary<int, Fixedpriceconfig> currFixedPrices = null;
-                    IDictionary<int, Variablepriceconfig> currVariablePrices = null;
-                    Season currSeason = null;
-                    int currMonth = -1;
-                    while (queryFromDate <= paramToDate)
-                    {
-                        queryToDate = new DateTime(queryFromDate.Year, queryFromDate.Month, queryFromDate.Day, 23, 59, 59);
-                        if (queryFromDate.Date == paramToDate.Date)
-                        {
-                            queryToDate = paramToDate;
-                        }
-
-                        if (currMonth != queryFromDate.Month)
-                        {
-                            currFixedPrices = fixedPrices.Where(f => f.Value.Monthno == queryFromDate.Month).ToDictionary(f => f.Key, f => f.Value); //verified only changes at month (email)
-                            currVariablePrices = variablePrices.Where(v => v.Value.Monthno == queryFromDate.Month).ToDictionary(v => v.Key, v => v.Value);
-                            currSeason = currFixedPrices.First().Value.Season;
-                            currMonth = queryFromDate.Month;
-                        }
-
-                        IDictionary<int, Variablepriceconfig> currDayVariablePrices = currVariablePrices.Where(v => v.Value.Pricefromdate <= queryFromDate && v.Value.Pricetodate >= queryToDate)
-                            .ToDictionary(v => v.Key, v => v.Value); ;
-
-                        tariffQueryResult.GridTariff.TariffPrice.PriceInfo.AddRange(
-                        ProcessDay(queryFromDate,
-                            queryToDate,
-                            ref publicHolidays,
-                            ref currFixedPrices,
-                            ref currDayVariablePrices,
-                            ref currSeason));
-                        queryFromDate = queryFromDate.AddDays(1);
-                    }
-                };
+                    Company = tariffType.Company.Company1,
+                    CustomerType = tariffType.Customertype,
+                    Title = tariffType.Title,
+                    Resolution = tariffType.Resolution,
+                    Description = tariffType.Description,
+                },
+                TariffPrice = new TariffPrice()
+                {
+                    PriceInfo = new List<PriceInfo>()
+                }
             };
+
+            IDictionary<int, Fixedpriceconfig> currFixedPrices = null;
+            IDictionary<int, Variablepriceconfig> currVariablePrices = null;
+            Season currSeason = null;
+            int currMonth = -1;
+            while (queryFromDate <= paramToDate)
+            {
+                queryToDate = new DateTime(queryFromDate.Year, queryFromDate.Month, queryFromDate.Day, 23, 59, 59);
+
+                if (queryFromDate.Date == paramFromDate.Date)
+                {
+                    queryFromDate = paramFromDate;
+                }
+
+                if (queryFromDate.Date == paramToDate.Date)
+                {
+                    queryToDate = paramToDate;
+                }
+
+                if (currMonth != queryFromDate.Month)
+                {
+                    currFixedPrices = fixedPrices.Where(f => f.Value.Monthno == queryFromDate.Month).ToDictionary(f => f.Key, f => f.Value); //verified only changes at month (email)
+                    currVariablePrices = variablePrices.Where(v => v.Value.Monthno == queryFromDate.Month).ToDictionary(v => v.Key, v => v.Value);
+                    currSeason = currFixedPrices.First().Value.Season;
+                    currMonth = queryFromDate.Month;
+                }
+
+                IDictionary<int, Variablepriceconfig> currDayVariablePrices = currVariablePrices.Where(v => v.Value.Pricefromdate <= queryFromDate && v.Value.Pricetodate >= queryToDate)
+                    .ToDictionary(v => v.Key, v => v.Value); ;
+
+                tariffQueryResult.GridTariff.TariffPrice.PriceInfo.AddRange(
+                ProcessDay(queryFromDate,
+                    queryToDate,
+                    ref publicHolidays,
+                    ref currFixedPrices,
+                    ref currDayVariablePrices,
+                    ref currSeason));
+                queryFromDate = queryFromDate.AddDays(1).Date;
+            }
             return tariffQueryResult;
         }
 
@@ -145,6 +149,7 @@ namespace Kunde.TariffApi.Services.TariffQuery
                 calculatedVariablePrices = CalcVariablePricesDay(fromHour, toHour, ref variablePrices);
             }
 
+            fromTime = fromTime.Date;
             while (fromHour <= toHour)
             {
                 PriceInfo priceInfo = new PriceInfo()
