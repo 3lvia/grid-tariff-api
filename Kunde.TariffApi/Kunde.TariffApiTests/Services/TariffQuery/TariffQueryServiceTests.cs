@@ -28,19 +28,15 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
         private void Setup()
         {
             _mockLogger = new Mock<ITelemetryInsightsLogger>();
-
             var services = new ServiceCollection();
             var db = Guid.NewGuid().ToString();
             services.AddDbContext<TariffContext>(u => u.UseInMemoryDatabase(databaseName: db));
 
             var provider = services.BuildServiceProvider();
             _tariffContext = provider.GetRequiredService<TariffContext>();
-
             _TariffQueryService = new TariffQueryService(_tariffContext);
             _tariffTypeService = new TariffTypeService(_tariffContext);
-
             TestHelper testHelper = new TestHelper();
-
             _tariffContext.Add(testHelper.GetCompanyElvia());
             _tariffContext.Add(testHelper.GetCompanyFoobar());
 

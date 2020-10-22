@@ -22,7 +22,11 @@ namespace Kunde.TariffApi.Controllers
             _tariffTypeService = tariffTypeService;
             _telemetry = telemetry;
         }
-        // GET: api/<TariffTypeController>
+        /// <summary>
+        /// Get all tariffs
+        /// </summary>
+        /// <remarks>Service returns all available tariffs</remarks>
+        /// <returns>All tariffs</returns>
         [HttpGet]
         public IActionResult Get()
         {

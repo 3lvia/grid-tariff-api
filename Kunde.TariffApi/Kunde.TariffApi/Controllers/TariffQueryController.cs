@@ -29,7 +29,17 @@ namespace Kunde.TariffApi.Controllers
             _tariffQueryService = tariffQueryService;
         }
 
-        // GET: api/<TariffQueryController>
+        /// <summary>
+        /// Returns tariff data for a given tariff for a given timeperiod
+        /// </summary>
+        /// <remarks>Returns tariff data for a given tariff for a given timeperiod</remarks>
+        /// <param name="tariffQueryRequest">
+        /// JSON format. <br></br>
+        /// TariffKey dictates which tariff will be queried<br></br>
+        /// Range dictates which day to query. Valid values is yesterday,today,tomorrow<br></br>
+        /// StartTime/EndTime dictates which timeperiod to query.<br></br>
+        /// Range and StartTime/Endtime is mutual exclusive, meaning either one must be present, but not both<br></br>
+        /// <returns>TariffData matching query parameters</returns>
         [HttpGet]
         public IActionResult Get([FromQuery] TariffQueryRequest tariffQueryRequest)
         {
