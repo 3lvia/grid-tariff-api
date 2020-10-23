@@ -1,8 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: imageimport-api
+  name: kunde-tariff-api
 data:
   environment : "Dev"
   swaggerSettings.useSwaggerUI: "true"
-  importSettings.AllowedCorsOrigins: "https://localhost,http://localhost:8080,https://louvre.dev-elvia.io"

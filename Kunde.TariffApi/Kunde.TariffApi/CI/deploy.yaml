@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: imageimport-api
+  name: kunde-tariff-api
 spec:
   replicas: 1
   strategy:
@@ -11,21 +11,21 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: imageimport-api
+      app: kunde-tariff-api
   template:
     metadata:
       labels:
-        app: imageimport-api
+        app: kunde-tariff-api
     spec:
-      serviceAccountName: imageimport-api
+      serviceAccountName: kunde-tariff-api
       imagePullSecrets:
       - name: containerregistryprodsecret
       dnsConfig:
         options:
         - name: single-request-reopen
       containers:
-      - name: imageimport-api
-        image: containerregistryelvia.azurecr.io/louvre-imageimport-api:imagetag
+      - name: kunde-tariff-api
+        image: containerregistryelvia.azurecr.io/kunde-tariff-api:imagetag
         resources:
           requests:
             cpu: "300m"
@@ -52,34 +52,30 @@ spec:
           - name: SwaggerSettings__UseSwaggerUI
             valueFrom:
               configMapKeyRef:
-                name: imageimport-api
+                name: kunde-tariff-api
                 key: swaggerSettings.useSwaggerUI
           - name: SwaggerSettings__PathPrefix
-            value: "/imageimport"
-          - name: ImportSettings__AllowedCorsOrigins
-            valueFrom:
-              configMapKeyRef:
-                name: imageimport-api
-                key: importSettings.AllowedCorsOrigins
+            value: "/tariff-api"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: imageimport-api
-  name: imageimport-api
+    app: kunde-tariff-api
+  name: kunde-tariff-api
 spec:
   type: ClusterIP
   ports:
   - port: 80
-    name: imageimport-api-port
+    name: kunde-tariff-api-port
+    targetport: 8080
   selector:
-    app: imageimport-api
+    app: kunde-tariff-api
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: imageimport-api
+  name: kunde-tariff-api
   annotations:
     traefik.frontend.rule.type: PathPrefixStrip
     kubernetes.io/ingress.class: traefik
@@ -89,50 +85,24 @@ metadata:
     traefik.ingress.kubernetes.io/request-modifier: "ReplacePathRegex: ^/metrics(.*) /"
 spec:
   rules:
-  - host: louvre.:domaintag
+  - host: kunde.:domaintag
     http: 
       paths:
-      - path: /imageimport
+      - path: /tariff-api
         backend:
-          serviceName: imageimport-api
+          serviceName: kunde-tariff-api
           servicePort: 80
 ---
 kind: ServiceMonitor
 apiVersion: monitoring.coreos.com/v1
 metadata:
-  # Prometheus will scrape metrics on the http endpoint, imageimport-api-port
-  name: imageimport-api
-  namespace: louvre
+  # Prometheus will scrape metrics on the http endpoint, kunde-tariff-api-port
+  name: kunde-tariff-api
+  namespace: kunde
 spec:
   endpoints:
-  - port: imageimport-api-port
+  - port: kunde-tariff-api-port
     interval: 5s
   selector:
     matchLabels:
-      app: imageimport-api
----
-apiVersion: autoscaling/v2beta2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: imageimport-api
-  namespace: louvre
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: imageimport-api
-  minReplicas: 1
-  maxReplicas: 2
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 50
-    - type: Resource
-      resource:
-        name: memory
-        target:
-          type: Utilization
-          averageUtilization: 50
+      app: kunde-tariff-api

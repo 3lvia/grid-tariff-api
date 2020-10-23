@@ -1,5 +1,6 @@
 using Elvia.Configuration;
 using Elvia.Telemetry;
+using Elvia.Telemetry.Extensions;
 using Kunde.TariffApi.EntityFramework;
 using Kunde.TariffApi.Extensions;
 using Kunde.TariffApi.Services.TariffQuery;
@@ -13,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Prometheus;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Kunde.TariffApi
@@ -32,19 +34,15 @@ namespace Kunde.TariffApi
             services.AddAuthorization(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
-                    //                    .RequireAuthenticatedUser()
                     .RequireAssertion(context => context.HasScope("kunde.nett-tariff-api.machineaccess"))
                     .Build();
                 options.DefaultPolicy = policy;
             });
 
             services.AddControllers();
-
             var instrumentationKey = _configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key");
             services.AddStandardElviaTelemetryLogging(instrumentationKey);
-
             var authority = _configuration.EnsureHasValue("kunde:kv:elvid:generic:authority");
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
               .AddJwtBearer(options =>
               {
@@ -53,13 +51,10 @@ namespace Kunde.TariffApi
                   options.TokenValidationParameters.ValidateIssuer = false;
               });
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
             services.AddTransient<ITariffTypeService, TariffTypeService>();
             services.AddTransient<ITariffQueryService, TariffQueryService>();
-
             var connectionString = _configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string");
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(connectionString));
-
             var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
             services.AddSwaggerConfiguration(swaggerSettings);
         }
@@ -73,20 +68,17 @@ namespace Kunde.TariffApi
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
+            app.AddStandardElviaAspnetMetrics(); // After AddRouting(), and before UseEndpoints()
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapMetrics(); // This adds the '/metrics' url for Prometheus scraping
             });
-
-            //var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
-            //app.UseSwaggerConfiguration(swaggerSettings);
-
+            var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
+            app.UseSwaggerConfiguration(swaggerSettings);
         }
     }
 }
