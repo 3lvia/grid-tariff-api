@@ -202,9 +202,9 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
                 Assert.Equal(variablePriceConfig.Power, priceInfo.VariablePrice.Power);
                 Assert.Equal(priceInfo.VariablePrice.Taxes,
                     (variablePriceConfig.Taxenova + variablePriceConfig.Taxenergy + variablePriceConfig.Taxmva));
-                Assert.Equal(variablePriceConfig.Pricelevel.Pricelevel1, priceInfo.VariablePrice.Level);
+                Assert.Equal(variablePriceConfig.Pricelevel.PricelevelDescription, priceInfo.VariablePrice.Level);
                 Assert.Equal(variablePriceConfig.Uom.Currency, priceInfo.VariablePrice.Currency);
-                Assert.Equal(variablePriceConfig.Uom.Uom1, priceInfo.VariablePrice.Uom);
+                Assert.Equal(variablePriceConfig.Uom.Unit, priceInfo.VariablePrice.Uom);
             }
         }
 
@@ -235,9 +235,9 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
                     Assert.Equal(variablePriceConfig.Power, priceInfo.VariablePrice.Power);
                     Assert.Equal(priceInfo.VariablePrice.Taxes,
                         (variablePriceConfig.Taxenova + variablePriceConfig.Taxenergy + variablePriceConfig.Taxmva));
-                    Assert.Equal(variablePriceConfig.Pricelevel.Pricelevel1, priceInfo.VariablePrice.Level);
+                    Assert.Equal(variablePriceConfig.Pricelevel.PricelevelDescription, priceInfo.VariablePrice.Level);
                     Assert.Equal(variablePriceConfig.Uom.Currency, priceInfo.VariablePrice.Currency);
-                    Assert.Equal(variablePriceConfig.Uom.Uom1, priceInfo.VariablePrice.Uom);
+                    Assert.Equal(variablePriceConfig.Uom.Unit, priceInfo.VariablePrice.Uom);
                 }
             }
         }
@@ -255,7 +255,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
             var result = _TariffQueryService.QueryTariff("private_tou_rush", startDate, endDate);
             Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Count());
 
-            Uom uomKrHour = _tariffContext.Uom.Where(f => f.Id == uomID).FirstOrDefault();
+            UnitofMeasure uomKrHour = _tariffContext.Uom.Where(f => f.Id == uomID).FirstOrDefault();
             Assert.NotNull(uomKrHour);
 
             List<Fixedpriceconfig> fixedPriceConfigs = _tariffContext.Fixedpriceconfig.Where(f => f.Tarifftypeid == 1 && f.Monthno == 12).ToList();
@@ -276,7 +276,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
                             Assert.Equal(priceLevel.Level, fixedPriceConfig.Pricelevel.Pricelevel);
                             Assert.Equal(priceLevel.LevelInfo, fixedPriceConfig.Pricelevel.Levelinfo);
                             Assert.Equal(priceLevel.Currency, fixedPriceConfig.Uom.Currency);
-                            Assert.Equal(priceLevel.Uom, uomKrHour.Uom1);
+                            Assert.Equal(priceLevel.Uom, uomKrHour.Unit);
                             Assert.Equal(priceLevel.Fixed, fixedVal);
                             Assert.Equal(priceLevel.Taxes, taxesVal);
                             Assert.Equal(priceLevel.Total, totalVal);

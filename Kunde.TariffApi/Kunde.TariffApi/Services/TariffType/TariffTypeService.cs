@@ -24,7 +24,7 @@ namespace Kunde.TariffApi.Services.TariffType
                 tariffTypeContainer.TariffTypes.Add(new Models.TariffType()
                 {
                     TariffKey = tariffType.Tariffkey,
-                    Company = tariffType.Company.Company1,
+                    Company = tariffType.Company.CompanyName,
                     CustomerType = tariffType.Customertype,
                     Title = tariffType.Title,
                     Resolution = tariffType.Resolution,

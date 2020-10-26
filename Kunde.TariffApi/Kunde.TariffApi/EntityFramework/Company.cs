@@ -10,7 +10,7 @@ namespace Kunde.TariffApi.EntityFramework
         }
 
         public int Id { get; set; }
-        public string Company1 { get; set; }
+        public string CompanyName { get; set; }
 
         public virtual ICollection<Tarifftype> Tarifftype { get; set; }
     }

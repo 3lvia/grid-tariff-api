@@ -34,7 +34,7 @@ namespace Kunde.TariffApi.Controllers
             TariffTypeContainer tariffTypeContainer = _tariffTypeService.GetTariffTypes();
             _telemetry.TrackMetric($"TariffAPI|TimeToGetTariffTypesInSeconds", (double)processingTime.ElapsedMilliseconds / 1000);
 
-            return Ok(_tariffTypeService.GetTariffTypes());
+            return Ok(tariffTypeContainer);
         }
 
     }

@@ -20,7 +20,7 @@ namespace Kunde.TariffApiTests
             return new Company()
             {
                 Id = 1,
-                Company1 = "Elvia AS"
+                CompanyName = "Elvia AS"
             };
         }
 
@@ -29,7 +29,7 @@ namespace Kunde.TariffApiTests
             return new Company()
             {
                 Id = 2,
-                Company1 = "Foobar Inc"
+                CompanyName = "Foobar Inc"
             };
         }
 
@@ -65,7 +65,7 @@ namespace Kunde.TariffApiTests
             foreach (var tariffType in model)
             {
                 if (
-                    tariffType.Company.Equals(db.Company.Company1)
+                    tariffType.Company.Equals(db.Company.CompanyName)
                     && tariffType.CustomerType.Equals(db.Customertype)
                     && tariffType.Title.Equals(db.Title)
                     && tariffType.Resolution.Equals(db.Resolution)
@@ -77,9 +77,9 @@ namespace Kunde.TariffApiTests
             return false;
         }
 
-        public List<Uom> GetUoms()
+        public List<UnitofMeasure> GetUoms()
         {
-            List<Uom> retVal = new List<Uom>();
+            List<UnitofMeasure> retVal = new List<UnitofMeasure>();
             List<String> strElements = new List<string>()
             {
                 "1;NOK;kr/month",
@@ -90,10 +90,10 @@ namespace Kunde.TariffApiTests
             foreach (var strElement in strElements)
             {
                 string[] elements = strElement.Split(";");
-                retVal.Add(new Uom() { 
+                retVal.Add(new UnitofMeasure() { 
                     Id = Convert.ToInt32(elements[0]),
                     Currency = elements[1],
-                    Uom1 = elements[2]
+                    Unit = elements[2]
 
                 });
             }
@@ -168,7 +168,7 @@ namespace Kunde.TariffApiTests
                 {
                     Id = Convert.ToInt32(elements[ctr++]),
                     Sortorder = Convert.ToInt32(elements[ctr++]),
-                    Pricelevel1 = elements[2]
+                    PricelevelDescription = elements[2]
                 });;
             }
             return retval;

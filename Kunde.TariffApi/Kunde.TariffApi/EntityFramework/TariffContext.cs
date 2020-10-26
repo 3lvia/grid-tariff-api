@@ -20,7 +20,7 @@ namespace Kunde.TariffApi.EntityFramework
         public virtual DbSet<Publicholiday> Publicholiday { get; set; }
         public virtual DbSet<Season> Season { get; set; }
         public virtual DbSet<Tarifftype> Tarifftype { get; set; }
-        public virtual DbSet<Uom> Uom { get; set; }
+        public virtual DbSet<UnitofMeasure> Uom { get; set; }
         public virtual DbSet<Variablepriceconfig> Variablepriceconfig { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -38,7 +38,7 @@ namespace Kunde.TariffApi.EntityFramework
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Company1)
+                entity.Property(e => e.CompanyName)
                     .IsRequired()
                     .HasColumnName("company")
                     .HasMaxLength(100)
@@ -137,13 +137,13 @@ namespace Kunde.TariffApi.EntityFramework
             {
                 entity.ToTable("pricelevel");
 
-                entity.HasIndex(e => e.Pricelevel1)
+                entity.HasIndex(e => e.PricelevelDescription)
                     .HasName("UQ__pricelev__EDDD99B6B060FA0B")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Pricelevel1)
+                entity.Property(e => e.PricelevelDescription)
                     .IsRequired()
                     .HasColumnName("pricelevel")
                     .HasMaxLength(100)
@@ -231,11 +231,11 @@ namespace Kunde.TariffApi.EntityFramework
                     .HasConstraintName("FK__tarifftyp__compa__55F4C372");
             });
 
-            modelBuilder.Entity<Uom>(entity =>
+            modelBuilder.Entity<UnitofMeasure>(entity =>
             {
                 entity.ToTable("uom");
 
-                entity.HasIndex(e => new { e.Currency, e.Uom1 })
+                entity.HasIndex(e => new { e.Currency, e.Unit })
                     .HasName("uc_uom")
                     .IsUnique();
 
@@ -247,7 +247,7 @@ namespace Kunde.TariffApi.EntityFramework
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Uom1)
+                entity.Property(e => e.Unit)
                     .IsRequired()
                     .HasColumnName("uom")
                     .HasMaxLength(255)
@@ -336,11 +336,6 @@ namespace Kunde.TariffApi.EntityFramework
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__variablep__uomid__59C55456");
             });
-
-
-            OnModelCreatingPartial(modelBuilder);
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

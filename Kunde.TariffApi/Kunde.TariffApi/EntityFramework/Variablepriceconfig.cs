@@ -23,6 +23,6 @@ namespace Kunde.TariffApi.EntityFramework
         public virtual Pricelevel Pricelevel { get; set; }
         public virtual Season Season { get; set; }
         public virtual Tarifftype Tarifftype { get; set; }
-        public virtual Uom Uom { get; set; }
+        public virtual UnitofMeasure Uom { get; set; }
     }
 }

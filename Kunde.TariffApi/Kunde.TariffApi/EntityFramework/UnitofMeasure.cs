@@ -2,9 +2,9 @@
 
 namespace Kunde.TariffApi.EntityFramework
 {
-    public partial class Uom
+    public partial class UnitofMeasure
     {
-        public Uom()
+        public UnitofMeasure()
         {
             Fixedpriceconfig = new HashSet<Fixedpriceconfig>();
             Variablepriceconfig = new HashSet<Variablepriceconfig>();
@@ -12,7 +12,7 @@ namespace Kunde.TariffApi.EntityFramework
 
         public int Id { get; set; }
         public string Currency { get; set; }
-        public string Uom1 { get; set; }
+        public string Unit { get; set; }
 
         public virtual ICollection<Fixedpriceconfig> Fixedpriceconfig { get; set; }
         public virtual ICollection<Variablepriceconfig> Variablepriceconfig { get; set; }
