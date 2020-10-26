@@ -70,12 +70,17 @@ namespace Kunde.TariffApi.Services.TariffQuery
                         && f.Monthno == queryFromDate.Month
                         && f.Pricefromdate.Date <= queryToDate.Date
                         && f.Pricetodate.Date >= queryFromDate.Date)
+                        .Include(f => f.Pricelevel)
+                        .Include(f => f.Uom)
+                        .Include(f => f.Season)
                         .ToDictionary(f => f.Id, f => f); //verified only changes at month (email)
                     currVariablePrices = _tariffContext.Variablepriceconfig.Where(v => v.Tarifftypeid == tariffType.Id
                         && v.Monthno == queryFromDate.Month
                         && v.Pricefromdate.Date <= queryToDate.Date
-                        && v.Pricetodate.Date >= queryFromDate.Date
-                        ).ToDictionary(v => v.Id, v => v);
+                        && v.Pricetodate.Date >= queryFromDate.Date)
+                        .Include(v => v.Uom)
+                        .Include(v => v.Pricelevel)
+                        .ToDictionary(v => v.Id, v => v);
 
                     currentFixedPrices = GetMonthlyFixedPrices(ref currFixedPrices, queryFromDate.Year, queryFromDate.Month, fixedPriceUnitOfMeasure);
                     currSeason = currFixedPrices.First().Value.Season;

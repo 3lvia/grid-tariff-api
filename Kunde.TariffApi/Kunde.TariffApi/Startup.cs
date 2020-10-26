@@ -2,7 +2,6 @@ using Elvia.Configuration;
 using Elvia.Telemetry;
 using Elvia.Telemetry.Extensions;
 using Kunde.TariffApi.EntityFramework;
-using Kunde.TariffApi.Extensions;
 using Kunde.TariffApi.Services.TariffQuery;
 using Kunde.TariffApi.Services.TariffType;
 using Kunde.TariffApi.Swagger;
@@ -34,7 +33,7 @@ namespace Kunde.TariffApi
             services.AddAuthorization(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
-                    .RequireAssertion(context => context.HasScope("kunde.nett-tariff-api.machineaccess"))
+                    .RequireClaim("scope", "kunde.nett-tariff-api.machineaccess")
                     .Build();
                 options.DefaultPolicy = policy;
             });
