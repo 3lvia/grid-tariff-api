@@ -388,7 +388,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
                 bool isHoliday = dateIterator.DayOfWeek == DayOfWeek.Saturday || dateIterator.DayOfWeek == DayOfWeek.Sunday;
                 if (isHoliday)
                 {
-                    Variablepriceconfig lowPriceVariablePriceConfig= variablePriceConfigs.OrderBy(v => v.Pricelevel.Sortorder).FirstOrDefault();
+                    Variablepriceconfig lowPriceVariablePriceConfig = variablePriceConfigs.OrderBy(v => v.Pricelevel.Sortorder).FirstOrDefault();
                     Assert.NotNull(lowPriceVariablePriceConfig);
                     Assert.Equal(24, priceInfos.Count(p => p.VariablePrice.Energy.Equals(lowPriceVariablePriceConfig.Energy)));
                     Assert.Equal(24, priceInfos.Count(p => p.VariablePrice.Power.Equals(lowPriceVariablePriceConfig.Power)));
