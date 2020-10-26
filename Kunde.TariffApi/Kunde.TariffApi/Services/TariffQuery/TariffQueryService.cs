@@ -136,7 +136,7 @@ namespace Kunde.TariffApi.Services.TariffQuery
                     ExpiredAt = fromTime.AddHours(fromHour + 1),
                     HoursShortName = $"{fromHour.ToString().PadLeft(2, '0')}-{(fromHour + 1).ToString().PadLeft(2, '0')}",
                     Season = season.Season1,
-                    PublicHoliday = isPublicHoliday ? "yes" : "no"
+                    PublicHoliday = isPublicHoliday
                 };
                 priceInfo.FixedPrices = fixedPrices;
                 priceInfo.VariablePrice = calculatedVariablePrices[fromHour];

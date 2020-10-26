@@ -84,15 +84,14 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
 
             var result = _TariffQueryService.QueryTariff("private_tou_rush", startDate, endDate);
 
-            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 12 && f.PublicHoliday.Equals("no")).Count());
-            Assert.Empty(result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 12 && !f.PublicHoliday.Equals("no")));
+            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 12 && !f.PublicHoliday).Count());
+            Assert.Empty(result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 12 && f.PublicHoliday));
 
-            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 1 && f.StartTime.Day == 1 && f.PublicHoliday.Equals("yes")).Count());
-            Assert.Empty(result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 1 && f.StartTime.Day == 1 && !f.PublicHoliday.Equals("yes")));
+            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 1 && f.StartTime.Day == 1 && f.PublicHoliday).Count());
+            Assert.Empty(result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 1 && f.StartTime.Day == 1 && !f.PublicHoliday));
 
-            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 1 && f.StartTime.Day == 2 && f.PublicHoliday.Equals("no")).Count());
-            Assert.Empty(result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 1 && f.StartTime.Day == 2 && !f.PublicHoliday.Equals("no")));
-
+            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 1 && f.StartTime.Day == 2 && !f.PublicHoliday).Count());
+            Assert.Empty(result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 1 && f.StartTime.Day == 2 && f.PublicHoliday));
         }
 
         [Fact()]
