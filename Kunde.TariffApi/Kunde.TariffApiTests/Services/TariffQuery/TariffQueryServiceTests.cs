@@ -59,12 +59,12 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
         {
             Setup();
             DateTime startDate = new DateTime(2021, 03, 31);
-            DateTime endDate = new DateTime(2021, 04, 01,23,59,59);
+            DateTime endDate = new DateTime(2021, 04, 01, 23, 59, 59);
 
             Season SeasonWinter = _tariffContext.Season.Where(s => s.Id == 5).FirstOrDefault();
             Season SeasonSummer = _tariffContext.Season.Where(s => s.Id == 2).FirstOrDefault();
 
-            var result = _TariffQueryService.QueryTariff("private_tou_rush",startDate,endDate);
+            var result = _TariffQueryService.QueryTariff("private_tou_rush", startDate, endDate);
 
             var priceinfosMarch = result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 3);
             Assert.Equal(24, priceinfosMarch.Count());
@@ -84,7 +84,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
 
             var result = _TariffQueryService.QueryTariff("private_tou_rush", startDate, endDate);
 
-            Assert.Equal(24,result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 12 && f.PublicHoliday.Equals("no")).Count());
+            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 12 && f.PublicHoliday.Equals("no")).Count());
             Assert.Empty(result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 12 && !f.PublicHoliday.Equals("no")));
 
             Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 1 && f.StartTime.Day == 1 && f.PublicHoliday.Equals("yes")).Count());
@@ -265,7 +265,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
             {
                 foreach (var priceInfo in result.GridTariff.TariffPrice.PriceInfo)
                 {
-                   foreach (var fixedPrices in priceInfo.FixedPrices)
+                    foreach (var fixedPrices in priceInfo.FixedPrices)
                     {
                         foreach (var priceLevel in fixedPrices.PriceLevel)
                         {
@@ -307,6 +307,132 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
                 Assert.Single(priceInfo.FixedPrices);
                 Assert.NotNull(priceInfo.FixedPrices.FirstOrDefault());
                 Assert.NotNull(priceInfo.VariablePrice);
+            }
+        }
+
+        [Fact()]
+        public void ChangeInFixedTariffTest()
+        {
+            Setup();
+            DateTime startDate = new DateTime(2024, 12, 27);
+            DateTime endDate = new DateTime(2025, 01, 03).AddMinutes(-1);
+
+            Fixedpriceconfig fixedpriceconfigFirst = _tariffContext.Fixedpriceconfig.Where(f => f.Tarifftypeid == 1 && f.Monthno == 12 && f.Pricefromdate.Year < endDate.Year).FirstOrDefault();
+            Fixedpriceconfig fixedpriceconfigLast = _tariffContext.Fixedpriceconfig.Where(f => f.Tarifftypeid == 1 && f.Monthno == 1 && f.Pricefromdate.Year == endDate.Year).FirstOrDefault();
+            Assert.NotNull(fixedpriceconfigFirst);
+            Assert.NotNull(fixedpriceconfigLast);
+
+
+            var result = _TariffQueryService.QueryTariff("private_tou_rush", startDate, endDate);
+
+            DateTime dateIterator = startDate;
+            while (dateIterator.Date <= endDate.Date)
+            {
+                int hoursInMonth = DateTime.DaysInMonth(dateIterator.Year, dateIterator.Month) * 24;
+
+                List<PriceInfo> priceInfos = result.GridTariff.TariffPrice.PriceInfo.Where(p => p.StartTime.Date.Equals(dateIterator.Date)).ToList();
+                Assert.Equal(24, priceInfos.Count());
+
+                Decimal fixedVal;
+                Decimal taxesVal;
+                Decimal totalVal;
+                if (dateIterator.Year == fixedpriceconfigFirst.Pricetodate.Year)
+                {
+                    fixedVal = Decimal.Round(fixedpriceconfigFirst.Fixed / hoursInMonth, 4);
+                    taxesVal = Decimal.Round(fixedpriceconfigFirst.Taxes / hoursInMonth, 4);
+                    totalVal = fixedVal + taxesVal;
+                }
+                else
+                {
+                    fixedVal = Decimal.Round(fixedpriceconfigLast.Fixed / hoursInMonth, 4);
+                    taxesVal = Decimal.Round(fixedpriceconfigLast.Taxes / hoursInMonth, 4);
+                    totalVal = fixedVal + taxesVal;
+                }
+
+                foreach (var priceInfo in priceInfos)
+                {
+                    Assert.Single(priceInfo.FixedPrices);
+                    FixedPrices fixedPrice = priceInfo.FixedPrices.FirstOrDefault();
+                    Assert.Single(fixedPrice.PriceLevel);
+                    PriceLevel priceLevel = fixedPrice.PriceLevel.FirstOrDefault();
+
+                    Assert.Equal(fixedVal, priceLevel.Fixed);
+                    Assert.Equal(taxesVal, priceLevel.Taxes);
+                    Assert.Equal(totalVal, priceLevel.Total);
+
+                }
+                dateIterator = dateIterator.AddDays(1);
+            }
+        }
+
+        [Fact()]
+        public void ChangeInariableTariffTest()
+        {
+            Setup();
+            DateTime startDate = new DateTime(2024, 12, 27);
+            DateTime endDate = new DateTime(2025, 01, 05).AddMinutes(-1);
+
+            var result = _TariffQueryService.QueryTariff("private_tou_rush", startDate, endDate);
+
+            DateTime dateIterator = startDate;
+            while (dateIterator.Date <= endDate.Date)
+            {
+                List<Variablepriceconfig> variablePriceConfigs = _tariffContext.Variablepriceconfig.Where(v => v.Pricefromdate.Date <= dateIterator.Date
+                && v.Pricetodate >= dateIterator.Date
+                && v.Monthno == dateIterator.Month
+                && v.Tarifftypeid == 1).ToList();
+
+                List<PriceInfo> priceInfos = result.GridTariff.TariffPrice.PriceInfo.Where(p => p.StartTime.Date.Equals(dateIterator.Date)).ToList();
+                Assert.Equal(24, priceInfos.Count());
+
+                bool isHoliday = dateIterator.DayOfWeek == DayOfWeek.Saturday || dateIterator.DayOfWeek == DayOfWeek.Sunday;
+                if (isHoliday)
+                {
+                    Variablepriceconfig lowPriceVariablePriceConfig= variablePriceConfigs.OrderBy(v => v.Pricelevel.Sortorder).FirstOrDefault();
+                    Assert.NotNull(lowPriceVariablePriceConfig);
+                    Assert.Equal(24, priceInfos.Count(p => p.VariablePrice.Energy.Equals(lowPriceVariablePriceConfig.Energy)));
+                    Assert.Equal(24, priceInfos.Count(p => p.VariablePrice.Power.Equals(lowPriceVariablePriceConfig.Power)));
+                    Assert.Equal(24, priceInfos.Count(p => p.VariablePrice.Total.Equals(lowPriceVariablePriceConfig.Total)));
+
+                }
+                else
+                {
+                    int ctr = 0;
+                    foreach (var variablePriceConfig in variablePriceConfigs)
+                    {
+                        IEnumerable<int> configHours = from hour in variablePriceConfig.Hours.Split(';') select int.Parse(hour);
+                        for (int i = 0; i < configHours.Count(); i++)
+                        {
+                            int hour = configHours.ElementAt(i);
+                            PriceInfo priceInfo = priceInfos.Where(f => f.StartTime.Hour == hour).FirstOrDefault();
+                            Assert.NotNull(priceInfo);
+                            Assert.Equal(variablePriceConfig.Total, priceInfo.VariablePrice.Total);
+                            Assert.Equal(variablePriceConfig.Energy, priceInfo.VariablePrice.Energy);
+                            Assert.Equal(variablePriceConfig.Power, priceInfo.VariablePrice.Power);
+                            Assert.Equal(priceInfo.VariablePrice.Taxes,
+                            (variablePriceConfig.Taxenova + variablePriceConfig.Taxenergy + variablePriceConfig.Taxmva));
+                            Assert.Equal(variablePriceConfig.Pricelevel.PricelevelDescription, priceInfo.VariablePrice.Level);
+                            Assert.Equal(variablePriceConfig.Uom.Currency, priceInfo.VariablePrice.Currency);
+                            Assert.Equal(variablePriceConfig.Uom.Unit, priceInfo.VariablePrice.Uom);
+                            ctr++;
+
+                            if (dateIterator.Year == startDate.Year)
+                            {
+                                Assert.True(1 > priceInfo.VariablePrice.Total);
+                                Assert.True(1 > priceInfo.VariablePrice.Energy);
+                                Assert.True(1 > priceInfo.VariablePrice.Taxes);
+                            }
+                            else
+                            {
+                                Assert.True(1 < priceInfo.VariablePrice.Total);
+                                Assert.True(1 < priceInfo.VariablePrice.Energy);
+                                Assert.True(1 < priceInfo.VariablePrice.Taxes);
+                            }
+                        }
+                    }
+                    Assert.Equal(24, ctr);
+                }
+                dateIterator = dateIterator.AddDays(1);
             }
         }
     }
