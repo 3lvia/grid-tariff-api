@@ -9,9 +9,9 @@ namespace Kunde.TariffApi.Swagger
 
         public string PathPrefix { get; set; }
 
-        public string Title => "Effect Tariff API";
+        public string Title => "Grid Tariff API";
 
-        public string Description => "Provides effect tarrifs";
+        public string Description => "Provides grid tarrifs";
 
         public string Version => "v1";
 

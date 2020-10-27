@@ -15,6 +15,9 @@ using k8s.Models;
 using Kunde.TariffApi.Models.TariffQuery;
 using System.Linq;
 using Xunit;
+using Kunde.TariffApi.Config;
+using System.ComponentModel.DataAnnotations;
+using System.Collections;
 
 namespace Kunde.TariffApi.Controllers.Tests
 {
@@ -38,9 +41,10 @@ namespace Kunde.TariffApi.Controllers.Tests
             var provider = services.BuildServiceProvider();
             _tariffContext = provider.GetRequiredService<TariffContext>();
 
+            TariffQueryValidationSettings tariffQueryValidationSettings = new TariffQueryValidationSettings() { MinStartDateAllowed = new DateTime(2020, 11, 01)};
             _TariffQueryService = new TariffQueryService(_tariffContext);
             _tariffTypeService = new TariffTypeService(_tariffContext);
-            _tariffQueryController = new TariffQueryController(_mockLogger.Object, _tariffTypeService, _TariffQueryService);
+            _tariffQueryController = new TariffQueryController(_mockLogger.Object, _tariffTypeService, _TariffQueryService, tariffQueryValidationSettings);
 
             TestHelper testHelper = new TestHelper();
 
@@ -72,78 +76,78 @@ namespace Kunde.TariffApi.Controllers.Tests
         }
 
         [Fact()]
-        public void GETNoRangeOrPeriodTest()
+        public void GETStartTestBeforeMinDateTest()
         {
             Setup();
-            var actionResult = _tariffQueryController.Get(new Models.TariffQuery.TariffQueryRequest() { TariffKey = "private_tou_rush" });
+            TariffQueryRequest tariffQuery = new TariffQueryRequest() { TariffKey = "private_tou_rush", Range = "today", StartTime = new DateTime(2020,01,01), EndTime = DateTime.MaxValue};
+            var actionResult = _tariffQueryController.Get(null);
             BadRequestObjectResult result = actionResult as BadRequestObjectResult;
             Assert.Equal(400, result.StatusCode);
+        }
+
+        [Fact()]
+        public void GETNoRangeOrPeriodTest()
+        {
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() {  TariffKey = "private_tou_rush" } ;
+            List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
+            Assert.Equal(3, validationResults.Count());
         }
 
         [Fact()]
         public void GETRangeAndStartDateTest()
         {
-            Setup();
-            var actionResult = _tariffQueryController.Get(new Models.TariffQuery.TariffQueryRequest() { TariffKey = "private_tou_rush", StartTime = DateTime.Now });
-            BadRequestObjectResult result = actionResult as BadRequestObjectResult;
-            Assert.Equal(400, result.StatusCode);
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() {  TariffKey = "private_tou_rush", Range = "today", StartTime = DateTime.Now };
+            List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
+            Assert.Equal(1, validationResults.Count());
         }
 
         [Fact()]
         public void GETRangeAndEndDateTest()
         {
-            Setup();
-            var actionResult = _tariffQueryController.Get(new Models.TariffQuery.TariffQueryRequest() { TariffKey = "private_tou_rush", EndTime = DateTime.Now });
-            BadRequestObjectResult result = actionResult as BadRequestObjectResult;
-            Assert.Equal(400, result.StatusCode);
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", Range = "today", EndTime = DateTime.Now };
+            List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
+            Assert.Equal(1, validationResults.Count());
         }
 
         [Fact()]
         public void GETNonExistingTariffKeyTest()
         {
-            Setup();
-            var actionResult = _tariffQueryController.Get(new Models.TariffQuery.TariffQueryRequest() { TariffKey = "NotExisting"});
-            BadRequestObjectResult result = actionResult as BadRequestObjectResult;
-            Assert.Equal(400, result.StatusCode);
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "NotExisting" };
+            List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
+            Assert.Equal(3, validationResults.Count());
         }
-
-
 
         [Fact()]
         public void GETBothDatesMissingTest()
         {
-            Setup();
-            var actionResult = _tariffQueryController.Get(new Models.TariffQuery.TariffQueryRequest() { TariffKey = "private_tou_rush"});
-            BadRequestObjectResult result = actionResult as BadRequestObjectResult;
-            Assert.Equal(400, result.StatusCode);
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush"};
+            List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
+            Assert.Equal(3,validationResults.Count());
         }
 
 
         [Fact()]
         public void GETStartDateMissingTest()
         {
-            Setup();
-            var actionResult = _tariffQueryController.Get(new Models.TariffQuery.TariffQueryRequest() { TariffKey = "private_tou_rush", EndTime = DateTime.MaxValue });
-            BadRequestObjectResult result = actionResult as BadRequestObjectResult;
-            Assert.Equal(400, result.StatusCode);
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", EndTime = DateTime.MaxValue };
+            List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
+            Assert.Single(validationResults);
         }
 
         [Fact()]
         public void GETEndDateMissingTest()
         {
-            Setup();
-            var actionResult = _tariffQueryController.Get(new Models.TariffQuery.TariffQueryRequest() { TariffKey = "private_tou_rush", StartTime = DateTime.MaxValue });
-            BadRequestObjectResult result = actionResult as BadRequestObjectResult;
-            Assert.Equal(400, result.StatusCode);
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", StartTime = DateTime.MaxValue };
+            List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
+            Assert.Single(validationResults);
         }
 
         [Fact()]
         public void StartDateGreaterTest()
         {
-            Setup();
-            var actionResult = _tariffQueryController.Get(new Models.TariffQuery.TariffQueryRequest() { TariffKey = "private_tou_rush", StartTime = DateTime.MaxValue, EndTime = DateTime.MinValue });
-            BadRequestObjectResult result = actionResult as BadRequestObjectResult;
-            Assert.Equal(400, result.StatusCode);
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", StartTime = DateTime.MaxValue, EndTime = DateTime.MinValue };
+            List<ValidationResult>  validationResults = tariffQueryRequest.Validate(null).ToList();
+            Assert.Single(validationResults);
         }
     }
 }

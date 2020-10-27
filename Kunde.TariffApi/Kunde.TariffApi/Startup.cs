@@ -1,6 +1,7 @@
 using Elvia.Configuration;
 using Elvia.Telemetry;
 using Elvia.Telemetry.Extensions;
+using Kunde.TariffApi.Config;
 using Kunde.TariffApi.EntityFramework;
 using Kunde.TariffApi.Services.TariffQuery;
 using Kunde.TariffApi.Services.TariffType;
@@ -54,6 +55,8 @@ namespace Kunde.TariffApi
             services.AddTransient<ITariffQueryService, TariffQueryService>();
             var connectionString = _configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string");
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(connectionString));
+            var tariffQueryValidationSettings = _configuration.GetSection("TariffQueryValidationSettings").Get<TariffQueryValidationSettings>();
+            services.AddSingleton(tariffQueryValidationSettings);
             var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
             services.AddSwaggerConfiguration(swaggerSettings);
         }

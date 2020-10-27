@@ -28,7 +28,9 @@ namespace Kunde.TariffApi.Services.TariffQuery
 
             Tarifftype tariffType = _tariffContext.Tarifftype.Where(t => t.Tariffkey.Equals(tariffKey)).Include(t => t.Company).FirstOrDefault();
             UnitofMeasure fixedPriceUnitOfMeasure = _tariffContext.Uom.Where(u => u.Id == _fixedPriceUnitOfMeasureId).FirstOrDefault();
-            Dictionary <DateTime, String> publicHolidays = _tariffContext.Publicholiday.Where(p => p.Holidaydate >= queryFromDate && p.Holidaydate <= queryToDate)
+            Dictionary <DateTime, String> publicHolidays = _tariffContext.Publicholiday.Where(
+                p => p.Holidaydate >= queryFromDate 
+                && p.Holidaydate <= queryToDate)
                 .ToDictionary(p => p.Holidaydate, p => p.Description);
 
             tariffQueryResult.GridTariff = new GridTariff
@@ -55,7 +57,7 @@ namespace Kunde.TariffApi.Services.TariffQuery
             List<FixedPrices> currentFixedPrices = null;
             while (queryFromDate <= paramToDate)
             {
-                if (queryFromDate.Date == paramToDate.Date)     //last day, limit to hhmmd as in request
+                if (queryFromDate.Date == paramToDate.Date)     //last day, limit to hhmmdd as in request
                 {
                     queryToDate = paramToDate;
                 }
