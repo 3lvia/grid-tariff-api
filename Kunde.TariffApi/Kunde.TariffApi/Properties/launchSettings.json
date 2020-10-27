@@ -15,8 +15,7 @@
       "launchUrl": "TariffQuery",
       "environmentVariables": {
         "VAULT_ADDR": "https://vault.dev-elvia.io/",
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "GITHUB_TOKEN": "c8b1f8964251833c8666a1f8f15cda8698a2b63e"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "Kunde.TariffApi": {
