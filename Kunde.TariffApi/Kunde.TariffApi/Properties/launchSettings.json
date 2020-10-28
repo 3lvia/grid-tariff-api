@@ -3,9 +3,7 @@
     "Kunde.TariffAPI": {
       "commandName": "Project",
       "environmentVariables": {
-        "VAULT_ADDR": "https://vault.dev-elvia.io/",
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "GITHUB_TOKEN": "7bf73719c09bbbe09aee869391a9f0f7fd615733"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:5000"
     }
