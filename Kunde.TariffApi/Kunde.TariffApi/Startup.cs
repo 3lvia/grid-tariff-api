@@ -54,7 +54,7 @@ namespace Kunde.TariffApi
             services.AddTransient<ITariffTypeService, TariffTypeService>();
             services.AddTransient<ITariffQueryService, TariffQueryService>();
             var connectionString = _configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string");
-            services.AddDbContext<TariffContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<TariffContext>(options => options.UseSqlServer(connectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)) ;
             var tariffQueryValidationSettings = _configuration.GetSection("TariffQueryValidationSettings").Get<TariffQueryValidationSettings>();
             services.AddSingleton(tariffQueryValidationSettings);
             var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
