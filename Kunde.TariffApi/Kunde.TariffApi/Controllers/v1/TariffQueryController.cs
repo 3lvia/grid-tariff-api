@@ -12,7 +12,7 @@ using System.Diagnostics;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Kunde.TariffApi.Controllers
+namespace Kunde.TariffApi.Controllers.v1    
 {
     [ApiController]
     [Authorize]
@@ -40,7 +40,7 @@ namespace Kunde.TariffApi.Controllers
         /// Returns tariff data for a given tariff for a given timeperiod
         /// </summary>
         /// <remarks>Returns tariff data for a given tariff for a given timeperiod</remarks>
-        /// <param name="tariffQueryRequest">
+        /// <param name="tariffQueryRequest"></param>
         /// JSON format. <br></br>
         /// TariffKey dictates which tariff will be queried<br></br>
         /// Range dictates which day to query. Valid values is yesterday,today,tomorrow<br></br>

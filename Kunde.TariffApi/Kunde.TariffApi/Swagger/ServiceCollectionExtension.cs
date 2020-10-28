@@ -37,7 +37,7 @@ namespace Kunde.TariffApi.Swagger
                     Title = settings.Title,
                     Description = settings.Description,
                 });
-                options.IncludeXmlComments(Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "ImageImportApi.xml"));
+                options.IncludeXmlComments(Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "GridTariffAPI.xml"));
             });
 
             return services;

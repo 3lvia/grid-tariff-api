@@ -65,8 +65,8 @@ namespace Kunde.TariffApi
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(connectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)) ;
             var tariffQueryValidationSettings = _configuration.GetSection("TariffQueryValidationSettings").Get<TariffQueryValidationSettings>();
             services.AddSingleton(tariffQueryValidationSettings);
-            //var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
-            //services.AddSwaggerConfiguration(swaggerSettings);
+            var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
+            services.AddSwaggerConfiguration(swaggerSettings);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,8 +87,8 @@ namespace Kunde.TariffApi
                 endpoints.MapControllers();
                 endpoints.MapMetrics(); // This adds the '/metrics' url for Prometheus scraping
             });
-            //var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
-            //app.UseSwaggerConfiguration(swaggerSettings);
+            var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
+            app.UseSwaggerConfiguration(swaggerSettings);
         }
     }
 }

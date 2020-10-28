@@ -1,4 +1,4 @@
-﻿using Kunde.TariffApi.Controllers;
+﻿using Kunde.TariffApi.Controllers.v1;
 using System;
 using System.Collections.Generic;
 using System.Text;

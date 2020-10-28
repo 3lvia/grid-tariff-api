@@ -1,4 +1,4 @@
-﻿using Kunde.TariffApi.Controllers;
+﻿using Kunde.TariffApi.Controllers.v1;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -98,7 +98,7 @@ namespace Kunde.TariffApi.Controllers.Tests
         {
             TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() {  TariffKey = "private_tou_rush", Range = "today", StartTime = DateTime.Now };
             List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
-            Assert.Equal(1, validationResults.Count());
+            Assert.Single(validationResults);
         }
 
         [Fact()]
@@ -106,7 +106,7 @@ namespace Kunde.TariffApi.Controllers.Tests
         {
             TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", Range = "today", EndTime = DateTime.Now };
             List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
-            Assert.Equal(1, validationResults.Count());
+            Assert.Single(validationResults);
         }
 
         [Fact()]

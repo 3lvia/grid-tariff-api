@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Kunde.TariffApi.Controllers
+namespace Kunde.TariffApi.Controllers.v1
 {
     [ApiController]
     [Authorize]
