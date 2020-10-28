@@ -10,9 +10,10 @@ using System.Diagnostics;
 
 namespace Kunde.TariffApi.Controllers
 {
-    [Route("[controller]")]
     [ApiController]
     [Authorize]
+    [ApiVersion("1.0")]
+    [Route("api/{v:apiVersion}/tarifftype")]
     public class TariffTypeController : ControllerBase
     {
         private readonly ITariffTypeService _tariffTypeService;

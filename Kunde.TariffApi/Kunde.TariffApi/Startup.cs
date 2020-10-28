@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,6 +41,13 @@ namespace Kunde.TariffApi
             });
 
             services.AddControllers();
+            services.AddApiVersioning(x =>
+            {
+                x.DefaultApiVersion = new ApiVersion(1, 0);
+                x.AssumeDefaultVersionWhenUnspecified = true;
+                x.ReportApiVersions = true;
+            });
+
             var instrumentationKey = _configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key");
             services.AddStandardElviaTelemetryLogging(instrumentationKey);
             var authority = _configuration.EnsureHasValue("kunde:kv:elvid:generic:authority");
@@ -57,8 +65,8 @@ namespace Kunde.TariffApi
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(connectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)) ;
             var tariffQueryValidationSettings = _configuration.GetSection("TariffQueryValidationSettings").Get<TariffQueryValidationSettings>();
             services.AddSingleton(tariffQueryValidationSettings);
-            var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
-            services.AddSwaggerConfiguration(swaggerSettings);
+            //var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
+            //services.AddSwaggerConfiguration(swaggerSettings);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,8 +87,8 @@ namespace Kunde.TariffApi
                 endpoints.MapControllers();
                 endpoints.MapMetrics(); // This adds the '/metrics' url for Prometheus scraping
             });
-            var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
-            app.UseSwaggerConfiguration(swaggerSettings);
+            //var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
+            //app.UseSwaggerConfiguration(swaggerSettings);
         }
     }
 }
