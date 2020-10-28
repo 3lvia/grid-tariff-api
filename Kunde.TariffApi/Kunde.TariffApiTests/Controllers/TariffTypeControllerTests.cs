@@ -1,17 +1,15 @@
-﻿using Kunde.TariffApi.Controllers.v1;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Moq;
-using Elvia.Telemetry;
-using Xunit;
-using Kunde.TariffApi.Services.TariffType;
+﻿using Elvia.Telemetry;
+using Kunde.TariffApi.Controllers.v1;
 using Kunde.TariffApi.EntityFramework;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
 using Kunde.TariffApi.Models;
+using Kunde.TariffApi.Services.TariffType;
 using Kunde.TariffApiTests;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using System;
 using System.Linq;
+using Xunit;
 
 namespace Kunde.TariffApi.Controllers.Tests
 {

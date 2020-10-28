@@ -46,7 +46,7 @@ namespace Kunde.TariffApi.Models.TariffQuery
                 {
                     yield return new ValidationResult(
                       $"StartTime Not specified",
-                      new[] {nameof(StartTime)});
+                      new[] { nameof(StartTime) });
                 }
                 if (!hasEnd)
                 {

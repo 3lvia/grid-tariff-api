@@ -1,17 +1,14 @@
-﻿using Kunde.TariffApi.Services.TariffQuery;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Elvia.Telemetry;
-using Moq;
-using Kunde.TariffApi.Services.TariffType;
+﻿using Elvia.Telemetry;
 using Kunde.TariffApi.EntityFramework;
-using Microsoft.Extensions.DependencyInjection;
+using Kunde.TariffApi.Models.TariffQuery;
+using Kunde.TariffApi.Services.TariffType;
 using Kunde.TariffApiTests;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using Kunde.TariffApi.Models.TariffQuery;
-using System.Xml.Schema;
 using Xunit;
 
 namespace Kunde.TariffApi.Services.TariffQuery.Tests

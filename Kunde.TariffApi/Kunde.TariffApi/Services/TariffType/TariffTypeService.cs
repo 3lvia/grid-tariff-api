@@ -1,7 +1,6 @@
 ﻿using Kunde.TariffApi.EntityFramework;
 using Kunde.TariffApi.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 
 namespace Kunde.TariffApi.Services.TariffType

@@ -1,10 +1,7 @@
 ﻿using Kunde.TariffApi.EntityFramework;
-using Kunde.TariffApi.Models.TariffQuery;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
 
 namespace Kunde.TariffApiTests
 {
@@ -12,10 +9,10 @@ namespace Kunde.TariffApiTests
     {
         public TestHelper()
         {
-            
+
         }
 
-        public Company GetCompanyElvia ()
+        public Company GetCompanyElvia()
         {
             return new Company()
             {
@@ -90,7 +87,8 @@ namespace Kunde.TariffApiTests
             foreach (var strElement in strElements)
             {
                 string[] elements = strElement.Split(";");
-                retVal.Add(new UnitofMeasure() { 
+                retVal.Add(new UnitofMeasure()
+                {
                     Id = Convert.ToInt32(elements[0]),
                     Currency = elements[1],
                     Unit = elements[2]
@@ -169,7 +167,7 @@ namespace Kunde.TariffApiTests
                     Id = Convert.ToInt32(elements[ctr++]),
                     Sortorder = Convert.ToInt32(elements[ctr++]),
                     PricelevelDescription = elements[2]
-                });;
+                }); ;
             }
             return retval;
         }

@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <!-- Sonarcloud needs ProjectGuid -->
+    <ProjectGuid>{7409F122-48CE-4333-AE47-E3662A828E6B}</ProjectGuid>
+    <CodeAnalysisRuleSet>..\.sonarlint\3lvia_kunde-tariff-apicsharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -13,6 +16,10 @@
     <DocumentationFile>bin\Release\netcoreapp3.1\GridTariffAPI.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\.sonarlint\3lvia_kunde-tariff-api\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="SQL\" />

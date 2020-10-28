@@ -1,7 +1,6 @@
 ﻿using Kunde.TariffApi.EntityFramework;
 using Kunde.TariffApi.Models.TariffQuery;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,8 +27,8 @@ namespace Kunde.TariffApi.Services.TariffQuery
 
             Tarifftype tariffType = _tariffContext.Tarifftype.Where(t => t.Tariffkey.Equals(tariffKey)).Include(t => t.Company).FirstOrDefault();
             UnitofMeasure fixedPriceUnitOfMeasure = _tariffContext.Uom.Where(u => u.Id == _fixedPriceUnitOfMeasureId).FirstOrDefault();
-            Dictionary <DateTime, String> publicHolidays = _tariffContext.Publicholiday.Where(
-                p => p.Holidaydate >= queryFromDate 
+            Dictionary<DateTime, String> publicHolidays = _tariffContext.Publicholiday.Where(
+                p => p.Holidaydate >= queryFromDate
                 && p.Holidaydate <= queryToDate)
                 .ToDictionary(p => p.Holidaydate, p => p.Description);
 
@@ -100,11 +99,11 @@ namespace Kunde.TariffApi.Services.TariffQuery
             return tariffQueryResult;
         }
 
-        private List<PriceInfo> ProcessDay(DateTime fromTime, 
-            DateTime toTime, 
-            ref Dictionary<DateTime, String> publicHolidays, 
-            ref List<FixedPrices> fixedPrices, 
-            ref IDictionary<int, Variablepriceconfig> variablePrices, 
+        private List<PriceInfo> ProcessDay(DateTime fromTime,
+            DateTime toTime,
+            ref Dictionary<DateTime, String> publicHolidays,
+            ref List<FixedPrices> fixedPrices,
+            ref IDictionary<int, Variablepriceconfig> variablePrices,
             ref Season season)
         {
             List<PriceInfo> priceInfos = new List<PriceInfo>();

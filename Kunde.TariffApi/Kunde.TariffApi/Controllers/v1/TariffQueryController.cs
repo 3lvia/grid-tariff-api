@@ -7,12 +7,11 @@ using Kunde.TariffApi.Services.TariffType;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Kunde.TariffApi.Controllers.v1    
+namespace Kunde.TariffApi.Controllers.v1
 {
     [ApiController]
     [Authorize]
@@ -25,9 +24,9 @@ namespace Kunde.TariffApi.Controllers.v1
         private readonly ITariffQueryService _tariffQueryService;
         private readonly TariffQueryValidationSettings _tariffQueryValidationSettings;
         public TariffQueryController(
-            ITelemetryInsightsLogger telemetry, 
-            ITariffTypeService tariffTypeService, 
-            ITariffQueryService tariffQueryService, 
+            ITelemetryInsightsLogger telemetry,
+            ITariffTypeService tariffTypeService,
+            ITariffQueryService tariffQueryService,
             TariffQueryValidationSettings tariffQueryValidationSettings)
         {
             _telemetry = telemetry;
