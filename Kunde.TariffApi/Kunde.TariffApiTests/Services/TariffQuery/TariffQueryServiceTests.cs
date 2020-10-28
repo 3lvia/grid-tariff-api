@@ -65,11 +65,11 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
 
             var priceinfosMarch = result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 3);
             Assert.Equal(24, priceinfosMarch.Count());
-            Assert.Equal(24, priceinfosMarch.Where(f => f.Season.Equals(SeasonWinter.Season1)).Count());
+            Assert.Equal(24, priceinfosMarch.Count(f => f.Season.Equals(SeasonWinter.Season1)));
 
             var priceinfosApril = result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 4);
             Assert.Equal(24, priceinfosApril.Count());
-            Assert.Equal(24, priceinfosApril.Where(f => f.Season.Equals(SeasonSummer.Season1)).Count());
+            Assert.Equal(24, priceinfosApril.Count(f => f.Season.Equals(SeasonSummer.Season1)));
         }
 
         [Fact()]
@@ -81,13 +81,13 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
 
             var result = _TariffQueryService.QueryTariff("private_tou_rush", startDate, endDate);
 
-            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 12 && !f.PublicHoliday).Count());
+            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Count(f => f.StartTime.Month == 12 && !f.PublicHoliday));
             Assert.Empty(result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 12 && f.PublicHoliday));
 
-            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 1 && f.StartTime.Day == 1 && f.PublicHoliday).Count());
+            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Count(f => f.StartTime.Month == 1 && f.StartTime.Day == 1 && f.PublicHoliday));
             Assert.Empty(result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 1 && f.StartTime.Day == 1 && !f.PublicHoliday));
 
-            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 1 && f.StartTime.Day == 2 && !f.PublicHoliday).Count());
+            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Count(f => f.StartTime.Month == 1 && f.StartTime.Day == 2 && !f.PublicHoliday));
             Assert.Empty(result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Month == 1 && f.StartTime.Day == 2 && f.PublicHoliday));
         }
 
@@ -99,12 +99,12 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
             DateTime endDate = new DateTime(2020, 12, 31, 23, 59, 59);
 
             var result = _TariffQueryService.QueryTariff("private_tou_rush", startDate, endDate);
-            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Count());
+            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Count);
 
             for (int hour = 0; hour < 24; hour++)
             {
                 PriceInfo priceInfo =
-                result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Date == startDate.Date && f.StartTime.Hour == hour).FirstOrDefault();
+                result.GridTariff.TariffPrice.PriceInfo.FirstOrDefault(f => f.StartTime.Date == startDate.Date && f.StartTime.Hour == hour);
                 Assert.NotNull(priceInfo);
                 Assert.Equal(0, priceInfo.StartTime.Minute);
                 Assert.Equal(0, priceInfo.StartTime.Second);
@@ -122,7 +122,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
                 Assert.Equal(0, priceInfo.ExpiredAt.Minute);
                 Assert.Equal(0, priceInfo.ExpiredAt.Second);
                 Assert.Equal(0, priceInfo.ExpiredAt.Millisecond);
-            };
+            }
         }
 
         [Fact()]
@@ -133,15 +133,15 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
             DateTime endDate = new DateTime(2020, 12, 31, 7, 30, 0);
 
             var result = _TariffQueryService.QueryTariff("private_tou_rush", startDate, endDate);
-            Assert.Equal(2, result.GridTariff.TariffPrice.PriceInfo.Count());
+            Assert.Equal(2, result.GridTariff.TariffPrice.PriceInfo.Count);
 
             for (int hour = 6; hour < 8; hour++)
             {
                 PriceInfo priceInfo =
-                result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Date == startDate.Date && f.StartTime.Hour == hour).FirstOrDefault();
+                result.GridTariff.TariffPrice.PriceInfo.FirstOrDefault(f => f.StartTime.Date == startDate.Date && f.StartTime.Hour == hour);
                 Assert.NotNull(priceInfo);
                 Assert.Equal(priceInfo.ExpiredAt.Hour, priceInfo.StartTime.Hour + 1);
-            };
+            }
         }
 
         [Fact()]
@@ -152,7 +152,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
             DateTime endDate = new DateTime(2020, 12, 31, 23, 59, 59);
 
             var result = _TariffQueryService.QueryTariff("private_tou_rush", startDate, endDate);
-            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Count());
+            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Count);
 
             foreach (var priceInfo in result.GridTariff.TariffPrice.PriceInfo)
             {
@@ -191,7 +191,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
 
             for (int hour = 0; hour < 24; hour++)
             {
-                PriceInfo priceInfo = result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Hour == hour).FirstOrDefault();
+                PriceInfo priceInfo = result.GridTariff.TariffPrice.PriceInfo.FirstOrDefault(f => f.StartTime.Hour == hour);
                 Assert.NotNull(priceInfo);
                 Assert.Equal(variablePriceConfig.Total, priceInfo.VariablePrice.Total);
                 Assert.Equal(variablePriceConfig.Energy, priceInfo.VariablePrice.Energy);
@@ -215,7 +215,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
 
             List<Variablepriceconfig> variablePriceConfigs = _tariffContext.Variablepriceconfig.Where(f => f.Tarifftypeid == 1 && f.Monthno == 12)
                 .ToList();
-            Assert.Equal(3, variablePriceConfigs.Count());
+            Assert.Equal(3, variablePriceConfigs.Count);
 
             foreach (var variablePriceConfig in variablePriceConfigs)
             {
@@ -224,7 +224,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
                 for (int i = 0; i < configHours.Count(); i++)
                 {
                     int hour = configHours.ElementAt(i);
-                    PriceInfo priceInfo = result.GridTariff.TariffPrice.PriceInfo.Where(f => f.StartTime.Hour == hour).FirstOrDefault();
+                    PriceInfo priceInfo = result.GridTariff.TariffPrice.PriceInfo.FirstOrDefault(f => f.StartTime.Hour == hour);
                     Assert.NotNull(priceInfo);
                     Assert.Equal(variablePriceConfig.Total, priceInfo.VariablePrice.Total);
                     Assert.Equal(variablePriceConfig.Energy, priceInfo.VariablePrice.Energy);
@@ -249,7 +249,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
             const int uomID = 4;        //kr/hour
 
             var result = _TariffQueryService.QueryTariff("private_tou_rush", startDate, endDate);
-            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Count());
+            Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Count);
 
             UnitofMeasure uomKrHour = _tariffContext.Uom.Where(f => f.Id == uomID).FirstOrDefault();
             Assert.NotNull(uomKrHour);
@@ -295,7 +295,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
             Assert.NotNull(result.GridTariff.TariffType);
             Assert.NotNull(result.GridTariff.TariffPrice);
             Assert.NotNull(result.GridTariff.TariffPrice.PriceInfo);
-            Assert.Equal(numDays * 24, result.GridTariff.TariffPrice.PriceInfo.Count());
+            Assert.Equal(numDays * 24, result.GridTariff.TariffPrice.PriceInfo.Count);
 
             foreach (var priceInfo in result.GridTariff.TariffPrice.PriceInfo)
             {
@@ -327,7 +327,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
                 int hoursInMonth = DateTime.DaysInMonth(dateIterator.Year, dateIterator.Month) * 24;
 
                 List<PriceInfo> priceInfos = result.GridTariff.TariffPrice.PriceInfo.Where(p => p.StartTime.Date.Equals(dateIterator.Date)).ToList();
-                Assert.Equal(24, priceInfos.Count());
+                Assert.Equal(24, priceInfos.Count);
 
                 Decimal fixedVal;
                 Decimal taxesVal;
@@ -379,7 +379,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
                 && v.Tarifftypeid == 1).ToList();
 
                 List<PriceInfo> priceInfos = result.GridTariff.TariffPrice.PriceInfo.Where(p => p.StartTime.Date.Equals(dateIterator.Date)).ToList();
-                Assert.Equal(24, priceInfos.Count());
+                Assert.Equal(24, priceInfos.Count);
 
                 bool isHoliday = dateIterator.DayOfWeek == DayOfWeek.Saturday || dateIterator.DayOfWeek == DayOfWeek.Sunday;
                 if (isHoliday)
@@ -400,7 +400,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
                         for (int i = 0; i < configHours.Count(); i++)
                         {
                             int hour = configHours.ElementAt(i);
-                            PriceInfo priceInfo = priceInfos.Where(f => f.StartTime.Hour == hour).FirstOrDefault();
+                            PriceInfo priceInfo = priceInfos.FirstOrDefault(f => f.StartTime.Hour == hour);
                             Assert.NotNull(priceInfo);
                             Assert.Equal(variablePriceConfig.Total, priceInfo.VariablePrice.Total);
                             Assert.Equal(variablePriceConfig.Energy, priceInfo.VariablePrice.Energy);

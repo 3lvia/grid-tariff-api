@@ -7,7 +7,7 @@ namespace Kunde.TariffApi.Services.TariffType
 {
     public class TariffTypeService : ITariffTypeService
     {
-        private TariffContext _tariffContext;
+        private readonly TariffContext _tariffContext;
         public TariffTypeService(TariffContext tariffContext)
         {
             _tariffContext = tariffContext;
