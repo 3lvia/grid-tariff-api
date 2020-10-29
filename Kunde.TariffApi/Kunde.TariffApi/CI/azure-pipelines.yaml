@@ -1,0 +1,57 @@
+# setup
+trigger:
+- trunk
+
+#variables
+variables:
+    containerregistry: 'ContainerRegistryElvia'
+    imagetag: $(Build.BuildNumber)
+    imagename: kunde-tariff-api
+    buildConfiguration: 'Release'
+
+jobs:
+  
+- job: BuildDockerImage
+
+  pool:
+    vmImage: 'ubuntu-latest'
+  
+  steps:
+  - task: Docker@2
+    displayName: Build docker image
+    inputs:
+      containerRegistry: $(containerregistry)
+      repository: '$(imagename)'
+      command: build
+      Dockerfile: 'Kunde.TariffApi/Dockerfile'
+      tags: '$(imagetag)'
+  - task: Docker@2
+    displayName: 'Login for $(containerregistry)'
+    inputs:
+      containerRegistry: $(containerregistry)
+      command: login
+  - task: aquasecScanner@4
+    displayName: 'Scan docker image with Aquasec'
+    inputs:
+      image: 'containerregistryelvia.azurecr.io/$(imagename):$(imagetag)'
+      scanner: 'containerregistryelvia.azurecr.io/aquasec/scanner:latest'
+      connection: 'aqua-scanner'
+      policies: Default
+      continueOnError: false
+  - task: Docker@2
+    condition: ne(variables['Build.Reason'], 'PullRequest')
+    displayName: Push docker image
+    inputs:
+      containerRegistry: $(containerregistry)
+      repository: '$(imagename)'
+      command: push
+      tags: '$(imagetag)'
+  - bash: 'sed -i "s/:imagetag/:$(imagetag)/" deploy.yaml'
+    displayName: 'Replace imagetag with build number in k8s deployments'
+    workingDirectory: CI
+  - task: PublishBuildArtifacts@1
+    condition: ne(variables['Build.Reason'], 'PullRequest')
+    displayName: 'Publish CI artifacts'
+    inputs:
+      PathtoPublish: CI/
+      ArtifactName: CI

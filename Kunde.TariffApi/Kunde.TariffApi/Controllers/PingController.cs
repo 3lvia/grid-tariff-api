@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Louvre.ImageImportAPI.Controllers
+namespace Kunde.TariffApi.Controllers
 {
 
     /// <summary>
