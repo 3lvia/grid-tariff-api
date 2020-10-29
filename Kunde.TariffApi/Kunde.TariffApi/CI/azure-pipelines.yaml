@@ -23,7 +23,7 @@ jobs:
       containerRegistry: $(containerregistry)
       repository: '$(imagename)'
       command: build
-      Dockerfile: 'Kunde.TariffApi/Dockerfile'
+      Dockerfile: 'Kunde.TariffApi/Kunde.TariffApi/Dockerfile'
       tags: '$(imagetag)'
   - task: Docker@2
     displayName: 'Login for $(containerregistry)'
