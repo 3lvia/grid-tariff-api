@@ -68,7 +68,7 @@ spec:
   ports:
   - port: 80
     name: kunde-tariff-api-port
-    targetport: 8080
+#    targetport: 8080
   selector:
     app: kunde-tariff-api
 ---
