@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: kunde-tariff-api
+  name: nett-tariff-api
 data:
   environment : "Dev"
   swaggerSettings.useSwaggerUI: "true"

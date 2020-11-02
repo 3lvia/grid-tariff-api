@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kunde-tariff-api
+  name: nett-tariff-api
 spec:
   replicas: 1
   strategy:
@@ -11,11 +11,11 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: kunde-tariff-api
+      app: nett-tariff-api
   template:
     metadata:
       labels:
-        app: kunde-tariff-api
+        app: nett-tariff-api
     spec:
       serviceAccountName: nett-tariff-api
       imagePullSecrets:
@@ -24,8 +24,8 @@ spec:
         options:
         - name: single-request-reopen
       containers:
-      - name: kunde-tariff-api
-        image: containerregistryelvia.azurecr.io/kunde-tariff-api:imagetag
+      - name: nett-tariff-api
+        image: containerregistryelvia.azurecr.io/nett-tariff-api:imagetag
         resources:
           requests:
             cpu: "300m"
@@ -52,7 +52,7 @@ spec:
           - name: SwaggerSettings__UseSwaggerUI
             valueFrom:
               configMapKeyRef:
-                name: kunde-tariff-api
+                name: nett-tariff-api
                 key: swaggerSettings.useSwaggerUI
           - name: SwaggerSettings__PathPrefix
             value: "/tariff-api"
@@ -61,21 +61,21 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: kunde-tariff-api
-  name: kunde-tariff-api
+    app: nett-tariff-api
+  name: nett-tariff-api
 spec:
   type: ClusterIP
   ports:
   - port: 80
-    name: kunde-tariff-api-port
+    name: nett-tariff-api-port
 #    targetport: 8080
   selector:
-    app: kunde-tariff-api
+    app: nett-tariff-api
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: kunde-tariff-api
+  name: nett-tariff-api
   annotations:
     traefik.frontend.rule.type: PathPrefixStrip
     kubernetes.io/ingress.class: traefik
@@ -90,19 +90,19 @@ spec:
       paths:
       - path: /tariff-api
         backend:
-          serviceName: kunde-tariff-api
+          serviceName: nett-tariff-api
           servicePort: 80
 ---
 kind: ServiceMonitor
 apiVersion: monitoring.coreos.com/v1
 metadata:
-  # Prometheus will scrape metrics on the http endpoint, kunde-tariff-api-port
-  name: kunde-tariff-api
+  # Prometheus will scrape metrics on the http endpoint, nett-tariff-api-port
+  name: nett-tariff-api
   namespace: kunde
 spec:
   endpoints:
-  - port: kunde-tariff-api-port
+  - port: nett-tariff-api-port
     interval: 5s
   selector:
     matchLabels:
-      app: kunde-tariff-api
+      app: nett-tariff-api
