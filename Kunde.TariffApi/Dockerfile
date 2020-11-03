@@ -20,6 +20,4 @@ COPY --from=build /app/out .
 RUN chown --recursive application-user .
 USER application-user
 EXPOSE 8080
-RUN apk add --no-cache icu-libs
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ENTRYPOINT ["dotnet", "Kunde.TariffApi.dll"]
