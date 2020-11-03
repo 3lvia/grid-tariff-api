@@ -68,7 +68,7 @@ spec:
   ports:
   - port: 80
     name: nett-tariff-api-port
-    targetport: 8080
+    targetPort: 8080
   selector:
     app: nett-tariff-api
 ---
