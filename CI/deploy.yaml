@@ -36,13 +36,13 @@ spec:
         startupProbe:
           httpGet:
             path: /ping
-            port: 80
+            port: 8080
           failureThreshold: 40
           periodSeconds: 5
         readinessProbe:
           httpGet:
             path: /ping
-            port: 80
+            port: 8080
           periodSeconds: 30
         lifecycle:
           preStop:
