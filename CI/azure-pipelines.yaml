@@ -6,7 +6,7 @@ trigger:
 variables:
     containerregistry: 'ContainerRegistryElvia'
     imagetag: $(Build.BuildNumber)
-    imagename: kunde-tariff-api
+    imagename: nett-tariff-api
     buildConfiguration: 'Release'
 
 jobs:
