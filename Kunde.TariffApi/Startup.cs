@@ -1,11 +1,13 @@
 using Elvia.Configuration;
 using Elvia.Telemetry;
 using Elvia.Telemetry.Extensions;
+using Kunde.TariffApi.Auth;
 using Kunde.TariffApi.Config;
 using Kunde.TariffApi.EntityFramework;
 using Kunde.TariffApi.Services.TariffQuery;
 using Kunde.TariffApi.Services.TariffType;
 using Kunde.TariffApi.Swagger;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -29,17 +31,8 @@ namespace Kunde.TariffApi
 
         public IConfiguration _configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthorization(options =>
-            {
-                var policy = new AuthorizationPolicyBuilder()
-                    .RequireClaim("scope", "kunde.nett-tariff-api.machineaccess")
-                    .Build();
-                options.DefaultPolicy = policy;
-            });
-
             services.AddControllers();
             services.AddApiVersioning(x =>
             {
@@ -50,15 +43,6 @@ namespace Kunde.TariffApi
 
             var instrumentationKey = _configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key");
             services.AddStandardElviaTelemetryLogging(instrumentationKey);
-            var authority = _configuration.EnsureHasValue("kunde:kv:elvid:generic:authority");
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-              .AddJwtBearer(options =>
-              {
-                  options.Authority = authority;
-                  options.TokenValidationParameters.ValidateAudience = false; /*utkommentert fordi vi starter med elvid, ikke hid*/
-                  options.TokenValidationParameters.ValidateIssuer = false;
-              });
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddTransient<ITariffTypeService, TariffTypeService>();
             services.AddTransient<ITariffQueryService, TariffQueryService>();
             var connectionString = _configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string");
@@ -67,7 +51,22 @@ namespace Kunde.TariffApi
             services.AddSingleton(tariffQueryValidationSettings);
             var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
             services.AddSwaggerConfiguration(swaggerSettings);
+
+            ConfigureAuth(services);
         }
+
+        protected virtual void ConfigureAuth(IServiceCollection services)
+        {
+            var username = _configuration.EnsureHasValue("kunde:kv:nett-tariff-api:username");
+            var password = _configuration.EnsureHasValue("kunde:kv:nett-tariff-api:password");
+
+            services.AddAuthentication("BasicAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
+            services.AddSingleton(config =>
+                new AuthenticationConfig(username, password));
+        }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
