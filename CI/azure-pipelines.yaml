@@ -38,6 +38,13 @@ jobs:
       connection: 'aqua-scanner'
       policies: Default
       continueOnError: false
+  - task: DotNetCoreCLI@2
+    displayName: 'Unit tests'
+    inputs:
+      command: test
+      projects: Kunde.TariffApiTests/Kunde.TariffApiTests.csproj
+      arguments: '--configuration Release --collect:"Code Coverage"'
+      nobuild: true
   - task: Docker@2
     condition: ne(variables['Build.Reason'], 'PullRequest')
     displayName: Push docker image
