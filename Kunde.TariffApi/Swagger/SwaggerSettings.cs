@@ -11,7 +11,7 @@ namespace Kunde.TariffApi.Swagger
 
         public string Title => "Grid Tariff API";
 
-        public string Description => "Provides grid tarrifs";
+        public string Description => "Provides private grid tariffs. For external and internal use.";
 
         public string Version => "v1";
 
