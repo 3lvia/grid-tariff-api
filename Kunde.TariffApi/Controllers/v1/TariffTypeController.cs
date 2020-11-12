@@ -24,7 +24,7 @@ namespace Kunde.TariffApi.Controllers.v1
             _telemetry = telemetry;
         }
         /// <summary>
-        /// Get all tariffs
+        /// Service returns all available private tariffs
         /// </summary>
         /// <remarks>Service returns all available tariffs</remarks>
         /// <returns>All tariffs</returns>
