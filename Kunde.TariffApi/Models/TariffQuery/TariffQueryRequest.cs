@@ -10,6 +10,11 @@ namespace Kunde.TariffApi.Models.TariffQuery
         [StringLength(100)]
         public String TariffKey { get; set; }
 
+        /// <summary>
+        /// Mutual exclusive with startTime/EndTime.  Valid values: yesterday,today,tomorrow. 
+        /// 
+        /// </summary>
+        /// <example>tomorrow</example>
         [StringLength(10)]
         [RegularExpression("yesterday|today|tomorrow", ErrorMessage = "Valid values is 'yesterday','today','tomorrow'")]
         public String Range { get; set; }
