@@ -12,16 +12,23 @@ namespace Kunde.TariffApi.Models.TariffQuery
 
         /// <summary>
         /// Mutual exclusive with startTime/EndTime.  Valid values: yesterday,today,tomorrow. 
-        /// 
         /// </summary>
         /// <example>tomorrow</example>
         [StringLength(10)]
         [RegularExpression("yesterday|today|tomorrow", ErrorMessage = "Valid values is 'yesterday','today','tomorrow'")]
         public String Range { get; set; }
 
+        /// <summary>
+        /// Mutual exclusive with Range. Used together with EndTime
+        /// </summary>
+        /// <example>2020-11-09T00:00:00.000Z</example>
         [DataType(DataType.DateTime)]
         public DateTime? StartTime { get; set; }
 
+        /// <summary>
+        /// Mutual exclusive with Range. Used together with StartTime
+        /// </summary>
+        /// <example>2020-12-31T00:00:00.000Z</example>
         [DataType(DataType.DateTime)]
         public DateTime? EndTime { get; set; }
 
