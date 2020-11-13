@@ -7,7 +7,7 @@ namespace Kunde.TariffApi.Models.TariffQuery
     public class TariffQueryRequest : IValidatableObject
     {
         /// <summary>
-        /// Tariff identifier. Value from tarifftype service.
+        /// Tariff identifier. Value from tarifftype service. Sample value: private_tou_rush1
         /// </summary>
         /// <example>private_tou_rush1</example>
 
