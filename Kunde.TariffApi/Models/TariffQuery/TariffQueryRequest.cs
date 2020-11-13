@@ -24,14 +24,14 @@ namespace Kunde.TariffApi.Models.TariffQuery
         public String Range { get; set; }
 
         /// <summary>
-        /// Mutual exclusive with Range. Used together with EndTime
+        /// Mutual exclusive with Range. Used together with EndTime. Sample value: 2020-11-09T00:00:00.000Z
         /// </summary>
         /// <example>2020-11-09T00:00:00.000Z</example>
         [DataType(DataType.DateTime)]
         public DateTime? StartTime { get; set; }
 
         /// <summary>
-        /// Mutual exclusive with Range. Used together with StartTime
+        /// Mutual exclusive with Range. Used together with StartTime. Sample value: 2020-12-31T00:00:00.000Z
         /// </summary>
         /// <example>2020-12-31T00:00:00.000Z</example>
         [DataType(DataType.DateTime)]
