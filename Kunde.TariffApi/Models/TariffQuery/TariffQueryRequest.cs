@@ -6,6 +6,11 @@ namespace Kunde.TariffApi.Models.TariffQuery
 {
     public class TariffQueryRequest : IValidatableObject
     {
+        /// <summary>
+        /// Tariff identifier. Value from tarifftype service.
+        /// </summary>
+        /// <example>private_tou_rush1</example>
+
         [Required]
         [StringLength(100)]
         public String TariffKey { get; set; }
