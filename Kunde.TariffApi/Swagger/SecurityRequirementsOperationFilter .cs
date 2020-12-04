@@ -14,7 +14,7 @@ namespace Kunde.TariffApi.Swagger
 
         private static readonly OpenApiSecurityScheme _securityScheme = new OpenApiSecurityScheme
         {
-            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "basic" }
         };
 
         private static readonly List<OpenApiSecurityRequirement> _securityRequirements = new List<OpenApiSecurityRequirement>

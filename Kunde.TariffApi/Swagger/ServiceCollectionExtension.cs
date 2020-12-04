@@ -22,12 +22,13 @@ namespace Kunde.TariffApi.Swagger
             settings.EnsureValid();
             services.AddSwaggerGen(options =>
             {
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                options.AddSecurityDefinition("basic", new OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization header using the Bearer scheme. Example value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
-                    Type = SecuritySchemeType.ApiKey,
+                    Description = "Basic Authorization header.",
+                    Type = SecuritySchemeType.Http,
                     Name = "Authorization",
                     In = ParameterLocation.Header,
+                    Scheme = "basic"
                 });
 
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
