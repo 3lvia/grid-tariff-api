@@ -52,7 +52,6 @@ namespace Kunde.TariffApi.Controllers.Tests
         public void NullPointerTest()
         {
             Setup();
-            TestHelper testHelper = new TestHelper();
             TariffTypeContainer tariffTypeContainer = _tariffTypeService.GetTariffTypes();
             Assert.NotNull(tariffTypeContainer);
             Assert.NotNull(tariffTypeContainer.TariffTypes);
@@ -73,7 +72,7 @@ namespace Kunde.TariffApi.Controllers.Tests
             Tarifftype tariffTypeRush = _tariffContext.Tarifftype.Where(t => t.Tariffkey.Equals("private_tou_rush")).Include(t => t.Company).FirstOrDefault();
             Assert.True(testHelper.Contains(tariffTypeContainer.TariffTypes, tariffTypeRush));
 
-            Tarifftype tariffTypeDayNight = _tariffContext.Tarifftype.Where(t => t.Tariffkey.Equals("private_tou_daynight")).Include(t => t.Company).FirstOrDefault(); ;
+            Tarifftype tariffTypeDayNight = _tariffContext.Tarifftype.Where(t => t.Tariffkey.Equals("private_tou_daynight")).Include(t => t.Company).FirstOrDefault();
             Assert.True(testHelper.Contains(tariffTypeContainer.TariffTypes, tariffTypeDayNight));
         }
     }
