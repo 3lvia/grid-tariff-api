@@ -90,7 +90,7 @@ namespace Kunde.TariffApi.Controllers.v1
             {
                 return (DateTime)tariffQueryModel.StartTime;
             }
-            return AddDaysUsingQueryRangeParameter(tariffQueryModel, DateTime.Now.Date);
+            return AddDaysUsingQueryRangeParameter(tariffQueryModel, DateTime.UtcNow.Date);
         }
 
         private DateTime GetEndTime(TariffQueryRequest tariffQueryModel)
@@ -99,7 +99,7 @@ namespace Kunde.TariffApi.Controllers.v1
             {
                 return (DateTime)tariffQueryModel.EndTime;
             }
-            return AddDaysUsingQueryRangeParameter(tariffQueryModel, DateTime.Now.Date.AddDays(1).AddSeconds(-1));
+            return AddDaysUsingQueryRangeParameter(tariffQueryModel, DateTime.UtcNow.Date.AddDays(1).AddSeconds(-1));
         }
 
         private DateTime AddDaysUsingQueryRangeParameter(TariffQueryRequest tariffQueryRequest, DateTime dateTime)
