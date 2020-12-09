@@ -6,14 +6,14 @@ namespace Kunde.TariffApi.EntityFramework
     {
         public Season()
         {
-            Fixedpriceconfig = new HashSet<Fixedpriceconfig>();
-            Variablepriceconfig = new HashSet<Variablepriceconfig>();
+            FixedPriceConfig = new HashSet<FixedPriceConfig>();
+            VariablePriceConfig = new HashSet<VariablePriceConfig>();
         }
 
         public int Id { get; set; }
-        public string Season1 { get; set; }
+        public string Description { get; set; }
 
-        public virtual ICollection<Fixedpriceconfig> Fixedpriceconfig { get; set; }
-        public virtual ICollection<Variablepriceconfig> Variablepriceconfig { get; set; }
+        public virtual ICollection<FixedPriceConfig> FixedPriceConfig { get; set; }
+        public virtual ICollection<VariablePriceConfig> VariablePriceConfig { get; set; }
     }
 }

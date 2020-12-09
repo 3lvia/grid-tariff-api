@@ -17,11 +17,11 @@ namespace Kunde.TariffApi.Services.TariffType
         public TariffTypeContainer GetTariffTypes()
         {
             TariffTypeContainer tariffTypeContainer = new TariffTypeContainer();
-            tariffTypeContainer.TariffTypes = _tariffContext.Tarifftype.Include(t => t.Company).Select(tariffType => new Models.TariffType
+            tariffTypeContainer.TariffTypes = _tariffContext.TariffType.Include(t => t.Company).Select(tariffType => new Models.TariffType
             {
-                TariffKey = tariffType.Tariffkey,
+                TariffKey = tariffType.TariffKey,
                 Company = tariffType.Company.CompanyName,
-                CustomerType = tariffType.Customertype,
+                CustomerType = tariffType.CustomerType,
                 Title = tariffType.Title,
                 Resolution = tariffType.Resolution,
                 Description = tariffType.Description

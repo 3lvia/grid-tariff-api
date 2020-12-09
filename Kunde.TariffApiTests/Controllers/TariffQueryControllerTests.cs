@@ -49,8 +49,8 @@ namespace Kunde.TariffApi.Controllers.Tests
             _tariffContext.Add(testHelper.GetCompanyFoobar());
 
             _tariffContext.Add(testHelper.GetTariffRush());
-            Tarifftype dayNight = testHelper.GetTariffDayNight();
-            dayNight.Companyid = 2;
+            EntityFramework.TariffType dayNight = testHelper.GetTariffDayNight();
+            dayNight.CompanyId = 2;
             _tariffContext.Add(dayNight);
 
             _tariffContext.AddRange(testHelper.GetUoms());

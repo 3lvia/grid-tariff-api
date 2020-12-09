@@ -2,17 +2,17 @@
 
 namespace Kunde.TariffApi.EntityFramework
 {
-    public partial class Pricelevel
+    public partial class PriceLevel
     {
-        public Pricelevel()
+        public PriceLevel()
         {
-            Variablepriceconfig = new HashSet<Variablepriceconfig>();
+            VariablePriceConfig = new HashSet<VariablePriceConfig>();
         }
 
         public int Id { get; set; }
-        public int Sortorder { get; set; }
-        public string PricelevelDescription { get; set; }
+        public int SortOrder { get; set; }
+        public string PriceLevelDescription { get; set; }
 
-        public virtual ICollection<Variablepriceconfig> Variablepriceconfig { get; set; }
+        public virtual ICollection<VariablePriceConfig> VariablePriceConfig { get; set; }
     }
 }

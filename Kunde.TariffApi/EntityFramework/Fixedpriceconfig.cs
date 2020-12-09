@@ -2,23 +2,23 @@
 
 namespace Kunde.TariffApi.EntityFramework
 {
-    public partial class Fixedpriceconfig
+    public partial class FixedPriceConfig
     {
         public int Id { get; set; }
-        public int Tarifftypeid { get; set; }
-        public int Seasonid { get; set; }
-        public int Monthno { get; set; }
-        public int Pricelevelid { get; set; }
+        public int TariffTypeId { get; set; }
+        public int SeasonId { get; set; }
+        public int MonthNo { get; set; }
+        public int PriceLevelId { get; set; }
         public decimal Total { get; set; }
         public decimal Fixed { get; set; }
         public decimal Taxes { get; set; }
-        public int Uomid { get; set; }
-        public DateTime Pricefromdate { get; set; }
-        public DateTime Pricetodate { get; set; }
+        public int UomId { get; set; }
+        public DateTime PriceFromDate { get; set; }
+        public DateTime PriceToDate { get; set; }
 
-        public virtual Fixedpricelevel Pricelevel { get; set; }
+        public virtual FixedPriceLevel PriceLevel { get; set; }
         public virtual Season Season { get; set; }
-        public virtual Tarifftype Tarifftype { get; set; }
-        public virtual UnitofMeasure Uom { get; set; }
+        public virtual TariffType TariffType { get; set; }
+        public virtual UnitOfMeasure Uom { get; set; }
     }
 }

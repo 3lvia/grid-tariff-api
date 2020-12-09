@@ -2,24 +2,24 @@
 
 namespace Kunde.TariffApi.EntityFramework
 {
-    public partial class Tarifftype
+    public partial class TariffType
     {
-        public Tarifftype()
+        public TariffType()
         {
-            Fixedpriceconfig = new HashSet<Fixedpriceconfig>();
-            Variablepriceconfig = new HashSet<Variablepriceconfig>();
+            FixedPriceConfig = new HashSet<FixedPriceConfig>();
+            VariablePriceConfig = new HashSet<VariablePriceConfig>();
         }
 
         public int Id { get; set; }
-        public string Tariffkey { get; set; }
-        public int Companyid { get; set; }
-        public string Customertype { get; set; }
+        public string TariffKey { get; set; }
+        public int CompanyId { get; set; }
+        public string CustomerType { get; set; }
         public string Title { get; set; }
         public int Resolution { get; set; }
         public string Description { get; set; }
 
         public virtual Company Company { get; set; }
-        public virtual ICollection<Fixedpriceconfig> Fixedpriceconfig { get; set; }
-        public virtual ICollection<Variablepriceconfig> Variablepriceconfig { get; set; }
+        public virtual ICollection<FixedPriceConfig> FixedPriceConfig { get; set; }
+        public virtual ICollection<VariablePriceConfig> VariablePriceConfig { get; set; }
     }
 }

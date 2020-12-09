@@ -6,12 +6,12 @@ namespace Kunde.TariffApi.EntityFramework
     {
         public Company()
         {
-            Tarifftype = new HashSet<Tarifftype>();
+            TariffType = new HashSet<TariffType>();
         }
 
         public int Id { get; set; }
         public string CompanyName { get; set; }
 
-        public virtual ICollection<Tarifftype> Tarifftype { get; set; }
+        public virtual ICollection<TariffType> TariffType { get; set; }
     }
 }

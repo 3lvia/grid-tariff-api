@@ -39,10 +39,10 @@ namespace Kunde.TariffApi.Controllers.Tests
             _tariffContext.Company.Add(testHelper.GetCompanyElvia());
             _tariffContext.Company.Add(testHelper.GetCompanyFoobar());
 
-            _tariffContext.Tarifftype.Add(testHelper.GetTariffRush());
-            Tarifftype dayNight = testHelper.GetTariffDayNight();
-            dayNight.Companyid = 2;
-            _tariffContext.Tarifftype.Add(dayNight);
+            _tariffContext.TariffType.Add(testHelper.GetTariffRush());
+            EntityFramework.TariffType dayNight = testHelper.GetTariffDayNight();
+            dayNight.CompanyId = 2;
+            _tariffContext.TariffType.Add(dayNight);
 
             _tariffContext.SaveChanges();
         }
@@ -69,10 +69,10 @@ namespace Kunde.TariffApi.Controllers.Tests
             TariffTypeContainer tariffTypeContainer = _tariffTypeService.GetTariffTypes();
             Assert.Equal(2, tariffTypeContainer.TariffTypes.Count);
 
-            Tarifftype tariffTypeRush = _tariffContext.Tarifftype.Where(t => t.Tariffkey.Equals("private_tou_rush")).Include(t => t.Company).FirstOrDefault();
+            Kunde.TariffApi.EntityFramework.TariffType tariffTypeRush = _tariffContext.TariffType.Where(t => t.TariffKey.Equals("private_tou_rush")).Include(t => t.Company).FirstOrDefault();
             Assert.True(testHelper.Contains(tariffTypeContainer.TariffTypes, tariffTypeRush));
 
-            Tarifftype tariffTypeDayNight = _tariffContext.Tarifftype.Where(t => t.Tariffkey.Equals("private_tou_daynight")).Include(t => t.Company).FirstOrDefault();
+            Kunde.TariffApi.EntityFramework.TariffType tariffTypeDayNight = _tariffContext.TariffType.Where(t => t.TariffKey.Equals("private_tou_daynight")).Include(t => t.Company).FirstOrDefault();
             Assert.True(testHelper.Contains(tariffTypeContainer.TariffTypes, tariffTypeDayNight));
         }
     }

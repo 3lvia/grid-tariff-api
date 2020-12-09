@@ -2,17 +2,17 @@
 
 namespace Kunde.TariffApi.EntityFramework
 {
-    public partial class Fixedpricelevel
+    public partial class FixedPriceLevel
     {
-        public Fixedpricelevel()
+        public FixedPriceLevel()
         {
-            Fixedpriceconfig = new HashSet<Fixedpriceconfig>();
+            FixedPriceConfig = new HashSet<FixedPriceConfig>();
         }
 
         public int Id { get; set; }
-        public string Pricelevel { get; set; }
-        public string Levelinfo { get; set; }
+        public string PriceLevel { get; set; }
+        public string LevelInfo { get; set; }
 
-        public virtual ICollection<Fixedpriceconfig> Fixedpriceconfig { get; set; }
+        public virtual ICollection<FixedPriceConfig> FixedPriceConfig { get; set; }
     }
 }

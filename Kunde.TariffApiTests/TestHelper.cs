@@ -30,26 +30,26 @@ namespace Kunde.TariffApiTests
             };
         }
 
-        public Tarifftype GetTariffRush()
+        public TariffType GetTariffRush()
         {
-            return new Tarifftype()
+            return new TariffType()
             {
-                Tariffkey = "private_tou_rush",
-                Companyid = 1,
-                Customertype = "private",
+                TariffKey = "private_tou_rush",
+                CompanyId = 1,
+                CustomerType = "private",
                 Title = "Nettleie Rush & Ro",
                 Resolution = 60,
                 Description = "Tariff focused on lowering energy consumption during high consumption periods of the day"
             };
         }
 
-        public Tarifftype GetTariffDayNight()
+        public TariffType GetTariffDayNight()
         {
-            return new Tarifftype()
+            return new TariffType()
             {
-                Tariffkey = "private_tou_daynight",
-                Companyid = 1,
-                Customertype = "private",
+                TariffKey = "private_tou_daynight",
+                CompanyId = 1,
+                CustomerType = "private",
                 Title = "Nettleie Dag&Natt",
                 Resolution = 60,
                 Description = "Tariff focused on moving energy consumption from day to night"
@@ -57,13 +57,13 @@ namespace Kunde.TariffApiTests
         }
 
 
-        public bool Contains(List<TariffApi.Models.TariffType> model, Tarifftype db)
+        public bool Contains(List<TariffApi.Models.TariffType> model, TariffType db)
         {
             foreach (var tariffType in model)
             {
                 if (
                     tariffType.Company.Equals(db.Company.CompanyName)
-                    && tariffType.CustomerType.Equals(db.Customertype)
+                    && tariffType.CustomerType.Equals(db.CustomerType)
                     && tariffType.Title.Equals(db.Title)
                     && tariffType.Resolution.Equals(db.Resolution)
                     && tariffType.Description.Equals(db.Description))
@@ -74,9 +74,9 @@ namespace Kunde.TariffApiTests
             return false;
         }
 
-        public List<UnitofMeasure> GetUoms()
+        public List<UnitOfMeasure> GetUoms()
         {
-            var retVal = new List<UnitofMeasure>();
+            var retVal = new List<UnitOfMeasure>();
             var strElements = new List<string>()
             {
                 "1;NOK;kr/month",
@@ -87,7 +87,7 @@ namespace Kunde.TariffApiTests
             foreach (var strElement in strElements)
             {
                 string[] elements = strElement.Split(";");
-                retVal.Add(new UnitofMeasure()
+                retVal.Add(new UnitOfMeasure()
                 {
                     Id = Convert.ToInt32(elements[0]),
                     Currency = elements[1],
@@ -118,15 +118,15 @@ namespace Kunde.TariffApiTests
                 retVal.Add(new Season()
                 {
                     Id = Convert.ToInt32(elements[ctr++]),
-                    Season1 = elements[ctr++]
+                    Description = elements[ctr++]
                 });
             }
             return retVal;
         }
 
-        public List<Publicholiday> GetPublicHolidays()
+        public List<PublicHoliday> GetPublicHolidays()
         {
-            var retval = new List<Publicholiday>();
+            var retval = new List<PublicHoliday>();
             var strElements = new List<string>()
             {
                 "1;2021-01-01;Første nyttårsdag"
@@ -136,19 +136,19 @@ namespace Kunde.TariffApiTests
             {
                 int ctr = 0;
                 string[] elements = strElement.Split(";");
-                retval.Add(new Publicholiday()
+                retval.Add(new PublicHoliday()
                 {
                     Id = Convert.ToInt32(elements[ctr++]),
-                    Holidaydate = DateTime.Parse(elements[ctr++]),
+                    HolidayDate = DateTime.Parse(elements[ctr++]),
                     Description = elements[ctr++]
                 });
             }
             return retval;
         }
 
-        public List<Pricelevel> GetPricelevels()
+        public List<PriceLevel> GetPricelevels()
         {
-            var retval = new List<Pricelevel>();
+            var retval = new List<PriceLevel>();
             var strElements = new List<string>()
             {
                 "1;0;VERY_CHEAP",
@@ -162,19 +162,19 @@ namespace Kunde.TariffApiTests
             {
                 int ctr = 0;
                 string[] elements = strElement.Split(";");
-                retval.Add(new Pricelevel()
+                retval.Add(new PriceLevel()
                 {
                     Id = Convert.ToInt32(elements[ctr++]),
-                    Sortorder = Convert.ToInt32(elements[ctr++]),
-                    PricelevelDescription = elements[2]
+                    SortOrder = Convert.ToInt32(elements[ctr++]),
+                    PriceLevelDescription = elements[2]
                 });
             }
             return retval;
         }
 
-        public List<Fixedpricelevel> GetFixedPricelevels()
+        public List<FixedPriceLevel> GetFixedPricelevels()
         {
-            var retval = new List<Fixedpricelevel>();
+            var retval = new List<FixedPriceLevel>();
             var strElements = new List<string>()
             {
                 "1;Level1;For alle privatkunder i Elvia med tariff: Nettleie Elvia sør",
@@ -185,19 +185,19 @@ namespace Kunde.TariffApiTests
             {
                 int ctr = 0;
                 string[] elements = strElement.Split(";");
-                retval.Add(new Fixedpricelevel()
+                retval.Add(new FixedPriceLevel()
                 {
                     Id = Convert.ToInt32(elements[ctr++]),
-                    Pricelevel = elements[ctr++],
-                    Levelinfo = elements[ctr++]
+                    PriceLevel = elements[ctr++],
+                    LevelInfo = elements[ctr++]
                 });
             }
             return retval;
         }
 
-        public List<Fixedpriceconfig> GetFixedPriceConfigs()
+        public List<FixedPriceConfig> GetFixedPriceConfigs()
         {
-            var retval = new List<Fixedpriceconfig>();
+            var retval = new List<FixedPriceConfig>();
             var strElements = new List<string>()
             {
                 "1;1;5;1;2;200.0000;160.0000;40.0000;1;2020-11-01;2024-12-31",
@@ -234,27 +234,27 @@ namespace Kunde.TariffApiTests
             {
                 string[] elements = strElement.Split(";");
                 int ctr = 0;
-                retval.Add(new Fixedpriceconfig()
+                retval.Add(new FixedPriceConfig()
                 {
                     Id = Convert.ToInt32(elements[ctr++]),
-                    Tarifftypeid = Convert.ToInt32(elements[ctr++]),
-                    Seasonid = Convert.ToInt32(elements[ctr++]),
-                    Monthno = Convert.ToInt32(elements[ctr++]),
-                    Pricelevelid = Convert.ToInt32(elements[ctr++]),
+                    TariffTypeId = Convert.ToInt32(elements[ctr++]),
+                    SeasonId = Convert.ToInt32(elements[ctr++]),
+                    MonthNo = Convert.ToInt32(elements[ctr++]),
+                    PriceLevelId = Convert.ToInt32(elements[ctr++]),
                     Total = Decimal.Parse(elements[ctr++], numberFormatInfo),
                     Fixed = Convert.ToDecimal(elements[ctr++], numberFormatInfo),
                     Taxes = Convert.ToDecimal(elements[ctr++], numberFormatInfo),
-                    Uomid = Convert.ToInt32(elements[ctr++], numberFormatInfo),
-                    Pricefromdate = DateTime.Parse(elements[ctr++]),
-                    Pricetodate = DateTime.Parse(elements[ctr++])
+                    UomId = Convert.ToInt32(elements[ctr++], numberFormatInfo),
+                    PriceFromDate = DateTime.Parse(elements[ctr++]),
+                    PriceToDate = DateTime.Parse(elements[ctr++])
                 });
             }
             return retval;
         }
 
-        public List<Variablepriceconfig> GetVariablePriceConfigs()
+        public List<VariablePriceConfig> GetVariablePriceConfigs()
         {
-            var retval = new List<Variablepriceconfig>();
+            var retval = new List<VariablePriceConfig>();
             var strElements = new List<string>()
             {
                 "1,1,5,1,4,0.8470,0.5406,0.0000,0.1352,0.0100,0.1613,2,2020-11-01,2024-12-31,8;9;10;11;16;17;18;19",
@@ -322,22 +322,22 @@ namespace Kunde.TariffApiTests
             {
                 string[] elements = strElement.Split(",");
                 int ctr = 0;
-                retval.Add(new Variablepriceconfig()
+                retval.Add(new VariablePriceConfig()
                 {
                     Id = Convert.ToInt32(elements[ctr++]),
-                    Tarifftypeid = Convert.ToInt32(elements[ctr++]),
-                    Seasonid = Convert.ToInt32(elements[ctr++]),
-                    Monthno = Convert.ToInt32(elements[ctr++]),
-                    Pricelevelid = Convert.ToInt32(elements[ctr++]),
+                    TariffTypeDd = Convert.ToInt32(elements[ctr++]),
+                    SeasonId = Convert.ToInt32(elements[ctr++]),
+                    MonthNo = Convert.ToInt32(elements[ctr++]),
+                    PriceLevelId = Convert.ToInt32(elements[ctr++]),
                     Total = Convert.ToDecimal(elements[ctr++], numberFormatInfo),
                     Energy = Convert.ToDecimal(elements[ctr++], numberFormatInfo),
                     Power = Convert.ToDecimal(elements[ctr++], numberFormatInfo),
-                    Taxmva = Convert.ToDecimal(elements[ctr++], numberFormatInfo),
-                    Taxenova = Convert.ToDecimal(elements[ctr++], numberFormatInfo),
-                    Taxenergy = Convert.ToDecimal(elements[ctr++], numberFormatInfo),
-                    Uomid = Convert.ToInt32(elements[ctr++]),
-                    Pricefromdate = Convert.ToDateTime(elements[ctr++]),
-                    Pricetodate = Convert.ToDateTime(elements[ctr++]),
+                    TaxMva = Convert.ToDecimal(elements[ctr++], numberFormatInfo),
+                    TaxEnova = Convert.ToDecimal(elements[ctr++], numberFormatInfo),
+                    TaxEnergy = Convert.ToDecimal(elements[ctr++], numberFormatInfo),
+                    UomId = Convert.ToInt32(elements[ctr++]),
+                    PriceFromDate = Convert.ToDateTime(elements[ctr++]),
+                    PriceToDate = Convert.ToDateTime(elements[ctr++]),
                     Hours = elements[ctr++]
                 });
             }
