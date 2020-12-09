@@ -76,8 +76,8 @@ namespace Kunde.TariffApiTests
 
         public List<UnitofMeasure> GetUoms()
         {
-            List<UnitofMeasure> retVal = new List<UnitofMeasure>();
-            List<String> strElements = new List<string>()
+            var retVal = new List<UnitofMeasure>();
+            var strElements = new List<string>()
             {
                 "1;NOK;kr/month",
                 "2;NOK;kr/kWh",
@@ -100,8 +100,8 @@ namespace Kunde.TariffApiTests
 
         public List<Season> GetSeasons()
         {
-            List<Season> retVal = new List<Season>();
-            List<String> strElements = new List<string>()
+            var retVal = new List<Season>();
+            var strElements = new List<string>()
             {
                 "1;summerLow",
                 "2;summer",
@@ -126,8 +126,8 @@ namespace Kunde.TariffApiTests
 
         public List<Publicholiday> GetPublicHolidays()
         {
-            List<Publicholiday> retval = new List<Publicholiday>();
-            List<String> strElements = new List<string>()
+            var retval = new List<Publicholiday>();
+            var strElements = new List<string>()
             {
                 "1;2021-01-01;Første nyttårsdag"
             };
@@ -148,8 +148,8 @@ namespace Kunde.TariffApiTests
 
         public List<Pricelevel> GetPricelevels()
         {
-            List<Pricelevel> retval = new List<Pricelevel>();
-            List<String> strElements = new List<string>()
+            var retval = new List<Pricelevel>();
+            var strElements = new List<string>()
             {
                 "1;0;VERY_CHEAP",
                 "2;1;CHEAP",
@@ -174,8 +174,8 @@ namespace Kunde.TariffApiTests
 
         public List<Fixedpricelevel> GetFixedPricelevels()
         {
-            List<Fixedpricelevel> retval = new List<Fixedpricelevel>();
-            List<String> strElements = new List<string>()
+            var retval = new List<Fixedpricelevel>();
+            var strElements = new List<string>()
             {
                 "1;Level1;For alle privatkunder i Elvia med tariff: Nettleie Elvia sør",
                 "2;Level2;For alle privatkunder i Elvia med tariff: Nettleie Rush&Ro eller Nettleie Dag&Natt"
@@ -197,8 +197,8 @@ namespace Kunde.TariffApiTests
 
         public List<Fixedpriceconfig> GetFixedPriceConfigs()
         {
-            List<Fixedpriceconfig> retval = new List<Fixedpriceconfig>();
-            List<String> strElements = new List<string>()
+            var retval = new List<Fixedpriceconfig>();
+            var strElements = new List<string>()
             {
                 "1;1;5;1;2;200.0000;160.0000;40.0000;1;2020-11-01;2024-12-31",
                 "2;1;5;2;2;200.0000;160.0000;40.0000;1;2020-11-01;2024-12-31",
@@ -254,8 +254,8 @@ namespace Kunde.TariffApiTests
 
         public List<Variablepriceconfig> GetVariablePriceConfigs()
         {
-            List<Variablepriceconfig> retval = new List<Variablepriceconfig>();
-            List<String> strElements = new List<string>()
+            var retval = new List<Variablepriceconfig>();
+            var strElements = new List<string>()
             {
                 "1,1,5,1,4,0.8470,0.5406,0.0000,0.1352,0.0100,0.1613,2,2020-11-01,2024-12-31,8;9;10;11;16;17;18;19",
                 "2,1,5,1,3,0.5805,0.3274,0.0000,0.0818,0.0100,0.1613,2,2020-11-01,2024-12-31,6;7;12;13;14;15;20;21",

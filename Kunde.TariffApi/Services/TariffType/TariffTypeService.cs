@@ -2,6 +2,7 @@
 using Kunde.TariffApi.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Kunde.TariffApi.Services.TariffType
 {
@@ -16,20 +17,15 @@ namespace Kunde.TariffApi.Services.TariffType
         public TariffTypeContainer GetTariffTypes()
         {
             TariffTypeContainer tariffTypeContainer = new TariffTypeContainer();
-            tariffTypeContainer.TariffTypes = new List<Models.TariffType>();
-
-            foreach (var tariffType in _tariffContext.Tarifftype.Include(t => t.Company))
+            tariffTypeContainer.TariffTypes = _tariffContext.Tarifftype.Include(t => t.Company).Select(tariffType => new Models.TariffType
             {
-                tariffTypeContainer.TariffTypes.Add(new Models.TariffType()
-                {
-                    TariffKey = tariffType.Tariffkey,
-                    Company = tariffType.Company.CompanyName,
-                    CustomerType = tariffType.Customertype,
-                    Title = tariffType.Title,
-                    Resolution = tariffType.Resolution,
-                    Description = tariffType.Description
-                });
-            }
+                TariffKey = tariffType.Tariffkey,
+                Company = tariffType.Company.CompanyName,
+                CustomerType = tariffType.Customertype,
+                Title = tariffType.Title,
+                Resolution = tariffType.Resolution,
+                Description = tariffType.Description
+            }).ToList();
             return tariffTypeContainer;
         }
     }

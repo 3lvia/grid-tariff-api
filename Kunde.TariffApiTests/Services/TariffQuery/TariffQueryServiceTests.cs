@@ -153,7 +153,6 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
 
             var result = _TariffQueryService.QueryTariff("private_tou_rush", startDate, endDate);
             Assert.Equal(24, result.GridTariff.TariffPrice.PriceInfo.Count);
-
             foreach (var priceInfo in result.GridTariff.TariffPrice.PriceInfo)
             {
                 int hour = priceInfo.StartTime.Hour;

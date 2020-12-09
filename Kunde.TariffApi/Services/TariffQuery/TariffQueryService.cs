@@ -106,7 +106,7 @@ namespace Kunde.TariffApi.Services.TariffQuery
             ref IDictionary<int, Variablepriceconfig> variablePrices,
             ref Season season)
         {
-            List<PriceInfo> priceInfos = new List<PriceInfo>();
+            var priceInfos = new List<PriceInfo>();
             IDictionary<int, VariablePrice> calculatedVariablePrices = null;
 
             int fromHour = fromTime.Hour;
@@ -185,7 +185,7 @@ namespace Kunde.TariffApi.Services.TariffQuery
         private List<FixedPrices> GetMonthlyFixedPrices(ref IDictionary<int, Fixedpriceconfig> fixedpriceconfigs, int year, int month, UnitofMeasure unitOfMeasure)
         {
             const int hoursInDay = 24;
-            List<FixedPrices> fixedPrices = new List<FixedPrices>();
+            var fixedPrices = new List<FixedPrices>();
             int daysInMonth = DateTime.DaysInMonth(year, month);
 
             foreach (Fixedpriceconfig fixedPriceConfig in fixedpriceconfigs.Values)
