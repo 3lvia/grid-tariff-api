@@ -43,7 +43,7 @@ namespace Kunde.TariffApi.Services.TariffQuery
             Dictionary<DateTime, String> publicHolidays,
             TariffQueryResult tariffQueryResult)
         {
-            int currMonth = -1;
+            int currMonth = int.MinValue;
             Dictionary<int, FixedPriceConfig> currFixedPrices = null;
             Dictionary<int, VariablePriceConfig> currVariablePrices = null;
             List<FixedPrices> currentFixedPrices = null;
