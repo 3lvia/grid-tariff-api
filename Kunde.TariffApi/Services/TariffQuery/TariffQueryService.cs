@@ -58,7 +58,7 @@ namespace Kunde.TariffApi.Services.TariffQuery
                 {
                     currFixedPrices = GetFixedPricesForGivenMonth(paramFromDate, queryToDate, tariffTypeId);
                     currVariablePrices = GetVariablePricesForGivenMonth(paramFromDate, queryToDate, tariffTypeId);
-                    currentFixedPrices = CalculateFixedPricesForGivenMonth(ref currFixedPrices, paramFromDate.Year, paramFromDate.Month, fixedPriceUnitOfMeasure);
+                    currentFixedPrices = CalculateFixedPricesForGivenMonth(currFixedPrices, paramFromDate.Year, paramFromDate.Month, fixedPriceUnitOfMeasure);
                     currSeason = currFixedPrices.First().Value.Season.Season1;
                     currMonth = paramFromDate.Month;
                 }
@@ -66,8 +66,8 @@ namespace Kunde.TariffApi.Services.TariffQuery
                     ProcessDay(paramFromDate,
                         queryToDate,
                         isPublicHoliday,
-                        ref currentFixedPrices,
-                        ref currVariablePrices,
+                        currentFixedPrices,
+                        currVariablePrices,
                         currSeason));
 
                 paramFromDate = paramFromDate.AddDays(1).Date;
@@ -132,13 +132,13 @@ namespace Kunde.TariffApi.Services.TariffQuery
         private List<PriceInfo> ProcessDay(DateTime fromTime,
             DateTime toTime,
             bool isPublicHoliday,
-            ref List<FixedPrices> fixedPrices,
-            ref Dictionary<int, Variablepriceconfig> variablePrices,
+            List<FixedPrices> fixedPrices,
+            Dictionary<int, Variablepriceconfig> variablePrices,
             String season)
         {
             var priceInfos = new List<PriceInfo>();
             bool isLowTariff = isPublicHoliday || fromTime.DayOfWeek == DayOfWeek.Saturday || fromTime.DayOfWeek == DayOfWeek.Sunday;
-            Dictionary<int, VariablePrice> calculatedVariablePrices = CalcVariablePricesDay(ref variablePrices, fromTime.Hour, toTime.Hour, isLowTariff);
+            Dictionary<int, VariablePrice> calculatedVariablePrices = CalcVariablePricesDay(variablePrices, fromTime.Hour, toTime.Hour, isLowTariff);
 
             while (fromTime.Date == toTime.Date && fromTime.Hour <= toTime.Hour)
             {
@@ -157,7 +157,7 @@ namespace Kunde.TariffApi.Services.TariffQuery
             return priceInfos;
         }
 
-        private Dictionary<int, VariablePrice> CalcVariablePricesDay(ref Dictionary<int, Variablepriceconfig> variablePrices, int fromHour, int toHour, bool isLowTariff)
+        private Dictionary<int, VariablePrice> CalcVariablePricesDay(Dictionary<int, Variablepriceconfig> variablePrices, int fromHour, int toHour, bool isLowTariff)
         {
             if (isLowTariff)
             {
@@ -165,24 +165,24 @@ namespace Kunde.TariffApi.Services.TariffQuery
                 IEnumerable<int> configHours = from hour in _lowTariffHours.Split(';') select int.Parse(hour);
 
                 Variablepriceconfig lowTariffVariablePriceConfig = variablePrices.OrderBy(v => v.Value.Pricelevel.Sortorder).FirstOrDefault().Value;
-                CalcVariablePricesDay(fromHour, toHour, ref calculatedVariablePrices, lowTariffVariablePriceConfig, configHours);
+                CalcVariablePricesDay(fromHour, toHour, calculatedVariablePrices, lowTariffVariablePriceConfig, configHours);
                 return calculatedVariablePrices;
             }
-            return CalcVariablePricesDay(fromHour, toHour, ref variablePrices);
+            return CalcVariablePricesDay(fromHour, toHour, variablePrices);
         }
 
-        Dictionary<int, VariablePrice> CalcVariablePricesDay(int fromHour, int toHour, ref Dictionary<int, Variablepriceconfig> variablepriceconfigs)
+        Dictionary<int, VariablePrice> CalcVariablePricesDay(int fromHour, int toHour, Dictionary<int, Variablepriceconfig> variablepriceconfigs)
         {
             Dictionary<int, VariablePrice> variablePrices = new Dictionary<int, VariablePrice>();
             foreach (Variablepriceconfig variablePriceConfig in variablepriceconfigs.Values)
             {
                 IEnumerable<int> configHours = from hour in variablePriceConfig.Hours.Split(';') select int.Parse(hour);
-                CalcVariablePricesDay(fromHour, toHour, ref variablePrices, variablePriceConfig, configHours);
+                CalcVariablePricesDay(fromHour, toHour, variablePrices, variablePriceConfig, configHours);
             }
             return variablePrices;
         }
 
-        private void CalcVariablePricesDay(int fromHour, int toHour, ref Dictionary<int, VariablePrice> variablePrices, Variablepriceconfig variablePriceConfig, IEnumerable<int> configHours)
+        private void CalcVariablePricesDay(int fromHour, int toHour, Dictionary<int, VariablePrice> variablePrices, Variablepriceconfig variablePriceConfig, IEnumerable<int> configHours)
         {
             IEnumerable<int> matchedHours = configHours.Where(h => fromHour <= h && h <= toHour);
             foreach (int matchedHour in matchedHours)
@@ -201,7 +201,7 @@ namespace Kunde.TariffApi.Services.TariffQuery
             }
         }
 
-        private List<FixedPrices> CalculateFixedPricesForGivenMonth(ref Dictionary<int, Fixedpriceconfig> fixedpriceconfigs, int year, int month, string unitOfMeasure)
+        private List<FixedPrices> CalculateFixedPricesForGivenMonth(Dictionary<int, Fixedpriceconfig> fixedpriceconfigs, int year, int month, string unitOfMeasure)
         {
             const int hoursInDay = 24;
             var fixedPrices = new List<FixedPrices>();
