@@ -140,7 +140,26 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
                 PriceInfo priceInfo =
                 result.GridTariff.TariffPrice.PriceInfo.FirstOrDefault(f => f.StartTime.Date == startDate.Date && f.StartTime.Hour == hour);
                 Assert.NotNull(priceInfo);
-                Assert.Equal(priceInfo.ExpiredAt.Hour, priceInfo.StartTime.Hour + 1);
+                Assert.Equal(hour, priceInfo.StartTime.Hour);
+                Assert.Equal(priceInfo.StartTime.Hour + 1, priceInfo.ExpiredAt.Hour);
+                Assert.False(priceInfo.PublicHoliday);
+                Assert.Equal("winter", priceInfo.Season);
+
+                Assert.Equal("NOK", priceInfo.VariablePrice.Currency);
+                Assert.Equal(0.3274M, priceInfo.VariablePrice.Energy);
+                Assert.Equal("NORMAL", priceInfo.VariablePrice.Level);
+                Assert.Equal(0M, priceInfo.VariablePrice.Power);
+                Assert.Equal(.2531M, priceInfo.VariablePrice.Taxes);
+                Assert.Equal(.5805M, priceInfo.VariablePrice.Total);
+                Assert.Equal("kr/kWh", priceInfo.VariablePrice.Uom);
+
+                Assert.Equal("NOK", priceInfo.FixedPrices.FirstOrDefault().PriceLevel.FirstOrDefault().Currency);
+                Assert.Equal(.2151M, priceInfo.FixedPrices.FirstOrDefault().PriceLevel.FirstOrDefault().Fixed);
+                Assert.Equal("Level2", priceInfo.FixedPrices.FirstOrDefault().PriceLevel.FirstOrDefault().Level);
+                Assert.Equal("For alle privatkunder i Elvia med tariff: Nettleie Rush&Ro eller Nettleie Dag&Natt", priceInfo.FixedPrices.FirstOrDefault().PriceLevel.FirstOrDefault().LevelInfo);
+                Assert.Equal(.0538M, priceInfo.FixedPrices.FirstOrDefault().PriceLevel.FirstOrDefault().Taxes);
+                Assert.Equal(.2689M, priceInfo.FixedPrices.FirstOrDefault().PriceLevel.FirstOrDefault().Total);
+                Assert.Equal("kr/hour", priceInfo.FixedPrices.FirstOrDefault().PriceLevel.FirstOrDefault().Uom);
             }
         }
 
@@ -361,7 +380,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
         }
 
         [Fact()]
-        public void ChangeInariableTariffTest()
+        public void ChangeInVariableTariffTest()
         {
             Setup();
             DateTime startDate = new DateTime(2024, 12, 27);

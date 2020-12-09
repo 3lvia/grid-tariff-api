@@ -32,11 +32,11 @@ namespace Kunde.TariffApi.Services.TariffQuery
                 .ToDictionary(p => p.Holidaydate, p => p.Description);
 
             TariffQueryResult tariffQueryResult = InitTariffQueryResult(tariffType);
-            tariffQueryResult = ProcessTimePeriodÅerDay(paramFromDate, paramToDate, tariffType.Id, fixedPriceUnitOfMeasure, publicHolidays, tariffQueryResult);
+            tariffQueryResult = ProcessTimePeriodPerDay(paramFromDate, paramToDate, tariffType.Id, fixedPriceUnitOfMeasure, publicHolidays, tariffQueryResult);
             return tariffQueryResult;
         }
 
-        private TariffQueryResult ProcessTimePeriodÅerDay(DateTime paramFromDate, 
+        private TariffQueryResult ProcessTimePeriodPerDay(DateTime paramFromDate, 
             DateTime paramToDate, 
             int tariffTypeId,
             string fixedPriceUnitOfMeasure,
@@ -137,29 +137,22 @@ namespace Kunde.TariffApi.Services.TariffQuery
             String season)
         {
             var priceInfos = new List<PriceInfo>();
-            Dictionary<int, VariablePrice> calculatedVariablePrices = null;
-
-            int fromHour = fromTime.Hour;
-            int toHour = toTime.Hour;
             bool isLowTariff = isPublicHoliday || fromTime.DayOfWeek == DayOfWeek.Saturday || fromTime.DayOfWeek == DayOfWeek.Sunday;
+            Dictionary<int, VariablePrice> calculatedVariablePrices = CalcVariablePricesDay(ref variablePrices, fromTime.Hour, toTime.Hour, isLowTariff);
 
-            calculatedVariablePrices = CalcVariablePricesDay(ref variablePrices, fromHour, toHour, isLowTariff);
-
-            fromTime = fromTime.Date;
-            while (fromHour <= toHour)
+            while (fromTime.Date == toTime.Date && fromTime.Hour <= toTime.Hour)
             {
-                var priceInfo = new PriceInfo()
+                priceInfos.Add(new PriceInfo()
                 {
-                    StartTime = fromTime.AddHours(fromHour),
-                    ExpiredAt = fromTime.AddHours(fromHour + 1),
-                    HoursShortName = $"{fromHour.ToString().PadLeft(2, '0')}-{(fromHour + 1).ToString().PadLeft(2, '0')}",
+                    StartTime = fromTime.Date.AddHours(fromTime.Hour),
+                    ExpiredAt = fromTime.Date.AddHours(fromTime.Hour + 1),
+                    HoursShortName = $"{fromTime.Hour.ToString().PadLeft(2, '0')}-{(fromTime.Hour + 1).ToString().PadLeft(2, '0')}",
                     Season = season,
-                    PublicHoliday = isPublicHoliday
-                };
-                priceInfo.FixedPrices = fixedPrices;
-                priceInfo.VariablePrice = calculatedVariablePrices[fromHour];
-                priceInfos.Add(priceInfo);
-                fromHour++;
+                    PublicHoliday = isPublicHoliday,
+                    FixedPrices = fixedPrices,
+                    VariablePrice = calculatedVariablePrices[fromTime.Hour]
+                });
+                fromTime = fromTime.AddHours(1);
             }
             return priceInfos;
         }
