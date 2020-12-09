@@ -167,7 +167,7 @@ namespace Kunde.TariffApiTests
                     Id = Convert.ToInt32(elements[ctr++]),
                     Sortorder = Convert.ToInt32(elements[ctr++]),
                     PricelevelDescription = elements[2]
-                }); ;
+                });
             }
             return retval;
         }
@@ -190,7 +190,7 @@ namespace Kunde.TariffApiTests
                     Id = Convert.ToInt32(elements[ctr++]),
                     Pricelevel = elements[ctr++],
                     Levelinfo = elements[ctr++]
-                }); ;
+                });
             }
             return retval;
         }
@@ -247,7 +247,7 @@ namespace Kunde.TariffApiTests
                     Uomid = Convert.ToInt32(elements[ctr++], numberFormatInfo),
                     Pricefromdate = DateTime.Parse(elements[ctr++]),
                     Pricetodate = DateTime.Parse(elements[ctr++])
-                }); ;
+                });
             }
             return retval;
         }
