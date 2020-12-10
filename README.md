@@ -1,6 +1,56 @@
 GridTariff API
 =========
-_API for retrieving tariffs ([kunde-tariff-api](https://github.com/3lvia/kunde-tariff-api)). Visit [Swagger UI in dev](https://kunde.dev-elvia.io/tariff-api/swagger/index.html) for more information about resources and schemas._
+GridTariff API is an API intended for use by Norwegian Electrical Grid Utility companies.
+GridTariff API exposes the following service
+
+* Retrieve all available available tariffs (api/{v:apiVersion}/tarifftype)
+* Retrieve tariffs per hour for a given tariff for a given timeperiod (api/{v:apiVersion}/tariffquery)
+
+### Retrieve all available available tariffs (api/{v:apiVersion}/tarifftype)
+Service takes zero parameters
+Service returns json containing information about all tarrifs
+
+### Retrieve tariffs per hour for a given tariff for a given timeperiod (api/{v:apiVersion}/tariffquery)
+Service takes two parameters.
+Parameter one is the tariff which the service is to return data for.
+Parameter two is the timeperiod in question.
+The timperiod can be specified in two ways.
+Either specify timeperiod using paramater Range. Valid values are 'yesterday','today' or 'tomorrow'.
+Or specify timeperiod using StartTime and EndTime.
+
+The service will return tariffs per hour for the given tariff and timeperiod.
+For each hour there will be returned a fixed price element, and a variable price element.
+The variable price element can change for each hour during the day.
+On public holidays, Saturdays and Sundays the variable price elements is always the cheapest available for all hours of the day.
+
+## Most important datbase tables used by GridTariff API
+Script for creating SQL Server database and sample data exists in folder 'SQL' in the solution.
+
+###Table 'tarifftype'
+This table contains all tariffs
+
+### Table 'fixedpriceconfig'
+This table contains fixed price element for tariffs.
+Fixed prices is specified as the fixed price for a given month.
+(The API will calculate fixed price element per hour based on total amount of hours for a given month).
+Fixed prices have a validity interval (pricefromdate/pricetodate).
+Fixed price validity interval can not be arbitrary, they must start/stop at beginning/end of month
+
+### Table 'variablepriceconfig'
+This table contains variable price elements for a given tariff.
+Each tariff may have one or more rows of variable price elements for a given day.
+The column 'Hours' specify which hours of the day the variable price elements is valid.
+Variable prices have a validity interval (pricefromdate/pricetodate).
+Variable price validity interval can not be arbitrary, they must start/stop at beginning/end of month
+
+### Table 'publicholiday'
+This table contains public holidays.
+(For these days the cheapest variable price element valid for the day is used, for all hours of the day).
+
+
+### Other information
+
+([kunde-tariff-api](https://github.com/3lvia/kunde-tariff-api)). Visit [Swagger UI in dev](https://kunde.dev-elvia.io/tariff-api/swagger/index.html) for more information about resources and schemas._
 
 | Build Pipeline | Dev Release | Test Release | Prod Release |
 | -------------- | ----------- | ------------ | ------------ |
@@ -45,7 +95,7 @@ Configuration
 -------------
 
 ### Development configuration
-If you wish to override any of the configuration when developing, create a new file in `/Louvre.ImageImportAPI` called `appsettings.Development.json`, and copy the contents of [Louvre.ImageImportAPI/appsettings.json](Louvre.ImageImportAPI/appsettings.json) into this file.
+If you wish to override any of the configuration when developing, create a new file in `/Kunde.TariffApi` called `appsettings.Development.json`, and copy the contents of [Kunde.TariffApi/appsettings.json](Kunde.TariffApi/appsettings.json) into this file.
 
 Any setting in `appsettings.Development.json` will override the settings in `appsettings.json`, but `appsettings.Development.json` is ignored by git, so you're less likely to check in secrets to source control. If secrets ever are checked in by accident, the most important thing is not to try to gloss over the accident. Instead you should:
 1. [Rotate the exposed secrets](https://hafslundnett.atlassian.net/wiki/spaces/ISOA/pages/1469481180/Rullering+av+hemmeligheter?atlOrigin=eyJpIjoiYzI1Y2U2NjE3MDlhNGEzNWIxOGNmMmQ4OWYxMGMwYmQiLCJwIjoiYyJ9). Talk to your team or the core-team if you're uncertain about how to do this.
