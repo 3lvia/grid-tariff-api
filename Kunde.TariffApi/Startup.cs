@@ -1,9 +1,11 @@
 using Elvia.Configuration;
+using Elvia.Configuration.HashiVault;
 using Elvia.Telemetry;
 using Elvia.Telemetry.Extensions;
 using Kunde.TariffApi.Auth;
 using Kunde.TariffApi.Config;
 using Kunde.TariffApi.EntityFramework;
+using Kunde.TariffApi.Services.Config;
 using Kunde.TariffApi.Services.TariffQuery;
 using Kunde.TariffApi.Services.TariffType;
 using Kunde.TariffApi.Swagger;
@@ -41,32 +43,24 @@ namespace Kunde.TariffApi
                 x.ReportApiVersions = true;
             });
 
-            var instrumentationKey = _configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key");
-            services.AddStandardElviaTelemetryLogging(instrumentationKey);
+            GridTariffApiConfig gridTariffAPIConfig = GridTariffApiConfigFactory.GetGridTariffAPIConfig(_configuration);
+            services.AddSingleton(gridTariffAPIConfig);
+            services.AddStandardElviaTelemetryLogging(gridTariffAPIConfig.InstrumentationKey);
             services.AddTransient<ITariffTypeService, TariffTypeService>();
             services.AddTransient<ITariffQueryService, TariffQueryService>();
-            var connectionString = _configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string");
-            services.AddDbContext<TariffContext>(options => options.UseSqlServer(connectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
-            var tariffQueryValidationSettings = _configuration.GetSection("TariffQueryValidationSettings").Get<TariffQueryValidationSettings>();
-            services.AddSingleton(tariffQueryValidationSettings);
+            services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffAPIConfig.DBConnectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
             var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
             services.AddSwaggerConfiguration(swaggerSettings);
-
-            ConfigureAuth(services);
+            ConfigureAuth(services, gridTariffAPIConfig.Username, gridTariffAPIConfig.Password);
         }
 
-        protected virtual void ConfigureAuth(IServiceCollection services)
+        protected virtual void ConfigureAuth(IServiceCollection services, string user, string password)
         {
-            var username = _configuration.EnsureHasValue("kunde:kv:nett-tariff-api:username");
-            var password = _configuration.EnsureHasValue("kunde:kv:nett-tariff-api:password");
-
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
-
             services.AddSingleton(config =>
-                new AuthenticationConfig(username, password));
+                new AuthenticationConfig(user, password));
         }
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -22,17 +22,17 @@ namespace Kunde.TariffApi.Controllers.v1
         private readonly ITelemetryInsightsLogger _telemetry;
         private readonly ITariffTypeService _tariffTypeService;
         private readonly ITariffQueryService _tariffQueryService;
-        private readonly TariffQueryValidationSettings _tariffQueryValidationSettings;
+        private readonly GridTariffApiConfig _gridTariffApiConfig;
         public TariffQueryController(
             ITelemetryInsightsLogger telemetry,
             ITariffTypeService tariffTypeService,
             ITariffQueryService tariffQueryService,
-            TariffQueryValidationSettings tariffQueryValidationSettings)
+            GridTariffApiConfig gridTariffApiConfig)
         {
             _telemetry = telemetry;
             _tariffTypeService = tariffTypeService;
             _tariffQueryService = tariffQueryService;
-            _tariffQueryValidationSettings = tariffQueryValidationSettings;
+            _gridTariffApiConfig = gridTariffApiConfig;
         }
 
         /// <summary>
@@ -77,9 +77,9 @@ namespace Kunde.TariffApi.Controllers.v1
             }
 
             DateTime startDateTime = GetStartTime(tariffQueryModel);
-            if (startDateTime < _tariffQueryValidationSettings.MinStartDateAllowed)
+            if (startDateTime < _gridTariffApiConfig.MinStartDateAllowedQuery)
             {
-                return $"Query before {_tariffQueryValidationSettings.MinStartDateAllowed} not supported";
+                return $"Query before {_gridTariffApiConfig.MinStartDateAllowedQuery} not supported";
             }
             return String.Empty;
         }

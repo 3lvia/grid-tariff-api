@@ -15,7 +15,6 @@ namespace Kunde.TariffApi
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureAppConfiguration((context, config) => config.AddHashiVaultSecrets());
                     webBuilder.UseStartup<Startup>();
                 });
     }

@@ -47,6 +47,9 @@ Variable price validity interval can not be arbitrary, they must start/stop at b
 This table contains public holidays.
 (For these days the cheapest variable price element valid for the day is used, for all hours of the day).
 
+## Overview of solution
+
+
 
 ### Other information
 
