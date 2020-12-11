@@ -123,8 +123,12 @@ Alternative implementation of logging can be implementetd by extending LoggingHa
 ### SwaggerSettings
 **UseSwaggerUI** is a boolean that determines whether or not Swagger UI is served by GridTariff API.
 
+## Azure API Management.
+GridTariff API can be used as is with basic authentication.
+GridTariff API has also been successfully deployed with Azure API Management in front.
+Deployment was done using [API Management Suite] (https://marketplace.visualstudio.com/items?itemName=stephane-eyskens.apim) , but other deployment strategies may also work.
 
-### Other
+## Other 
 Solution includes the following two nuget packages mantained by Elvia AS.
 * Elvia Configuration
 * Elvia Telemetry
