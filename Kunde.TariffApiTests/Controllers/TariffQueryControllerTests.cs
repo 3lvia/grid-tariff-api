@@ -1,8 +1,8 @@
-﻿using Elvia.Telemetry;
-using Kunde.TariffApi.Config;
+﻿using Kunde.TariffApi.Config;
 using Kunde.TariffApi.Controllers.v1;
 using Kunde.TariffApi.EntityFramework;
 using Kunde.TariffApi.Models.TariffQuery;
+using Kunde.TariffApi.Services.Logger;
 using Kunde.TariffApi.Services.TariffQuery;
 using Kunde.TariffApi.Services.TariffType;
 using Kunde.TariffApiTests;
@@ -20,7 +20,7 @@ namespace Kunde.TariffApi.Controllers.Tests
 {
     public class TariffQueryControllerTests
     {
-        private Mock<ITelemetryInsightsLogger> _mockLogger;
+        private Mock<ILoggingHandler> _mockLogger;
         private TariffQueryController _tariffQueryController;
         private TariffQueryService _TariffQueryService;
 
@@ -29,7 +29,7 @@ namespace Kunde.TariffApi.Controllers.Tests
 
         private void Setup()
         {
-            _mockLogger = new Mock<ITelemetryInsightsLogger>();
+            _mockLogger = new Mock<ILoggingHandler>();
 
             var services = new ServiceCollection();
             var db = Guid.NewGuid().ToString();
@@ -38,10 +38,10 @@ namespace Kunde.TariffApi.Controllers.Tests
             var provider = services.BuildServiceProvider();
             _tariffContext = provider.GetRequiredService<TariffContext>();
 
-            TariffQueryValidationSettings tariffQueryValidationSettings = new TariffQueryValidationSettings() { MinStartDateAllowed = new DateTime(2020, 11, 01) };
+            GridTariffApiConfig gridTariffApiConfig = new GridTariffApiConfig() { MinStartDateAllowedQuery = new DateTime(2020, 11, 01) };
             _TariffQueryService = new TariffQueryService(_tariffContext);
             _tariffTypeService = new TariffTypeService(_tariffContext);
-            _tariffQueryController = new TariffQueryController(_mockLogger.Object, _tariffTypeService, _TariffQueryService, tariffQueryValidationSettings);
+            _tariffQueryController = new TariffQueryController(_mockLogger.Object, _tariffTypeService, _TariffQueryService, gridTariffApiConfig);
 
             TestHelper testHelper = new TestHelper();
 

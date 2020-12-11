@@ -1,7 +1,7 @@
-﻿using Elvia.Telemetry;
-using Kunde.TariffApi.Config;
+﻿using Kunde.TariffApi.Config;
 using Kunde.TariffApi.Models;
 using Kunde.TariffApi.Models.TariffQuery;
+using Kunde.TariffApi.Services.Logger;
 using Kunde.TariffApi.Services.TariffQuery;
 using Kunde.TariffApi.Services.TariffType;
 using Microsoft.AspNetCore.Authorization;
@@ -19,17 +19,17 @@ namespace Kunde.TariffApi.Controllers.v1
     [Route("api/{v:apiVersion}/tariffquery")]
     public class TariffQueryController : ControllerBase
     {
-        private readonly ITelemetryInsightsLogger _telemetry;
         private readonly ITariffTypeService _tariffTypeService;
         private readonly ITariffQueryService _tariffQueryService;
         private readonly GridTariffApiConfig _gridTariffApiConfig;
+        private readonly ILoggingHandler _loggingHandler;
         public TariffQueryController(
-            ITelemetryInsightsLogger telemetry,
+            ILoggingHandler loggingHandler,
             ITariffTypeService tariffTypeService,
             ITariffQueryService tariffQueryService,
             GridTariffApiConfig gridTariffApiConfig)
         {
-            _telemetry = telemetry;
+            _loggingHandler = loggingHandler;
             _tariffTypeService = tariffTypeService;
             _tariffQueryService = tariffQueryService;
             _gridTariffApiConfig = gridTariffApiConfig;
@@ -58,7 +58,7 @@ namespace Kunde.TariffApi.Controllers.v1
             DateTime startDateTime = GetStartTime(tariffQueryRequest);
             DateTime endDateTime = GetEndTime(tariffQueryRequest);
             TariffQueryResult tariffQueryResult = _tariffQueryService.QueryTariff(tariffQueryRequest.TariffKey, startDateTime, endDateTime);
-            _telemetry.TrackMetric($"TariffAPI|TimeToQueryTariffsInSeconds", (double)processingTime.ElapsedMilliseconds / 1000);
+            _loggingHandler.TrackMetric($"TariffAPI|TimeToQueryTariffsInSeconds", (double)processingTime.ElapsedMilliseconds / 1000);
             return Ok(tariffQueryResult);
         }
 

@@ -1,5 +1,5 @@
-﻿using Elvia.Telemetry;
-using Kunde.TariffApi.Models;
+﻿using Kunde.TariffApi.Models;
+using Kunde.TariffApi.Services.Logger;
 using Kunde.TariffApi.Services.TariffType;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +17,14 @@ namespace Kunde.TariffApi.Controllers.v1
     public class TariffTypeController : ControllerBase
     {
         private readonly ITariffTypeService _tariffTypeService;
-        private readonly ITelemetryInsightsLogger _telemetry;
-        public TariffTypeController(ITariffTypeService tariffTypeService, ITelemetryInsightsLogger telemetry)
+        private readonly ILoggingHandler _loggingHandler;
+
+        public TariffTypeController(ITariffTypeService tariffTypeService, 
+            ILoggingHandler loggingHandler
+)
         {
+            _loggingHandler = loggingHandler;
             _tariffTypeService = tariffTypeService;
-            _telemetry = telemetry;
         }
         /// <summary>
         /// Service returns all available private tariffs
@@ -33,7 +36,7 @@ namespace Kunde.TariffApi.Controllers.v1
         {
             var processingTime = Stopwatch.StartNew();
             TariffTypeContainer tariffTypeContainer = _tariffTypeService.GetTariffTypes();
-            _telemetry.TrackMetric($"TariffAPI|TimeToGetTariffTypesInSeconds", (double)processingTime.ElapsedMilliseconds / 1000);
+            _loggingHandler.TrackMetric($"TariffAPI|TimeToGetTariffTypesInSeconds", (double)processingTime.ElapsedMilliseconds / 1000);
 
             return Ok(tariffTypeContainer);
         }

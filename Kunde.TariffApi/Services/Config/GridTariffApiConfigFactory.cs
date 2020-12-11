@@ -1,9 +1,5 @@
 ﻿using Kunde.TariffApi.Config;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Kunde.TariffApi.Services.Config
 {
@@ -12,11 +8,11 @@ namespace Kunde.TariffApi.Services.Config
         public static GridTariffApiConfig GetGridTariffAPIConfig(IConfiguration configuration)
         {
             var gridTariffAPIParameters = configuration.GetSection("GridTariffAPIConfig").Get<GridTariffApiConfig>();
-            IConfigHandler configHandler = getImplementetation(gridTariffAPIParameters.AlternativeSource);
+            IConfigHandler configHandler = GetImplementetation(gridTariffAPIParameters.AlternativeSource);
             return configHandler.GetConfig(gridTariffAPIParameters);
         }
 
-        private static IConfigHandler getImplementetation (string alternativeSource)
+        private static IConfigHandler GetImplementetation (string alternativeSource)
         {
             if (alternativeSource.Equals("Elvia"))
             {

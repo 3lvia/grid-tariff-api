@@ -6,12 +6,11 @@ using Kunde.TariffApi.Auth;
 using Kunde.TariffApi.Config;
 using Kunde.TariffApi.EntityFramework;
 using Kunde.TariffApi.Services.Config;
+using Kunde.TariffApi.Services.Logger;
 using Kunde.TariffApi.Services.TariffQuery;
 using Kunde.TariffApi.Services.TariffType;
 using Kunde.TariffApi.Swagger;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +19,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prometheus;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace Kunde.TariffApi
 {
@@ -45,7 +43,7 @@ namespace Kunde.TariffApi
 
             GridTariffApiConfig gridTariffAPIConfig = GridTariffApiConfigFactory.GetGridTariffAPIConfig(_configuration);
             services.AddSingleton(gridTariffAPIConfig);
-            services.AddStandardElviaTelemetryLogging(gridTariffAPIConfig.InstrumentationKey);
+            services.AddSingleton<ILoggingHandler, LoggingHandler>();
             services.AddTransient<ITariffTypeService, TariffTypeService>();
             services.AddTransient<ITariffQueryService, TariffQueryService>();
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffAPIConfig.DBConnectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));

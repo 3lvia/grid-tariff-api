@@ -1,7 +1,7 @@
-﻿using Elvia.Telemetry;
-using Kunde.TariffApi.Controllers.v1;
+﻿using Kunde.TariffApi.Controllers.v1;
 using Kunde.TariffApi.EntityFramework;
 using Kunde.TariffApi.Models;
+using Kunde.TariffApi.Services.Logger;
 using Kunde.TariffApi.Services.TariffType;
 using Kunde.TariffApiTests;
 using Microsoft.EntityFrameworkCore;
@@ -15,14 +15,14 @@ namespace Kunde.TariffApi.Controllers.Tests
 {
     public class TariffTypeControllerTests
     {
-        private Mock<ITelemetryInsightsLogger> _mockLogger;
+        private Mock<ILoggingHandler> _mockLogger;
         private TariffTypeController _tariffTypeController;
         private TariffTypeService _tariffTypeService;
         private TariffContext _tariffContext;
 
         private void Setup()
         {
-            _mockLogger = new Mock<ITelemetryInsightsLogger>();
+            _mockLogger = new Mock<ILoggingHandler>();
 
             var services = new ServiceCollection();
             var db = Guid.NewGuid().ToString();
