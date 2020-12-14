@@ -111,7 +111,9 @@ To authorize Swagger UI, you start by clicking on the "Authorize"-button. Then a
 -------------
 GridTariff API uses appsettings.json for configuration variables.
 Alternative source of configuration can be implemented by implementing interface IConfigHandler and extending class GridTariffApiConfigFactory.
-In appsettings.json the variable AlternativeSource must have an unique value for this to work.
+There exists two different ways to specify override of default appsettings.json configuration.
+1. Set value AlternativeSource in appsettings.json
+2. Set OS environment variable alternativeSource
 
 ### Development configuration
 If you wish to override any of the configuration when developing, create a new file in `/Kunde.TariffApi` called `appsettings.Development.json`, and copy the contents of [Kunde.TariffApi/appsettings.json](Kunde.TariffApi/appsettings.json) into this file.

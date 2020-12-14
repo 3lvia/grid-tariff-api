@@ -351,3 +351,4 @@ MigrationBackup/
 /Kunde.TariffApi/FetchHolidays
 
 launchSettings.json
+/Kunde.TariffApi/appsettings.development.json
