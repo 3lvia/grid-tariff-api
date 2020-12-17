@@ -3,9 +3,9 @@ LABEL maintainer="elvia@elvia.no"
 WORKDIR /app
 COPY . .
 RUN dotnet restore \
-    Kunde.TariffApi.csproj \
+    GridTariffApi.csproj \
     && dotnet publish \
-    Kunde.TariffApi.csproj \
+    GridTariffApi.csproj \
     --output ./out \
     --configuration Release
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine AS runtime
