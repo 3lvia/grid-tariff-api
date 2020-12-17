@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kunde.TariffApi", "Kunde.TariffApi\Kunde.TariffApi.csproj", "{7409F122-48CE-4333-AE47-E3662A828E6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GridTariffApi", "Kunde.TariffApi\GridTariffApi.csproj", "{7409F122-48CE-4333-AE47-E3662A828E6B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CI", "CI", "{041DA3EE-5BB6-47A5-B1D5-4E556FC71FFA}"
 	ProjectSection(SolutionItems) = preProject
@@ -14,7 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CI", "CI", "{041DA3EE-5BB6-
 		CI\deploy.yaml = CI\deploy.yaml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kunde.TariffApiTests", "Kunde.TariffApiTests\Kunde.TariffApiTests.csproj", "{DB0D0D26-5B4C-4ABB-89BE-F0560E1E61E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GridTariffApi.Lib.Tests", "Kunde.TariffApiTests\GridTariffApi.Lib.Tests.csproj", "{DB0D0D26-5B4C-4ABB-89BE-F0560E1E61E8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GridTariffApi.Lib", "GridTariffAPI.lib\GridTariffApi.Lib.csproj", "{846917CC-BAF0-4FA3-8B8C-568F85235E31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,10 @@ Global
 		{DB0D0D26-5B4C-4ABB-89BE-F0560E1E61E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB0D0D26-5B4C-4ABB-89BE-F0560E1E61E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB0D0D26-5B4C-4ABB-89BE-F0560E1E61E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{846917CC-BAF0-4FA3-8B8C-568F85235E31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{846917CC-BAF0-4FA3-8B8C-568F85235E31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{846917CC-BAF0-4FA3-8B8C-568F85235E31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{846917CC-BAF0-4FA3-8B8C-568F85235E31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

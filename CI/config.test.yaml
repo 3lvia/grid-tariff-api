@@ -5,6 +5,7 @@ metadata:
 data:
   environment : "Test"
   swaggerSettings.useSwaggerUI: "true"
-  alternativeSource: "Elvia"
   minStartDateAllowedQuery : "2020-11-01T00:00:00Z"
+  timeZone: "W. Europe Standard Time"
+
 

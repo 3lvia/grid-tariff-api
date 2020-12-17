@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Kunde.TariffApi.Controllers
+namespace GridTariffApi.Controllers
 {
 
     /// <summary>

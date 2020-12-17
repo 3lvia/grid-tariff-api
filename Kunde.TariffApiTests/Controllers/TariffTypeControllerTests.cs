@@ -1,28 +1,23 @@
-﻿using Kunde.TariffApi.Controllers.v1;
-using Kunde.TariffApi.EntityFramework;
-using Kunde.TariffApi.Models;
-using Kunde.TariffApi.Services.Logger;
-using Kunde.TariffApi.Services.TariffType;
-using Kunde.TariffApiTests;
+﻿using GridTariffApi.Lib.Controllers.v1;
+using GridTariffApi.Lib.EntityFramework;
+using GridTariffApi.Lib.Models;
+using GridTariffApi.Lib.Services.TariffType;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using System;
 using System.Linq;
 using Xunit;
 
-namespace Kunde.TariffApi.Controllers.Tests
+namespace GridTariffApi.Controllers.Tests
 {
     public class TariffTypeControllerTests
     {
-        private Mock<ILoggingHandler> _mockLogger;
         private TariffTypeController _tariffTypeController;
         private TariffTypeService _tariffTypeService;
         private TariffContext _tariffContext;
 
         private void Setup()
         {
-            _mockLogger = new Mock<ILoggingHandler>();
 
             var services = new ServiceCollection();
             var db = Guid.NewGuid().ToString();
@@ -30,20 +25,15 @@ namespace Kunde.TariffApi.Controllers.Tests
 
             var provider = services.BuildServiceProvider();
             _tariffContext = provider.GetRequiredService<TariffContext>();
-
             _tariffTypeService = new TariffTypeService(_tariffContext);
-            _tariffTypeController = new TariffTypeController(_tariffTypeService, _mockLogger.Object);
-
+            _tariffTypeController = new TariffTypeController(_tariffTypeService);
             TestHelper testHelper = new TestHelper();
-
             _tariffContext.Company.Add(testHelper.GetCompanyElvia());
             _tariffContext.Company.Add(testHelper.GetCompanyFoobar());
-
             _tariffContext.TariffType.Add(testHelper.GetTariffRush());
-            EntityFramework.TariffType dayNight = testHelper.GetTariffDayNight();
+            GridTariffApi.Lib.EntityFramework.TariffType dayNight = testHelper.GetTariffDayNight();
             dayNight.CompanyId = 2;
             _tariffContext.TariffType.Add(dayNight);
-
             _tariffContext.SaveChanges();
         }
 
@@ -69,10 +59,10 @@ namespace Kunde.TariffApi.Controllers.Tests
             TariffTypeContainer tariffTypeContainer = _tariffTypeService.GetTariffTypes();
             Assert.Equal(2, tariffTypeContainer.TariffTypes.Count);
 
-            Kunde.TariffApi.EntityFramework.TariffType tariffTypeRush = _tariffContext.TariffType.Where(t => t.TariffKey.Equals("private_tou_rush")).Include(t => t.Company).FirstOrDefault();
+            GridTariffApi.Lib.EntityFramework.TariffType tariffTypeRush = _tariffContext.TariffType.Where(t => t.TariffKey.Equals("private_tou_rush")).Include(t => t.Company).FirstOrDefault();
             Assert.True(testHelper.Contains(tariffTypeContainer.TariffTypes, tariffTypeRush));
 
-            Kunde.TariffApi.EntityFramework.TariffType tariffTypeDayNight = _tariffContext.TariffType.Where(t => t.TariffKey.Equals("private_tou_daynight")).Include(t => t.Company).FirstOrDefault();
+            GridTariffApi.Lib.EntityFramework.TariffType tariffTypeDayNight = _tariffContext.TariffType.Where(t => t.TariffKey.Equals("private_tou_daynight")).Include(t => t.Company).FirstOrDefault();
             Assert.True(testHelper.Contains(tariffTypeContainer.TariffTypes, tariffTypeDayNight));
         }
     }

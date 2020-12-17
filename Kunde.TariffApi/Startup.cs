@@ -1,15 +1,13 @@
 using Elvia.Configuration;
-using Elvia.Configuration.HashiVault;
-using Elvia.Telemetry;
 using Elvia.Telemetry.Extensions;
-using Kunde.TariffApi.Auth;
-using Kunde.TariffApi.Config;
-using Kunde.TariffApi.EntityFramework;
-using Kunde.TariffApi.Services.Config;
-using Kunde.TariffApi.Services.Logger;
-using Kunde.TariffApi.Services.TariffQuery;
-using Kunde.TariffApi.Services.TariffType;
-using Kunde.TariffApi.Swagger;
+using GridTariffApi.Auth;
+using GridTariffApi.Lib.Config;
+using GridTariffApi.Lib.EntityFramework;
+using GridTariffApi.Lib.Services.TariffQuery;
+using GridTariffApi.Lib.Services.TariffType;
+using GridTariffApi.Lib.Swagger;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,8 +17,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prometheus;
+using System;
 
-namespace Kunde.TariffApi
+namespace GridTariff.Api
 {
     public class Startup
     {
@@ -41,15 +40,33 @@ namespace Kunde.TariffApi
                 x.ReportApiVersions = true;
             });
 
-            GridTariffApiConfig gridTariffAPIConfig = GridTariffApiConfigFactory.GetGridTariffAPIConfig(_configuration);
-            services.AddSingleton(gridTariffAPIConfig);
-            services.AddSingleton<ILoggingHandler, LoggingHandler>();
+            GridTariffApiConfig gridTariffApiConfig = GetGridTariffApiConfig();
+            services.AddSingleton (gridTariffApiConfig);
+
+            TelemetryConfiguration tconfiguration = TelemetryConfiguration.CreateDefault();
+            tconfiguration.InstrumentationKey = gridTariffApiConfig.InstrumentationKey;
+            var telemetryClient = new TelemetryClient(tconfiguration);
+            services.AddSingleton<TelemetryClient>(telemetryClient);
+
             services.AddTransient<ITariffTypeService, TariffTypeService>();
             services.AddTransient<ITariffQueryService, TariffQueryService>();
-            services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffAPIConfig.DBConnectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+            services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+
             var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
             services.AddSwaggerConfiguration(swaggerSettings);
-            ConfigureAuth(services, gridTariffAPIConfig.Username, gridTariffAPIConfig.Password);
+            ConfigureAuth(services, gridTariffApiConfig.Username, gridTariffApiConfig.Password);
+        }
+
+        private GridTariffApiConfig GetGridTariffApiConfig()
+        {
+            GridTariffApiConfig gridTariffApiConfig = new GridTariffApiConfig();
+            gridTariffApiConfig.DBConnectionString = _configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string");
+            gridTariffApiConfig.InstrumentationKey = _configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key");
+            gridTariffApiConfig.Username = _configuration.EnsureHasValue("kunde:kv:nett-tariff-api:username");
+            gridTariffApiConfig.Password = _configuration.EnsureHasValue("kunde:kv:nett-tariff-api:password");
+            gridTariffApiConfig.MinStartDateAllowedQuery = _configuration.GetValue<DateTime>("minStartDateAllowedQuery");
+            gridTariffApiConfig.TimeZone = _configuration.GetValue<String>("timeZone");
+            return gridTariffApiConfig;
         }
 
         protected virtual void ConfigureAuth(IServiceCollection services, string user, string password)

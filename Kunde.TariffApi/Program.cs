@@ -1,9 +1,10 @@
+using Elvia.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Kunde.TariffApi
+namespace GridTariff.Api
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -14,6 +15,7 @@ namespace Kunde.TariffApi
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureAppConfiguration((context, config) => config.AddHashiVaultSecrets());
                     webBuilder.UseStartup<Startup>();
                 });
     }

@@ -1,21 +1,18 @@
-﻿using Elvia.Telemetry;
-using Kunde.TariffApi.EntityFramework;
-using Kunde.TariffApi.Models.TariffQuery;
-using Kunde.TariffApi.Services.TariffType;
-using Kunde.TariffApiTests;
+﻿using GridTariffApi.Lib.EntityFramework;
+using GridTariffApi.Lib.Models.TariffQuery;
+using GridTariffApi.Lib.Services.TariffQuery;
+using GridTariffApi.Lib.Services.TariffType;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace Kunde.TariffApi.Services.TariffQuery.Tests
+namespace GridTariffApi.Services.TariffQuery.Tests
 {
     public class TariffQueryServiceTests
     {
-        private Mock<ITelemetryInsightsLogger> _mockLogger;
         private TariffQueryService _TariffQueryService;
 
         private TariffTypeService _tariffTypeService;
@@ -23,7 +20,6 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
 
         private void Setup()
         {
-            _mockLogger = new Mock<ITelemetryInsightsLogger>();
             var services = new ServiceCollection();
             var db = Guid.NewGuid().ToString();
             services.AddDbContext<TariffContext>(u => u.UseInMemoryDatabase(databaseName: db));
@@ -37,7 +33,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
             _tariffContext.Add(testHelper.GetCompanyFoobar());
 
             _tariffContext.Add(testHelper.GetTariffRush());
-            EntityFramework.TariffType dayNight = testHelper.GetTariffDayNight();
+            GridTariffApi.Lib.EntityFramework.TariffType dayNight = testHelper.GetTariffDayNight();
             dayNight.CompanyId = 2;
             _tariffContext.Add(dayNight);
 
@@ -368,7 +364,7 @@ namespace Kunde.TariffApi.Services.TariffQuery.Tests
                     Assert.Single(priceInfo.FixedPrices);
                     FixedPrices fixedPrice = priceInfo.FixedPrices.FirstOrDefault();
                     Assert.Single(fixedPrice.PriceLevel);
-                    Models.TariffQuery.PriceLevel priceLevel = fixedPrice.PriceLevel.FirstOrDefault();
+                    GridTariffApi.Lib.Models.TariffQuery.PriceLevel priceLevel = fixedPrice.PriceLevel.FirstOrDefault();
 
                     Assert.Equal(fixedVal, priceLevel.Fixed);
                     Assert.Equal(taxesVal, priceLevel.Taxes);

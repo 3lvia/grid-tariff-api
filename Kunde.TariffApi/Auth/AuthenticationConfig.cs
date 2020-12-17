@@ -1,4 +1,4 @@
-﻿namespace Kunde.TariffApi.Auth
+﻿namespace GridTariffApi.Auth
 {
     public class AuthenticationConfig
     {

@@ -56,16 +56,16 @@ spec:
                 key: swaggerSettings.useSwaggerUI
           - name: SwaggerSettings__PathPrefix
             value: "/tariff-api"
-          - name: alternativeSource
-            valueFrom:
-              configMapKeyRef:
-                name: nett-tariff-api
-                key: alternativeSource
           - name: minStartDateAllowedQuery
             valueFrom:
               configMapKeyRef:
                 name: nett-tariff-api
                 key: minStartDateAllowedQuery
+          - name: timeZone
+            valueFrom:
+              configMapKeyRef:
+                name: nett-tariff-api
+                key: timeZone
 ---
 apiVersion: v1
 kind: Service

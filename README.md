@@ -26,7 +26,7 @@ On public holidays, Saturdays and Sundays the variable price elements is always 
 ## Most important datbase tables used by GridTariff API
 Script for creating SQL Server database and sample data exists in folder 'SQL' in the solution.
 
-###Table 'tarifftype'
+### Table 'tarifftype'
 This table contains all tariffs
 
 ### Table 'fixedpriceconfig'
@@ -107,7 +107,7 @@ GridTariff API is authorizing users using basic authentication, so before using 
 To authorize Swagger UI, you start by clicking on the "Authorize"-button. Then add the username and password and click "Authorize".
 
 
-##Configuration
+## Configuration
 -------------
 GridTariff API uses appsettings.json for configuration variables.
 Alternative source of configuration can be implemented by implementing interface IConfigHandler and extending class GridTariffApiConfigFactory.
@@ -118,7 +118,7 @@ There exists two different ways to specify override of default appsettings.json 
 ### Development configuration
 If you wish to override any of the configuration when developing, create a new file in `/Kunde.TariffApi` called `appsettings.Development.json`, and copy the contents of [Kunde.TariffApi/appsettings.json](Kunde.TariffApi/appsettings.json) into this file.
 
-##Logging
+## Logging
 Logging to vanilla Azure Application Insights is supported.
 Alternative implementation of logging can be implementetd by extending LoggingHandler.
 

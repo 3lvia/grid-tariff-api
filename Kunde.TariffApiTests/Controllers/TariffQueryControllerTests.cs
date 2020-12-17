@@ -1,26 +1,22 @@
-﻿using Kunde.TariffApi.Config;
-using Kunde.TariffApi.Controllers.v1;
-using Kunde.TariffApi.EntityFramework;
-using Kunde.TariffApi.Models.TariffQuery;
-using Kunde.TariffApi.Services.Logger;
-using Kunde.TariffApi.Services.TariffQuery;
-using Kunde.TariffApi.Services.TariffType;
-using Kunde.TariffApiTests;
+﻿using GridTariffApi.Lib.Config;
+using GridTariffApi.Lib.Controllers.v1;
+using GridTariffApi.Lib.EntityFramework;
+using GridTariffApi.Lib.Models.TariffQuery;
+using GridTariffApi.Lib.Services.TariffQuery;
+using GridTariffApi.Lib.Services.TariffType;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Xunit;
 
-namespace Kunde.TariffApi.Controllers.Tests
+namespace GridTariffApi.Controllers.Tests
 {
     public class TariffQueryControllerTests
     {
-        private Mock<ILoggingHandler> _mockLogger;
         private TariffQueryController _tariffQueryController;
         private TariffQueryService _TariffQueryService;
 
@@ -29,7 +25,6 @@ namespace Kunde.TariffApi.Controllers.Tests
 
         private void Setup()
         {
-            _mockLogger = new Mock<ILoggingHandler>();
 
             var services = new ServiceCollection();
             var db = Guid.NewGuid().ToString();
@@ -41,7 +36,7 @@ namespace Kunde.TariffApi.Controllers.Tests
             GridTariffApiConfig gridTariffApiConfig = new GridTariffApiConfig() { MinStartDateAllowedQuery = new DateTime(2020, 11, 01) };
             _TariffQueryService = new TariffQueryService(_tariffContext);
             _tariffTypeService = new TariffTypeService(_tariffContext);
-            _tariffQueryController = new TariffQueryController(_mockLogger.Object, _tariffTypeService, _TariffQueryService, gridTariffApiConfig);
+            _tariffQueryController = new TariffQueryController(_tariffTypeService, _TariffQueryService, gridTariffApiConfig);
 
             TestHelper testHelper = new TestHelper();
 
@@ -49,7 +44,7 @@ namespace Kunde.TariffApi.Controllers.Tests
             _tariffContext.Add(testHelper.GetCompanyFoobar());
 
             _tariffContext.Add(testHelper.GetTariffRush());
-            EntityFramework.TariffType dayNight = testHelper.GetTariffDayNight();
+            GridTariffApi.Lib.EntityFramework.TariffType dayNight = testHelper.GetTariffDayNight();
             dayNight.CompanyId = 2;
             _tariffContext.Add(dayNight);
 

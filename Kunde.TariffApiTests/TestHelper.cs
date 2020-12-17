@@ -1,9 +1,9 @@
-﻿using Kunde.TariffApi.EntityFramework;
+﻿using GridTariffApi.Lib.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace Kunde.TariffApiTests
+namespace GridTariffApi
 {
     public class TestHelper
     {
@@ -30,9 +30,9 @@ namespace Kunde.TariffApiTests
             };
         }
 
-        public TariffType GetTariffRush()
+        public GridTariffApi.Lib.EntityFramework.TariffType GetTariffRush()
         {
-            return new TariffType()
+            return new GridTariffApi.Lib.EntityFramework.TariffType()
             {
                 TariffKey = "private_tou_rush",
                 CompanyId = 1,
@@ -43,9 +43,9 @@ namespace Kunde.TariffApiTests
             };
         }
 
-        public TariffType GetTariffDayNight()
+        public GridTariffApi.Lib.EntityFramework.TariffType GetTariffDayNight()
         {
-            return new TariffType()
+            return new GridTariffApi.Lib.EntityFramework.TariffType()
             {
                 TariffKey = "private_tou_daynight",
                 CompanyId = 1,
@@ -57,7 +57,7 @@ namespace Kunde.TariffApiTests
         }
 
 
-        public bool Contains(List<TariffApi.Models.TariffType> model, TariffType db)
+        public bool Contains(List<GridTariffApi.Lib.Models.TariffType> model, GridTariffApi.Lib.EntityFramework.TariffType db)
         {
             foreach (var tariffType in model)
             {

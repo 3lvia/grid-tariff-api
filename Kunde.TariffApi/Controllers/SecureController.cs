@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Kunde.TariffApi.Controllers
+namespace GridTariffApi.Controllers
 {
     /// <summary>
     /// Ping to validate security
