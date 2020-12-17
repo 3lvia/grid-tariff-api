@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kunde.TariffApi\GridTariffApi.csproj" />
+    <ProjectReference Include="..\GridTariffAPI.lib\GridTariffApi.Lib.csproj" />
   </ItemGroup>
 
 </Project>

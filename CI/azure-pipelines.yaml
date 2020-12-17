@@ -42,7 +42,7 @@ jobs:
     displayName: 'Unit tests'
     inputs:
       command: test
-      projects: Kunde.TariffApiTests/GridTariffApi.Lib.Tests.csproj
+      projects: GridTariffApi.Lib.Tests/GridTariffApi.Lib.Tests.csproj
       arguments: '--configuration Release --collect:"Code Coverage"'
       nobuild: true
   - task: Docker@2

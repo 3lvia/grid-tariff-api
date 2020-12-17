@@ -3,9 +3,9 @@ LABEL maintainer="elvia@elvia.no"
 WORKDIR /app
 COPY . .
 RUN dotnet restore \
-    Kunde.TariffApi/GridTariffApi.csproj \
+    GridTariffAPI/GridTariffApi.csproj \
     && dotnet publish \
-    Kunde.TariffApi/GridTariffApi.csproj \
+    GridTariffAPI/GridTariffApi.csproj \
     --output ./out \
     --configuration Release
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine AS runtime
@@ -27,4 +27,4 @@ COPY --from=build /app/out .
 RUN chown --recursive application-user .
 USER application-user
 EXPOSE 8080
-ENTRYPOINT ["dotnet", "Kunde.TariffApi.dll"]
+ENTRYPOINT ["dotnet", "GridTariffApi.dll"]
