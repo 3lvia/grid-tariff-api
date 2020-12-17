@@ -5,7 +5,7 @@ COPY . .
 RUN dotnet restore \
     Kunde.TariffApi/GridTariffApi.csproj \
     && dotnet publish \
-    GridTariffApi.csproj \
+    Kunde.TariffApi/GridTariffApi.csproj \
     --output ./out \
     --configuration Release
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine AS runtime
