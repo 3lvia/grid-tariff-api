@@ -1,5 +1,5 @@
 ## GridTariff Api
-=========
+
 GridTariff Api is an Api intended for for offering variable electrical grid tariffs.
 GridTariff Api exposes the following services:
 
