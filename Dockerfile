@@ -3,7 +3,7 @@ LABEL maintainer="elvia@elvia.no"
 WORKDIR /app
 COPY . .
 RUN dotnet restore \
-    GridTariffApi.csproj \
+    Kunde.TariffApi/GridTariffApi.csproj \
     && dotnet publish \
     GridTariffApi.csproj \
     --output ./out \
