@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nett-tariff-api
+  name: grid-tariff-api
 spec:
   replicas: 1
   strategy:
@@ -11,21 +11,21 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: nett-tariff-api
+      app: grid-tariff-api
   template:
     metadata:
       labels:
-        app: nett-tariff-api
+        app: grid-tariff-api
     spec:
-      serviceAccountName: nett-tariff-api
+      serviceAccountName: grid-tariff-api
       imagePullSecrets:
       - name: containerregistryprodsecret
       dnsConfig:
         options:
         - name: single-request-reopen
       containers:
-      - name: nett-tariff-api
-        image: containerregistryelvia.azurecr.io/nett-tariff-api:imagetag
+      - name: grid-tariff-api
+        image: containerregistryelvia.azurecr.io/grid-tariff-api:imagetag
         resources:
           requests:
             cpu: "300m"
@@ -52,40 +52,40 @@ spec:
           - name: SwaggerSettings__UseSwaggerUI
             valueFrom:
               configMapKeyRef:
-                name: nett-tariff-api
+                name: grid-tariff-api
                 key: swaggerSettings.useSwaggerUI
           - name: SwaggerSettings__PathPrefix
             value: "/tariff-api"
           - name: minStartDateAllowedQuery
             valueFrom:
               configMapKeyRef:
-                name: nett-tariff-api
+                name: grid-tariff-api
                 key: minStartDateAllowedQuery
           - name: timeZone
             valueFrom:
               configMapKeyRef:
-                name: nett-tariff-api
+                name: grid-tariff-api
                 key: timeZone
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: nett-tariff-api
-  name: nett-tariff-api
+    app: grid-tariff-api
+  name: grid-tariff-api
 spec:
   type: ClusterIP
   ports:
   - port: 80
-    name: nett-tariff-api-port
+    name: grid-tariff-api-port
     targetPort: 8080
   selector:
-    app: nett-tariff-api
+    app: grid-tariff-api
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: nett-tariff-api
+  name: grid-tariff-api
   annotations:
     traefik.frontend.rule.type: PathPrefixStrip
     kubernetes.io/ingress.class: traefik
@@ -100,33 +100,33 @@ spec:
       paths:
       - path: /tariff-api
         backend:
-          serviceName: nett-tariff-api
+          serviceName: grid-tariff-api
           servicePort: 80
 ---
 kind: ServiceMonitor
 apiVersion: monitoring.coreos.com/v1
 metadata:
-  # Prometheus will scrape metrics on the http endpoint, nett-tariff-api-port
-  name: nett-tariff-api
+  # Prometheus will scrape metrics on the http endpoint, grid-tariff-api-port
+  name: grid-tariff-api
   namespace: kunde
 spec:
   endpoints:
-  - port: nett-tariff-api-port
+  - port: grid-tariff-api-port
     interval: 5s
   selector:
     matchLabels:
-      app: nett-tariff-api
+      app: grid-tariff-api
 ---
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: nett-tariff-api
+  name: grid-tariff-api
   namespace: kunde
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: nett-tariff-api
+    name: grid-tariff-api
   minReplicas: 1
   maxReplicas: 2
   metrics:

@@ -6,7 +6,7 @@ trigger:
 variables:
     containerregistry: 'ContainerRegistryElvia'
     imagetag: $(Build.BuildNumber)
-    imagename: nett-tariff-api
+    imagename: grid-tariff-api
     buildConfiguration: 'Release'
 
 jobs:
