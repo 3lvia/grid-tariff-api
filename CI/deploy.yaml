@@ -61,11 +61,6 @@ spec:
               configMapKeyRef:
                 name: grid-tariff-api
                 key: minStartDateAllowedQuery
-          - name: timeZone
-            valueFrom:
-              configMapKeyRef:
-                name: grid-tariff-api
-                key: timeZone
 ---
 apiVersion: v1
 kind: Service
