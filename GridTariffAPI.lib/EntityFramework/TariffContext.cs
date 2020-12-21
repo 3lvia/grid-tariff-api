@@ -43,7 +43,7 @@ namespace GridTariffApi.Lib.EntityFramework
                 entity.ToTable("fixedpriceconfig");
 
                 entity.HasIndex(e => new { e.TariffTypeId, e.SeasonId, e.MonthNo, e.PriceLevelId, e.PriceFromDate, e.PriceToDate })
-                    .HasName("uc_fixedpriceconfig")
+                    .HasDatabaseName("uc_fixedpriceconfig")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -108,7 +108,7 @@ namespace GridTariffApi.Lib.EntityFramework
                 entity.ToTable("fixedpricelevel");
 
                 entity.HasIndex(e => e.PriceLevel)
-                    .HasName("UQ__fixedpri__EDDD99B6130E6CC1")
+                    .HasDatabaseName("UQ__fixedpri__EDDD99B6130E6CC1")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -131,7 +131,7 @@ namespace GridTariffApi.Lib.EntityFramework
                 entity.ToTable("pricelevel");
 
                 entity.HasIndex(e => e.PriceLevelDescription)
-                    .HasName("UQ__pricelev__EDDD99B6B060FA0B")
+                    .HasDatabaseName("UQ__pricelev__EDDD99B6B060FA0B")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -167,7 +167,7 @@ namespace GridTariffApi.Lib.EntityFramework
                 entity.ToTable("season");
 
                 entity.HasIndex(e => e.Description)
-                    .HasName("UQ__season__BC91B170D949B744")
+                    .HasDatabaseName("UQ__season__BC91B170D949B744")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -184,7 +184,7 @@ namespace GridTariffApi.Lib.EntityFramework
                 entity.ToTable("tarifftype");
 
                 entity.HasIndex(e => new { e.CustomerType, e.Title })
-                    .HasName("uc_tarifftype")
+                    .HasDatabaseName("uc_tarifftype")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -229,7 +229,7 @@ namespace GridTariffApi.Lib.EntityFramework
                 entity.ToTable("uom");
 
                 entity.HasIndex(e => new { e.Currency, e.Unit })
-                    .HasName("uc_uom")
+                    .HasDatabaseName("uc_uom")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -252,7 +252,7 @@ namespace GridTariffApi.Lib.EntityFramework
                 entity.ToTable("variablepriceconfig");
 
                 entity.HasIndex(e => new { e.TariffTypeDd, e.SeasonId, e.MonthNo, e.PriceLevelId, e.PriceFromDate, e.PriceToDate, e.Hours })
-                    .HasName("uc_variablepriceconfig")
+                    .HasDatabaseName("uc_variablepriceconfig")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");

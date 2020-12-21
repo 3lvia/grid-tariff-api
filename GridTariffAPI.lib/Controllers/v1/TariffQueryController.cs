@@ -82,14 +82,14 @@ namespace GridTariffApi.Lib.Controllers.v1
             {
                 return (DateTime)tariffQueryModel.StartTime;
             }
+
             DateTime timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
             return AddDaysUsingQueryRangeParameter(tariffQueryModel, timeZonedDateTime);
         }
 
         private DateTime GetTimeZonedDateTime(DateTime datetime)
         {
-            var timeZone = TimeZoneInfo.FindSystemTimeZoneById(_gridTariffApiConfig.TimeZone);
-            var timeZonedDateTime = TimeZoneInfo.ConvertTimeFromUtc(datetime, timeZone);
+            var timeZonedDateTime = TimeZoneInfo.ConvertTimeFromUtc(datetime, _gridTariffApiConfig.TimeZoneForQueries);
             return timeZonedDateTime;
         }
 

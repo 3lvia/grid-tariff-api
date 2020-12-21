@@ -6,5 +6,4 @@ data:
   environment : "Dev"
   swaggerSettings.useSwaggerUI: "true"
   minStartDateAllowedQuery : "2020-11-01T00:00:00Z"
-  timeZone: "W. Europe Standard Time"
 

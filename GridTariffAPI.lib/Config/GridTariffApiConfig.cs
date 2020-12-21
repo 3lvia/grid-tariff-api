@@ -9,6 +9,6 @@ namespace GridTariffApi.Lib.Config
         public string Username { get; set; }
         public string Password { get; set; }
         public DateTime MinStartDateAllowedQuery { get; set; }
-        public string TimeZone { get; set; }
+        public TimeZoneInfo TimeZoneForQueries { get; set; }
     }
 }
