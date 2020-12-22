@@ -15,6 +15,7 @@ LABEL maintainer="elvia@elvia.no"
 # Unhandled exception. System.NotSupportedException: Globalization Invariant Mode is not supported.
 # https://github.com/dotnet/SqlClient/issues/220
 RUN apk add icu-libs
+RUN apk add tzdata
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 ENV ASPNETCORE_URLS=http://*:8080
