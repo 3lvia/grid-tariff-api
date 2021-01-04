@@ -17,7 +17,7 @@ spec:
       labels:
         app: nett-tariff-api
     spec:
-      serviceAccountName: nett-tariff-api
+      serviceAccountName: grid-tariff-api
       imagePullSecrets:
       - name: containerregistryprodsecret
       dnsConfig:
