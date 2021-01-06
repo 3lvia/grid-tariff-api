@@ -55,9 +55,6 @@ Contains classes with business logic used by controllers
 ###  SQL
 Contains sql statements for creating required tables in database
 
-###  SQL
-Contains sql statements for creating required tables in database
-
 ### Swagger
 Contains classes related to documentation of of Api.
 
@@ -142,7 +139,7 @@ To authorize Swagger UI, you start by clicking on the "Authorize"-button. Then a
 ## Configuration
 -------------
 GridTariffApi.lib uses classes under the Config directory for containing configuration.
-THese classes may be configured from appsettings.json, or any other mechanism.
+These classes may be configured from appsettings.json, or any other mechanism.
 
 ## Azure Api Management.
 GridTariff Api can be used as is with basic authentication.
