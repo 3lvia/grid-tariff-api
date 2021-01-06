@@ -6,7 +6,7 @@ trigger:
 variables:
     containerregistry: 'ContainerRegistryElvia'
     imagetag: $(Build.BuildNumber)
-    imagename: nett-tariff-api
+    imagename: grid-tariff-api
     buildConfiguration: 'Release'
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
       containerRegistry: $(containerregistry)
       repository: '$(imagename)'
       command: build
-      Dockerfile: 'Kunde.TariffApi/Dockerfile'
+      Dockerfile: 'Dockerfile'
       tags: '$(imagetag)'
   - task: Docker@2
     displayName: 'Login for $(containerregistry)'
@@ -42,7 +42,7 @@ jobs:
     displayName: 'Unit tests'
     inputs:
       command: test
-      projects: Kunde.TariffApiTests/Kunde.TariffApiTests.csproj
+      projects: GridTariffApi.Lib.Tests/GridTariffApi.Lib.Tests.csproj
       arguments: '--configuration Release --collect:"Code Coverage"'
       nobuild: true
   - task: Docker@2

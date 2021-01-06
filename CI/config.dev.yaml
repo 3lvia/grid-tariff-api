@@ -1,7 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nett-tariff-api
+  name: grid-tariff-api
 data:
   environment : "Dev"
   swaggerSettings.useSwaggerUI: "true"
+  minStartDateAllowedQuery : "2020-11-01T00:00:00Z"
+

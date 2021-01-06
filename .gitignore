@@ -348,6 +348,7 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-/Kunde.TariffApi/FetchHolidays
+/GridTariffAPI/FetchHolidays
 
 launchSettings.json
+/GridTariffAPI/appsettings.development.json
