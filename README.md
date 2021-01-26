@@ -3,10 +3,10 @@
 GridTariff Api is an Api intended for for offering variable electrical grid tariffs.
 GridTariff Api exposes the following services:
 
-* Retrieve all available available tariffs (api/{v:apiVersion}/tarifftype)
+* Retrieve all available private tariffs (api/{v:apiVersion}/tarifftype)
 * Retrieve tariff prices per hour for a given tariff for a given timeperiod (api/{v:apiVersion}/tariffquery)
 
-### Retrieve all available available tariffs (api/{v:apiVersion}/tarifftype)
+### Retrieve all available private tariffs (api/{v:apiVersion}/tarifftype)
 Service takes zero parameters
 Service returns json containing information about all tarrifs
 
