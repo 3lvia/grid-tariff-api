@@ -22,6 +22,9 @@ namespace GridTariffApi.Lib.EntityFramework
         public virtual DbSet<TariffType> TariffType { get; set; }
         public virtual DbSet<UnitOfMeasure> Uom { get; set; }
         public virtual DbSet<VariablePriceConfig> VariablePriceconfig { get; set; }
+        public virtual DbSet<IntegrationConfig> IntegrationConfigs { get; set; }
+        public virtual DbSet<MeteringPointProduct> MeteringPointProducts { get; set; }
+        public virtual DbSet<ProductTariffMapping> ProductTariffMappings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -329,6 +332,85 @@ namespace GridTariffApi.Lib.EntityFramework
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__variablep__uomid__59C55456");
             });
+
+
+
+            modelBuilder.Entity<IntegrationConfig>(entity =>
+            {
+                entity.ToTable("integrationconfig");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Tableupdated)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("tableupdated");
+
+                entity.Property(e => e.Updateddate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("updateddate");
+            });
+
+            modelBuilder.Entity<MeteringPointProduct>(entity =>
+            {
+                entity.ToTable("meteringpointproduct");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Areacode).HasColumnName("areacode");
+
+                entity.Property(e => e.Lastupdateddate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("lastupdateddate");
+
+                entity.Property(e => e.Mpid)
+                    .IsRequired()
+                    .HasMaxLength(25)
+                    .IsUnicode(false)
+                    .HasColumnName("mpid");
+
+                entity.Property(e => e.Product)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("product");
+
+                entity.Property(e => e.Tariffkey)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("tariffkey");
+            });
+
+            modelBuilder.Entity<ProductTariffMapping>(entity =>
+            {
+                entity.ToTable("producttariffmapping");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Created)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created");
+
+                entity.Property(e => e.Lastupdated)
+                    .HasColumnType("datetime")
+                    .HasColumnName("lastupdated");
+
+                entity.Property(e => e.Netproduct)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("netproduct");
+
+                entity.Property(e => e.Tariffkey)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("tariffkey");
+            });
+
+
         }
     }
 }
