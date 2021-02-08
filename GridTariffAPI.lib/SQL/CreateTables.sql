@@ -187,7 +187,7 @@ GO
 
 CREATE TABLE [dbo].[meteringpointproduct](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[mpid] [varchar](25) NOT NULL,
+	[meteringpointid] [varchar](32) NOT NULL,
 	[product] [varchar](100) NOT NULL,
 	[tariffkey] [varchar](100) NOT NULL,
 	[areacode] [int] NOT NULL,

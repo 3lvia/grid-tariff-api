@@ -341,13 +341,13 @@ namespace GridTariffApi.Lib.EntityFramework
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Tableupdated)
+                entity.Property(e => e.TableUpdated)
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("tableupdated");
 
-                entity.Property(e => e.Updateddate)
+                entity.Property(e => e.UpdatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("updateddate");
             });
@@ -358,17 +358,17 @@ namespace GridTariffApi.Lib.EntityFramework
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Areacode).HasColumnName("areacode");
+                entity.Property(e => e.AreaCode).HasColumnName("areacode");
 
-                entity.Property(e => e.Lastupdateddate)
+                entity.Property(e => e.LastUpdatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("lastupdateddate");
 
-                entity.Property(e => e.Mpid)
+                entity.Property(e => e.MeteringpointId)
                     .IsRequired()
-                    .HasMaxLength(25)
+                    .HasMaxLength(32)
                     .IsUnicode(false)
-                    .HasColumnName("mpid");
+                    .HasColumnName("meteringpointid");
 
                 entity.Property(e => e.Product)
                     .IsRequired()
@@ -376,12 +376,13 @@ namespace GridTariffApi.Lib.EntityFramework
                     .IsUnicode(false)
                     .HasColumnName("product");
 
-                entity.Property(e => e.Tariffkey)
+                entity.Property(e => e.TariffKey)
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("tariffkey");
             });
+
 
             modelBuilder.Entity<ProductTariffMapping>(entity =>
             {
@@ -397,7 +398,7 @@ namespace GridTariffApi.Lib.EntityFramework
                     .HasColumnType("datetime")
                     .HasColumnName("lastupdated");
 
-                entity.Property(e => e.Netproduct)
+                entity.Property(e => e.NetProduct)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)

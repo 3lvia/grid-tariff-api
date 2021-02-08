@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GridTariffAPI.lib\GridTariffApi.Lib.csproj" />
+    <ProjectReference Include="..\GridTariffApi.Synchronizer.Lib\GridTariffApi.Synchronizer.Lib.csproj" />
   </ItemGroup>
 
 

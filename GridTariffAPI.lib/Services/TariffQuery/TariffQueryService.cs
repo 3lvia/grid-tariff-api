@@ -36,8 +36,8 @@ namespace GridTariffApi.Lib.Services.TariffQuery
             return tariffQueryResult;
         }
 
-        private TariffQueryResult ProcessTimePeriodPerDay(DateTime paramFromDate, 
-            DateTime paramToDate, 
+        private TariffQueryResult ProcessTimePeriodPerDay(DateTime paramFromDate,
+            DateTime paramToDate,
             int tariffTypeId,
             string fixedPriceUnitOfMeasure,
             Dictionary<DateTime, String> publicHolidays,
@@ -97,7 +97,7 @@ namespace GridTariffApi.Lib.Services.TariffQuery
             };
         }
 
-        private static DateTime GetNextToDate(DateTime queryFromDate, DateTime paramToDate )
+        private static DateTime GetNextToDate(DateTime queryFromDate, DateTime paramToDate)
         {
             if (queryFromDate.Date == paramToDate.Date)     //last day to process, limit to hhmmdd as in request
             {

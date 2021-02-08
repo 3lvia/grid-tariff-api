@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using GridTariffApi.Lib.Config;
+using GridTariffApi.Lib.Models;
+using GridTariffApi.Lib.Models.TariffQuery;
+using GridTariffApi.Lib.Services.TariffQuery;
+using GridTariffApi.Lib.Services.TariffType;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using GridTariffApi.Lib.Services.TariffType;
-using GridTariffApi.Lib.Config;
-using GridTariffApi.Lib.Services.TariffQuery;
-using GridTariffApi.Lib.Models.TariffQuery;
-using GridTariffApi.Lib.Models;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace GridTariffApi.Lib.Controllers.v1
