@@ -211,6 +211,5 @@ namespace GridTariffApi.Synchronizer.Lib.Tests.Services
             Assert.Equal("GridTariff2", mp2.TariffKey);
             Assert.True(DateTime.UtcNow > mp2.LastUpdatedDate);
         }
-
     }
 }

@@ -6,6 +6,7 @@ using Google.Cloud.BigQuery.V2;
 using GridTariffApi.Auth;
 using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.EntityFramework;
+using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services.TariffQuery;
 using GridTariffApi.Lib.Services.TariffType;
 using GridTariffApi.Lib.Swagger;
@@ -57,6 +58,7 @@ namespace GridTariff.Api
             services.AddTransient<IGridTariffApiSynchronizer, GridTariffApiSynchronizer>();
             services.AddTransient<ITariffTypeService, TariffTypeService>();
             services.AddTransient<ITariffQueryService, TariffQueryService>();
+            services.AddTransient<IServiceHelper, ServiceHelper>();           
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString)/*.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)*/);
 
             services.AddStandardElviaTelemetryLoggingWorkerService(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true, retainTelemetryWhere: telemetryItem => telemetryItem switch
@@ -70,7 +72,6 @@ namespace GridTariff.Api
             {
                 c.TimeZoneInfo = TimeZoneInfo.Local;
                 c.CronExpression = @"0 5 * * * ";      //every day at 05:00
-                                                       //                c.CronExpression = @"*/1 * * * *";      //every minute
             });
 
             var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
