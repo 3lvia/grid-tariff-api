@@ -5,6 +5,10 @@
     <CodeAnalysisRuleSet>..\.sonarlint\3lvia_kunde-tariff-apicsharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>5</WarningLevel>
+  </PropertyGroup>
+
   <ItemGroup>
     <AdditionalFiles Include="..\.sonarlint\3lvia_kunde-tariff-api\CSharp\SonarLint.xml" Link="SonarLint.xml" />
   </ItemGroup>

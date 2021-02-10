@@ -29,6 +29,20 @@ namespace GridTariffApi.Lib.Controllers.v1
             _gridTariffApiConfig = gridTariffApiConfig;
         }
 
+
+        [HttpPost]
+        [Route("meteringpointsgridtariffs")]
+        public IActionResult GridTariffsByMeteringPoints([FromBody] TariffQueryRequestMeteringPoints tariffQueryRequest)
+        {
+
+            DateTime startDateTime = GetStartTime(tariffQueryRequest.Range, tariffQueryRequest.StartTime);
+            DateTime endDateTime = GetEndTime(tariffQueryRequest.Range, tariffQueryRequest.EndTime);
+
+            var result = _tariffQueryService.QueryTariff(tariffQueryRequest.MeteringPoints,startDateTime,endDateTime);
+            
+            return Ok(result);
+        }
+
         /// <summary>
         /// Returns tariff data for a given tariff for a given timeperiod
         /// </summary>
@@ -48,12 +62,12 @@ namespace GridTariffApi.Lib.Controllers.v1
             {
                 return BadRequest(validationErrorMsg);
             }
-            DateTime startDateTime = GetStartTime(tariffQueryRequest);
-            DateTime endDateTime = GetEndTime(tariffQueryRequest);
+
+            DateTime startDateTime = GetStartTime(tariffQueryRequest.Range, tariffQueryRequest.StartTime);
+            DateTime endDateTime = GetEndTime(tariffQueryRequest.Range, tariffQueryRequest.EndTime);
             TariffQueryResult tariffQueryResult = _tariffQueryService.QueryTariff(tariffQueryRequest.TariffKey, startDateTime, endDateTime);
             return Ok(tariffQueryResult);
         }
-
 
         private string ValidateRequestInput(TariffQueryRequest tariffQueryModel)
         {
@@ -68,7 +82,7 @@ namespace GridTariffApi.Lib.Controllers.v1
                 return $"TariffType {tariffQueryModel.TariffKey} not found";
             }
 
-            DateTime startDateTime = GetStartTime(tariffQueryModel);
+            DateTime startDateTime = GetStartTime(tariffQueryModel.Range, tariffQueryModel.StartTime);
             if (startDateTime < _gridTariffApiConfig.MinStartDateAllowedQuery)
             {
                 return $"Query before {_gridTariffApiConfig.MinStartDateAllowedQuery} not supported";
@@ -76,47 +90,47 @@ namespace GridTariffApi.Lib.Controllers.v1
             return String.Empty;
         }
 
-        private DateTime GetStartTime(TariffQueryRequest tariffQueryModel)
+        public DateTime GetStartTime(string? range, DateTime? startDateTime)
         {
-            if (tariffQueryModel.StartTime.HasValue)
+            if (startDateTime.HasValue)
             {
-                return (DateTime)tariffQueryModel.StartTime;
+                return (DateTime)startDateTime;
             }
-
             DateTime timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
-            return AddDaysUsingQueryRangeParameter(tariffQueryModel, timeZonedDateTime);
+            return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime);
+
+        }
+
+        public DateTime GetEndTime(string? range, DateTime? endDateTime)
+        {
+            if (endDateTime.HasValue)
+            {
+                return (DateTime)endDateTime;
+            }
+            DateTime timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
+            return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime.AddDays(1).AddSeconds(-1));
+        }
+
+        private DateTime AddDaysUsingQueryRangeParameter(string? range, DateTime dateTime)
+        {
+            if (!String.IsNullOrEmpty(range))
+            {
+                if (range.Equals("yesterday"))
+                {
+                    return dateTime.AddDays(-1);
+                }
+                if (range.Equals("tomorrow"))
+                {
+                    return dateTime.AddDays(1);
+                }
+            }
+            return dateTime;
         }
 
         private DateTime GetTimeZonedDateTime(DateTime datetime)
         {
             var timeZonedDateTime = TimeZoneInfo.ConvertTimeFromUtc(datetime, _gridTariffApiConfig.TimeZoneForQueries);
             return timeZonedDateTime;
-        }
-
-        private DateTime GetEndTime(TariffQueryRequest tariffQueryModel)
-        {
-            if (tariffQueryModel.EndTime.HasValue)
-            {
-                return (DateTime)tariffQueryModel.EndTime;
-            }
-            DateTime timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
-            return AddDaysUsingQueryRangeParameter(tariffQueryModel, timeZonedDateTime.AddDays(1).AddSeconds(-1));
-        }
-
-        private DateTime AddDaysUsingQueryRangeParameter(TariffQueryRequest tariffQueryRequest, DateTime dateTime)
-        {
-            if (!String.IsNullOrEmpty(tariffQueryRequest.Range))
-            {
-                if (tariffQueryRequest.Range.Equals("yesterday"))
-                {
-                    return dateTime.AddDays(-1);
-                }
-                if (tariffQueryRequest.Range.Equals("tomorrow"))
-                {
-                    return dateTime.AddDays(1);
-                }
-            }
-            return dateTime;
         }
     }
 }

@@ -44,7 +44,31 @@ namespace GridTariffApi.Services.TariffQuery.Tests
             _tariffContext.AddRange(testHelper.GetFixedPricelevels());
             _tariffContext.AddRange(testHelper.GetFixedPriceConfigs());
             _tariffContext.AddRange(testHelper.GetVariablePriceConfigs());
+            _tariffContext.AddRange(testHelper.GetMeteringPointProducts());
             _tariffContext.SaveChanges();
+        }
+
+        [Fact()]
+        public void QueryTariffsByMeteringPointsTest()
+        {
+            Setup();
+
+            var meteringPoints = new List<string>(){"abc1", "abc21", "abc22", "abc23","abc3"};
+            var result = _TariffQueryService.QueryTariff(meteringPoints, new DateTime(2021, 01, 01), new DateTime(2021, 01, 02));
+            Assert.Equal(2, result.GridTariffCollections.Count);
+
+            var gridTariffCollection1 = result.GridTariffCollections.FirstOrDefault(x => x.GridTariff.TariffType.TariffKey.Equals("private_tou_rush"));
+            Assert.NotNull(gridTariffCollection1);
+            Assert.Equal(2, gridTariffCollection1.MeteringPoints.Count);
+            Assert.Contains("abc1", gridTariffCollection1.MeteringPoints);
+            Assert.Contains("abc3", gridTariffCollection1.MeteringPoints);
+
+            var gridTariffCollection2 = result.GridTariffCollections.FirstOrDefault(x => x.GridTariff.TariffType.TariffKey.Equals("private_tou_daynight"));
+            Assert.NotNull(gridTariffCollection2);
+            Assert.Equal(3, gridTariffCollection2.MeteringPoints.Count);
+            Assert.Contains("abc21", gridTariffCollection2.MeteringPoints);
+            Assert.Contains("abc22", gridTariffCollection2.MeteringPoints);
+            Assert.Contains("abc23", gridTariffCollection2.MeteringPoints);
         }
 
         [Fact()]

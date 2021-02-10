@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Xunit;
 
 namespace GridTariffApi.Controllers.Tests
@@ -34,6 +35,8 @@ namespace GridTariffApi.Controllers.Tests
             _tariffContext = provider.GetRequiredService<TariffContext>();
 
             GridTariffApiConfig gridTariffApiConfig = new GridTariffApiConfig() { MinStartDateAllowedQuery = new DateTime(2020, 11, 01) };
+            gridTariffApiConfig.TimeZoneForQueries = NorwegianTimeZoneInfo();
+
             _TariffQueryService = new TariffQueryService(_tariffContext);
             _tariffTypeService = new TariffTypeService(_tariffContext);
             _tariffQueryController = new TariffQueryController(_tariffTypeService, _TariffQueryService, gridTariffApiConfig);
@@ -56,6 +59,40 @@ namespace GridTariffApi.Controllers.Tests
             _tariffContext.AddRange(testHelper.GetFixedPriceConfigs());
             _tariffContext.AddRange(testHelper.GetVariablePriceConfigs());
             _tariffContext.SaveChanges();
+        }
+
+
+        private static TimeZoneInfo NorwegianTimeZoneInfo()
+        {
+            var timeZoneId = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
+                "W. Europe Standard Time" :
+                "Europe/Oslo";
+            var norwegianTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            return norwegianTimeZone;
+        }
+
+        [Fact()]
+        public void GetStartDateTest()
+        {
+            Setup();
+            DateTime now = DateTime.UtcNow;
+            Assert.Equal(now, _tariffQueryController.GetStartTime(null, now));
+            Assert.Equal(now, _tariffQueryController.GetStartTime("yesterday", now));
+            Assert.Equal(now.AddDays(-1).Date, _tariffQueryController.GetStartTime("yesterday", null));
+            Assert.Equal(now.Date, _tariffQueryController.GetStartTime("today", null));
+            Assert.Equal(now.AddDays(+1).Date, _tariffQueryController.GetStartTime("tomorrow", null));
+        }
+
+        [Fact()]
+        public void GetEndDateTest()
+        {
+            Setup();
+            DateTime now = DateTime.UtcNow;
+            Assert.Equal(now, _tariffQueryController.GetEndTime(null, now));
+            Assert.Equal(now, _tariffQueryController.GetEndTime("yesterday", now));
+            Assert.Equal(now.AddDays(-1).Date.AddDays(1).AddSeconds(-1), _tariffQueryController.GetEndTime("yesterday", null));
+            Assert.Equal(now.Date.AddDays(1).AddSeconds(-1), _tariffQueryController.GetEndTime("today", null));
+            Assert.Equal(now.AddDays(+2).Date.AddSeconds(-1), _tariffQueryController.GetEndTime("tomorrow", null));
         }
 
         [Fact()]

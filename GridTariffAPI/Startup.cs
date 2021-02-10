@@ -69,7 +69,7 @@ namespace GridTariff.Api
             services.AddCronJob<ScheduledGridTariffApiSynchronizer>(c =>
             {
                 c.TimeZoneInfo = TimeZoneInfo.Local;
-                c.CronExpression = @"0 2 * * 1 ";      //every monday at 2 AM
+                c.CronExpression = @"0 5 * * * ";      //every day at 05:00
                                                        //                c.CronExpression = @"*/1 * * * *";      //every minute
             });
 

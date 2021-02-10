@@ -1,4 +1,5 @@
 ﻿using GridTariffApi.Lib.EntityFramework;
+using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Lib.Models.TariffQuery;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,6 +18,31 @@ namespace GridTariffApi.Lib.Services.TariffQuery
         public TariffQueryService(TariffContext tariffContext)
         {
             _tariffContext = tariffContext;
+        }
+
+        public TariffQueryRequestMeteringPointsResult QueryTariff(List<string> meteringPoints, DateTime startDateTime, DateTime endDateTime)
+        {
+            var result = new TariffQueryRequestMeteringPointsResult() { GridTariffCollections = new List<GridTariffCollection>()};
+            var meteringPointTariffs = GetMeteringPointTariffs(meteringPoints);
+
+            foreach (var tariffKey in meteringPointTariffs.Select(x => x.GridTariff).Distinct().ToList())
+            {
+                var gridTariffCollection = new GridTariffCollection() { };
+                gridTariffCollection.GridTariff = QueryTariff(tariffKey, startDateTime, endDateTime).GridTariff;
+                gridTariffCollection.MeteringPoints = meteringPointTariffs.Where(x => x.GridTariff.Equals(tariffKey)).Select(y => y.MeteringPoint).ToList();
+                result.GridTariffCollections.Add(gridTariffCollection);
+            }
+            return result;
+        }
+
+        public List<GridTariffWithMeteringPoints> GetMeteringPointTariffs(List<string> meteringPoints)
+        {
+            return _tariffContext.MeteringPointProducts.Where(m => meteringPoints.Contains(m.MeteringpointId)).Select(
+                s => new GridTariffWithMeteringPoints
+                {
+                    MeteringPoint = s.MeteringpointId,
+                    GridTariff = s.TariffKey
+                }).ToList();
         }
 
         public TariffQueryResult QueryTariff(string tariffKey, DateTime paramFromDate, DateTime paramToDate)
@@ -83,6 +109,7 @@ namespace GridTariffApi.Lib.Services.TariffQuery
                 {
                     TariffType = new Models.TariffQuery.TariffType()
                     {
+                        TariffKey = tariffType.TariffKey,
                         Company = tariffType.Company.CompanyName,
                         CustomerType = tariffType.CustomerType,
                         Title = tariffType.Title,
