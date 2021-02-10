@@ -30,16 +30,26 @@ namespace GridTariffApi.Lib.Controllers.v1
         }
 
 
+        /// <summary>
+        /// Returns tariff data for a given set of meteringpoints for a given timeperiod.
+        /// </summary>
+        /// <remarks>Returns tariff data for a given set of meteringpoints for a given timeperiod.</remarks>
+        /// <param name="TariffQueryRequestMeteringPoints"></param>
+        /// JSON format. <br></br>
+        /// MeteringPointIds ditctates which meteringpoints to return tariff data for.<br></br>
+        /// If a meteringpointid is unknown to api it will be omitted from the response.<br></br>
+        /// Range dictates which day to query. Valid values is yesterday,today,tomorrow<br></br>
+        /// StartTime/EndTime dictates which timeperiod to query.<br></br>
+        /// Range and StartTime/Endtime is mutual exclusive, meaning either one must be present, but not both.<br></br>
+        /// <returns>TariffData matching query parameters, also including meteringpoints associated with each tariff.</returns>
+
         [HttpPost]
         [Route("meteringpointsgridtariffs")]
         public IActionResult GridTariffsByMeteringPoints([FromBody] TariffQueryRequestMeteringPoints tariffQueryRequest)
         {
-
             DateTime startDateTime = GetStartTime(tariffQueryRequest.Range, tariffQueryRequest.StartTime);
             DateTime endDateTime = GetEndTime(tariffQueryRequest.Range, tariffQueryRequest.EndTime);
-
-            var result = _tariffQueryService.QueryTariff(tariffQueryRequest.MeteringPoints,startDateTime,endDateTime);
-            
+            var result = _tariffQueryService.QueryTariff(tariffQueryRequest.MeteringPointIds, startDateTime, endDateTime);
             return Ok(result);
         }
 

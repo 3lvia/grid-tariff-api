@@ -29,7 +29,7 @@ namespace GridTariffApi.Lib.Services.TariffQuery
             {
                 var gridTariffCollection = new GridTariffCollection() { };
                 gridTariffCollection.GridTariff = QueryTariff(tariffKey, startDateTime, endDateTime).GridTariff;
-                gridTariffCollection.MeteringPoints = meteringPointTariffs.Where(x => x.GridTariff.Equals(tariffKey)).Select(y => y.MeteringPoint).ToList();
+                gridTariffCollection.MeteringPointIds = meteringPointTariffs.Where(x => x.GridTariff.Equals(tariffKey)).Select(y => y.MeteringPoint).ToList();
                 result.GridTariffCollections.Add(gridTariffCollection);
             }
             return result;

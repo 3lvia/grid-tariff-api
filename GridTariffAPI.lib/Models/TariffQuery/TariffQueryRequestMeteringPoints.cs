@@ -23,6 +23,10 @@ namespace GridTariffApi.Lib.Models.TariffQuery
         [DataType(DataType.DateTime)]
         public DateTime? EndTime { get; set; }
 
-        public List<String> MeteringPoints { get; set; }
+        /// <summary>
+        /// List of meteringpoints which is used for determining tarriff data for
+        /// </summary>
+        /// <example>707057500020404292</example>
+        public List<String> MeteringPointIds { get; set; }
     }
 }

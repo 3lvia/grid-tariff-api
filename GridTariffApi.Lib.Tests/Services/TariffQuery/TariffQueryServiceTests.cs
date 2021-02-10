@@ -59,16 +59,16 @@ namespace GridTariffApi.Services.TariffQuery.Tests
 
             var gridTariffCollection1 = result.GridTariffCollections.FirstOrDefault(x => x.GridTariff.TariffType.TariffKey.Equals("private_tou_rush"));
             Assert.NotNull(gridTariffCollection1);
-            Assert.Equal(2, gridTariffCollection1.MeteringPoints.Count);
-            Assert.Contains("abc1", gridTariffCollection1.MeteringPoints);
-            Assert.Contains("abc3", gridTariffCollection1.MeteringPoints);
+            Assert.Equal(2, gridTariffCollection1.MeteringPointIds.Count);
+            Assert.Contains("abc1", gridTariffCollection1.MeteringPointIds);
+            Assert.Contains("abc3", gridTariffCollection1.MeteringPointIds);
 
             var gridTariffCollection2 = result.GridTariffCollections.FirstOrDefault(x => x.GridTariff.TariffType.TariffKey.Equals("private_tou_daynight"));
             Assert.NotNull(gridTariffCollection2);
-            Assert.Equal(3, gridTariffCollection2.MeteringPoints.Count);
-            Assert.Contains("abc21", gridTariffCollection2.MeteringPoints);
-            Assert.Contains("abc22", gridTariffCollection2.MeteringPoints);
-            Assert.Contains("abc23", gridTariffCollection2.MeteringPoints);
+            Assert.Equal(3, gridTariffCollection2.MeteringPointIds.Count);
+            Assert.Contains("abc21", gridTariffCollection2.MeteringPointIds);
+            Assert.Contains("abc22", gridTariffCollection2.MeteringPointIds);
+            Assert.Contains("abc23", gridTariffCollection2.MeteringPointIds);
         }
 
         [Fact()]
