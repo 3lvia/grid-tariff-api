@@ -96,7 +96,7 @@ namespace GridTariff.Api
             var gridTariffApiSynchronizerConfig = new GridTariffApiSynchronizerConfig();
             gridTariffApiSynchronizerConfig.BigQueryProjectId = _configuration.EnsureHasValue("bad:kv:info:bigquery:bad:project-id");
             gridTariffApiSynchronizerConfig.BigQueryAccountKey = _configuration.EnsureHasValue("bad:kv:bigquery:bad:service-account-key-sa-bigquery");
-            gridTariffApiSynchronizerConfig.InstrumentationKey = _configuration.EnsureHasValue("bad:kv:appinsights:bad:instrumentation-key");
+            gridTariffApiSynchronizerConfig.InstrumentationKey = _configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key");
             return gridTariffApiSynchronizerConfig;
         }
 
