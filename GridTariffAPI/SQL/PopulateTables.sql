@@ -2558,3 +2558,36 @@ INSERT [dbo].[variablepriceconfig] ([id], [tarifftypeid], [seasonid], [monthno],
 GO
 SET IDENTITY_INSERT [dbo].[variablepriceconfig] OFF
 GO
+
+SET IDENTITY_INSERT [dbo].[producttariffmapping] ON 
+GO
+INSERT [dbo].[producttariffmapping] ([id], [netproduct], [tariffkey], [created], [lastupdated]) VALUES (1, 'HN ELP-RR time avr','private_tou_rush1',GETDATE(),GETDATE())
+GO
+INSERT [dbo].[producttariffmapping] ([id], [netproduct], [tariffkey], [created], [lastupdated]) VALUES (2, 'HN ELP-DN time avr','private_tou_daynight1',GETDATE(),GETDATE())
+GO
+INSERT [dbo].[producttariffmapping] ([id], [netproduct], [tariffkey], [created], [lastupdated]) VALUES (3, 'HN ELHA avr','private_flatrate_house',GETDATE(),GETDATE())
+GO
+INSERT [dbo].[producttariffmapping] ([id], [netproduct], [tariffkey], [created], [lastupdated]) VALUES (4, 'HN ELHYA avr','private_flatrate_cabin',GETDATE(),GETDATE())
+GO
+INSERT [dbo].[producttariffmapping] ([id], [netproduct], [tariffkey], [created], [lastupdated]) VALUES (5, 'E10','private_flatrate_fuselevel1',GETDATE(),GETDATE())
+GO
+INSERT [dbo].[producttariffmapping] ([id], [netproduct], [tariffkey], [created], [lastupdated]) VALUES (6, 'E17','private_flatrate_fuselevel2',GETDATE(),GETDATE())
+GO
+INSERT [dbo].[producttariffmapping] ([id], [netproduct], [tariffkey], [created], [lastupdated]) VALUES (7, 'E25','private_flatrate_fuselevel3',GETDATE(),GETDATE())
+GO
+INSERT [dbo].[producttariffmapping] ([id], [netproduct], [tariffkey], [created], [lastupdated]) VALUES (8, 'E35','private_flatrate_fuselevel4',GETDATE(),GETDATE())
+GO
+INSERT [dbo].[producttariffmapping] ([id], [netproduct], [tariffkey], [created], [lastupdated]) VALUES (9, 'E50','private_flatrate_fuselevel5',GETDATE(),GETDATE())
+GO
+INSERT [dbo].[producttariffmapping] ([id], [netproduct], [tariffkey], [created], [lastupdated]) VALUES (10, 'E65','private_flatrate_fuselevel6',GETDATE(),GETDATE())
+GO
+INSERT [dbo].[producttariffmapping] ([id], [netproduct], [tariffkey], [created], [lastupdated]) VALUES (11, 'E80','private_flatrate_fuselevel7',GETDATE(),GETDATE())
+GO
+INSERT [dbo].[producttariffmapping] ([id], [netproduct], [tariffkey], [created], [lastupdated]) VALUES (12, 'E99','private_flatrate_fuselevel8',GETDATE(),GETDATE())
+GO
+INSERT [dbo].[producttariffmapping] ([id], [netproduct], [tariffkey], [created], [lastupdated]) VALUES (13, 'PLP1','private_tou_rush2',GETDATE(),GETDATE())
+GO
+INSERT [dbo].[producttariffmapping] ([id], [netproduct], [tariffkey], [created], [lastupdated]) VALUES (14, 'PLP2','private_tou_daynight2',GETDATE(),GETDATE())
+GO
+SET IDENTITY_INSERT [dbo].[producttariffmapping] OFF 
+GO

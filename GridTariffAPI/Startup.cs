@@ -1,15 +1,18 @@
 using Elvia.Configuration;
 using Elvia.Telemetry;
 using Elvia.Telemetry.Extensions;
+using Google.Apis.Auth.OAuth2;
+using Google.Cloud.BigQuery.V2;
 using GridTariffApi.Auth;
 using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.EntityFramework;
+using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services.TariffQuery;
 using GridTariffApi.Lib.Services.TariffType;
 using GridTariffApi.Lib.Swagger;
-using Microsoft.ApplicationInsights;
+using GridTariffApi.Synchronizer.Lib.Config;
+using GridTariffApi.Synchronizer.Lib.Services;
 using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,6 +24,7 @@ using Microsoft.Extensions.Hosting;
 using Prometheus;
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace GridTariff.Api
 {
@@ -44,8 +48,18 @@ namespace GridTariff.Api
             });
 
             GridTariffApiConfig gridTariffApiConfig = GetGridTariffApiConfig();
+            services.AddSingleton(gridTariffApiConfig);
+            GridTariffApiSynchronizerConfig gridTariffApiSynchronizerConfig = GetGridTariffApiSynchronizerConfig();
+            services.AddSingleton(gridTariffApiSynchronizerConfig);
 
-            services.AddSingleton (gridTariffApiConfig);
+            var bigQueryClient = CreateBigQueryClient(gridTariffApiSynchronizerConfig);
+            services.AddTransient(u => bigQueryClient);
+            services.AddTransient<IBigQueryReader, BigQueryReader>();
+            services.AddTransient<IGridTariffApiSynchronizer, GridTariffApiSynchronizer>();
+            services.AddTransient<ITariffTypeService, TariffTypeService>();
+            services.AddTransient<ITariffQueryService, TariffQueryService>();
+            services.AddTransient<IServiceHelper, ServiceHelper>();           
+            services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString)/*.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)*/);
 
             services.AddStandardElviaTelemetryLoggingWorkerService(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true, retainTelemetryWhere: telemetryItem => telemetryItem switch
             {
@@ -53,9 +67,12 @@ namespace GridTariff.Api
                 RequestTelemetry r => false,
                 _ => true,
             });
-            services.AddTransient<ITariffTypeService, TariffTypeService>();
-            services.AddTransient<ITariffQueryService, TariffQueryService>();
-            services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+
+            services.AddCronJob<ScheduledGridTariffApiSynchronizer>(c =>
+            {
+                c.TimeZoneInfo = TimeZoneInfo.Local;
+                c.CronExpression = @"0 5 * * * ";      //every day at 05:00
+            });
 
             var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
             services.AddSwaggerConfiguration(swaggerSettings);
@@ -72,6 +89,22 @@ namespace GridTariff.Api
             gridTariffApiConfig.MinStartDateAllowedQuery = _configuration.GetValue<DateTime>("minStartDateAllowedQuery");
             gridTariffApiConfig.TimeZoneForQueries = NorwegianTimeZoneInfo();
             return gridTariffApiConfig;
+        }
+
+        private GridTariffApiSynchronizerConfig GetGridTariffApiSynchronizerConfig()
+        {
+            var gridTariffApiSynchronizerConfig = new GridTariffApiSynchronizerConfig();
+            gridTariffApiSynchronizerConfig.BigQueryProjectId = _configuration.EnsureHasValue("bad:kv:info:bigquery:bad:project-id");
+            gridTariffApiSynchronizerConfig.BigQueryAccountKey = _configuration.EnsureHasValue("bad:kv:bigquery:bad:service-account-key-sa-bigquery");
+            gridTariffApiSynchronizerConfig.InstrumentationKey = _configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key");
+            return gridTariffApiSynchronizerConfig;
+        }
+
+        private static BigQueryClient CreateBigQueryClient(GridTariffApiSynchronizerConfig gridTariffApiSynchronizerConfig)
+        {
+            var jsonCredentials = Encoding.UTF8.GetString(Convert.FromBase64String(gridTariffApiSynchronizerConfig.BigQueryAccountKey));
+            var bigQueryClient = BigQueryClient.Create(gridTariffApiSynchronizerConfig.BigQueryProjectId, credential: GoogleCredential.FromJson(jsonCredentials));
+            return bigQueryClient;
         }
 
         protected virtual void ConfigureAuth(IServiceCollection services, string user, string password)

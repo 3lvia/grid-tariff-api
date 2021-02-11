@@ -2,6 +2,7 @@
 using GridTariffApi.Lib.Controllers.v1;
 using GridTariffApi.Lib.EntityFramework;
 using GridTariffApi.Lib.Models.TariffQuery;
+using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services.TariffQuery;
 using GridTariffApi.Lib.Services.TariffType;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Xunit;
 
 namespace GridTariffApi.Controllers.Tests
@@ -22,6 +24,7 @@ namespace GridTariffApi.Controllers.Tests
 
         private TariffTypeService _tariffTypeService;
         private TariffContext _tariffContext;
+        private IServiceHelper _serviceHelper;
 
         private void Setup()
         {
@@ -34,9 +37,12 @@ namespace GridTariffApi.Controllers.Tests
             _tariffContext = provider.GetRequiredService<TariffContext>();
 
             GridTariffApiConfig gridTariffApiConfig = new GridTariffApiConfig() { MinStartDateAllowedQuery = new DateTime(2020, 11, 01) };
+            gridTariffApiConfig.TimeZoneForQueries = NorwegianTimeZoneInfo();
+
+            _serviceHelper = new ServiceHelper(gridTariffApiConfig);
             _TariffQueryService = new TariffQueryService(_tariffContext);
             _tariffTypeService = new TariffTypeService(_tariffContext);
-            _tariffQueryController = new TariffQueryController(_tariffTypeService, _TariffQueryService, gridTariffApiConfig);
+            _tariffQueryController = new TariffQueryController(_tariffTypeService, _TariffQueryService, gridTariffApiConfig, _serviceHelper);
 
             TestHelper testHelper = new TestHelper();
 
@@ -56,6 +62,16 @@ namespace GridTariffApi.Controllers.Tests
             _tariffContext.AddRange(testHelper.GetFixedPriceConfigs());
             _tariffContext.AddRange(testHelper.GetVariablePriceConfigs());
             _tariffContext.SaveChanges();
+        }
+
+
+        private static TimeZoneInfo NorwegianTimeZoneInfo()
+        {
+            var timeZoneId = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
+                "W. Europe Standard Time" :
+                "Europe/Oslo";
+            var norwegianTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            return norwegianTimeZone;
         }
 
         [Fact()]
@@ -130,6 +146,65 @@ namespace GridTariffApi.Controllers.Tests
         {
             TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", StartTime = DateTime.MaxValue, EndTime = DateTime.MinValue };
             List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
+            Assert.Single(validationResults);
+        }
+
+        [Fact()]
+        public void GETStartDateBeforeMinDateMeteringPointTest()
+        {
+            Setup();
+            var request = new TariffQueryRequestMeteringPoints() { StartTime = DateTime.UtcNow.AddYears(-10), EndTime = DateTime.UtcNow };
+            var actionResult = _tariffQueryController.GridTariffsByMeteringPoints(request);
+            BadRequestObjectResult result = actionResult as BadRequestObjectResult;
+            Assert.Equal(400, result.StatusCode);
+        }
+
+        [Fact()]
+        public void GETNoRangeOrPeriodMeteringPointTest()   //todo
+        {
+            var request = new TariffQueryRequestMeteringPoints();
+            List<ValidationResult> validationResults = request.Validate(null).ToList();
+            Assert.Equal(3, validationResults.Count);
+        }
+
+        [Fact()]
+        public void GETRangeAndStartDateMeteringPointTest()
+        {
+            var request = new TariffQueryRequestMeteringPoints() { Range = "today", StartTime = DateTime.UtcNow };
+            List<ValidationResult> validationResults = request.Validate(null).ToList();
+            Assert.Single(validationResults);
+        }
+
+        [Fact()]
+        public void GETRangeAndEndDateMeteringPointTest()
+        {
+            var request = new TariffQueryRequestMeteringPoints() { Range = "today", EndTime = DateTime.UtcNow };
+            List<ValidationResult> validationResults = request.Validate(null).ToList();
+            Assert.Single(validationResults);
+        }
+
+
+        [Fact()]
+        public void GETStartDateMissingMeteringPointTest()
+        {
+            var request = new TariffQueryRequestMeteringPoints() {  EndTime = DateTime.MaxValue };
+            List<ValidationResult> validationResults = request.Validate(null).ToList();
+            Assert.Single(validationResults);
+        }
+
+        [Fact()]
+        public void GETEndDateMissingMeteringPointTest()
+        {
+            var request = new TariffQueryRequestMeteringPoints() { StartTime = DateTime.MaxValue };
+            List<ValidationResult> validationResults = request.Validate(null).ToList();
+            Assert.Single(validationResults);
+        }
+
+        [Fact()]
+        public void StartDateGreaterMeteringPointTest()
+        {
+            var request = new TariffQueryRequestMeteringPoints() { StartTime = DateTime.MaxValue, EndTime = DateTime.MinValue };
+            List<ValidationResult> validationResults = request.Validate(null).ToList();
             Assert.Single(validationResults);
         }
     }

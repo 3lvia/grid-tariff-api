@@ -1,4 +1,5 @@
 ﻿using GridTariffApi.Lib.EntityFramework;
+using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Lib.Models.TariffQuery;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,6 +20,31 @@ namespace GridTariffApi.Lib.Services.TariffQuery
             _tariffContext = tariffContext;
         }
 
+        public TariffQueryRequestMeteringPointsResult QueryTariff(List<string> meteringPoints, DateTime startDateTime, DateTime endDateTime)
+        {
+            var result = new TariffQueryRequestMeteringPointsResult() { GridTariffCollections = new List<GridTariffCollection>()};
+            var meteringPointTariffs = GetMeteringPointTariffs(meteringPoints);
+
+            foreach (var tariffKey in meteringPointTariffs.Select(x => x.GridTariff).Distinct().ToList())
+            {
+                var gridTariffCollection = new GridTariffCollection() { };
+                gridTariffCollection.GridTariff = QueryTariff(tariffKey, startDateTime, endDateTime).GridTariff;
+                gridTariffCollection.MeteringPointIds = meteringPointTariffs.Where(x => x.GridTariff.Equals(tariffKey)).Select(y => y.MeteringPoint).ToList();
+                result.GridTariffCollections.Add(gridTariffCollection);
+            }
+            return result;
+        }
+
+        public List<GridTariffWithMeteringPoints> GetMeteringPointTariffs(List<string> meteringPoints)
+        {
+            return _tariffContext.MeteringPointProducts.Where(m => meteringPoints.Contains(m.MeteringpointId)).Select(
+                s => new GridTariffWithMeteringPoints
+                {
+                    MeteringPoint = s.MeteringpointId,
+                    GridTariff = s.TariffKey
+                }).ToList();
+        }
+
         public TariffQueryResult QueryTariff(string tariffKey, DateTime paramFromDate, DateTime paramToDate)
         {
             DateTime dbQueryFromDate = paramFromDate.Date;
@@ -36,8 +62,8 @@ namespace GridTariffApi.Lib.Services.TariffQuery
             return tariffQueryResult;
         }
 
-        private TariffQueryResult ProcessTimePeriodPerDay(DateTime paramFromDate, 
-            DateTime paramToDate, 
+        private TariffQueryResult ProcessTimePeriodPerDay(DateTime paramFromDate,
+            DateTime paramToDate,
             int tariffTypeId,
             string fixedPriceUnitOfMeasure,
             Dictionary<DateTime, String> publicHolidays,
@@ -83,6 +109,7 @@ namespace GridTariffApi.Lib.Services.TariffQuery
                 {
                     TariffType = new Models.TariffQuery.TariffType()
                     {
+                        TariffKey = tariffType.TariffKey,
                         Company = tariffType.Company.CompanyName,
                         CustomerType = tariffType.CustomerType,
                         Title = tariffType.Title,
@@ -97,7 +124,7 @@ namespace GridTariffApi.Lib.Services.TariffQuery
             };
         }
 
-        private static DateTime GetNextToDate(DateTime queryFromDate, DateTime paramToDate )
+        private static DateTime GetNextToDate(DateTime queryFromDate, DateTime paramToDate)
         {
             if (queryFromDate.Date == paramToDate.Date)     //last day to process, limit to hhmmdd as in request
             {
