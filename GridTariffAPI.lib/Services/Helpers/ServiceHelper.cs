@@ -13,6 +13,8 @@ namespace GridTariffApi.Lib.Services.Helpers
             _gridTariffApiConfig = gridTariffApiConfig;
 
         }
+
+#nullable enable
         public DateTime GetStartTime(string? range, DateTime? startDateTime)
         {
             if (startDateTime.HasValue)
@@ -21,7 +23,6 @@ namespace GridTariffApi.Lib.Services.Helpers
             }
             DateTime timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
             return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime);
-
         }
 
         public DateTime GetEndTime(string? range, DateTime? endDateTime)
@@ -49,7 +50,7 @@ namespace GridTariffApi.Lib.Services.Helpers
             }
             return dateTime;
         }
-
+#nullable disable
         private DateTime GetTimeZonedDateTime(DateTime datetime)
         {
             var timeZonedDateTime = TimeZoneInfo.ConvertTimeFromUtc(datetime, _gridTariffApiConfig.TimeZoneForQueries);

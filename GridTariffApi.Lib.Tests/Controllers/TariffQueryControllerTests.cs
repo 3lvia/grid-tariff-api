@@ -160,7 +160,7 @@ namespace GridTariffApi.Controllers.Tests
         }
 
         [Fact()]
-        public void GETNoRangeOrPeriodMeteringPointTest()   //todo
+        public void GETNoRangeOrPeriodMeteringPointTest()
         {
             var request = new TariffQueryRequestMeteringPoints();
             List<ValidationResult> validationResults = request.Validate(null).ToList();

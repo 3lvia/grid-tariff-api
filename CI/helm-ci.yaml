@@ -1,0 +1,55 @@
+---
+trigger:
+  - "*"
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  containerregistry: "ContainerRegistryElvia"
+  imagetag: $(Build.BuildNumber)
+  name: grid-tariff-api
+  namespace: kunde
+
+resources:
+  repositories:
+    - repository: templates
+      type: github
+      name: 3lvia/core-azure-devops-templates
+      endpoint: 3lvia
+
+stages:
+  - stage: Build
+    jobs:
+      - template: test.yaml@templates
+        parameters:
+          unitTestProjects: |
+            **/*Tests/*.csproj
+      - template: build.yaml@templates
+        parameters:
+          dockerfile: Dockerfile
+
+  - stage: DeployDev
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/trunk'), true)
+    dependsOn: Build
+    jobs:
+      - template: deploy.yaml@templates
+        parameters:
+          environment: dev
+          helmValuesFile: values.yaml
+
+  - stage: DeployTest
+    dependsOn: DeployDev
+    jobs:
+      - template: deploy.yaml@templates
+        parameters:
+          environment: test
+          helmValuesFile: values.yaml
+
+  - stage: DeployProd
+    dependsOn: DeployTest
+    jobs:
+      - template: deploy.yaml@templates
+        parameters:
+          environment: prod
+          helmValuesFile: values.yaml
