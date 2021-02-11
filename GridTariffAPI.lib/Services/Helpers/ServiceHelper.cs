@@ -17,7 +17,7 @@ namespace GridTariffApi.Lib.Services.Helpers
         {
             if (startDateTime.HasValue)
             {
-                return (DateTime)startDateTime;
+                return startDateTime.Value;
             }
             DateTime timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
             return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime);
@@ -28,7 +28,7 @@ namespace GridTariffApi.Lib.Services.Helpers
         {
             if (endDateTime.HasValue)
             {
-                return (DateTime)endDateTime;
+                return endDateTime.Value;
             }
             DateTime timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
             return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime.AddDays(1).AddSeconds(-1));
