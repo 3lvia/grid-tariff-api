@@ -74,30 +74,6 @@ namespace GridTariffApi.Controllers.Tests
             return norwegianTimeZone;
         }
 
-        //[Fact()]
-        //public void GetStartDateTest()
-        //{
-        //    Setup();
-        //    DateTime now = DateTime.UtcNow;
-        //    Assert.Equal(now, _tariffQueryController.GetStartTime(null, now));
-        //    Assert.Equal(now, _tariffQueryController.GetStartTime("yesterday", now));
-        //    Assert.Equal(now.AddDays(-1).Date, _tariffQueryController.GetStartTime("yesterday", null));
-        //    Assert.Equal(now.Date, _tariffQueryController.GetStartTime("today", null));
-        //    Assert.Equal(now.AddDays(+1).Date, _tariffQueryController.GetStartTime("tomorrow", null));
-        //}
-
-        //[Fact()]
-        //public void GetEndDateTest()
-        //{
-        //    Setup();
-        //    DateTime now = DateTime.UtcNow;
-        //    Assert.Equal(now, _tariffQueryController.GetEndTime(null, now));
-        //    Assert.Equal(now, _tariffQueryController.GetEndTime("yesterday", now));
-        //    Assert.Equal(now.AddDays(-1).Date.AddDays(1).AddSeconds(-1), _tariffQueryController.GetEndTime("yesterday", null));
-        //    Assert.Equal(now.Date.AddDays(1).AddSeconds(-1), _tariffQueryController.GetEndTime("today", null));
-        //    Assert.Equal(now.AddDays(+2).Date.AddSeconds(-1), _tariffQueryController.GetEndTime("tomorrow", null));
-        //}
-
         [Fact()]
         public void GETEmptyCommandTest()
         {
@@ -170,6 +146,65 @@ namespace GridTariffApi.Controllers.Tests
         {
             TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", StartTime = DateTime.MaxValue, EndTime = DateTime.MinValue };
             List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
+            Assert.Single(validationResults);
+        }
+
+        [Fact()]
+        public void GETStartDateBeforeMinDateMeteringPointTest()
+        {
+            Setup();
+            var request = new TariffQueryRequestMeteringPoints() { StartTime = DateTime.UtcNow.AddYears(-10), EndTime = DateTime.UtcNow };
+            var actionResult = _tariffQueryController.GridTariffsByMeteringPoints(request);
+            BadRequestObjectResult result = actionResult as BadRequestObjectResult;
+            Assert.Equal(400, result.StatusCode);
+        }
+
+        [Fact()]
+        public void GETNoRangeOrPeriodMeteringPointTest()   //todo
+        {
+            var request = new TariffQueryRequestMeteringPoints();
+            List<ValidationResult> validationResults = request.Validate(null).ToList();
+            Assert.Equal(3, validationResults.Count);
+        }
+
+        [Fact()]
+        public void GETRangeAndStartDateMeteringPointTest()
+        {
+            var request = new TariffQueryRequestMeteringPoints() { Range = "today", StartTime = DateTime.UtcNow };
+            List<ValidationResult> validationResults = request.Validate(null).ToList();
+            Assert.Single(validationResults);
+        }
+
+        [Fact()]
+        public void GETRangeAndEndDateMeteringPointTest()
+        {
+            var request = new TariffQueryRequestMeteringPoints() { Range = "today", EndTime = DateTime.UtcNow };
+            List<ValidationResult> validationResults = request.Validate(null).ToList();
+            Assert.Single(validationResults);
+        }
+
+
+        [Fact()]
+        public void GETStartDateMissingMeteringPointTest()
+        {
+            var request = new TariffQueryRequestMeteringPoints() {  EndTime = DateTime.MaxValue };
+            List<ValidationResult> validationResults = request.Validate(null).ToList();
+            Assert.Single(validationResults);
+        }
+
+        [Fact()]
+        public void GETEndDateMissingMeteringPointTest()
+        {
+            var request = new TariffQueryRequestMeteringPoints() { StartTime = DateTime.MaxValue };
+            List<ValidationResult> validationResults = request.Validate(null).ToList();
+            Assert.Single(validationResults);
+        }
+
+        [Fact()]
+        public void StartDateGreaterMeteringPointTest()
+        {
+            var request = new TariffQueryRequestMeteringPoints() { StartTime = DateTime.MaxValue, EndTime = DateTime.MinValue };
+            List<ValidationResult> validationResults = request.Validate(null).ToList();
             Assert.Single(validationResults);
         }
     }

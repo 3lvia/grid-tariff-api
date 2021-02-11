@@ -51,6 +51,12 @@ namespace GridTariffApi.Lib.Controllers.v1
         [Route("meteringpointsgridtariffs")]
         public IActionResult GridTariffsByMeteringPoints([FromBody] TariffQueryRequestMeteringPoints tariffQueryRequest)
         {
+            string validationErrorMsg = ValidateRequestInput(tariffQueryRequest);
+            if (!String.IsNullOrEmpty(validationErrorMsg))
+            {
+                return BadRequest(validationErrorMsg);
+            }
+
             DateTime startDateTime = _serviceHelper.GetStartTime(tariffQueryRequest.Range, tariffQueryRequest.StartTime);
             DateTime endDateTime = _serviceHelper.GetEndTime(tariffQueryRequest.Range, tariffQueryRequest.EndTime);
             var result = _tariffQueryService.QueryTariff(tariffQueryRequest.MeteringPointIds, startDateTime, endDateTime);
@@ -97,6 +103,20 @@ namespace GridTariffApi.Lib.Controllers.v1
             }
 
             DateTime startDateTime = _serviceHelper.GetStartTime(tariffQueryModel.Range, tariffQueryModel.StartTime);
+            if (startDateTime < _gridTariffApiConfig.MinStartDateAllowedQuery)
+            {
+                return $"Query before {_gridTariffApiConfig.MinStartDateAllowedQuery} not supported";
+            }
+            return String.Empty;
+        }
+        private string ValidateRequestInput(TariffQueryRequestMeteringPoints tariffQueryRequest)
+        {
+            if (tariffQueryRequest == null)
+            {
+                return "Missing model";
+            }
+
+            DateTime startDateTime = _serviceHelper.GetStartTime(tariffQueryRequest.Range, tariffQueryRequest.StartTime);
             if (startDateTime < _gridTariffApiConfig.MinStartDateAllowedQuery)
             {
                 return $"Query before {_gridTariffApiConfig.MinStartDateAllowedQuery} not supported";
