@@ -5,6 +5,10 @@ using System.ComponentModel.DataAnnotations;
 namespace GridTariffApi.Lib.Models.TariffQuery
 {
     public class TariffQueryRequestMeteringPoints    {
+        /// <summary>
+        /// Mutual exclusive with startTime/EndTime.  Valid values: yesterday,today,tomorrow. 
+        /// </summary>
+        /// <example>tomorrow</example>
         [StringLength(10)]
         [RegularExpression("yesterday|today|tomorrow", ErrorMessage = "Valid values is 'yesterday','today','tomorrow'")]
         public String Range { get; set; }
