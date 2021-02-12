@@ -5,78 +5,60 @@
 name: grid-tariff-api
 namespace: kunde
 microserviceType: webapi
-# environment: dev|test|prod
 
-replicaCount: 2
+replicaCount: 1
 
-#image:
-# repository: containerregistryelvia.azurecr.io/core-demo-api # defaults to containerregistryelvia.azurecr.io/<namespace>-<name>
-#  tag: "ToBeReplaced"
-
-# imagePullSecret: containerregistryelvia
-
-env:
-- name: ASPNETCORE_URLS
-  value: http://+:8080
-
-service:
- port: 80
- targetPort: 8080
-
-ingress:
-  subdomain: core
-  path: "/demo-api"
+image:
+  repository: containerregistryelvia.azurecr.io/kunde-grid-tariff-api
 
 resources:
   requests:
-    cpu: "1"
-    memory: "1Gi"
+    cpu: "100m"
+    memory: "200Mi"
   limits:
-    cpu: "1.5"
-    memory: "8Gi"
+    cpu: "150m"
+    memory: "1Gi"
 
-# autoscaling:
-#   minReplicas: 2
-#   maxReplicas: 4
-#   targetCPUUtilizationPercentage: 80
+#env:
+#  - name: ELVID__Authority
+#    valueFrom:
+#      configMapKeyRef:
+#        name: pushreceiver-profiledmeterreadings
+#        key: elvid.authority
+#  - name: ELVID__RequiredScope
+#    value: pr.sesam
+#  - name: bigtable__project
+#    valueFrom:
+#      configMapKeyRef:
+#        name: pushreceiver-profiledmeterreadings
+#        key: bigtable.project
+#  - name: bigtable__instanceid
+#    valueFrom:
+#      configMapKeyRef:
+#        name: pushreceiver-profiledmeterreadings
+#        key: bigtable.instanceid
 
-lifecycle:
-  preStop:
-    exec:
-      command:
-      - sleep
-      - "1"
+service:
+  port: 80
+  targetPort: 8080
 
-readinessProbe:
-  failureThreshold: 3
-  httpGet:
-    path: /health
-    port: 8080
-    scheme: HTTP
-  initialDelaySeconds: 15
-  periodSeconds: 15
-  successThreshold: 1
-  timeoutSeconds: 3
-
-livenessProbe:
-  failureThreshold: 5
-  httpGet:
-    path: /health
-    port: 8080
-    scheme: HTTP
-  initialDelaySeconds: 15
-  periodSeconds: 15
-  successThreshold: 1
-  timeoutSeconds: 3
-
-# configmap:
-#   dev:
-#     bigtable.project: "hafslund-mdm-dev"
-#     bigtable.instanceid: "mdm-meterreadings-dev"
-#   test:
-#     bigtable.project: "hafslund-mdm-test"
-#     bigtable.instanceid: "mdm-meterreadings-test"
-#   prod:
-#     bigtable.project: "hafslund-mdm"
-#     bigtable.instanceid: "mdm-meterreadings"
-
+ingress:
+  subdomain: kunde
+  path: "/grid-tariff-api"
+  
+#configmap:
+#  dev:
+#    kvalitetsportalen.environment: DEV
+#    elvid.authority: https://elvid.test-elvia.io/
+#    bigtable.project: "hafslund-mdm-dev"
+#    bigtable.instanceid: "mdm-meterreadings-dev"
+#  test:
+#    kvalitetsportalen.environment: AMS-T01
+#    elvid.authority: https://elvid.test-elvia.io/
+#    bigtable.project: "hafslund-mdm-test"
+#    bigtable.instanceid: "mdm-meterreadings-test"
+#  prod:
+#    kvalitetsportalen.environment: HIPAD
+#    elvid.authority: https://elvid.elvia.io/
+#    bigtable.project: "hafslund-mdm"
+#    bigtable.instanceid: "mdm-meterreadings"
