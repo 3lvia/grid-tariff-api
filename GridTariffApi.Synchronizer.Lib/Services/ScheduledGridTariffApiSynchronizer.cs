@@ -18,8 +18,6 @@ namespace GridTariffApi.Synchronizer.Lib.Services
         {
             _logger = logger;
             _gridTariffApiSynchronizer = gridTariffApiSynchronizer;
-
-
         }
         public override Task StartAsync(CancellationToken cancellationToken)
         {
