@@ -26,9 +26,7 @@ namespace GridTariffApi.Synchronizer.Lib.Services
         {
             try
             {
-                _logger.TrackTrace("CronJobService.StartAsync Begin");
                 await ScheduleJob(cancellationToken);
-                _logger.TrackTrace("CronJobService.StartAsync END");
             }
             catch (Exception e)
             {
@@ -40,14 +38,12 @@ namespace GridTariffApi.Synchronizer.Lib.Services
         {
             try
             {
-                _logger.TrackTrace("CronJobService.ScheduleJob Begin");
                 var next = _expression.GetNextOccurrence(DateTimeOffset.Now, _timeZoneInfo);
                 if (next.HasValue)
                 {
                     var delay = next.Value - DateTimeOffset.Now;
                     if (delay.TotalMilliseconds <= 0)   // prevent non-positive values from being passed into Timer
                     {
-                        _logger.TrackTrace("CronJobService.ScheduleJob delay.TotalMilliseconds <= 0");
                         await ScheduleJob(cancellationToken);
                     }
                     _timer = new System.Timers.Timer(delay.TotalMilliseconds);
@@ -66,11 +62,9 @@ namespace GridTariffApi.Synchronizer.Lib.Services
                             await ScheduleJob(cancellationToken);    // reschedule next
                         }
                     };
-                    _logger.TrackTrace("CronJobService.ScheduleJob _timer.Start()");
                     _timer.Start();
                 }
                 await Task.CompletedTask;
-                _logger.TrackTrace("CronJobService.ScheduleJob End");
 
             }
             catch (Exception e)
@@ -82,22 +76,17 @@ namespace GridTariffApi.Synchronizer.Lib.Services
 
         public virtual async Task DoWork(CancellationToken cancellationToken)
         {
-            _logger.TrackTrace("CronJobService.DoWork Begin");
             await Task.Delay(5000, cancellationToken);  // do the work
-            _logger.TrackTrace("CronJobService.DoWork End");
         }
 
         public virtual async Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.TrackTrace("CronJobService.StopAsync Begin");
             _timer?.Stop();
-            _logger.TrackTrace("CronJobService.StopAsync Begin");
             await Task.CompletedTask;
         }
 
         public virtual void Dispose()
         {
-            _logger.TrackTrace("CronJobService.StopAsync Dispose");
             _timer?.Dispose();
         }
     }

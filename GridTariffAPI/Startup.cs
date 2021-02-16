@@ -61,7 +61,7 @@ namespace GridTariff.Api
             services.AddTransient<IServiceHelper, ServiceHelper>();           
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString)/*.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)*/);
 
-            services.AddStandardElviaTelemetryLoggingWorkerService(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true, retainTelemetryWhere: telemetryItem => telemetryItem switch
+            services.AddStandardElviaTelemetryLogging(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true, retainTelemetryWhere: telemetryItem => telemetryItem switch
             {
                 DependencyTelemetry d => false,
                 RequestTelemetry r => false,
@@ -71,7 +71,7 @@ namespace GridTariff.Api
             services.AddCronJob<ScheduledGridTariffApiSynchronizer>(c =>
             {
                 c.TimeZoneInfo = TimeZoneInfo.Local;
-                c.CronExpression = @"*/10 * * * *";      //every day at 05:00
+                c.CronExpression = @"0 5 * * * ";      //every day at 05:00
             });
 
             var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();

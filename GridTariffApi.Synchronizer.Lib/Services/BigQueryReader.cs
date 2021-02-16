@@ -38,14 +38,27 @@ namespace GridTariffApi.Synchronizer.Lib.Services
             var meteringPointProducts = new List<BqMeteringPointProduct>();
             foreach (var row in result)
             {
-                meteringPointProducts.Add(new BqMeteringPointProduct()
-                {
-                    MeteringPointId = row["meteringpointid"].ToString(),
-                    Product = row["netproduct"].ToString(),
-                    Area = Convert.ToInt32(row["source"])
-                });
+                meteringPointProducts.Add(BigQueryRowToBqMeteringPointProduct(row));
             }
             return meteringPointProducts;
+        }
+
+        private BqMeteringPointProduct BigQueryRowToBqMeteringPointProduct(BigQueryRow row)
+        {
+            var result = new BqMeteringPointProduct() { MeteringPointId = String.Empty, Product = String.Empty, Area = -1 } ;
+            if (row["meteringpointid"] != null)
+            {
+                result.MeteringPointId = row["meteringpointid"].ToString();
+            }
+            if (row["netproduct"] != null)
+            {
+                result.Product = row["netproduct"].ToString();
+            }
+            if (row["source"] != null)
+            {
+                result.Area = Convert.ToInt32(row["source"]);
+            }
+            return result;
         }
 
         private static BigQueryParameter[] GetIncrementalParameters(DateTime timestamp)
