@@ -71,7 +71,7 @@ namespace GridTariff.Api
             services.AddCronJob<ScheduledGridTariffApiSynchronizer>(c =>
             {
                 c.TimeZoneInfo = TimeZoneInfo.Local;
-                c.CronExpression = @"0 * * * *";      //every day at 05:00
+                c.CronExpression = @"0 5 * * *";      //every day at 05:00
             });
 
             var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
