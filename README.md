@@ -4,13 +4,13 @@ GridTariff Api is an Api intended for for offering variable electrical grid tari
 GridTariff Api exposes the following services:
 
 * Retrieve all available private tariffs (api/{v:apiVersion}/tarifftype)
-* Retrieve tariff prices per hour for a given tariff for a given timeperiod (api/{v:apiVersion}/tariffquery)
+* Retrieve tariff prices per hour for a given tariff for a given timeperiod (GET api/{v:apiVersion}/tariffquery)
 
 ### Retrieve all available private tariffs (api/{v:apiVersion}/tarifftype)
 Service takes zero parameters
 Service returns json containing information about all tarrifs
 
-### Retrieve tariff prices per hour for a given tariff for a given timeperiod (api/{v:apiVersion}/tariffquery)
+### Retrieve tariff prices per hour for a given tariff for a given timeperiod (GET api/{v:apiVersion}/tariffquery)
 Service takes two parameters.
 Parameter one is the tariff which the service is to return data for.
 Parameter two is the timeperiod in question.
@@ -23,6 +23,18 @@ For each hour there will be returned a fixed price element, and a variable price
 The variable price element can change for each hour during the day.
 On public holidays, Saturdays and Sundays the variable price elements is always the cheapest available, for all hours of the day.
 
+### Retrieve tariff prices per hour for a set of meteringpoints for a given timeperiod(POST api/{v:apiVersion}/meteringpointsgridtariffs)
+Service takes two parameters.
+Parameter one is a list of meterpoints to return data for.
+Parameter two is the timeperiod in question.
+The timperiod can be specified in two ways.
+Either specify timeperiod using paramater Range. Valid values are 'yesterday','today' or 'tomorrow'.
+Or specify timeperiod using StartTime and EndTime.
+
+The service will return a container containing zero or more elements.
+Each element will one tariff and a list of meteringpoints which has this tarff.
+The tariff data will be the same as the "GET api/{v:apiVersion}/tariffquery" endpoint, so see that endpoint for tariff details.
+
 ## Overview of projects in solution
 
 ### Project GridTariffApi.lib
@@ -32,8 +44,16 @@ Contains all business logic for Api.
 Unit tests for project GridTarifApi.lib
 
 ### Project GridTariffApi
-Project which uses GridTariffApi.lib to and hosts the services.
+Project which uses GridTariffApi.lib and GridTariffApiSynchronizer.lib to and hosts the services.
 This project is native to Elvia and is intended to serve as an example of how to host the services.
+
+### Project GridTariffApiSynchronizer.lib
+Project which is used by GridTariffApi.
+The functionality of this project is to retrieve meteringpoint and gridtariff from google bigquery and persist data in database for use by the api.
+This project is native to Elvia and is intended to serve as an example of how to retrieve information about meteringpoints and gridtariffs.
+
+### Project GridTariffApiSynchronizer.libTests
+Unit tests for project GridTariffApiSynchronizer.lib
 
 ## Project GridTariffApi.lib folders
 
@@ -57,7 +77,6 @@ Contains sql statements for creating required tables in database
 
 ### Swagger
 Contains classes related to documentation of of Api.
-
 
 ## Project GridTariffApi folders
 
@@ -93,6 +112,9 @@ Variable price validity interval can not be arbitrary, they must start/stop at b
 ### Table 'publicholiday'
 This table contains public holidays.
 (For these days the cheapest variable price element valid for the day is used, for all hours of the day).
+
+### Table 'meteringpointproduct'
+This table contains information about meteringpoints and their current gridtariffs.
 
 ## Overview of solution folders
 
