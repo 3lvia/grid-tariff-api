@@ -47,11 +47,13 @@ stages:
           helmValuesFile: values.yaml
 
   - stage: RegisterApiManagementProduct
-    dependsOn: DeployDev
+    dependsOn: DeployTest
     jobs:
-      - task: stephane-eyskens.apim.apimcreateorupdateproduct.apimcreateorupdateproduct@3
-        displayName: 'API Management - Create/Update Product '
-        inputs:
+    - job: CreateOrUpdateProduct
+      steps:
+        - task: stephane-eyskens.apim.apimcreateorupdateproduct.apimcreateorupdateproduct@3
+          displayName: 'API Management - Create/Update Product '
+          inputs:
             ConnectedServiceNameARM: ApiManagementRGTest
             ResourceGroupName: 'API-RGtest'
             ApiPortalName: elviatest
@@ -64,10 +66,8 @@ stages:
                 Administrators
                 Developers
                 Guests
-
-  - stage: RegisterApiManagementApi
-    dependsOn: RegisterApiManagementProduct
-    jobs:
+    - job: RegisterApiManagementApi
+      steps:
       - task: stephane-eyskens.apim.apim.apim@3
         displayName: 'API Management - Create/Update API '
         inputs:
