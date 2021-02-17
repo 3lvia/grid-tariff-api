@@ -43,8 +43,8 @@ service:
   targetPort: 8080
 
 ingress:
-  subdomain: kunde
-  path: "/grid-tariff-api"
+  subdomain: grid-tariff-api
+  path: "/"
   
 #configmap:
 #  dev:
