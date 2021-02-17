@@ -46,7 +46,7 @@ stages:
           environment: test
           helmValuesFile: values.yaml
 
-  - stage: RegisterApiManagementProduct
+  - stage: RegisterAzureApiManagementTest
     dependsOn: DeployTest
     jobs:
     - job: CreateOrUpdateProduct
@@ -103,7 +103,7 @@ stages:
             MicrosoftApiManagementAPIVersion: '2018-01-01'
 
   - stage: DeployProd
-    dependsOn: DeployTest
+    dependsOn: RegisterAzureApiManagementTest
     jobs:
       - template: deploy.yaml@templates
         parameters:
