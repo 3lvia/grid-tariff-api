@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CI", "CI", "{041DA3EE-5BB6-
 		CI\config.prod.yaml = CI\config.prod.yaml
 		CI\config.test.yaml = CI\config.test.yaml
 		CI\deploy.yaml = CI\deploy.yaml
-		CI\helm-ci.yaml = CI\helm-ci.yaml
+		CI\trunk.yaml = CI\trunk.yaml
 		CI\values.yaml = CI\values.yaml
 	EndProjectSection
 EndProject
