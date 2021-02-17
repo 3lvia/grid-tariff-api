@@ -3,7 +3,7 @@ trigger:
   - "*"
 
 pool:
-  vmImage: "ubuntu-latest"
+  vmImage: "windows-latest"
 
 variables:
   containerregistry: "ContainerRegistryElvia"
