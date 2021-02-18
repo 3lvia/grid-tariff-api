@@ -90,6 +90,18 @@ GO
 ALTER TABLE [dbo].[variablepriceconfig]  WITH CHECK ADD FOREIGN KEY([uomid])
 REFERENCES [dbo].[uom] ([id])
 GO
+CREATE NONCLUSTERED INDEX IX_MeteringPointProduct_MeteringPointId
+    ON dbo.meteringpointproduct (meteringpointid);
+GO
+CREATE NONCLUSTERED INDEX IX_PublicHoliday_HolidayDate
+    ON dbo.publicholiday (holidaydate);	
+GO	
+CREATE NONCLUSTERED INDEX IX_FixedPriceConfig_MonthIndex
+    ON dbo.fixedpriceconfig (MonthNo,PriceFromDate,PriceToDate);
+GO
+CREATE NONCLUSTERED INDEX IX_VariablePriceConfig_MonthIndex
+    ON dbo.variablepriceconfig (MonthNo,PriceFromDate,PriceToDate);	
+GO
 ALTER DATABASE [NettTariff-dev] SET  READ_WRITE 
 --ALTER DATABASE [NettTariff-test] SET  READ_WRITE 
 --ALTER DATABASE [NettTariff-prod] SET  READ_WRITE 
