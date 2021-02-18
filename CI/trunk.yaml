@@ -85,7 +85,7 @@ stages:
              <policies>
                  <inbound>
                      <base />
-                     <authentication-basic username=$(grid-tariff-api-username-test) password=$(grid-tariff-api-password-test) />
+                     <authentication-basic username="$(grid-tariff-api-username-test)" password="$(grid-tariff-api-password-test)" />
                      <rate-limit-by-key calls="1200" renewal-period="60"
                      increment-condition="@((context.Response.StatusCode &gt;= 200) &amp;&amp; (context.Response.StatusCode &lt; 300))"
                      counter-key="@(context.Subscription.Key)" />					  
