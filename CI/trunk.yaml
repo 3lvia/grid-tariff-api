@@ -3,7 +3,7 @@ trigger:
   - "*"
 
 pool:
-  vmImage: "windows-latest"
+  vmImage: "ubuntu-latest"
 
 variables:
   containerregistry: "ContainerRegistryElvia"
@@ -50,6 +50,8 @@ stages:
     dependsOn: DeployTest
     jobs:
     - job: CreateOrUpdateProduct
+      pool:
+        vmImage: "windows-latest"
       steps:
         - task: stephane-eyskens.apim.apimcreateorupdateproduct.apimcreateorupdateproduct@3
           displayName: 'API Management - Create/Update Product '
@@ -66,11 +68,9 @@ stages:
                 Administrators
                 Developers
                 Guests
-    - job: RegisterApiManagementApi
-      steps:
-      - task: stephane-eyskens.apim.apim.apim@3
-        displayName: 'API Management - Create/Update API '
-        inputs:
+        - task: stephane-eyskens.apim.apim.apim@3
+          displayName: 'API Management - Create/Update API '
+          inputs:
             ConnectedServiceNameARM: ApiManagementRGTest
             ResourceGroupName: 'API-RGtest'
             ApiPortalName: elviatest
@@ -85,7 +85,7 @@ stages:
              <policies>
                  <inbound>
                      <base />
-                     <authentication-basic username="V8yNnZDn5$D@UjCs" password="JDq%4LLPx2`W#Qb}" />
+                     <authentication-basic username=$(grid-tariff-api-username-test) password=$(grid-tariff-api-password-test) />
                      <rate-limit-by-key calls="1200" renewal-period="60"
                      increment-condition="@((context.Response.StatusCode &gt;= 200) &amp;&amp; (context.Response.StatusCode &lt; 300))"
                      counter-key="@(context.Subscription.Key)" />					  
