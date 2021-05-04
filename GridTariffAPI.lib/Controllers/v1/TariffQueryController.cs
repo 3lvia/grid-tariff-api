@@ -13,7 +13,7 @@ using System;
 namespace GridTariffApi.Lib.Controllers.v1
 {
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme + "," + "BasicAuthentication")]
+    [Authorize]
     [ApiVersion("1.0")]
     [Route("api/{v:apiVersion}/tariffquery")]
     public class TariffQueryController : ControllerBase

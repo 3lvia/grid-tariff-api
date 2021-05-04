@@ -4,6 +4,7 @@ using Elvia.Telemetry.Extensions;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.BigQuery.V2;
 using GridTariffApi.Auth;
+using GridTariffApi.Extensions;
 using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.EntityFramework;
 using GridTariffApi.Lib.Services.Helpers;
@@ -88,10 +89,11 @@ namespace GridTariff.Api
         {
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("MachineAccess",
-                    new AuthorizationPolicyBuilder()
-                          .RequireClaim("scope", "kunde.grid-tariff-api.machineaccess")
-                          .Build());
+                options.DefaultPolicy = new AuthorizationPolicyBuilder("BasicAuthentication", JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAssertion(c => {
+                        return c.HasScope("kunde.grid-tariff-api.machineaccess") || c.User?.Identity?.AuthenticationType =="BasicAuthentication";
+                    })
+                    .Build();
             });
         }
 
@@ -125,6 +127,7 @@ namespace GridTariff.Api
 
         protected virtual void ConfigureAuth(IServiceCollection services, string user, string password)
         {
+
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
             services.AddSingleton(config =>

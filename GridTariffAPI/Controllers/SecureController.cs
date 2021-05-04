@@ -9,7 +9,7 @@ namespace GridTariffApi.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme + "," + "BasicAuthentication")]
+    [Authorize]
     public class SecureController : ControllerBase
     {
 
