@@ -1,5 +1,6 @@
 ﻿using GridTariffApi.Lib.Models;
 using GridTariffApi.Lib.Services.TariffType;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GridTariffApi.Lib.Controllers.v1
 {
     [ApiController]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme + "," + "BasicAuthentication")]
     [ApiVersion("1.0")]
     [Route("api/{v:apiVersion}/tarifftype")]
     public class TariffTypeController : ControllerBase

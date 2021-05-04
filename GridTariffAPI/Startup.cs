@@ -14,6 +14,8 @@ using GridTariffApi.Synchronizer.Lib.Config;
 using GridTariffApi.Synchronizer.Lib.Services;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +25,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prometheus;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -47,6 +50,8 @@ namespace GridTariff.Api
                 x.ReportApiVersions = true;
             });
 
+            AddAuthorizations(services);
+
             GridTariffApiConfig gridTariffApiConfig = GetGridTariffApiConfig();
             services.AddSingleton(gridTariffApiConfig);
             GridTariffApiSynchronizerConfig gridTariffApiSynchronizerConfig = GetGridTariffApiSynchronizerConfig();
@@ -58,8 +63,8 @@ namespace GridTariff.Api
             services.AddTransient<IGridTariffApiSynchronizer, GridTariffApiSynchronizer>();
             services.AddTransient<ITariffTypeService, TariffTypeService>();
             services.AddTransient<ITariffQueryService, TariffQueryService>();
-            services.AddTransient<IServiceHelper, ServiceHelper>();           
-            services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString)/*.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)*/);
+            services.AddTransient<IServiceHelper, ServiceHelper>();
+            services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString));
 
             services.AddStandardElviaTelemetryLogging(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true, retainTelemetryWhere: telemetryItem => telemetryItem switch
             {
@@ -77,6 +82,17 @@ namespace GridTariff.Api
             var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
             services.AddSwaggerConfiguration(swaggerSettings);
             ConfigureAuth(services, gridTariffApiConfig.Username, gridTariffApiConfig.Password);
+        }
+
+        private static void AddAuthorizations(IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("MachineAccess",
+                    new AuthorizationPolicyBuilder()
+                          .RequireClaim("scope", "kunde.grid-tariff-api.machineaccess")
+                          .Build());
+            });
         }
 
         private GridTariffApiConfig GetGridTariffApiConfig()
@@ -113,6 +129,17 @@ namespace GridTariff.Api
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
             services.AddSingleton(config =>
                 new AuthenticationConfig(user, password));
+
+            var authority = _configuration.EnsureHasValue("kunde:kv:elvid:generic:authority");
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+              .AddJwtBearer(options =>
+              {
+                  options.Authority = authority;
+                  options.TokenValidationParameters.ValidateAudience = false;
+                  options.TokenValidationParameters.ValidateIssuer = false;
+              });
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
