@@ -1,6 +1,5 @@
 ﻿using GridTariffApi.Lib.Models;
 using GridTariffApi.Lib.Services.TariffType;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
