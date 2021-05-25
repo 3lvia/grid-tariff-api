@@ -74,6 +74,7 @@ namespace GridTariffApi.Lib.Services.TariffQuery
             Dictionary<int, VariablePriceConfig> currVariablePrices = null;
             List<FixedPrices> currentFixedPrices = null;
             String currSeason = String.Empty;
+            bool hasTariffDataforCurrentMonth = false;
 
             while (paramFromDate <= paramToDate)
             {
@@ -83,19 +84,25 @@ namespace GridTariffApi.Lib.Services.TariffQuery
                 if (currMonth != paramFromDate.Month)   //new month, find appropiate tariffs/season, calculate fixed tariffs
                 {
                     currFixedPrices = GetFixedPricesForGivenMonth(paramFromDate, queryToDate, tariffTypeId);
-                    currVariablePrices = GetVariablePricesForGivenMonth(paramFromDate, queryToDate, tariffTypeId);
-                    currentFixedPrices = CalculateFixedPricesForGivenMonth(currFixedPrices, paramFromDate.Year, paramFromDate.Month, fixedPriceUnitOfMeasure);
-                    currSeason = currFixedPrices.First().Value.Season.Description;
+                    hasTariffDataforCurrentMonth = currFixedPrices.Count > 0;
+                    if (hasTariffDataforCurrentMonth)
+                    {
+                        currVariablePrices = GetVariablePricesForGivenMonth(paramFromDate, queryToDate, tariffTypeId);
+                        currentFixedPrices = CalculateFixedPricesForGivenMonth(currFixedPrices, paramFromDate.Year, paramFromDate.Month, fixedPriceUnitOfMeasure);
+                        currSeason = currFixedPrices.First().Value.Season.Description;
+                    }
                     currMonth = paramFromDate.Month;
                 }
-                tariffQueryResult.GridTariff.TariffPrice.PriceInfo.AddRange(
-                    ProcessDay(paramFromDate,
-                        queryToDate,
-                        isPublicHoliday,
-                        currentFixedPrices,
-                        currVariablePrices,
-                        currSeason));
-
+                if (hasTariffDataforCurrentMonth)
+                {
+                    tariffQueryResult.GridTariff.TariffPrice.PriceInfo.AddRange(
+                        ProcessDay(paramFromDate,
+                            queryToDate,
+                            isPublicHoliday,
+                            currentFixedPrices,
+                            currVariablePrices,
+                            currSeason));
+                }
                 paramFromDate = paramFromDate.AddDays(1).Date;
             }
             return tariffQueryResult;

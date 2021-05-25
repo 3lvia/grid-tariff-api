@@ -469,5 +469,20 @@ namespace GridTariffApi.Services.TariffQuery.Tests
                 dateIterator = dateIterator.AddDays(1);
             }
         }
+
+        [Fact()]
+        public void PeriodOutsideDataInDatabase()
+        {
+            Setup();
+            var startDateTime = DateTime.MinValue;
+            var endDateTime = DateTime.MinValue.AddYears(1);
+            var meteringPoints = new List<String>() { "abc1" };
+            var result = _TariffQueryService.QueryTariff(meteringPoints, startDateTime, endDateTime);
+            Assert.Single(result.GridTariffCollections);
+            var gridTariffCollection = result.GridTariffCollections.First();
+            Assert.Single(gridTariffCollection.MeteringPointIds);
+            Assert.Contains("abc1", gridTariffCollection.MeteringPointIds);
+            Assert.Empty(gridTariffCollection.GridTariff.TariffPrice.PriceInfo);
+        }
     }
 }
