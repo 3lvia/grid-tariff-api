@@ -174,7 +174,8 @@ namespace GridTariffApi.Lib.Services.TariffQuery
             bool isLowTariff = isPublicHoliday || fromTime.DayOfWeek == DayOfWeek.Saturday || fromTime.DayOfWeek == DayOfWeek.Sunday;
             Dictionary<int, VariablePrice> calculatedVariablePrices = CalcVariablePricesDay(variablePrices, fromTime.Hour, toTime.Hour, isLowTariff);
 
-            while (fromTime.Date == toTime.Date && fromTime.Hour <= toTime.Hour)
+            while (fromTime.Date == toTime.Date && 
+                (fromTime.Hour < toTime.Hour) || (fromTime.Hour == toTime.Hour && toTime.Minute > 0)) 
             {
                 priceInfos.Add(new PriceInfo()
                 {
