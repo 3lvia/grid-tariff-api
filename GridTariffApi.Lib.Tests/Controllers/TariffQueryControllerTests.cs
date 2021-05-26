@@ -40,7 +40,7 @@ namespace GridTariffApi.Controllers.Tests
             gridTariffApiConfig.TimeZoneForQueries = NorwegianTimeZoneInfo();
 
             _serviceHelper = new ServiceHelper(gridTariffApiConfig);
-            _TariffQueryService = new TariffQueryService(_tariffContext);
+            _TariffQueryService = new TariffQueryService(_tariffContext, _serviceHelper);
             _tariffTypeService = new TariffTypeService(_tariffContext);
             _tariffQueryController = new TariffQueryController(_tariffTypeService, _TariffQueryService, gridTariffApiConfig, _serviceHelper);
 
@@ -61,6 +61,7 @@ namespace GridTariffApi.Controllers.Tests
             _tariffContext.AddRange(testHelper.GetFixedPricelevels());
             _tariffContext.AddRange(testHelper.GetFixedPriceConfigs());
             _tariffContext.AddRange(testHelper.GetVariablePriceConfigs());
+            _tariffContext.AddRange(testHelper.GetMeteringPointProducts());
             _tariffContext.SaveChanges();
         }
 
@@ -144,7 +145,8 @@ namespace GridTariffApi.Controllers.Tests
         [Fact()]
         public void StartDateGreaterTest()
         {
-            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", StartTime = DateTime.MaxValue, EndTime = DateTime.MinValue };
+            DateTime startDate = new DateTime(2021, 05, 25);
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", StartTime = startDate, EndTime = startDate.AddDays(-1)} ;
             List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
             Assert.Single(validationResults);
         }
@@ -203,9 +205,80 @@ namespace GridTariffApi.Controllers.Tests
         [Fact()]
         public void StartDateGreaterMeteringPointTest()
         {
-            var request = new TariffQueryRequestMeteringPoints() { StartTime = DateTime.MaxValue, EndTime = DateTime.MinValue };
+            DateTime startDate = new DateTime(2021, 05, 25);
+            var request = new TariffQueryRequestMeteringPoints() { StartTime = startDate, EndTime = startDate.AddDays(-1) };
             List<ValidationResult> validationResults = request.Validate(null).ToList();
             Assert.Single(validationResults);
+        }
+
+        [Fact()]
+        public void NorwegianWinterTimeTest()
+        {
+            Setup();
+            var startDateTime = new DateTimeOffset(new DateTime(2021, 01, 04, 0, 0, 0), new TimeSpan(1, 0, 0));
+            var endDateTime = new DateTimeOffset(new DateTime(2021, 01, 05, 0, 0, 0), new TimeSpan(1, 0, 0));
+            var request = new TariffQueryRequestMeteringPoints() { MeteringPointIds = new List<string>() { "abc1" }, StartTime = startDateTime, EndTime = endDateTime };
+            List<PriceInfo> priceInfos = ExecuteRequestAndInitialVerify(request);
+            Assert.Equal(24, priceInfos.Count);
+            AssertCorrectHours(startDateTime, priceInfos);
+            VerifyPriceInfo(startDateTime, priceInfos, "00-01", 0.2890);
+            VerifyPriceInfo(startDateTime.AddHours(23), priceInfos, "23-24", 0.2890);
+            VerifyPriceInfo(startDateTime.AddHours(5), priceInfos, "05-06", 0.2890);
+            VerifyPriceInfo(startDateTime.AddHours(6), priceInfos, "06-07", 0.5805);
+            VerifyPriceInfo(startDateTime.AddHours(15), priceInfos, "15-16", 0.5805);
+            VerifyPriceInfo(startDateTime.AddHours(16), priceInfos, "16-17", 0.8470);
+            VerifyPriceInfo(startDateTime.AddHours(19), priceInfos, "19-20", 0.8470);
+            VerifyPriceInfo(startDateTime.AddHours(20), priceInfos, "20-21", 0.5805);
+        }
+
+        private List<PriceInfo> ExecuteRequestAndInitialVerify(TariffQueryRequestMeteringPoints request)
+        {
+            var okObjectResult = _tariffQueryController.GridTariffsByMeteringPoints(request) as OkObjectResult;
+            Assert.NotNull(okObjectResult);
+            TariffQueryRequestMeteringPointsResult result = okObjectResult.Value as TariffQueryRequestMeteringPointsResult;
+            Assert.NotNull(result);
+            Assert.Single(result.GridTariffCollections);
+            var gridTariffCollection = result.GridTariffCollections.First();
+            var priceInfos = gridTariffCollection.GridTariff.TariffPrice.PriceInfo;
+            return priceInfos;
+        }
+
+        [Fact()]
+        public void NorwegianSummerTimeTest()
+        {
+            Setup();
+            var startDateTime = new DateTimeOffset(new DateTime(2021, 06, 01, 0, 0, 0), new TimeSpan(2, 0, 0));
+            var endDateTime = new DateTimeOffset(new DateTime(2021, 06, 02, 0, 0, 0), new TimeSpan(2, 0, 0));
+            var request = new TariffQueryRequestMeteringPoints() { MeteringPointIds = new List<string>() { "abc1" }, StartTime = startDateTime, EndTime = endDateTime };
+            List<PriceInfo> priceInfos = ExecuteRequestAndInitialVerify(request);
+            Assert.Equal(24, priceInfos.Count);
+            AssertCorrectHours(startDateTime, priceInfos);
+            VerifyPriceInfo(startDateTime, priceInfos, "00-01", 0.2515);
+            VerifyPriceInfo(startDateTime.AddHours(5), priceInfos, "05-06", 0.2515);
+            VerifyPriceInfo(startDateTime.AddHours(6), priceInfos, "06-07", 0.2765);
+            VerifyPriceInfo(startDateTime.AddHours(21), priceInfos, "21-22", 0.2765);
+            VerifyPriceInfo(startDateTime.AddHours(22), priceInfos, "22-23", 0.2515);
+            VerifyPriceInfo(startDateTime.AddHours(23), priceInfos, "23-24", 0.2515);
+        }
+
+        private static void AssertCorrectHours(DateTimeOffset startDateTime, List<PriceInfo> priceInfos)
+        {
+            DateTimeOffset dateIterator = startDateTime;
+            while (dateIterator.Day == startDateTime.Day)
+            {
+                var priceInfoElement = priceInfos.FirstOrDefault(x => x.StartTime == dateIterator);
+                Assert.NotNull(priceInfoElement);
+                Assert.Equal(priceInfoElement.ExpiredAt, dateIterator.AddHours(1));
+                dateIterator = dateIterator.AddHours(1);
+            }
+        }
+
+        private static void VerifyPriceInfo(DateTimeOffset startDateTime, List<PriceInfo> priceInfos,string hoursShort, double variableprice)
+        {
+            PriceInfo priceInfoFirst = priceInfos.FirstOrDefault(x => x.StartTime == startDateTime);
+            Assert.Equal(priceInfoFirst.ExpiredAt, startDateTime.AddHours(1));
+            Assert.Equal(hoursShort, priceInfoFirst.HoursShortName);
+            Assert.Equal(variableprice, (double)priceInfoFirst.VariablePrice.Total, 4);
         }
     }
 }
