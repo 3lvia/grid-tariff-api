@@ -5,8 +5,8 @@ namespace GridTariffApi.Lib.Models.TariffQuery
 {
     public class PriceInfo
     {
-        public DateTime StartTime { get; set; }
-        public DateTime ExpiredAt { get; set; }
+        public DateTimeOffset StartTime { get; set; }
+        public DateTimeOffset ExpiredAt { get; set; }
         public String HoursShortName { get; set; }
         public String Season { get; set; }
         public bool PublicHoliday { get; set; }

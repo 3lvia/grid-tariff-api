@@ -28,14 +28,14 @@ namespace GridTariffApi.Lib.Models.TariffQuery
         /// </summary>
         /// <example>2020-11-09T00:00:00.000Z</example>
         [DataType(DataType.DateTime)]
-        public DateTime? StartTime { get; set; }
+        public DateTimeOffset? StartTime { get; set; }
 
         /// <summary>
         /// Mutual exclusive with Range. Used together with StartTime. Sample value: 2020-12-31T00:00:00.000Z
         /// </summary>
         /// <example>2020-12-31T00:00:00.000Z</example>
         [DataType(DataType.DateTime)]
-        public DateTime? EndTime { get; set; }
+        public DateTimeOffset? EndTime { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

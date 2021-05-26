@@ -56,9 +56,8 @@ namespace GridTariffApi.Lib.Controllers.v1
             {
                 return BadRequest(validationErrorMsg);
             }
-
-            DateTime startDateTime = _serviceHelper.GetStartTime(tariffQueryRequest.Range, tariffQueryRequest.StartTime);
-            DateTime endDateTime = _serviceHelper.GetEndTime(tariffQueryRequest.Range, tariffQueryRequest.EndTime);
+            DateTime startDateTime = _serviceHelper.GetStartTime(tariffQueryRequest.Range, tariffQueryRequest.StartTime.Value.DateTime);
+            DateTime endDateTime = _serviceHelper.GetEndTime(tariffQueryRequest.Range, tariffQueryRequest.EndTime.Value.DateTime);
             var result = _tariffQueryService.QueryTariff(tariffQueryRequest.MeteringPointIds, startDateTime, endDateTime);
             return Ok(result);
         }
@@ -83,8 +82,8 @@ namespace GridTariffApi.Lib.Controllers.v1
                 return BadRequest(validationErrorMsg);
             }
 
-            DateTime startDateTime = _serviceHelper.GetStartTime(tariffQueryRequest.Range, tariffQueryRequest.StartTime);
-            DateTime endDateTime = _serviceHelper.GetEndTime(tariffQueryRequest.Range, tariffQueryRequest.EndTime);
+            DateTime startDateTime = _serviceHelper.GetStartTime(tariffQueryRequest.Range, tariffQueryRequest.StartTime.Value.DateTime);
+            DateTime endDateTime = _serviceHelper.GetEndTime(tariffQueryRequest.Range, tariffQueryRequest.EndTime.Value.DateTime);
             TariffQueryResult tariffQueryResult = _tariffQueryService.QueryTariff(tariffQueryRequest.TariffKey, startDateTime, endDateTime);
             return Ok(tariffQueryResult);
         }
@@ -102,7 +101,7 @@ namespace GridTariffApi.Lib.Controllers.v1
                 return $"TariffType {tariffQueryModel.TariffKey} not found";
             }
 
-            DateTime startDateTime = _serviceHelper.GetStartTime(tariffQueryModel.Range, tariffQueryModel.StartTime);
+            DateTime startDateTime = _serviceHelper.GetStartTime(tariffQueryModel.Range, tariffQueryModel.StartTime.Value.DateTime);
             if (startDateTime < _gridTariffApiConfig.MinStartDateAllowedQuery)
             {
                 return $"Query before {_gridTariffApiConfig.MinStartDateAllowedQuery} not supported";
@@ -115,8 +114,7 @@ namespace GridTariffApi.Lib.Controllers.v1
             {
                 return "Missing model";
             }
-
-            DateTime startDateTime = _serviceHelper.GetStartTime(tariffQueryRequest.Range, tariffQueryRequest.StartTime);
+            DateTime startDateTime = _serviceHelper.GetStartTime(tariffQueryRequest.Range, tariffQueryRequest.StartTime.Value.DateTime);
             if (startDateTime < _gridTariffApiConfig.MinStartDateAllowedQuery)
             {
                 return $"Query before {_gridTariffApiConfig.MinStartDateAllowedQuery} not supported";
