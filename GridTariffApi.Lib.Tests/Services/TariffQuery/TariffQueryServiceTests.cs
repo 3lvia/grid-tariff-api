@@ -1,5 +1,7 @@
-﻿using GridTariffApi.Lib.EntityFramework;
+﻿using GridTariffApi.Lib.Config;
+using GridTariffApi.Lib.EntityFramework;
 using GridTariffApi.Lib.Models.TariffQuery;
+using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services.TariffQuery;
 using GridTariffApi.Lib.Services.TariffType;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Xunit;
 
 namespace GridTariffApi.Services.TariffQuery.Tests
@@ -15,19 +18,22 @@ namespace GridTariffApi.Services.TariffQuery.Tests
     {
         private TariffQueryService _TariffQueryService;
 
-        private TariffTypeService _tariffTypeService;
         private TariffContext _tariffContext;
+        private IServiceHelper _serviceHelper;
 
         private void Setup()
         {
             var services = new ServiceCollection();
             var db = Guid.NewGuid().ToString();
             services.AddDbContext<TariffContext>(u => u.UseInMemoryDatabase(databaseName: db));
-
             var provider = services.BuildServiceProvider();
+
+            GridTariffApiConfig gridTariffApiConfig = new GridTariffApiConfig() { MinStartDateAllowedQuery = new DateTime(2020, 11, 01) };
+            gridTariffApiConfig.TimeZoneForQueries = NorwegianTimeZoneInfo();
+            _serviceHelper = new ServiceHelper(gridTariffApiConfig);
+
             _tariffContext = provider.GetRequiredService<TariffContext>();
-            _TariffQueryService = new TariffQueryService(_tariffContext);
-            _tariffTypeService = new TariffTypeService(_tariffContext);
+            _TariffQueryService = new TariffQueryService(_tariffContext, _serviceHelper);
             TestHelper testHelper = new TestHelper();
             _tariffContext.Add(testHelper.GetCompanyElvia());
             _tariffContext.Add(testHelper.GetCompanyFoobar());
@@ -468,6 +474,30 @@ namespace GridTariffApi.Services.TariffQuery.Tests
                 }
                 dateIterator = dateIterator.AddDays(1);
             }
+        }
+
+        [Fact()]
+        public void PeriodOutsideDataInDatabase()
+        {
+            Setup();
+            var startDateTime = DateTime.MinValue;
+            var endDateTime = DateTime.MinValue.AddYears(1);
+            var meteringPoints = new List<String>() { "abc1" };
+            var result = _TariffQueryService.QueryTariff(meteringPoints, startDateTime, endDateTime);
+            Assert.Single(result.GridTariffCollections);
+            var gridTariffCollection = result.GridTariffCollections.First();
+            Assert.Single(gridTariffCollection.MeteringPointIds);
+            Assert.Contains("abc1", gridTariffCollection.MeteringPointIds);
+            Assert.Empty(gridTariffCollection.GridTariff.TariffPrice.PriceInfo);
+        }
+
+        private static TimeZoneInfo NorwegianTimeZoneInfo()
+        {
+            var timeZoneId = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
+                "W. Europe Standard Time" :
+                "Europe/Oslo";
+            var norwegianTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            return norwegianTimeZone;
         }
     }
 }

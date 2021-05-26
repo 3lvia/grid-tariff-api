@@ -1,7 +1,5 @@
 ﻿using GridTariffApi.Lib.Config;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GridTariffApi.Lib.Services.Helpers
 {
@@ -55,6 +53,11 @@ namespace GridTariffApi.Lib.Services.Helpers
         {
             var timeZonedDateTime = TimeZoneInfo.ConvertTimeFromUtc(datetime, _gridTariffApiConfig.TimeZoneForQueries);
             return timeZonedDateTime;
+        }
+
+        public DateTimeOffset DbTimeZoneDateToUtc(DateTime dateTime)
+        {
+            return new DateTimeOffset(dateTime, _gridTariffApiConfig.TimeZoneForQueries.GetUtcOffset(dateTime));
         }
     }
 }

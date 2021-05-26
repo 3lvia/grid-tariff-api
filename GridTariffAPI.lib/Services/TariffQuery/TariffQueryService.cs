@@ -1,6 +1,7 @@
 ﻿using GridTariffApi.Lib.EntityFramework;
 using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Lib.Models.TariffQuery;
+using GridTariffApi.Lib.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,16 @@ namespace GridTariffApi.Lib.Services.TariffQuery
     public class TariffQueryService : ITariffQueryService
     {
         private readonly TariffContext _tariffContext;
+        private readonly IServiceHelper _serviceHelper;
 
         private readonly int _fixedPriceUnitOfMeasureId = 4;
         private static readonly string _lowTariffHours = "0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23";
 
-        public TariffQueryService(TariffContext tariffContext)
+        public TariffQueryService(TariffContext tariffContext, IServiceHelper serviceHelper
+            )
         {
             _tariffContext = tariffContext;
+            _serviceHelper = serviceHelper;
         }
 
         public TariffQueryRequestMeteringPointsResult QueryTariff(List<string> meteringPoints, DateTime startDateTime, DateTime endDateTime)
@@ -74,6 +78,7 @@ namespace GridTariffApi.Lib.Services.TariffQuery
             Dictionary<int, VariablePriceConfig> currVariablePrices = null;
             List<FixedPrices> currentFixedPrices = null;
             String currSeason = String.Empty;
+            bool hasTariffDataforCurrentMonth = false;
 
             while (paramFromDate <= paramToDate)
             {
@@ -83,19 +88,25 @@ namespace GridTariffApi.Lib.Services.TariffQuery
                 if (currMonth != paramFromDate.Month)   //new month, find appropiate tariffs/season, calculate fixed tariffs
                 {
                     currFixedPrices = GetFixedPricesForGivenMonth(paramFromDate, queryToDate, tariffTypeId);
-                    currVariablePrices = GetVariablePricesForGivenMonth(paramFromDate, queryToDate, tariffTypeId);
-                    currentFixedPrices = CalculateFixedPricesForGivenMonth(currFixedPrices, paramFromDate.Year, paramFromDate.Month, fixedPriceUnitOfMeasure);
-                    currSeason = currFixedPrices.First().Value.Season.Description;
+                    hasTariffDataforCurrentMonth = currFixedPrices.Count > 0;
+                    if (hasTariffDataforCurrentMonth)
+                    {
+                        currVariablePrices = GetVariablePricesForGivenMonth(paramFromDate, queryToDate, tariffTypeId);
+                        currentFixedPrices = CalculateFixedPricesForGivenMonth(currFixedPrices, paramFromDate.Year, paramFromDate.Month, fixedPriceUnitOfMeasure);
+                        currSeason = currFixedPrices.First().Value.Season.Description;
+                    }
                     currMonth = paramFromDate.Month;
                 }
-                tariffQueryResult.GridTariff.TariffPrice.PriceInfo.AddRange(
-                    ProcessDay(paramFromDate,
-                        queryToDate,
-                        isPublicHoliday,
-                        currentFixedPrices,
-                        currVariablePrices,
-                        currSeason));
-
+                if (hasTariffDataforCurrentMonth)
+                {
+                    tariffQueryResult.GridTariff.TariffPrice.PriceInfo.AddRange(
+                        ProcessDay(paramFromDate,
+                            queryToDate,
+                            isPublicHoliday,
+                            currentFixedPrices,
+                            currVariablePrices,
+                            currSeason));
+                }
                 paramFromDate = paramFromDate.AddDays(1).Date;
             }
             return tariffQueryResult;
@@ -163,16 +174,17 @@ namespace GridTariffApi.Lib.Services.TariffQuery
             Dictionary<int, VariablePriceConfig> variablePrices,
             String season)
         {
+            fromTime = fromTime.Date.AddHours(fromTime.Hour);   //trunc start at hour
             var priceInfos = new List<PriceInfo>();
             bool isLowTariff = isPublicHoliday || fromTime.DayOfWeek == DayOfWeek.Saturday || fromTime.DayOfWeek == DayOfWeek.Sunday;
             Dictionary<int, VariablePrice> calculatedVariablePrices = CalcVariablePricesDay(variablePrices, fromTime.Hour, toTime.Hour, isLowTariff);
 
-            while (fromTime.Date == toTime.Date && fromTime.Hour <= toTime.Hour)
+            while (fromTime.Date == toTime.Date && fromTime.Ticks < toTime.Ticks)
             {
                 priceInfos.Add(new PriceInfo()
                 {
-                    StartTime = fromTime.Date.AddHours(fromTime.Hour),
-                    ExpiredAt = fromTime.Date.AddHours(fromTime.Hour + 1),
+                    StartTime = _serviceHelper.DbTimeZoneDateToUtc(fromTime.Date.AddHours(fromTime.Hour)),
+                    ExpiredAt = _serviceHelper.DbTimeZoneDateToUtc(fromTime.Date.AddHours(fromTime.Hour + 1)),
                     HoursShortName = $"{fromTime.Hour.ToString().PadLeft(2, '0')}-{(fromTime.Hour + 1).ToString().PadLeft(2, '0')}",
                     Season = season,
                     PublicHoliday = isPublicHoliday,
