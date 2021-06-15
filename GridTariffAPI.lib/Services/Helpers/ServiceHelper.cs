@@ -13,21 +13,21 @@ namespace GridTariffApi.Lib.Services.Helpers
         }
 
 #nullable enable
-        public DateTime GetStartTime(string? range, DateTime? startDateTime)
+        public DateTime GetStartTime(string? range, DateTimeOffset? startDateTime)
         {
             if (startDateTime.HasValue)
             {
-                return startDateTime.Value;
+                return startDateTime.Value.DateTime;
             }
             DateTime timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
             return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime);
         }
 
-        public DateTime GetEndTime(string? range, DateTime? endDateTime)
+        public DateTime GetEndTime(string? range, DateTimeOffset? endDateTime)
         {
             if (endDateTime.HasValue)
             {
-                return endDateTime.Value;
+                return endDateTime.Value.DateTime;
             }
             DateTime timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
             return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime.AddDays(1).AddSeconds(-1));
