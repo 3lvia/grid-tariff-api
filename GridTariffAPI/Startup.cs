@@ -82,6 +82,11 @@ namespace GridTariff.Api
 
             var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
             services.AddSwaggerConfiguration(swaggerSettings);
+            services.ConfigureSwaggerGen(options =>
+            {
+               options.CustomSchemaIds(x => x.FullName);
+            });
+
             ConfigureAuth(services, gridTariffApiConfig.Username, gridTariffApiConfig.Password);
         }
 

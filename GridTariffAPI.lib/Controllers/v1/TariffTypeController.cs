@@ -25,10 +25,9 @@ namespace GridTariffApi.Lib.Controllers.v1
         /// <remarks>Service returns all available tariffs</remarks>
         /// <returns>All tariffs</returns>
         [HttpGet]
-        public IActionResult Get()
+        public ActionResult<TariffTypeContainer> Get()
         {
             TariffTypeContainer tariffTypeContainer = _tariffTypeService.GetTariffTypes();
-
             return Ok(tariffTypeContainer);
         }
     }
