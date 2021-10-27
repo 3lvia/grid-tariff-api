@@ -49,7 +49,7 @@ namespace GridTariffApi.Lib.Controllers.v1
 
         [HttpPost]
         [Route("meteringpointsgridtariffs")]
-        public IActionResult GridTariffsByMeteringPoints([FromBody] TariffQueryRequestMeteringPoints tariffQueryRequest)
+        public ActionResult<TariffQueryRequestMeteringPointsResult> GridTariffsByMeteringPoints([FromBody] TariffQueryRequestMeteringPoints tariffQueryRequest)
         {
             string validationErrorMsg = ValidateRequestInput(tariffQueryRequest);
             if (!String.IsNullOrEmpty(validationErrorMsg))
@@ -74,7 +74,7 @@ namespace GridTariffApi.Lib.Controllers.v1
         /// Range and StartTime/Endtime is mutual exclusive, meaning either one must be present, but not both<br></br>
         /// <returns>TariffData matching query parameters</returns>
         [HttpGet]
-        public IActionResult Get([FromQuery] TariffQueryRequest tariffQueryRequest)
+        public ActionResult<TariffQueryResult> Get([FromQuery] TariffQueryRequest tariffQueryRequest)
         {
             string validationErrorMsg = ValidateRequestInput(tariffQueryRequest);
             if (!String.IsNullOrEmpty(validationErrorMsg))

@@ -80,7 +80,7 @@ namespace GridTariffApi.Controllers.Tests
         {
             Setup();
             var actionResult = _tariffQueryController.Get(null);
-            BadRequestObjectResult result = actionResult as BadRequestObjectResult;
+            BadRequestObjectResult result = actionResult.Result as BadRequestObjectResult;
             Assert.Equal(400, result.StatusCode);
         }
 
@@ -90,7 +90,7 @@ namespace GridTariffApi.Controllers.Tests
             Setup();
             TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", StartTime = DateTime.UtcNow.AddYears(-10), EndTime = DateTime.UtcNow };
             var actionResult = _tariffQueryController.Get(tariffQueryRequest);
-            BadRequestObjectResult result = actionResult as BadRequestObjectResult;
+            BadRequestObjectResult result = actionResult.Result as BadRequestObjectResult;
             Assert.Equal(400, result.StatusCode);
         }
 
@@ -157,7 +157,7 @@ namespace GridTariffApi.Controllers.Tests
             Setup();
             var request = new TariffQueryRequestMeteringPoints() { StartTime = DateTime.UtcNow.AddYears(-10), EndTime = DateTime.UtcNow };
             var actionResult = _tariffQueryController.GridTariffsByMeteringPoints(request);
-            BadRequestObjectResult result = actionResult as BadRequestObjectResult;
+            BadRequestObjectResult result = actionResult.Result as BadRequestObjectResult;
             Assert.Equal(400, result.StatusCode);
         }
 
@@ -233,7 +233,7 @@ namespace GridTariffApi.Controllers.Tests
 
         private List<PriceInfo> ExecuteRequestAndInitialVerify(TariffQueryRequestMeteringPoints request)
         {
-            var okObjectResult = _tariffQueryController.GridTariffsByMeteringPoints(request) as OkObjectResult;
+            var okObjectResult = _tariffQueryController.GridTariffsByMeteringPoints(request).Result as OkObjectResult;
             Assert.NotNull(okObjectResult);
             TariffQueryRequestMeteringPointsResult result = okObjectResult.Value as TariffQueryRequestMeteringPointsResult;
             Assert.NotNull(result);
