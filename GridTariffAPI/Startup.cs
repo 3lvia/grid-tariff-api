@@ -11,6 +11,7 @@ using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services.TariffQuery;
 using GridTariffApi.Lib.Services.TariffType;
 using GridTariffApi.Lib.Swagger;
+using GridTariffApi.Services.V2;
 using GridTariffApi.Synchronizer.Lib.Config;
 using GridTariffApi.Synchronizer.Lib.Services;
 using Microsoft.ApplicationInsights.DataContracts;
@@ -29,6 +30,8 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.InteropServices;
 using System.Text;
+using GridTariffApi.Lib.Interfaces.V2.External;
+using GridTariffApi.Lib.Services.V2;
 
 namespace GridTariff.Api
 {
@@ -53,6 +56,7 @@ namespace GridTariff.Api
 
             AddAuthorizations(services);
 
+//v1
             GridTariffApiConfig gridTariffApiConfig = GetGridTariffApiConfig();
             services.AddSingleton(gridTariffApiConfig);
             GridTariffApiSynchronizerConfig gridTariffApiSynchronizerConfig = GetGridTariffApiSynchronizerConfig();
@@ -63,9 +67,23 @@ namespace GridTariff.Api
             services.AddTransient<IBigQueryReader, BigQueryReader>();
             services.AddTransient<IGridTariffApiSynchronizer, GridTariffApiSynchronizer>();
             services.AddTransient<ITariffTypeService, TariffTypeService>();
-            services.AddTransient<ITariffQueryService, TariffQueryService>();
+            services.AddTransient<GridTariffApi.Lib.Services.TariffQuery.ITariffQueryService, GridTariffApi.Lib.Services.TariffQuery.TariffQueryService>();
             services.AddTransient<IServiceHelper, ServiceHelper>();
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString));
+
+            //v2
+            services.AddSingleton<ITariffPersistence, TariffPersistenceFile>();
+            services.AddTransient<ITariffPriceCache, TariffPriceCache>();
+            services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffQueryService, GridTariffApi.Lib.Services.V2.TariffQueryService>();
+
+//some testing
+            ITariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPersistenceFile());
+            //tariffPriceCache.GetTariff("normal_daynight1", new DateTime(2021,09,04), new DateTime(2021, 12, 3));
+
+            var tariffQueryService = new GridTariffApi.Lib.Services.V2.TariffQueryService(tariffPriceCache);
+            tariffQueryService.QueryTariff("normal_daynight1", new DateTime(2021, 04, 04), new DateTime(2021, 4, 5));
+//            tariffQueryService.QueryTariff("normal_daynight1", new DateTime(2021, 04, 04), new DateTime(2021, 8, 3));
+
 
             services.AddStandardElviaTelemetryLogging(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true, retainTelemetryWhere: telemetryItem => telemetryItem switch
             {
