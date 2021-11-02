@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace GridTariffApi.Lib.Services.V2
 {
     public interface ITariffQueryService
     {
-        GridTariffCollection QueryTariff(string tariffKey, DateTimeOffset paramFromDate, DateTimeOffset paramToDate);
+        Task<GridTariffCollection> QueryTariffAsync(string tariffKey, DateTimeOffset paramFromDate, DateTimeOffset paramToDate);
     }
 
     public class TariffQueryService : ITariffQueryService
@@ -19,33 +20,49 @@ namespace GridTariffApi.Lib.Services.V2
             _tariffPriceCache = tariffPriceCache;
         }
 
-        public GridTariffCollection QueryTariff(string tariffKey, DateTimeOffset paramFromDate, DateTimeOffset paramToDate)
+        public async Task<GridTariffCollection> QueryTariffAsync(
+            string tariffKey, 
+            DateTimeOffset paramFromDate, 
+            DateTimeOffset paramToDate)
         {
+            var tasks = new List<Task<List<Models.V2.Digin.PriceInfo>>>();
             var tariff = _tariffPriceCache.GetTariff(tariffKey, paramFromDate, paramToDate);
             var company = _tariffPriceCache.GetCompany();
 
             var gridTariffCollection = new GridTariffCollection();
             gridTariffCollection.GridTariff = ToGridTariff(company, tariff);
             gridTariffCollection.GridTariff.TariffPrice = new Models.V2.Digin.TariffPrice();
+            gridTariffCollection.GridTariff.TariffPrice.PriceInfo = new List<PriceInfo>();
 
             tariff.TariffPrices.RemoveAll(x => x.EndDate <= paramFromDate || x.StartDate > paramToDate);
             foreach (var tariffPrice in tariff.TariffPrices.OrderBy(x => x.StartDate))      //order by not strictly necessary
             {
                 var startDate = tariffPrice.StartDate <= paramFromDate ? paramFromDate : tariffPrice.StartDate;
                 var endDate = tariffPrice.EndDate > paramToDate ? paramToDate : tariffPrice.EndDate;
-                gridTariffCollection.GridTariff.TariffPrice.PriceInfo = ProcessTariffPrice(tariffPrice, startDate, endDate);
+                tasks.Add(ProcessTariffPriceAsync(tariffPrice, startDate, endDate));
+            }
+            foreach (var task in tasks)
+            {
+                foreach (var priceInfo in await task)
+                {
+                    gridTariffCollection.GridTariff.TariffPrice.PriceInfo.Add(priceInfo);
+                }
             }
             return gridTariffCollection;
         }
 
-        public Models.V2.Digin.GridTariff ToGridTariff(Models.V2.PriceStructure.Company company, Models.V2.PriceStructure.TariffType tariffType)
+        public Models.V2.Digin.GridTariff ToGridTariff(
+            Models.V2.PriceStructure.Company company, 
+            Models.V2.PriceStructure.TariffType tariffType)
         {
             var retVal = new Models.V2.Digin.GridTariff();
             retVal.TariffType = ToTariffType(company,tariffType);
             return retVal;
         }
 
-        public Models.V2.Digin.TariffType ToTariffType(Models.V2.PriceStructure.Company company, Models.V2.PriceStructure.TariffType tariffType)
+        public Models.V2.Digin.TariffType ToTariffType(
+            Models.V2.PriceStructure.Company company, 
+            Models.V2.PriceStructure.TariffType tariffType)
         {
             var retVal = new Models.V2.Digin.TariffType();
             retVal.TariffKey = tariffType.TariffKey;
@@ -81,22 +98,34 @@ namespace GridTariffApi.Lib.Services.V2
             return retVal;
         }
 
-        public List<Models.V2.Digin.PriceInfo> ProcessTariffPrice(Models.V2.PriceStructure.TariffPrice tariffPrice, DateTimeOffset paramFromDate, DateTimeOffset paramToDate)
+        public async Task<List<Models.V2.Digin.PriceInfo>> ProcessTariffPriceAsync(
+            Models.V2.PriceStructure.TariffPrice tariffPrice, 
+            DateTimeOffset paramFromDate, 
+            DateTimeOffset paramToDate)
         {
+            var tasks = new List<Task<List<Models.V2.Digin.PriceInfo>>>();
             var retVal = new List<Models.V2.Digin.PriceInfo>();
             var fromDate = paramFromDate;
             while (fromDate < paramToDate)
             {
                 var currMonthEndToDate = GetNextMonthEndDate(fromDate, paramToDate);
-                retVal.AddRange(ProcessMonth(tariffPrice, fromDate, currMonthEndToDate));
+                tasks.Add(ProcessMonthAsync(tariffPrice, fromDate, currMonthEndToDate));
                 fromDate = currMonthEndToDate;
+            }
+            foreach (var task in tasks)
+            {
+                retVal.AddRange(await task);
             }
             return retVal;
         }
 
 
-        public List<Models.V2.Digin.PriceInfo> ProcessMonth(GridTariffApi.Lib.Models.V2.PriceStructure.TariffPrice tariffPrice, DateTimeOffset paramFromDate, DateTimeOffset paramToDate)
+        public async Task<List<Models.V2.Digin.PriceInfo>> ProcessMonthAsync(
+            GridTariffApi.Lib.Models.V2.PriceStructure.TariffPrice tariffPrice, 
+            DateTimeOffset paramFromDate, 
+            DateTimeOffset paramToDate)
         {
+            var tasks = new List<Task<List<Models.V2.Digin.PriceInfo>>>();
             var retVal = new List<Models.V2.Digin.PriceInfo>();
             var season = tariffPrice.Seasons.FirstOrDefault(x => x.Months.Contains(paramFromDate.Month));
             var fixedPrices = CalcMonthlyFixePrices(season.FixedPrices, tariffPrice.Taxes.FixedPriceTaxes, paramFromDate.Year, paramFromDate.Month);
@@ -106,16 +135,24 @@ namespace GridTariffApi.Lib.Services.V2
             while (fromDate.Ticks < paramToDate.Ticks)
             {
                 var endDate = fromDate.AddDays(1) < paramToDate ? fromDate.AddDays(1) : paramToDate;
-                retVal.AddRange(ProcessDay(season, fixedPrices, variableEnergyPrices, fromDate, endDate));
+                tasks.Add(ProcessDayAsync(season, fixedPrices, variableEnergyPrices, fromDate, endDate));
                 fromDate = fromDate.AddDays(1);
+            }
+            foreach (var task in tasks)
+            {
+                retVal.AddRange(await task);
             }
             return retVal;
         }
 
-        public Models.V2.Digin.FixedPrices CalcMonthlyFixePrices(Models.V2.PriceStructure.FixedPrices fixedPrices, List<Models.V2.PriceStructure.FixedPriceTax> fixedPriceTaxes, int year, int month)
+        public Models.V2.Digin.FixedPrices CalcMonthlyFixePrices(
+            Models.V2.PriceStructure.FixedPrices fixedPrices, 
+            List<Models.V2.PriceStructure.FixedPriceTax> fixedPriceTaxes, 
+            int year, 
+            int month)
         {
             var retVal = new Models.V2.Digin.FixedPrices() { PriceLevel = new List<Models.V2.Digin.PriceLevel>() };
-
+            
             const int hoursInDay = 24;          //todo not constant here
             int hoursInMonth = DateTime.DaysInMonth(year, month)* hoursInDay;
             var vat = fixedPriceTaxes.FirstOrDefault(x => x.TaxType == "vat");
@@ -160,7 +197,12 @@ namespace GridTariffApi.Lib.Services.V2
             return retVal;
         }
 
-        public List<Models.V2.Digin.PriceInfo> ProcessDay(Models.V2.PriceStructure.Season season, Models.V2.Digin.FixedPrices fixedPrices, Models.V2.Digin.EnergyPrice[] energyPrices, DateTimeOffset paramFromDate, DateTimeOffset paramToDate)
+        public async Task<List<Models.V2.Digin.PriceInfo>> ProcessDayAsync(
+            Models.V2.PriceStructure.Season season, 
+            Models.V2.Digin.FixedPrices fixedPrices, 
+            Models.V2.Digin.EnergyPrice[] energyPrices, 
+            DateTimeOffset paramFromDate, 
+            DateTimeOffset paramToDate)
         {
             var retVal = new List<Models.V2.Digin.PriceInfo>();
             var fromDate = paramFromDate;
@@ -179,6 +221,7 @@ namespace GridTariffApi.Lib.Services.V2
                 retVal.Add(priceInfo);
                 fromDate = fromDate.AddHours(1);
             }
+            await Task.CompletedTask;
             return retVal;
         }
 
