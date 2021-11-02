@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace GridTariffApi.Lib.Models.V2.PriceStructure
 {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
     public class Company
     {
         [JsonProperty("companyName")]
@@ -23,13 +22,13 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         public string Basis { get; set; }
 
         [JsonProperty("maxhoursPerDay")]
-        public object MaxhoursPerDay { get; set; }
+        public int? MaxhoursPerDay { get; set; }
 
         [JsonProperty("daysPerMonth")]
-        public object DaysPerMonth { get; set; }
+        public int? DaysPerMonth { get; set; }
 
         [JsonProperty("allDaysPerMonth")]
-        public object AllDaysPerMonth { get; set; }
+        public bool? AllDaysPerMonth { get; set; }
 
         [JsonProperty("maxhoursPerMonth")]
         public int MaxhoursPerMonth { get; set; }

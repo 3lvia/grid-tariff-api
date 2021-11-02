@@ -1,5 +1,6 @@
 ﻿using GridTariffApi.Lib.Interfaces.V2.External;
 using GridTariffApi.Lib.Models.V2.PriceStructure;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,13 +22,7 @@ namespace GridTariffApi.Services.V2
         {
             string jsonString = File.ReadAllText(_filename);
 
-
-            var gridTariffPriceConfiguration = JsonSerializer.Deserialize<GridTariffPriceConfiguration>(jsonString);
-
-//            var test = JsonSerializer.Deserialize<Newtonsoft.Json.Linq.JObject>(jsonString);
-
-
-            var tariffPriceStructureRoot = JsonSerializer.Deserialize<TariffPriceStructureRoot>(jsonString);
+            var tariffPriceStructureRoot = JsonConvert.DeserializeObject<TariffPriceStructureRoot>(jsonString);
             return tariffPriceStructureRoot;
         }
     }

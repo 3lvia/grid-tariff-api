@@ -10,6 +10,8 @@ namespace GridTariffApi.Lib.Services.V2
 {
     public interface ITariffPriceCache
     {
+        Models.V2.PriceStructure.Company GetCompany();
+
         Models.V2.PriceStructure.TariffType GetTariff(String tariffKey, DateTimeOffset fromDate, DateTimeOffset toDate);
     }
 
@@ -24,7 +26,13 @@ namespace GridTariffApi.Lib.Services.V2
             _tariffPersistence = tariffPersistence;
         }
 
-        public GridTariffApi.Lib.Models.V2.PriceStructure.TariffType GetTariff(String tariffKey, DateTimeOffset fromDate, DateTimeOffset toDate)
+        public Models.V2.PriceStructure.Company GetCompany()
+        {
+            return GetRootElement().GridTariffPriceConfiguration.GridTariff.Company;
+
+        }
+
+        public Models.V2.PriceStructure.TariffType GetTariff(String tariffKey, DateTimeOffset fromDate, DateTimeOffset toDate)
         {
             var tariffPriceStructureRoot = GetRootElement();
             var retVal = tariffPriceStructureRoot.GridTariffPriceConfiguration.GridTariff.TariffTypes.FirstOrDefault(a => a.TariffKey == tariffKey);

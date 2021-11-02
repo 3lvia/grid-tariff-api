@@ -78,11 +78,8 @@ namespace GridTariff.Api
 
 //some testing
             ITariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPersistenceFile());
-            //tariffPriceCache.GetTariff("normal_daynight1", new DateTime(2021,09,04), new DateTime(2021, 12, 3));
-
             var tariffQueryService = new GridTariffApi.Lib.Services.V2.TariffQueryService(tariffPriceCache);
-            tariffQueryService.QueryTariff("normal_daynight1", new DateTime(2021, 04, 04), new DateTime(2021, 4, 5));
-//            tariffQueryService.QueryTariff("normal_daynight1", new DateTime(2021, 04, 04), new DateTime(2021, 8, 3));
+            tariffQueryService.QueryTariff("normal_daynight1", new DateTime(2021, 04, 29), new DateTime(2021, 5, 3));
 
 
             services.AddStandardElviaTelemetryLogging(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true, retainTelemetryWhere: telemetryItem => telemetryItem switch
