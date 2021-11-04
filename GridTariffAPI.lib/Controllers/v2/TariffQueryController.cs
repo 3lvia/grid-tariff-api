@@ -22,10 +22,10 @@ namespace GridTariffApi.Lib.Controllers.v2
     [Route("api/{v:apiVersion}/tariffquerytest")]
     public class TariffQueryController : ControllerBase
     {
-        readonly ITariffQueryService _tariffQueryService;
-        readonly IServiceHelper _serviceHelper;
-        readonly GridTariffApiConfig _gridTariffApiConfig;
-        readonly ITariffPriceCache _tariffPriceCache;
+        private readonly ITariffQueryService _tariffQueryService;
+        private readonly IServiceHelper _serviceHelper;
+        private readonly GridTariffApiConfig _gridTariffApiConfig;
+        private readonly ITariffPriceCache _tariffPriceCache;
         public TariffQueryController(ITariffQueryService tariffQueryService,
             IServiceHelper serviceHelper,
             GridTariffApiConfig gridTariffApiConfig,
@@ -56,7 +56,6 @@ namespace GridTariffApi.Lib.Controllers.v2
             {
                 return BadRequest(validationErrorMsg);
             }
-
             DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(tariffQueryRequest.Range, tariffQueryRequest.StartTime);
             DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(tariffQueryRequest.Range, tariffQueryRequest.EndTime);
             var result = await _tariffQueryService.QueryTariffAsync(tariffQueryRequest.TariffKey, startDateTime, endDateTime);
@@ -76,13 +75,6 @@ namespace GridTariffApi.Lib.Controllers.v2
             {
                 return $"TariffType {tariffQueryModel.TariffKey} not found";
             }
-
-            //todo
-            //TariffTypeContainer tariffTypeContainer = _tariffTypeService.GetTariffTypes();
-            //if (!tariffTypeContainer.TariffTypes.Exists(t => t.TariffKey.Equals(tariffQueryModel.TariffKey)))
-            //{
-            //    return $"TariffType {tariffQueryModel.TariffKey} not found";
-            //}
 
             //todo either tariffkey or netproduct
 

@@ -15,9 +15,13 @@ namespace GridTariffApi.Lib.Services.V2
     public class TariffQueryService : ITariffQueryService
     {
         private readonly ITariffPriceCache _tariffPriceCache;
-        public TariffQueryService(ITariffPriceCache tariffPriceCache)
+        private readonly IObjectConversionHelper _objectConversionHelper;
+        public TariffQueryService(
+            ITariffPriceCache tariffPriceCache,
+            IObjectConversionHelper objectConversionHelper)
         {
             _tariffPriceCache = tariffPriceCache;
+            _objectConversionHelper = objectConversionHelper;
         }
 
         public async Task<GridTariffCollection> QueryTariffAsync(
@@ -51,51 +55,7 @@ namespace GridTariffApi.Lib.Services.V2
             Models.V2.PriceStructure.TariffType tariffType)
         {
             var retVal = new Models.V2.Digin.GridTariff();
-            retVal.TariffType = ToTariffType(company,tariffType);
-            return retVal;
-        }
-
-        public Models.V2.Digin.TariffType ToTariffType(
-            Models.V2.PriceStructure.Company company, 
-            Models.V2.PriceStructure.TariffType tariffType)
-        {
-            var retVal = new Models.V2.Digin.TariffType();
-            retVal.TariffKey = tariffType.TariffKey;
-            retVal.Product = tariffType.Product;
-            retVal.CompanyName = company.CompanyName;
-            retVal.CompanyOrgNo = company.CompanyOrgNo;
-            retVal.Title = tariffType.Title;
-            retVal.ConsumptionFlag = tariffType.ConsumptionFlag;
-            retVal.FixedPriceConfiguration = ToFixedPriceConfiguration(tariffType.FixedPriceConfiguration);
-            retVal.Resolution = company.Resolution;
-            retVal.Description = tariffType.Description;
-            return retVal;
-        }
-
-        public Models.V2.Digin.FixedPriceConfiguration ToFixedPriceConfiguration(Models.V2.PriceStructure.FixedPriceConfiguration priceConfiguration)
-        {
-            var retVal = new Models.V2.Digin.FixedPriceConfiguration();
-            retVal.Basis = priceConfiguration.Basis;
-            if (priceConfiguration.MaxhoursPerDay.HasValue)
-            {
-                retVal.MaxhoursPerDay = priceConfiguration.MaxhoursPerDay.Value;
-            }
-            if (priceConfiguration.DaysPerMonth.HasValue)
-            {
-                retVal.DaysPerMonth = priceConfiguration.DaysPerMonth.Value;
-            }
-            if (priceConfiguration.AllDaysPerMonth.HasValue)
-            {
-                retVal.AllDaysPerMonth = priceConfiguration.AllDaysPerMonth.Value;
-            }
-            if (priceConfiguration.MaxhoursPerMonth.HasValue)
-            {
-                retVal.MaxhoursPerMonth = priceConfiguration.MaxhoursPerMonth.Value;
-            }
-            if (priceConfiguration.Months.HasValue)
-            {
-                retVal.Months = priceConfiguration.Months.Value;
-            }
+            retVal.TariffType = _objectConversionHelper.ToTariffType(company,tariffType);
             return retVal;
         }
 
