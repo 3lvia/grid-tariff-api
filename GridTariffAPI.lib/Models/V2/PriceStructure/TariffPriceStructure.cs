@@ -31,13 +31,13 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         public bool? AllDaysPerMonth { get; set; }
 
         [JsonProperty("maxhoursPerMonth")]
-        public int MaxhoursPerMonth { get; set; }
+        public int? MaxhoursPerMonth { get; set; }
 
         [JsonProperty("months")]
-        public int Months { get; set; }
+        public int? Months { get; set; }
 
         [JsonProperty("monthsOffset")]
-        public int MonthsOffset { get; set; }
+        public int? MonthsOffset { get; set; }
     }
 
     public class FixedPriceTax
@@ -103,7 +103,7 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         public int LevelId { get; set; }
 
         [JsonProperty("levelValueMin")]
-        public double LevelValueMin { get; set; }
+        public double? LevelValueMin { get; set; }
 
         [JsonProperty("levelValueMax")]
         public double? LevelValueMax { get; set; }
@@ -143,6 +143,12 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
 
         [JsonProperty("hours")]
         public List<int> Hours { get; set; }
+
+        [JsonProperty("monthlyActivePowerTotal")]
+        public double MonthlyActivePowerTotal { get; set; }
+
+        [JsonProperty("monthlyReactivePowerTotal")]
+        public double MonthlyReactivePowerTotal { get; set; }
     }
 
     public class FixedPrices
@@ -163,6 +169,12 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         public string MonetaryUnitOfMeasure { get; set; }
     }
 
+    public class PowerPrices
+    {
+        [JsonProperty("priceLevel")]
+        public List<PriceLevel> PriceLevel { get; set; }
+    }
+
     public class Season
     {
         [JsonProperty("name")]
@@ -176,21 +188,33 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
 
         [JsonProperty("energyPrice")]
         public EnergyPrice EnergyPrice { get; set; }
+
+        [JsonProperty("powerPrices")]
+        public PowerPrices PowerPrices { get; set; }
     }
 
     public class TariffPrice
     {
         [JsonProperty("startDate")]
-        public DateTime StartDate { get; set; }
+        public DateTimeOffset StartDate { get; set; }
 
         [JsonProperty("endDate")]
-        public DateTime EndDate { get; set; }
+        public DateTimeOffset EndDate { get; set; }
 
         [JsonProperty("taxes")]
         public Taxes Taxes { get; set; }
 
         [JsonProperty("seasons")]
         public List<Season> Seasons { get; set; }
+    }
+
+    public class PowerPriceConfiguration
+    {
+        [JsonProperty("reactivePowerPricing")]
+        public bool ReactivePowerPricing { get; set; }
+
+        [JsonProperty("powerFactorPercentage")]
+        public double PowerFactorPercentage { get; set; }
     }
 
     public class TariffType
@@ -224,6 +248,15 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
 
         [JsonProperty("tariffPrices")]
         public List<TariffPrice> TariffPrices { get; set; }
+
+        [JsonProperty("usePublicHolidayPrices")]
+        public bool? UsePublicHolidayPrices { get; set; }
+
+        [JsonProperty("useWeekendPrices")]
+        public bool? UseWeekendPrices { get; set; }
+
+        [JsonProperty("powerPriceConfiguration")]
+        public PowerPriceConfiguration PowerPriceConfiguration { get; set; }
     }
 
     public class GridTariff
@@ -246,7 +279,6 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         [JsonProperty("gridTariffPriceConfiguration")]
         public GridTariffPriceConfiguration GridTariffPriceConfiguration { get; set; }
     }
-
 
 }
 

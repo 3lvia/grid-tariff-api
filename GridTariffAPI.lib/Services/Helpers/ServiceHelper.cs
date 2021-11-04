@@ -33,6 +33,43 @@ namespace GridTariffApi.Lib.Services.Helpers
             return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime.AddDays(1).AddSeconds(-1));
         }
 
+        public DateTimeOffset GetStartDateTimeOffset(string? range, DateTimeOffset? startDateTime)
+        {
+            if (startDateTime.HasValue)
+            {
+                return startDateTime.Value.DateTime;
+            }
+            DateTimeOffset timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
+            return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime);
+        }
+
+        public DateTimeOffset GetEndDateTimeOffset(string? range, DateTimeOffset? endDateTime)
+        {
+            if (endDateTime.HasValue)
+            {
+                return endDateTime.Value.DateTime;
+            }
+            DateTimeOffset timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
+            return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime.AddDays(1).AddSeconds(-1));
+        }
+
+
+        private DateTimeOffset AddDaysUsingQueryRangeParameter(string? range, DateTimeOffset dateTimeOffset)
+        {
+            if (!String.IsNullOrEmpty(range))
+            {
+                if (range.Equals("yesterday"))
+                {
+                    return dateTimeOffset.AddDays(-1);
+                }
+                if (range.Equals("tomorrow"))
+                {
+                    return dateTimeOffset.AddDays(1);
+                }
+            }
+            return dateTimeOffset;
+        }
+
         private DateTime AddDaysUsingQueryRangeParameter(string? range, DateTime dateTime)
         {
             if (!String.IsNullOrEmpty(range))

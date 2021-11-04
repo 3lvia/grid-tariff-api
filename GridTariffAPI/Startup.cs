@@ -66,7 +66,7 @@ namespace GridTariff.Api
             services.AddTransient(u => bigQueryClient);
             services.AddTransient<IBigQueryReader, BigQueryReader>();
             services.AddTransient<IGridTariffApiSynchronizer, GridTariffApiSynchronizer>();
-            services.AddTransient<ITariffTypeService, TariffTypeService>();
+            services.AddTransient<GridTariffApi.Lib.Services.TariffType.ITariffTypeService, GridTariffApi.Lib.Services.TariffType.TariffTypeService>();
             services.AddTransient<GridTariffApi.Lib.Services.TariffQuery.ITariffQueryService, GridTariffApi.Lib.Services.TariffQuery.TariffQueryService>();
             services.AddTransient<IServiceHelper, ServiceHelper>();
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString));
@@ -79,8 +79,10 @@ namespace GridTariff.Api
 //some testing
             ITariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPersistenceFile());
             var tariffQueryService = new GridTariffApi.Lib.Services.V2.TariffQueryService(tariffPriceCache);
-            tariffQueryService.QueryTariffAsync("normal_daynight1", new DateTime(2021, 04, 29), new DateTime(2021, 5, 3));
+            tariffQueryService.QueryTariffAsync("normal_daynight1", new DateTime(2021, 01, 01), new DateTime(2021, 12, 3));
+            tariffQueryService.QueryTariffAsync("company_ls_dn1", new DateTime(2021, 01, 01), new DateTime(2021, 12, 3));
 
+            
 
             services.AddStandardElviaTelemetryLogging(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true, retainTelemetryWhere: telemetryItem => telemetryItem switch
             {
@@ -99,7 +101,7 @@ namespace GridTariff.Api
             services.AddSwaggerConfiguration(swaggerSettings);
             services.ConfigureSwaggerGen(options =>
             {
-               options.CustomSchemaIds(x => x.FullName);
+                options.CustomSchemaIds(x => x.FullName);
             });
 
             ConfigureAuth(services, gridTariffApiConfig.Username, gridTariffApiConfig.Password);

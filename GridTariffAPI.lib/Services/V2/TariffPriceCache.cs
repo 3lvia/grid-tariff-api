@@ -11,8 +11,8 @@ namespace GridTariffApi.Lib.Services.V2
     public interface ITariffPriceCache
     {
         Models.V2.PriceStructure.Company GetCompany();
-
         Models.V2.PriceStructure.TariffType GetTariff(String tariffKey, DateTimeOffset fromDate, DateTimeOffset toDate);
+        List<Models.V2.PriceStructure.TariffType> GetTariffs();
     }
 
     public class TariffPriceCache : ITariffPriceCache
@@ -31,6 +31,13 @@ namespace GridTariffApi.Lib.Services.V2
             return GetRootElement().GridTariffPriceConfiguration.GridTariff.Company;
 
         }
+
+        public List<Models.V2.PriceStructure.TariffType> GetTariffs()
+        {
+            var tariffPriceStructureRoot = GetRootElement();
+            return tariffPriceStructureRoot.GridTariffPriceConfiguration.GridTariff.TariffTypes;
+        }
+
 
         public Models.V2.PriceStructure.TariffType GetTariff(String tariffKey, DateTimeOffset fromDate, DateTimeOffset toDate)
         {
