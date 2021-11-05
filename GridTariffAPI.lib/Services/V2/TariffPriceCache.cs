@@ -52,9 +52,23 @@ namespace GridTariffApi.Lib.Services.V2
 
         private TariffPriceStructureRoot GetRootElement()
         {
-            if (_cacheValidUntil.Ticks < DateTime.UtcNow.Ticks)
+            try
             {
-                RefreshCache();
+                _lockSemaphore.Wait();
+                if (_cacheValidUntil.Ticks < DateTime.UtcNow.Ticks)
+                {
+                    RefreshCache();
+                }
+            }
+            catch (Exception e)
+            {
+                //todo tracktrace exception
+                _lockSemaphore.Release();
+
+            }
+            finally
+            {
+                _lockSemaphore.Release();
             }
             return _tariffPriceStructureRoot;
         }
@@ -62,22 +76,7 @@ namespace GridTariffApi.Lib.Services.V2
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S2696:Instance members should not write to \"static\" fields", Justification = "Performed inside semaphore")]
         private void RefreshCache()
         {
-            try
-            {
-//                        await semaphoreSlim.WaitAsync().ConfigureAwait(false);
-                _lockSemaphore.Wait();
-                _tariffPriceStructureRoot = _tariffPersistence.GetTariffPriceStructure();
-                _cacheValidUntil = DateTime.UtcNow.AddDays(1).Date;     //todo ikke hardkodet verdi
-            }
-            catch (Exception e)
-            {
-                //todo tracktrace exception
-                _lockSemaphore.Release();
-            }
-            finally
-            {
-                _lockSemaphore.Release();
-            }
+            _tariffPriceStructureRoot = _tariffPersistence.GetTariffPriceStructure();
         }
     }
 }

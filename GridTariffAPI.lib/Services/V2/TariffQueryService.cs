@@ -115,11 +115,8 @@ namespace GridTariffApi.Lib.Services.V2
             var retVal = new List<Models.V2.Digin.PowerPrice>();
             if (powerPrices != null)
             {
-                const int hoursInDay = 24;          //todo not constant here
-                int hoursInMonth = DateTime.DaysInMonth(year, month) * hoursInDay;
-
+                int hoursInMonth = DateTime.DaysInMonth(year, month) * Constants.HoursInDay;
                 var vatTax = GetPowerPriceTax(powerPriceTaxes, "vat");
-
                 foreach (var priceLevel in powerPrices.PriceLevel)
                 {
                     var powerPrice = new Models.V2.Digin.PowerPrice();
@@ -141,16 +138,16 @@ namespace GridTariffApi.Lib.Services.V2
                         powerPrice.NextLevelIdUp = priceLevel.NextLevelIdUp.Value;
                     }
                     powerPrice.LevelValueUnitOfMeasure = priceLevel.LevelValueUnitOfMeasure;
-                    powerPrice.MonthlyActivePowerTotal = priceLevel.MonthlyActivePowerTotal;
-                    powerPrice.MonthlyReactivePowerTotal = priceLevel.MonthlyReactivePowerTotal;
+                    powerPrice.MonthlyActivePowerTotal = RoundDouble(priceLevel.MonthlyActivePowerTotal, Constants.PowerPriceDecimals);
+                    powerPrice.MonthlyReactivePowerTotal = RoundDouble(priceLevel.MonthlyReactivePowerTotal, Constants.PowerPriceDecimals);
                     //                powerPrice.MonthlyTotalUnitOfMeasure = priceLevel.MonthlyTotalUnitOfMeasure;
                     powerPrice.LevelInfo = priceLevel.LevelInfo;
-                    powerPrice.ActiveTotal = powerPrice.MonthlyActivePowerTotal / hoursInMonth;
-                    powerPrice.ActiveTaxes = CalcTaxes(powerPrice.ActiveTotal, vatTax);
-                    powerPrice.ActivePowerExTaxes = powerPrice.ActiveTotal - powerPrice.ActiveTaxes;
-                    powerPrice.ReactiveTotal = powerPrice.MonthlyReactivePowerTotal / hoursInMonth;
-                    powerPrice.ReactiveTaxes = CalcTaxes(powerPrice.ReactiveTotal, vatTax);
-                    powerPrice.ReactivePowerExTaxes = powerPrice.ReactiveTotal - powerPrice.ReactiveTaxes;
+                    powerPrice.ActiveTotal = RoundDouble(powerPrice.MonthlyActivePowerTotal / hoursInMonth, Constants.PowerPriceDecimals);
+                    powerPrice.ActiveTaxes = RoundDouble(CalcTaxes(powerPrice.ActiveTotal, vatTax),4);
+                    powerPrice.ActivePowerExTaxes = RoundDouble(powerPrice.ActiveTotal - powerPrice.ActiveTaxes, Constants.PowerPriceDecimals);
+                    powerPrice.ReactiveTotal = RoundDouble(powerPrice.MonthlyReactivePowerTotal / hoursInMonth, Constants.PowerPriceDecimals);
+                    powerPrice.ReactiveTaxes = RoundDouble(CalcTaxes(powerPrice.ReactiveTotal, vatTax), Constants.PowerPriceDecimals);
+                    powerPrice.ReactivePowerExTaxes = RoundDouble(powerPrice.ReactiveTotal - powerPrice.ReactiveTaxes, Constants.PowerPriceDecimals);
                     powerPrice.Currency = priceLevel.Currency;
                     powerPrice.MonetaryUnitOfMeasure = priceLevel.MonetaryUnitOfMeasure;
 
@@ -158,6 +155,12 @@ namespace GridTariffApi.Lib.Services.V2
                 }
             }
             return retVal;
+        }
+
+        public double RoundDouble(double value, int numDecimals)
+        {
+            double addValue = 1 / Math.Pow(10, numDecimals +1);
+            return Math.Round(value + addValue, numDecimals);
         }
 
         public double CalcTaxes (double input, double vat)
@@ -173,16 +176,14 @@ namespace GridTariffApi.Lib.Services.V2
         {
             var retVal = new Models.V2.Digin.FixedPrices() { PriceLevel = new List<Models.V2.Digin.PriceLevel>() };
             
-            const int hoursInDay = 24;          //todo not constant here
-            int hoursInMonth = DateTime.DaysInMonth(year, month)* hoursInDay;
+            int hoursInMonth = DateTime.DaysInMonth(year, month)* Constants.HoursInDay;
             var vatTax = fixedPriceTaxes.FirstOrDefault(x => x.TaxType == "vat");
-
             foreach (var priceLevelPrice in fixedPrices.PriceLevel)
             {
                 var priceLevel = ToPriceLevel(priceLevelPrice);
-                priceLevel.Total = priceLevelPrice.MonthlyTotal / hoursInMonth;
-                priceLevel.Taxes = CalcTaxes(priceLevel.Total, vatTax.TaxValue);
-                priceLevel.FixedExTaxes = priceLevel.Total - priceLevel.Taxes;
+                priceLevel.Total = RoundDouble(priceLevelPrice.MonthlyTotal / hoursInMonth, Constants.FixedPricesDecimals);
+                priceLevel.Taxes = RoundDouble(CalcTaxes(priceLevel.Total, vatTax.TaxValue), Constants.FixedPricesDecimals);
+                priceLevel.FixedExTaxes = RoundDouble(priceLevel.Total - priceLevel.Taxes, Constants.FixedPricesDecimals);
                 retVal.PriceLevel.Add(priceLevel);
             }
             return retVal;
@@ -234,7 +235,7 @@ namespace GridTariffApi.Lib.Services.V2
             {
                 var priceInfo = new Models.V2.Digin.PriceInfo();
                 priceInfo.StartTime = fromDate;
-                priceInfo.ExpiredAt = fromDate.AddHours(1);
+                priceInfo.ExpiredAt = fromDate.AddHours(1);     //todo resolution fra prisstruktur
                 priceInfo.HoursShortName = $"{priceInfo.StartTime.Hour.ToString().PadLeft(2, '0')}-{(priceInfo.ExpiredAt.Hour).ToString().PadLeft(2, '0')}";
                 priceInfo.Season = season.Name;
 //                priceInfo.PublicHoliday       todo
@@ -248,7 +249,7 @@ namespace GridTariffApi.Lib.Services.V2
                     priceInfo.VariablePrices.PowerPriceLevel.Add(powerPrice);
                 }
                 retVal.Add(priceInfo);
-                fromDate = fromDate.AddHours(1);
+                fromDate = fromDate.AddHours(1); //todo resolution fra prisstruktur
             }
             await Task.CompletedTask;
             return retVal;
@@ -256,7 +257,10 @@ namespace GridTariffApi.Lib.Services.V2
 
         public Models.V2.Digin.EnergyPrice[] CalcVariableEnergyPrice (Models.V2.PriceStructure.EnergyPrice priceStructureEnergyPrice, List<Models.V2.PriceStructure.EnergyPriceTax> energyPriceTaxes)
         {
-            Models.V2.Digin.EnergyPrice[] retval = new Models.V2.Digin.EnergyPrice[24];
+            var consumptionTax = GetEnergyPriceTax(energyPriceTaxes, "consumptionTax");
+            var enovaTax = GetEnergyPriceTax(energyPriceTaxes, "enovaTax");
+            var vatTax = GetEnergyPriceTax(energyPriceTaxes, "vat");
+            Models.V2.Digin.EnergyPrice[] retval = new Models.V2.Digin.EnergyPrice[Constants.HoursInDay];
             foreach (var priceLevel in priceStructureEnergyPrice.PriceLevel)
             {
                 var energyPrice = new Models.V2.Digin.EnergyPrice();
@@ -264,19 +268,26 @@ namespace GridTariffApi.Lib.Services.V2
                 energyPrice.Currency = priceLevel.Currency;
                 energyPrice.MonetaryUnitOfMeasure = priceLevel.MonetaryUnitOfMeasure;
 
-                energyPrice.Total = priceLevel.Total;
-                energyPrice.EnergyExTaxes = CalcVariablePriceEnergyExTaxes(
+                energyPrice.Total = RoundDouble (priceLevel.Total,Constants.EnergyPriceDecimals);
+                var energyExTaxes = CalcVariablePriceEnergyExTaxes(
                     priceLevel.Total,
-                    GetEnergyPriceTax(energyPriceTaxes, "consumptionTax"),
-                    GetEnergyPriceTax(energyPriceTaxes, "enovaTax"),
-                    GetEnergyPriceTax(energyPriceTaxes, "vat"));
-                energyPrice.Taxes = energyPrice.Total - energyPrice.EnergyExTaxes;
+                    consumptionTax,
+                    enovaTax,
+                    vatTax);
+                energyPrice.EnergyExTaxes = RoundDouble(energyExTaxes, Constants.EnergyPriceDecimals);
+                energyPrice.Taxes = RoundDouble(energyPrice.Total - energyPrice.EnergyExTaxes, Constants.EnergyPriceDecimals);
                 foreach (var hour in priceLevel.Hours)
                 {
                     retval[hour] = energyPrice;
                 }
             }
             return retval;
+        }
+
+        public double CalcVariablePriceEnergyExTaxes(double total, double consumptionTax, double enovaTax, double vat)
+        {
+            double retVal = total - CalcTaxes(total, vat) - consumptionTax - enovaTax;
+            return retVal;
         }
 
 
@@ -300,11 +311,6 @@ namespace GridTariffApi.Lib.Services.V2
             return 0;
         }
 
-        public double CalcVariablePriceEnergyExTaxes(double total, double consumptionTax, double enovaTax, double vat )
-        {
-            double retVal = total - CalcTaxes(total,vat) - consumptionTax - enovaTax;
-            return retVal;
-        }
 
         public DateTimeOffset GetNextMonthEndDate(DateTimeOffset fromDate, DateTimeOffset toDate)
         {

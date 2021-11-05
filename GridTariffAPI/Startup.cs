@@ -77,19 +77,22 @@ namespace GridTariff.Api
             //v2
             services.AddSingleton<ITariffPersistence, TariffPersistenceFile>();
             services.AddTransient<ITariffPriceCache, TariffPriceCache>();
+            services.AddTransient<GridTariffApi.Lib.Services.V2.IObjectConversionHelper, GridTariffApi.Lib.Services.V2.ObjectConversionHelper>();
             services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffQueryService, GridTariffApi.Lib.Services.V2.TariffQueryService>();
             services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffTypeService, GridTariffApi.Lib.Services.V2.TariffTypeService>();
-            services.AddTransient<GridTariffApi.Lib.Services.V2.IObjectConversionHelper, GridTariffApi.Lib.Services.V2.ObjectConversionHelper>();
 
             //some testing
-            ITariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPersistenceFile());
-            IObjectConversionHelper objectConversionHelper = new ObjectConversionHelper();
+//            ITariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPersistenceFile());
+//            IObjectConversionHelper objectConversionHelper = new ObjectConversionHelper();
 
-            //var tariffQueryService = new GridTariffApi.Lib.Services.V2.TariffQueryService(tariffPriceCache, objectConversionHelper);
-            //tariffQueryService.QueryTariffAsync("normal_daynight1", new DateTime(2021, 01, 01), new DateTime(2021, 12, 3));
-            //tariffQueryService.QueryTariffAsync("company_ls_dn1", new DateTime(2021, 01, 01), new DateTime(2021, 12, 3));
-            var tariffTypeService = new GridTariffApi.Lib.Services.V2.TariffTypeService(tariffPriceCache, objectConversionHelper);
-            var tariffTypes = tariffTypeService.GetTariffTypes();
+//            var tariffQueryService = new GridTariffApi.Lib.Services.V2.TariffQueryService(tariffPriceCache, objectConversionHelper);
+//            tariffQueryService.QueryTariffAsync("normal_daynight1", new DateTime(2021, 01, 01), new DateTime(2021, 12, 3));
+//            tariffQueryService.QueryTariffAsync("company_ls_dn1", new DateTime(2021, 01, 01), new DateTime(2021, 12, 3));
+//            var tariffTypeService = new GridTariffApi.Lib.Services.V2.TariffTypeService(tariffPriceCache, objectConversionHelper);
+            //var tariffTypes = tariffTypeService.GetTariffTypes();
+
+            //var tariffTypeController = new GridTariffApi.Lib.Controllers.v2.TariffTypeController(tariffTypeService);
+            //var test = tariffTypeController.Get();
 
             services.AddStandardElviaTelemetryLogging(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true, retainTelemetryWhere: telemetryItem => telemetryItem switch
             {
