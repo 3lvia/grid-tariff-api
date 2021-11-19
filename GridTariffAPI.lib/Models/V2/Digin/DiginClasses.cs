@@ -71,8 +71,8 @@ namespace GridTariffApi.Lib.Models.V2.Digin
         [Newtonsoft.Json.JsonProperty("gridTariff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public GridTariff GridTariff { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("meteringPointIds", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> MeteringPointIds { get; set; }
+        [Newtonsoft.Json.JsonProperty("meteringPointsAndPriceLevels", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<MeteringPointsAndPriceLevels> MeteringPointsAndPriceLevels { get; set; }
 
 
     }
@@ -118,6 +118,18 @@ namespace GridTariffApi.Lib.Models.V2.Digin
         [Newtonsoft.Json.JsonProperty("consumptionFlag", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool ConsumptionFlag { get; set; }
 
+        /// <summary>The time of when the prices were last updated on the server side. No need to get prices if you already fetched the latest ones? Ex. 2021-11-05T00:00:00+01:00</summary>
+        [Newtonsoft.Json.JsonProperty("lastUpdated", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset LastUpdated { get; set; }
+
+        /// <summary>True if the grid tariff use the lowest prices during public holidays.</summary>
+        [Newtonsoft.Json.JsonProperty("usePublicHolidayPrices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool UsePublicHolidayPrices { get; set; }
+
+        /// <summary>True if the grid tariff use the lowest prices during public weekends(Saturday and/or Sunday)</summary>
+        [Newtonsoft.Json.JsonProperty("useWeekendPrices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool UseWeekendPrices { get; set; }
+
         [Newtonsoft.Json.JsonProperty("fixedPriceConfiguration", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public FixedPriceConfiguration FixedPriceConfiguration { get; set; }
 
@@ -150,7 +162,7 @@ namespace GridTariffApi.Lib.Models.V2.Digin
         [Newtonsoft.Json.JsonProperty("daysPerMonth", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int DaysPerMonth { get; set; }
 
-        /// <summary>Only for dailymax tariff. Flag to indicate if a dailymax tariff uses all days per month as basis. Null if not dailymax tariff. Ex. True = all days per month is used. False = not all days per month are used. If false, then daysPerMonth must not be null.</summary>
+        /// <summary>Only for dailymax tariff. Flag to indicate if a dailymax tariff uses all days per month as basis. True = all days per month is used. False = not all days per month are used or basis != dailymax. If false, then daysPerMonth must not be null.</summary>
         [Newtonsoft.Json.JsonProperty("allDaysPerMonth", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool AllDaysPerMonth { get; set; }
 
@@ -182,9 +194,9 @@ namespace GridTariffApi.Lib.Models.V2.Digin
         [Newtonsoft.Json.JsonProperty("reactivePowerPricing", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool ReactivePowerPricing { get; set; }
 
-        /// <summary>This factor is used to trigger invoicing of reactive power. Ex. a power factor of 0.9 equals a power factor percentage of 50, meaning invoicing starts when reactive power is more than 50% of active power. Pricing applies to exceeding value above 50%</summary>
+        /// <summary>The power factor is used to trigger invoicing of reactive power. Ex. a power factor of 0.9 equals a power factor percentage of 50, meaning invoicing starts when reactive power is more than 50% of active power. Pricing applies to exceeding value above 50%. Ex. 50.0000</summary>
         [Newtonsoft.Json.JsonProperty("powerFactorPercentage", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int PowerFactorPercentage { get; set; }
+        public double PowerFactorPercentage { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
 
@@ -202,8 +214,45 @@ namespace GridTariffApi.Lib.Models.V2.Digin
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class TariffPrice
     {
+        [Newtonsoft.Json.JsonProperty("hours", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<Hours> Hours { get; set; }
+
         [Newtonsoft.Json.JsonProperty("priceInfo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<PriceInfo> PriceInfo { get; set; }
+        public PriceInfo PriceInfo { get; set; }
+
+    }
+
+    /// <summary>The time series with prices per resolution period.</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class Hours
+    {
+        /// <summary>The start time of this resolution period. Ex. 2021-09-17T00:00:00+02:00</summary>
+        [Newtonsoft.Json.JsonProperty("startTime", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset StartTime { get; set; }
+
+        /// <summary>The time when this resolution period is expired. Ex. 2021-09-17T01:00:00+02:00</summary>
+        [Newtonsoft.Json.JsonProperty("expiredAt", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset ExpiredAt { get; set; }
+
+        /// <summary>Short name for this resolution period. Ex. 0000-0100</summary>
+        [Newtonsoft.Json.JsonProperty("shortName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ShortName { get; set; }
+
+        /// <summary>Indicate if this is a public holiday true=public holiday</summary>
+        [Newtonsoft.Json.JsonProperty("isPublicHoliday", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool IsPublicHoliday { get; set; }
+
+        /// <summary>Object with id references to fixed prices</summary>
+        [Newtonsoft.Json.JsonProperty("fixedPrice", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public FixedPrice FixedPrice { get; set; }
+
+        /// <summary>Object with id references to power prices</summary>
+        [Newtonsoft.Json.JsonProperty("powerPrice", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public PowerPrice PowerPrice { get; set; }
+
+        /// <summary>Object with id references to energy prices and the hourly energy price included taxes</summary>
+        [Newtonsoft.Json.JsonProperty("energyPrice", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public EnergyPrice EnergyPrice { get; set; }
 
 
     }
@@ -212,149 +261,309 @@ namespace GridTariffApi.Lib.Models.V2.Digin
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class PriceInfo
     {
-        /// <summary>The start time of this resolution period. Ex. 2021-09-17T00:00:00.000Z</summary>
-        [Newtonsoft.Json.JsonProperty("startTime", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset StartTime { get; set; }
-
-        /// <summary>The time when this resolution period is expired. Ex. 2021-09-17T01:00:00.000Z</summary>
-        [Newtonsoft.Json.JsonProperty("expiredAt", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset ExpiredAt { get; set; }
-
-        /// <summary>Short name for this resolution period. Ex. 00-01</summary>
-        [Newtonsoft.Json.JsonProperty("hoursShortName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string HoursShortName { get; set; }
-
-        /// <summary>Season name for this resolution period. summer/winter</summary>
-        [Newtonsoft.Json.JsonProperty("season", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.RegularExpression(@"summer|winter")]
-        public string Season { get; set; }
-
-        /// <summary>Indicate if this is a public holiday true=public holiday</summary>
-        [Newtonsoft.Json.JsonProperty("publicHoliday", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool PublicHoliday { get; set; }
-
         /// <summary>Object with list of fixed prices</summary>
         [Newtonsoft.Json.JsonProperty("fixedPrices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+//        public List<FixedPrices> FixedPrices { get; set; }
         public System.Collections.Generic.ICollection<FixedPrices> FixedPrices { get; set; }
 
-        /// <summary>Object with variable prices</summary>
-        [Newtonsoft.Json.JsonProperty("variablePrices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public VariablePrices VariablePrices { get; set; }
+        /// <summary>Object with list of power prices</summary>
+        [Newtonsoft.Json.JsonProperty("powerPrices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<PowerPrices> PowerPrices { get; set; }
+
+        /// <summary>Object with list of energy prices</summary>
+        [Newtonsoft.Json.JsonProperty("energyPrices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<EnergyPrices> EnergyPrices { get; set; }
 
 
     }
 
-    /// <summary>Fixed prices object containing priceLevel list and currentPriceLevel(if applicable)</summary>
+    /// <summary>Fixed prices object containing priceLevel list</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class FixedPrices
     {
-        [Newtonsoft.Json.JsonProperty("priceLevel", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<PriceLevel> PriceLevel { get; set; }
+        /// <summary>Unique id for this fixed price (decided by the start and end time of the price). Ex. 216783ff-5dda-4c38-b491-d6f0fcee9a9b</summary>
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Id { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("currentPriceLevel", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public CurrentPriceLevel CurrentPriceLevel { get; set; }
+        /// <summary>Start date for when this fixed price is valid from. Ex. 2021-01-01</summary>
+        [Newtonsoft.Json.JsonProperty("startDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+//        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
+        public System.DateTimeOffset StartDate { get; set; }
+
+        /// <summary>End date for when this fixed price is valid to. Ex. 2021-12-31</summary>
+        [Newtonsoft.Json.JsonProperty("endDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+//        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
+        public System.DateTimeOffset EndDate { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("priceLevel", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<FixedPriceLevel> PriceLevel { get; set; }
 
 
     }
 
     /// <summary>The fixed prices and attributes for this price level for the resolution period. Ex. hour 00-01</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class PriceLevel
+    public partial class FixedPriceLevel
     {
-        /// <summary>Fixed price component level id/number. Ex. 1</summary>
-        [Newtonsoft.Json.JsonProperty("levelId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int LevelId { get; set; }
+        /// <summary>Unique fixed price component level id. Ex. edcf53ce-70d3-4fa0-8bfb-e79918335ab7</summary>
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Id { get; set; }
 
         /// <summary>Minimum value the level is based on. Included on this level for monthlymax and dailymax models(Ex. 0.0000 kWh/h). Included for fusesize based(Ex. 50 A). Null if this is the lowest level.</summary>
-        [Newtonsoft.Json.JsonProperty("levelValueMin", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double LevelValueMin { get; set; }
+        [Newtonsoft.Json.JsonProperty("valueMin", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? ValueMin { get; set; }
 
         /// <summary>Maximum value the level is based on. Excluded on this level for monthlymax and dailymax models(Ex. 2.0000 kWh/h which is the next level start value). Included for fusesize based(Ex. 50 A). Null if this is the highest level.</summary>
-        [Newtonsoft.Json.JsonProperty("levelValueMax", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double LevelValueMax { get; set; }
+        [Newtonsoft.Json.JsonProperty("valueMax", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? ValueMax { get; set; }
 
-        /// <summary>Level id of the level below the current. Ex. 1</summary>
-        [Newtonsoft.Json.JsonProperty("nextLevelIdDown", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int NextLevelIdDown { get; set; }
+        /// <summary>Level id of the level below the current. Ex. null if this is the lowest level</summary>
+        [Newtonsoft.Json.JsonProperty("nextIdDown", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string NextIdDown { get; set; }
 
-        /// <summary>Level id of the level above the current. Ex. 3</summary>
-        [Newtonsoft.Json.JsonProperty("nextLevelIdUp", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int NextLevelIdUp { get; set; }
+        /// <summary>Level id of the level above the current. Ex. a920b2af-a43f-4de4-aa86-33ea874bdbc4</summary>
+        [Newtonsoft.Json.JsonProperty("nextIdUp", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string NextIdUp { get; set; }
 
-        /// <summary>Unit of measure for the levelValueMin and Max. Ex. kWh/h</summary>
-        [Newtonsoft.Json.JsonProperty("levelValueUnitOfMeasure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string LevelValueUnitOfMeasure { get; set; }
+        /// <summary>Unit of measure for the valueMin and Max. Ex. kWh/h</summary>
+        [Newtonsoft.Json.JsonProperty("valueUnitOfMeasure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ValueUnitOfMeasure { get; set; }
 
-        /// <summary>Total monthly fixed price for this level. Ex 170.0000</summary>
+        /// <summary>Total monthly fixed price for this level included taxes. Ex 100.0000</summary>
         [Newtonsoft.Json.JsonProperty("monthlyTotal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double MonthlyTotal { get; set; }
 
+        /// <summary>Monthly fixed price including all taxes except VAT. Ex 80.0000</summary>
+        [Newtonsoft.Json.JsonProperty("monthlyTotalExVat", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double MonthlyTotalExVat { get; set; }
+
+        /// <summary>Monthly fixed price exluded all taxes. Ex 80.0000</summary>
+        [Newtonsoft.Json.JsonProperty("monthlyExTaxes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double MonthlyExTaxes { get; set; }
+
+        /// <summary>Monthly total for all taxes including VAT for fixed price. Ex 20.0000</summary>
+        [Newtonsoft.Json.JsonProperty("monthlyTaxes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double MonthlyTaxes { get; set; }
+
         /// <summary>Unit of measure for the monthlyTotal fixed price. Ex. kr/month</summary>
-        [Newtonsoft.Json.JsonProperty("monthlyTotalUnitOfMeasure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double MonthlyTotalUnitOfMeasure { get; set; }
+        [Newtonsoft.Json.JsonProperty("monthlyUnitOfMeasure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string MonthlyUnitOfMeasure { get; set; }
+
+        /// <summary>List of hourly prices for months with 31,30,29 and 28 days for this fixed price level.</summary>
+        [Newtonsoft.Json.JsonProperty("hourPrices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<HourFixedPrices> HourPrices { get; set; }
 
         /// <summary>Information about this fixed price level. Ex. Power consumption: 8-12 kWh/h</summary>
         [Newtonsoft.Json.JsonProperty("levelInfo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string LevelInfo { get; set; }
 
-        /// <summary>Total price for this resolution period. Ex. 0.2361</summary>
-        [Newtonsoft.Json.JsonProperty("total", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double Total { get; set; }
-
-        /// <summary>Price excluded taxes for this resolution period. Ex. 0.1889</summary>
-        [Newtonsoft.Json.JsonProperty("fixedExTaxes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double FixedExTaxes { get; set; }
-
-        /// <summary>Taxes for this resolution period. Ex. 0.0472</summary>
-        [Newtonsoft.Json.JsonProperty("taxes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double Taxes { get; set; }
-
         /// <summary>The currency for all monetary units of measures. Ex. NOK</summary>
         [Newtonsoft.Json.JsonProperty("currency", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Currency { get; set; }
 
-        /// <summary>Unit of measure for the total, fixedExTaxes and taxes prices. Ex. kr/hour</summary>
+        /// <summary>Unit of measure for the hourPrices. Ex. kr/hour</summary>
         [Newtonsoft.Json.JsonProperty("monetaryUnitOfMeasure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string MonetaryUnitOfMeasure { get; set; }
 
 
     }
 
-    /// <summary>The last known fixed price level the MPID is placed in based on fuse size or max hour measurement</summary>
+    /// <summary>Price per hour for fixed prices, with a unique id</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class CurrentPriceLevel
+    public partial class HourFixedPrices
     {
-        /// <summary>Fixed price component level id/number. Ex. 2</summary>
-        [Newtonsoft.Json.JsonProperty("currentLevelId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int CurrentLevelId { get; set; }
+        /// <summary>Unique id. Ex. 884d57a8-c8ac-462c-a04e-7554f3fc9c7a</summary>
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Id { get; set; }
 
-        /// <summary>The value of the fuse size or max hour measurement. Ex. 3.456 (kWh/h). Not in use for v0_8 as this is information that needs a higher level of authentication and/or authorization to expose</summary>
-        [Newtonsoft.Json.JsonProperty("currentLevelValue", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double CurrentLevelValue { get; set; }
+        /// <summary>The number of days the total fixed price is divided by to find the hourly price. Valid values: 31|30|29|28. Ex. 30</summary>
+        [Newtonsoft.Json.JsonProperty("numberOfDaysInMonth", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int NumberOfDaysInMonth { get; set; }
+
+        /// <summary>Total price of fixed component for this resolution period included taxes. Calculated by monthlyTotal/(number of days in the month)/24 hours. Ex. 0.1388</summary>
+        [Newtonsoft.Json.JsonProperty("total", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double Total { get; set; }
+
+        /// <summary>Total price of fixed component for this resolution period included all taxes except VAT. Calculated by monthlyTotalExVat/(number of days in the month)/24 hours. Ex. 0.1388</summary>
+        [Newtonsoft.Json.JsonProperty("totalExVat", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double TotalExVat { get; set; }
 
 
     }
 
-    /// <summary>Variable prices object containing energyPrice and powerPrice(if applicable)</summary>
+    /// <summary>Power price object containing properties for power price.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class VariablePrices
+    public partial class PowerPrices
     {
-        [Newtonsoft.Json.JsonProperty("energyPrice", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public EnergyPrice EnergyPrice { get; set; }
+        /// <summary>Unique id for this power price (decided by the start and end time of the price). Ex. f122e3e7-3e0c-43ca-a3ce-051ec0339b98</summary>
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Id { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("powerPriceLevel", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<PowerPrice> PowerPriceLevel { get; set; }
+        /// <summary>Start date for when this power price is valid from. Ex. 2021-01-01</summary>
+        [Newtonsoft.Json.JsonProperty("startDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+//        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
+        public System.DateTimeOffset StartDate { get; set; }
+
+        /// <summary>End date for when this power price is valid to. Ex. 2021-12-31</summary>
+        [Newtonsoft.Json.JsonProperty("endDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+//        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
+        public System.DateTimeOffset EndDate { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("priceLevel", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<PowerPriceLevel> PriceLevel { get; set; }
 
 
     }
 
-    /// <summary>Energy price object containing properties for energy price(ex. total can be multiplied by consumption in this resolution period to get cost of energy price)</summary>
+    /// <summary>The fixed prices and attributes for this price level for the resolution period. Ex. hour 00-01</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class EnergyPrice
+    public partial class PowerPriceLevel
     {
+        /// <summary>Unique fixed price component level id. Ex. edcf53ce-70d3-4fa0-8bfb-e79918335ab7</summary>
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Id { get; set; }
+
+        /// <summary>Minimum value the level is based on. Included on this level for monthlymax and dailymax models(Ex. 0.0000 kWh/h). Included for fusesize based(Ex. 50 A). Null if this is the lowest level.</summary>
+        [Newtonsoft.Json.JsonProperty("valueMin", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double ValueMin { get; set; }
+
+        /// <summary>Maximum value the level is based on. Excluded on this level for monthlymax and dailymax models(Ex. 2.0000 kWh/h which is the next level start value). Included for fusesize based(Ex. 50 A). Null if this is the highest level.</summary>
+        [Newtonsoft.Json.JsonProperty("valueMax", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double ValueMax { get; set; }
+
+        /// <summary>Level id of the level below the current. Ex. null if this is the lowest level</summary>
+        [Newtonsoft.Json.JsonProperty("nextIdDown", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string NextIdDown { get; set; }
+
+        /// <summary>Level id of the level above the current. Ex. a920b2af-a43f-4de4-aa86-33ea874bdbc4</summary>
+        [Newtonsoft.Json.JsonProperty("nextIdUp", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string NextIdUp { get; set; }
+
+        /// <summary>Unit of measure for the valueMin and Max. Ex. kWh/h</summary>
+        [Newtonsoft.Json.JsonProperty("valueUnitOfMeasure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ValueUnitOfMeasure { get; set; }
+
+        /// <summary>Total monthly active power price. To be multiplied with the number of kW (specifically kWh/h) on the maximum hour of the month. Ex. 27.500</summary>
+        [Newtonsoft.Json.JsonProperty("monthlyActivePowerTotal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double MonthlyActivePowerTotal { get; set; }
+
+        /// <summary>Monthly active power price including all taxes except VAT. Ex 80.0000</summary>
+        [Newtonsoft.Json.JsonProperty("monthlyActivePowerTotalExVat", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double MonthlyActivePowerTotalExVat { get; set; }
+
+        /// <summary>Monthly active power price excluded taxes. To be multiplied with the number of kW (specifically kWh/h) on the maximum hour of the month. Ex. 22.0000</summary>
+        [Newtonsoft.Json.JsonProperty("monthlyActivePowerExTaxes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double MonthlyActivePowerExTaxes { get; set; }
+
+        /// <summary>Monthly active power taxes. To be multiplied with the number of kW (specifically kWh/h) on the maximum hour of the month. Ex. 5.5000</summary>
+        [Newtonsoft.Json.JsonProperty("monthlyActivePowerTaxes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double MonthlyActivePowerTaxes { get; set; }
+
+        /// <summary>Total monthly reactive power price. May be multiplied with the number of kW (specifically kWh/h) which exceeds the powerFactorPercentage on the maximum hour of the month. Ex. 13.2625</summary>
+        [Newtonsoft.Json.JsonProperty("monthlyReactivePowerTotal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double MonthlyReactivePowerTotal { get; set; }
+
+        /// <summary>Monthly reactive power price including all taxes except VAT. Ex 80.0000</summary>
+        [Newtonsoft.Json.JsonProperty("monthlyReactivePowerTotalExVat", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double MonthlyReactivePowerTotalExVat { get; set; }
+
+        /// <summary>Monthly reactive power price excluded taxes. May be multiplied with the number of kW (specifically kWh/h) which exceeds the powerFactorPercentage on the maximum hour of the month. Ex. 10.6100</summary>
+        [Newtonsoft.Json.JsonProperty("monthlyReactivePowerExTaxes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double MonthlyReactivePowerExTaxes { get; set; }
+
+        /// <summary>Monthly reactive power taxes. May be multiplied with the number of kW (specifically kWh/h) which exceeds the powerFactorPercentage on the maximum hour of the month. ONLY USED FOR POWER PRICE. Ex. 2.6525</summary>
+        [Newtonsoft.Json.JsonProperty("monthlyReactivePowerTaxes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double MonthlyReactivePowerTaxes { get; set; }
+
+        /// <summary>Unit of measure for the monthlyTotal power price. Ex. kr/month</summary>
+        [Newtonsoft.Json.JsonProperty("monthlyUnitOfMeasure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string MonthlyUnitOfMeasure { get; set; }
+
+        /// <summary>List of hourly prices for months with 31,30,29 and 28 days for this power price level.</summary>
+        [Newtonsoft.Json.JsonProperty("hourPrices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<HourPowerPrices> HourPrices { get; set; }
+
+        /// <summary>Information about this fixed price level. Ex. Power consumption: 8-12 kWh/h</summary>
+        [Newtonsoft.Json.JsonProperty("levelInfo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string LevelInfo { get; set; }
+
+        /// <summary>The currency for all monetary units of measures. Ex. NOK</summary>
+        [Newtonsoft.Json.JsonProperty("currency", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Currency { get; set; }
+
+        /// <summary>Unit of measure for the hourPrices. Ex. kr/hour</summary>
+        [Newtonsoft.Json.JsonProperty("monetaryUnitOfMeasure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string MonetaryUnitOfMeasure { get; set; }
+
+
+    }
+
+    /// <summary>Price per hour for power prices, with a unique id</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class HourPowerPrices
+    {
+        /// <summary>Unique id. Ex. 884d57a8-c8ac-462c-a04e-7554f3fc9c7a</summary>
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Id { get; set; }
+
+        /// <summary>The number of days the total power price is divided by to find the hourly price. Valid values: 31|30|29|28. Ex. 30</summary>
+        [Newtonsoft.Json.JsonProperty("numberOfDaysInMonth", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string NumberOfDaysInMonth { get; set; }
+
+        /// <summary>Total price of active power for the power component for this resolution period included taxes. Calculated by monthlyActivePowerTotal/(number of days in the month)/24 hours. Ex. 0.0381</summary>
+        [Newtonsoft.Json.JsonProperty("activeTotal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double ActiveTotal { get; set; }
+
+        /// <summary>Total price of active power for the power component for this resolution period included all taxes except VAT. Calculated by monthlyActivePowerTotalExVat/(number of days in the month)/24 hours. Ex. 0.0381</summary>
+        [Newtonsoft.Json.JsonProperty("activeTotalExVat", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double ActiveTotalExVat { get; set; }
+
+        /// <summary>Total price of reactive power for the power component for this resolution period included taxes. Calculated by monthlyReactivePowerTotal/(number of days in the month)/24 hours. Ex. 0.0184</summary>
+        [Newtonsoft.Json.JsonProperty("reactiveTotal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double ReactiveTotal { get; set; }
+
+        /// <summary>Total price of reactive power for the power component for this resolution period included all taxes except VAT. Calculated by monthlyReactivePowerTotalExVat/(number of days in the month)/24 hours. Ex. 0.0184</summary>
+        [Newtonsoft.Json.JsonProperty("reactiveTotalExVat", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double ReactiveTotalExVat { get; set; }
+
+
+    }
+
+    /// <summary>Energy price object containing properties for energy price. The total can be multiplied by consumption in this resolution period to get cost of energy price</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class EnergyPrices
+    {
+        /// <summary>Unique id for this energy price (decided by the start and end time of the price). Ex. ba446e00-24be-4850-b212-fdc9f20cfef0</summary>
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Id { get; set; }
+
+        /// <summary>Start date for when this energy price is valid from. Ex. 2021-01-01</summary>
+        [Newtonsoft.Json.JsonProperty("startDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+//        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
+        public System.DateTimeOffset StartDate { get; set; }
+
+        /// <summary>End date for when this energy price is valid to. Ex. 2021-12-31</summary>
+        [Newtonsoft.Json.JsonProperty("endDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+//        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
+        public System.DateTimeOffset EndDate { get; set; }
+
+        /// <summary>Season for this resolution period. Ex. summer</summary>
+        [Newtonsoft.Json.JsonProperty("season", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"summer|winter|year")]
+        public string Season { get; set; }
+
+        /// <summary>Short name for the price level for this resolution period. Ex. CHEAP</summary>
+        [Newtonsoft.Json.JsonProperty("level", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"VERY_CHEAP|CHEAP|NORMAL|EXPENSIVE|VERY_EXPENSIVE")]
+        public string Level { get; set; }
+
         /// <summary>Total price of energy component for this resolution period. Ex. 0.2585</summary>
         [Newtonsoft.Json.JsonProperty("total", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Total { get; set; }
+
+        /// <summary>Total price of energy component for this resolution period included all taxes except VAT. Ex. 0.2068</summary>
+        [Newtonsoft.Json.JsonProperty("totalExVat", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double TotalExVat { get; set; }
 
         /// <summary>Price of energy component excluded taxes for this resolution period. Ex. 0.0299</summary>
         [Newtonsoft.Json.JsonProperty("energyExTaxes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -363,11 +572,6 @@ namespace GridTariffApi.Lib.Models.V2.Digin
         /// <summary>Taxes for the energy component for this resolution period. Ex. 0.2286</summary>
         [Newtonsoft.Json.JsonProperty("taxes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Taxes { get; set; }
-
-        /// <summary>Short name for the price level for this resolution period. Ex. CHEAP</summary>
-        [Newtonsoft.Json.JsonProperty("level", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.RegularExpression(@"VERY_CHEAP|CHEAP|NORMAL|EXPENSIVE|VERY_EXPENSIVE")]
-        public string Level { get; set; }
 
         /// <summary>Currency. Ex. NOK</summary>
         [Newtonsoft.Json.JsonProperty("currency", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -380,81 +584,91 @@ namespace GridTariffApi.Lib.Models.V2.Digin
 
     }
 
-    /// <summary>Power price object containing properties for power price(ex. total can be multiplied by the month maximum hour(Ex. 10 kWh/h) to get the power component cost)</summary>
+    /// <summary>The response object with the grid tariff object and the meteringpointid object</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class MeteringPointsAndPriceLevels
+    {
+        [Newtonsoft.Json.JsonProperty("currentFixedPriceLevel", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public CurrentFixedPriceLevel CurrentFixedPriceLevel { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("meteringPointIds", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public MeteringPointIds MeteringPointIds { get; set; }
+
+
+    }
+
+    /// <summary>The last known fixed price level the MPID is placed in based on fuse size or max hour measurement</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class CurrentFixedPriceLevel
+    {
+        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.fixedPrices.id. Ex. 216783ff-5dda-4c38-b491-d6f0fcee9a9b</summary>
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Id { get; set; }
+
+        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.fixedPrices.priceLevel.id. Ex. edcf53ce-70d3-4fa0-8bfb-e79918335ab7</summary>
+        [Newtonsoft.Json.JsonProperty("levelId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string LevelId { get; set; }
+
+        /// <summary>Value of the max hour setting the level of fixedprice. NOT IN USE YET AS IT REQUIRES A HIGHER LEVEL OF AUTHENTICATION AND AUTHORIZATION. Ex. 9.0000</summary>
+        [Newtonsoft.Json.JsonProperty("levelValue", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double LevelValue { get; set; }
+
+        /// <summary>Time of when the last metervalues were received from the meters to calculate basis for the fixed level. Ex. 2021-09-17T02:00:00+02:00</summary>
+        [Newtonsoft.Json.JsonProperty("lastUpdated", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset LastUpdated { get; set; }
+
+
+    }
+
+    /// <summary>List of meteringpoint-ids that has this tariff type at the time of the api call. Ex. 707057500000000002</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class MeteringPointIds : System.Collections.ObjectModel.Collection<string>
+    {
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class FixedPrice
+    {
+        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.fixedPrices.id. Ex. 216783ff-5dda-4c38-b491-d6f0fcee9a9b</summary>
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Id { get; set; }
+
+        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.fixedPrices.priceLevel.hourPrices.id Ex. a4afa37ae2ec41048e2b5153c35af1c5</summary>
+        [Newtonsoft.Json.JsonProperty("hourId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string HourId { get; set; }
+
+
+    }
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class PowerPrice
     {
-        /// <summary>Power price component level id/number. Ex. 1</summary>
-        [Newtonsoft.Json.JsonProperty("levelId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int LevelId { get; set; }
+        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.powerPrices.id. Ex. f122e3e7-3e0c-43ca-a3ce-051ec0339b98</summary>
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Id { get; set; }
 
-        /// <summary>Minimum value the level is based on. Null if only one level or this is the lowest level. Ex. 0 (kW)</summary>
-        [Newtonsoft.Json.JsonProperty("levelValueMin", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double LevelValueMin { get; set; }
+        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.powerPrices.priceLevel.hourPrices.id Ex. 27134fc2-514d-479e-aedb-f13fc4f087d1</summary>
+        [Newtonsoft.Json.JsonProperty("hourId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string HourId { get; set; }
 
-        /// <summary>Maximum value the level is based on. Null if only one level or this is the highest level. Ex. 100 (kW)</summary>
-        [Newtonsoft.Json.JsonProperty("levelValueMax", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double LevelValueMax { get; set; }
 
-        /// <summary>Level id of the level below the current. Null if this is the lowest level. Ex. 1</summary>
-        [Newtonsoft.Json.JsonProperty("nextLevelIdDown", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int NextLevelIdDown { get; set; }
+    }
 
-        /// <summary>Level id of the level above the current. Null if this is the highest level. Ex. 3</summary>
-        [Newtonsoft.Json.JsonProperty("nextLevelIdUp", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int NextLevelIdUp { get; set; }
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class EnergyPrice
+    {
+        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.energyPrices.id. Ex. 0852242b-90a9-4f71-9903-e881d55194f9</summary>
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Id { get; set; }
 
-        /// <summary>Unit of measure for the levelValueMin and Max. Ex. kW</summary>
-        [Newtonsoft.Json.JsonProperty("levelValueUnitOfMeasure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string LevelValueUnitOfMeasure { get; set; }
+        /// <summary>Total price of energy component for this resolution period. This is for easier access to the hourly energy price. Ex. 0.2850</summary>
+        [Newtonsoft.Json.JsonProperty("total", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double Total { get; set; }
 
-        /// <summary>Total monthly active power price. To be multiplied with the number of kW (specifically kWh/h) on the maximum hour of the month. Ex. 27.500</summary>
-        [Newtonsoft.Json.JsonProperty("monthlyActivePowerTotal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double MonthlyActivePowerTotal { get; set; }
-
-        /// <summary>Total monthly reactive power price. To be multiplied with the number of kW (specifically kWh/h) on the maximum hour of the month. Ex. 27.500</summary>
-        [Newtonsoft.Json.JsonProperty("monthlyReactivePowerTotal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double MonthlyReactivePowerTotal { get; set; }
-
-        /// <summary>Unit of measure for total monthly power price. Ex. kr/kW/month (specifically kr/kWh/h/month).</summary>
-        [Newtonsoft.Json.JsonProperty("monthlyTotalUnitOfMeasure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double MonthlyTotalUnitOfMeasure { get; set; }
-
-        /// <summary>Information about this power price level. Ex. 0-100 kW</summary>
-        [Newtonsoft.Json.JsonProperty("levelInfo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string LevelInfo { get; set; }
-
-        /// <summary>Total price of active power component for this resolution period. Total is calculated by ex. (monthly active power price)/(no of days this month)/24 hours. Ex. 0.0381</summary>
-        [Newtonsoft.Json.JsonProperty("activeTotal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double ActiveTotal { get; set; }
-
-        /// <summary>Price of active power component for this resolution period excluded taxes. Ex. 0.102</summary>
-        [Newtonsoft.Json.JsonProperty("activePowerExTaxes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double ActivePowerExTaxes { get; set; }
-
-        /// <summary>Taxes for the active power component for this resolution period. Ex. 0.100</summary>
-        [Newtonsoft.Json.JsonProperty("activeTaxes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double ActiveTaxes { get; set; }
-
-        /// <summary>Total price of reactive power component for this resolution period. Total is calculated by ex. (monthly reactive power price)/(no of days this month)/24 hours. Ex. 0.0184</summary>
-        [Newtonsoft.Json.JsonProperty("reactiveTotal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double ReactiveTotal { get; set; }
-
-        /// <summary>Price of reactive power component for this resolution period excluded taxes. Ex. 0.102</summary>
-        [Newtonsoft.Json.JsonProperty("reactivePowerExTaxes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double ReactivePowerExTaxes { get; set; }
-
-        /// <summary>Taxes for the reactive power component for this resolution period. Ex. 0.100</summary>
-        [Newtonsoft.Json.JsonProperty("reactiveTaxes", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double ReactiveTaxes { get; set; }
-
-        /// <summary>Currency. Ex. NOK</summary>
-        [Newtonsoft.Json.JsonProperty("currency", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Currency { get; set; }
-
-        /// <summary>Unit of measure for the power prices. Ex. kr/kW</summary>
-        [Newtonsoft.Json.JsonProperty("monetaryUnitOfMeasure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string MonetaryUnitOfMeasure { get; set; }
+        /// <summary>Total price of energy component for this resolution period included all taxes except VAT. This is for easier access to the hourly energy price. Ex. 0.2280</summary>
+        [Newtonsoft.Json.JsonProperty("totalExVat", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double TotalExVat { get; set; }
 
 
     }

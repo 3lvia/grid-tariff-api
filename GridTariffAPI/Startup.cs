@@ -82,11 +82,11 @@ namespace GridTariff.Api
             services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffTypeService, GridTariffApi.Lib.Services.V2.TariffTypeService>();
 
             //some testing
-//            ITariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPersistenceFile());
-//            IObjectConversionHelper objectConversionHelper = new ObjectConversionHelper();
+            ITariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPersistenceFile());
+            IObjectConversionHelper objectConversionHelper = new ObjectConversionHelper();
 
-//            var tariffQueryService = new GridTariffApi.Lib.Services.V2.TariffQueryService(tariffPriceCache, objectConversionHelper);
-//            tariffQueryService.QueryTariffAsync("normal_daynight1", new DateTime(2021, 01, 01), new DateTime(2021, 12, 3));
+            var tariffQueryService = new GridTariffApi.Lib.Services.V2.TariffQueryService(tariffPriceCache, objectConversionHelper);
+            tariffQueryService.QueryTariffAsync("standard", new DateTime(2022, 2, 28), new DateTime(2022, 3, 3));
 //            tariffQueryService.QueryTariffAsync("company_ls_dn1", new DateTime(2021, 01, 01), new DateTime(2021, 12, 3));
 //            var tariffTypeService = new GridTariffApi.Lib.Services.V2.TariffTypeService(tariffPriceCache, objectConversionHelper);
             //var tariffTypes = tariffTypeService.GetTariffTypes();
