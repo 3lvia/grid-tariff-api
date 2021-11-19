@@ -9,12 +9,15 @@ namespace GridTariffApi.Lib.Models.Internal
     {
         public SeasonDataNew()
         {
-            fixedPricesDaysInMonthProcessed = new bool[31+1]; //todo constant
+            FixedPricesDaysInMonthProcessed = new bool[31 + 1]; //todo constant
+            PowerPricesDaysInMonthProcessed = new bool[31 + 1]; //todo constant
             TariffPrice = new TariffPrice();
             TariffPrice.PriceInfo = new PriceInfo();
             TariffPrice.PriceInfo.FixedPrices = new List<Models.V2.Digin.FixedPrices>();
+            TariffPrice.PriceInfo.PowerPrices = new List<Models.V2.Digin.PowerPrices>();
         }
-        public bool[] fixedPricesDaysInMonthProcessed { get; set; }
+        public bool[] FixedPricesDaysInMonthProcessed { get; set; }
+        public bool[] PowerPricesDaysInMonthProcessed { get; set; }
         public TariffPrice TariffPrice { get; set; }
 //        public List<Hours> Hours { get; set; }
     }

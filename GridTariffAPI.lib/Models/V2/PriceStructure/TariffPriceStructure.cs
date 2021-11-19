@@ -98,7 +98,7 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         public List<PowerPriceTax> PowerPriceTaxes { get; set; }
     }
 
-    public class PriceLevel
+    public class FixedPriceLevel
     {
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -134,7 +134,7 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         public string MonetaryUnitOfMeasure { get; set; }
 
         [JsonProperty("levelId")]
-        public int? LevelId { get; set; }
+        public string LevelId { get; set; }
 
         [JsonProperty("levelValueMin")]
         public double? LevelValueMin { get; set; }
@@ -143,19 +143,28 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         public double? LevelValueMax { get; set; }
 
         [JsonProperty("nextLevelIdDown")]
-        public int? NextLevelIdDown { get; set; }
+        public string NextLevelIdDown { get; set; }
 
         [JsonProperty("nextLevelIdUp")]
-        public int? NextLevelIdUp { get; set; }
-
-        [JsonProperty("levelValueUnitOfMeasure")]
-        public string LevelValueUnitOfMeasure { get; set; }
+        public string NextLevelIdUp { get; set; }
 
         [JsonProperty("monthlyTotalUnitOfMeasure")]
         public string MonthlyTotalUnitOfMeasure { get; set; }
+    }
 
-        [JsonProperty("levelValueUom")]
-        public string LevelValueUom { get; set; }
+    public class FixedPrices
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("fixedPriceLevel")]
+        public List<FixedPriceLevel> FixedPriceLevel { get; set; }
+    }
+
+    public class EnergyPriceLevel
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
 
         [JsonProperty("level")]
         public string Level { get; set; }
@@ -167,25 +176,64 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         public List<int> Hours { get; set; }
     }
 
-    public class FixedPrices
-    {
-        [JsonProperty("id")]
-        public string Id { get; set; }
-
-        [JsonProperty("priceLevel")]
-        public List<PriceLevel> PriceLevel { get; set; }
-    }
-
     public class EnergyPrice
     {
-        [JsonProperty("priceLevel")]
-        public List<PriceLevel> PriceLevel { get; set; }
+        [JsonProperty("energyPriceLevel")]
+        public List<EnergyPriceLevel> EnergyPriceLevel { get; set; }
 
         [JsonProperty("currency")]
         public string Currency { get; set; }
 
         [JsonProperty("monetaryUnitOfMeasure")]
         public string MonetaryUnitOfMeasure { get; set; }
+    }
+
+    public class PowerPriceLevel
+    {
+        [JsonProperty("levelId")]
+        public string LevelId { get; set; }
+
+        [JsonProperty("levelValueMin")]
+        public double? LevelValueMin { get; set; }
+
+        [JsonProperty("levelValueMax")]
+        public double? LevelValueMax { get; set; }
+
+        [JsonProperty("nextLevelIdDown")]
+        public string NextLevelIdDown { get; set; }
+
+        [JsonProperty("nextLevelIdUp")]
+        public string NextLevelIdUp { get; set; }
+
+        [JsonProperty("valueUnitOfMeasure")]
+        public string ValueUnitOfMeasure { get; set; }
+
+        [JsonProperty("monthlyActivePowerTotalExVat")]
+        public double MonthlyActivePowerTotalExVat { get; set; }
+
+        [JsonProperty("monthlyReactivePowerTotalExVat")]
+        public double MonthlyReactivePowerTotalExVat { get; set; }
+
+        [JsonProperty("monthlyTotalUnitOfMeasure")]
+        public string MonthlyTotalUnitOfMeasure { get; set; }
+
+        [JsonProperty("levelInfo")]
+        public string LevelInfo { get; set; }
+
+        [JsonProperty("currency")]
+        public string Currency { get; set; }
+
+        [JsonProperty("monetaryUnitOfMeasure")]
+        public string MonetaryUnitOfMeasure { get; set; }
+    }
+
+    public class PowerPrices
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("powerPriceLevel")]
+        public List<PowerPriceLevel> PowerPriceLevel { get; set; }
     }
 
     public class Season
@@ -201,6 +249,9 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
 
         [JsonProperty("energyPrice")]
         public EnergyPrice EnergyPrice { get; set; }
+
+        [JsonProperty("powerPrices")]
+        public PowerPrices PowerPrices { get; set; }
     }
 
     public class TariffPrice
@@ -283,6 +334,5 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         [JsonProperty("gridTariffPriceConfiguration")]
         public GridTariffPriceConfiguration GridTariffPriceConfiguration { get; set; }
     }
-
 }
 

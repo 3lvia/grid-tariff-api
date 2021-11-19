@@ -86,8 +86,8 @@ namespace GridTariff.Api
             IObjectConversionHelper objectConversionHelper = new ObjectConversionHelper();
 
             var tariffQueryService = new GridTariffApi.Lib.Services.V2.TariffQueryService(tariffPriceCache, objectConversionHelper);
-            tariffQueryService.QueryTariffAsync("standard", new DateTime(2022, 2, 28), new DateTime(2022, 3, 3));
-//            tariffQueryService.QueryTariffAsync("company_ls_dn1", new DateTime(2021, 01, 01), new DateTime(2021, 12, 3));
+//            tariffQueryService.QueryTariffAsync("standard", new DateTime(2022, 2, 28), new DateTime(2022, 3, 3));
+            tariffQueryService.QueryTariffAsync("power_ls_dn", new DateTime(2022, 02, 01), new DateTime(2022, 02, 3));
 //            var tariffTypeService = new GridTariffApi.Lib.Services.V2.TariffTypeService(tariffPriceCache, objectConversionHelper);
             //var tariffTypes = tariffTypeService.GetTariffTypes();
 
