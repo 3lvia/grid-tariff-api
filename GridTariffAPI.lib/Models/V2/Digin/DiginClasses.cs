@@ -539,12 +539,12 @@ namespace GridTariffApi.Lib.Models.V2.Digin
 
         /// <summary>Start date for when this energy price is valid from. Ex. 2021-01-01</summary>
         [Newtonsoft.Json.JsonProperty("startDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-//        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
+        //        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
         public System.DateTimeOffset StartDate { get; set; }
 
         /// <summary>End date for when this energy price is valid to. Ex. 2021-12-31</summary>
         [Newtonsoft.Json.JsonProperty("endDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-//        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
+        //        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
         public System.DateTimeOffset EndDate { get; set; }
 
         /// <summary>Season for this resolution period. Ex. summer</summary>
