@@ -508,7 +508,7 @@ namespace GridTariffApi.Lib.Models.V2.Digin
 
         /// <summary>The number of days the total power price is divided by to find the hourly price. Valid values: 31|30|29|28. Ex. 30</summary>
         [Newtonsoft.Json.JsonProperty("numberOfDaysInMonth", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string NumberOfDaysInMonth { get; set; }
+        public int NumberOfDaysInMonth { get; set; }
 
         /// <summary>Total price of active power for the power component for this resolution period included taxes. Calculated by monthlyActivePowerTotal/(number of days in the month)/24 hours. Ex. 0.0381</summary>
         [Newtonsoft.Json.JsonProperty("activeTotal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]

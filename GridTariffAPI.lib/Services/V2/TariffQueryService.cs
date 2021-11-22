@@ -166,10 +166,34 @@ namespace GridTariffApi.Lib.Services.V2
                     powerPriceLevel = PriceLevelPowerPriceToPowerPriceLevel(PowerPricePrice, powerPriceTaxes);
                     powerPrices.PriceLevel.Add(powerPriceLevel);
                 }
-                //todo
-                //                fixedPriceLevel.HourPrices.Add(CalcMonthlyFixedPrices(PowerPricePrice, powerPriceTaxes, daysInMonth));
+                powerPriceLevel.HourPrices.Add(CalcMonthlyPowerPrices(PowerPricePrice, powerPriceTaxes, daysInMonth));
             }
         }
+
+        public Models.V2.Digin.HourPowerPrices CalcMonthlyPowerPrices(
+            Models.V2.PriceStructure.PowerPriceLevel powerPriceLevel,
+            List<Models.V2.PriceStructure.PowerPriceTax> powerPriceTaxes,
+            int daysInMonth)
+        {
+            var vatTax = powerPriceTaxes.FirstOrDefault(x => x.TaxType == "vat");
+            int hoursInMonth = daysInMonth * Constants.HoursInDay;
+
+            var activeTotalExVat = powerPriceLevel.MonthlyActivePowerTotalExVat / hoursInMonth;
+            var activeTotal = AddTaxes(activeTotalExVat, vatTax.TaxValue);
+            var reactiveTotalExVat = powerPriceLevel.MonthlyReactivePowerTotalExVat / hoursInMonth;
+            var reactiveTotal = AddTaxes(reactiveTotalExVat, vatTax.TaxValue);
+
+            var retVal = new Models.V2.Digin.HourPowerPrices();
+            retVal.Id = Guid.NewGuid().ToString();
+            retVal.NumberOfDaysInMonth = daysInMonth;
+            retVal.ActiveTotal = RoundDouble(activeTotal,Constants.PowerPriceDecimals);
+            retVal.ActiveTotalExVat = RoundDouble(activeTotalExVat, Constants.PowerPriceDecimals);
+            retVal.ReactiveTotal = RoundDouble(reactiveTotal, Constants.PowerPriceDecimals);
+            retVal.ReactiveTotalExVat = RoundDouble(reactiveTotalExVat, Constants.PowerPriceDecimals);
+            return retVal;
+        }
+
+
 
         PowerPriceLevel PriceLevelPowerPriceToPowerPriceLevel(
             Models.V2.PriceStructure.PowerPriceLevel powerPriceLevel,
@@ -261,7 +285,7 @@ namespace GridTariffApi.Lib.Services.V2
             retVal.ValueUnitOfMeasure = priceLevel.ValueUnitOfMeasure;
             retVal.MonthlyTotal = AddTaxes(priceLevel.MonthlyTotalExVat, vatTax.TaxValue);
             retVal.MonthlyTotalExVat = priceLevel.MonthlyTotalExVat;
-            retVal.MonthlyExTaxes = retVal.MonthlyTotalExVat;   //todo er det andre skatter enn vat som skal beregnes her ? ikke p.t. 2021.11.19
+            retVal.MonthlyExTaxes = retVal.MonthlyTotalExVat;
             retVal.MonthlyTaxes = retVal.MonthlyTotal - retVal.MonthlyExTaxes;
             retVal.HourPrices = new List<HourFixedPrices>();
             retVal.MonthlyUnitOfMeasure = priceLevel.MonthlyUnitOfMeasure;
