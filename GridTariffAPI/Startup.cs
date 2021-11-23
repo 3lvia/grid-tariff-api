@@ -76,14 +76,16 @@ namespace GridTariff.Api
 
             //v2
             services.AddSingleton<ITariffPersistence, TariffPersistenceFile>();
+            services.AddSingleton<IHolidayPersistence, HolidayPersistenceFile>();
             services.AddTransient<ITariffPriceCache, TariffPriceCache>();
             services.AddTransient<GridTariffApi.Lib.Services.V2.IObjectConversionHelper, GridTariffApi.Lib.Services.V2.ObjectConversionHelper>();
             services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffQueryService, GridTariffApi.Lib.Services.V2.TariffQueryService>();
             services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffTypeService, GridTariffApi.Lib.Services.V2.TariffTypeService>();
 
             //some testing
-            ITariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPersistenceFile());
+            ITariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPersistenceFile(), new HolidayPersistenceFile());
             IObjectConversionHelper objectConversionHelper = new ObjectConversionHelper();
+//            IHolidayPersistence holidayPersistence = 
 
             var tariffQueryService = new GridTariffApi.Lib.Services.V2.TariffQueryService(tariffPriceCache, objectConversionHelper);
             tariffQueryService.QueryTariffAsync("standard", new DateTime(2022, 2, 01), new DateTime(2022, 2, 2));

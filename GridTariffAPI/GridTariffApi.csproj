@@ -45,6 +45,9 @@
     <Content Update="Artifacts\GridTariffPriceConfiguration.v0_9_gridtariffprices_json_example.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="Artifacts\holidays.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 

@@ -1,5 +1,6 @@
 ﻿using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Lib.Models.V2.Digin;
+using GridTariffApi.Lib.Models.V2.Holidays;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,29 +55,33 @@ namespace GridTariffApi.Lib.Services.V2
             tariffPrice.PriceInfo.EnergyPrices = new List<Models.V2.Digin.EnergyPrices>();
             tariffPrice.Hours = new List<Models.V2.Digin.Hours>();
 
+            var holidays = _tariffPriceCache.GetHolidays(paramFromDate, paramToDate);
             foreach (var tariffPricePrice in tariffPricePrices)
             {
-                processTariffPrice(paramFromDate, paramToDate, tariffPrice, tariffPricePrice);
+                processTariffPrice(paramFromDate, paramToDate, tariffPrice, tariffPricePrice, holidays);
             }
             return tariffPrice;
         }
 
-        private void processTariffPrice(DateTimeOffset paramFromDate, DateTimeOffset paramToDate, TariffPrice tariffPrice, Models.V2.PriceStructure.TariffPrice tariffPricePrice)
+        private void processTariffPrice(DateTimeOffset paramFromDate, 
+            DateTimeOffset paramToDate, 
+            TariffPrice tariffPrice, 
+            Models.V2.PriceStructure.TariffPrice tariffPricePrice,
+            List<Holiday> holidays)
         {
+
             var startDate = tariffPricePrice.StartDate <= paramFromDate ? paramFromDate : tariffPricePrice.StartDate;
             var endDate = tariffPricePrice.EndDate > paramToDate ? paramToDate : tariffPricePrice.EndDate;
+            var filteredHolidays = holidays.Where(a => a.Date >= startDate && a.Date <= endDate).ToList();
 
             foreach (var season in tariffPricePrice.Seasons)
             {
-                if (season.Name == "winter")
-                {
-                    bool debug = true;
-                }
                 var accumulator = ProcessSeason(
                     season,
                     tariffPricePrice,
                     startDate,
-                    endDate);
+                    endDate,
+                    filteredHolidays);
 
                 if (accumulator != null)
                 {
@@ -105,7 +110,8 @@ namespace GridTariffApi.Lib.Services.V2
         SeasonDataNew ProcessSeason(Models.V2.PriceStructure.Season season,
             Models.V2.PriceStructure.TariffPrice tariffPricePrice,
             DateTimeOffset paramFromDate,
-            DateTimeOffset paramToDate)
+            DateTimeOffset paramToDate,
+            List<Holiday> holidays)
         {
             var dataAccumulator = new SeasonDataNew() { };
             if (season.FixedPrices != null)
@@ -128,8 +134,9 @@ namespace GridTariffApi.Lib.Services.V2
                     dataAccumulator = AddPowerPrices(season.PowerPrices, tariffPricePrice.Taxes.PowerPriceTaxes, daysInMonth, dataAccumulator);
                     dataAccumulator = AddEnergyPrices(season.EnergyPrice, tariffPricePrice.Taxes.EnergyPriceTaxes, daysInMonth, dataAccumulator,season.Name, paramFromDate, paramToDate); //todo korrekt fra/tuldato
 
+                    var filteredHolidays = holidays.Where(a => a.Date >= fromDate && a.Date <= currMonthEndToDate).ToList();
                     var hourSeasonIndex = BuildHourSeasonIndex(dataAccumulator.TariffPrice.PriceInfo, season.EnergyPrice, daysInMonth);
-                    dataAccumulator = ProcessMonth(dataAccumulator, fromDate, currMonthEndToDate, hourSeasonIndex);
+                    dataAccumulator = ProcessMonth(dataAccumulator, fromDate, currMonthEndToDate, hourSeasonIndex, filteredHolidays);
                 }
                 fromDate = currMonthEndToDate;
             }
@@ -184,21 +191,20 @@ namespace GridTariffApi.Lib.Services.V2
                     }
                 }
             }
-
-
             return retVal;
         }
 
         SeasonDataNew ProcessMonth(SeasonDataNew dataAccumulator,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate,
-            HourSeasonIndex hourSeasonIndex)
+            HourSeasonIndex hourSeasonIndex,
+            List<Holiday> holidays)
 
         {
             var fromDate = paramFromDate;
             while (fromDate.Ticks < paramToDate.Ticks)
             {
-                bool isPublicHoliday = false; //todo
+                bool isPublicHoliday = holidays.Exists(a => a.Date.Day == fromDate.Day);
                 var toDate = fromDate.AddDays(1) < paramToDate ? fromDate.AddDays(1) : paramToDate;
                 dataAccumulator = ProcessDay(dataAccumulator,fromDate,toDate,hourSeasonIndex, 60,isPublicHoliday);       //todo resolution, todo holiday
                 fromDate = fromDate.AddDays(1);

@@ -1,4 +1,5 @@
 ﻿using GridTariffApi.Lib.Interfaces.V2.External;
+using GridTariffApi.Lib.Models.V2.Holidays;
 using GridTariffApi.Lib.Models.V2.PriceStructure;
 using System;
 using System.Collections.Generic;
@@ -13,35 +14,43 @@ namespace GridTariffApi.Lib.Services.V2
         Models.V2.PriceStructure.Company GetCompany();
         Models.V2.PriceStructure.TariffType GetTariff(String tariffKey, DateTimeOffset fromDate, DateTimeOffset toDate);
         List<Models.V2.PriceStructure.TariffType> GetTariffs();
+
+        List<Holiday> GetHolidays(DateTimeOffset fromDate, DateTimeOffset toDate);
     }
 
     public class TariffPriceCache : ITariffPriceCache
     {
         private readonly ITariffPersistence _tariffPersistence;
+        private readonly IHolidayPersistence _holidayPersistence;
+
         private static TariffPriceStructureRoot _tariffPriceStructureRoot;
+        private static List<Holiday> _holidayRoot;
+
         private static DateTime _cacheValidUntil = DateTime.UtcNow;
         private static SemaphoreSlim _lockSemaphore = new SemaphoreSlim(1);
-        public TariffPriceCache(ITariffPersistence tariffPersistence)
+        public TariffPriceCache(ITariffPersistence tariffPersistence
+            , IHolidayPersistence holidayPersistence)
         {
             _tariffPersistence = tariffPersistence;
+            _holidayPersistence = holidayPersistence;
         }
 
         public Models.V2.PriceStructure.Company GetCompany()
         {
-            return GetRootElement().GridTariffPriceConfiguration.GridTariff.Company;
+            return GetTariffRootElement().GridTariffPriceConfiguration.GridTariff.Company;
 
         }
 
         public List<Models.V2.PriceStructure.TariffType> GetTariffs()
         {
-            var tariffPriceStructureRoot = GetRootElement();
+            var tariffPriceStructureRoot = GetTariffRootElement();
             return tariffPriceStructureRoot.GridTariffPriceConfiguration.GridTariff.TariffTypes;
         }
 
 
         public Models.V2.PriceStructure.TariffType GetTariff(String tariffKey, DateTimeOffset fromDate, DateTimeOffset toDate)
         {
-            var tariffPriceStructureRoot = GetRootElement();
+            var tariffPriceStructureRoot = GetTariffRootElement();
             var retVal = tariffPriceStructureRoot.GridTariffPriceConfiguration.GridTariff.TariffTypes.FirstOrDefault(a => a.TariffKey == tariffKey);
             if (retVal != null)
             {
@@ -50,7 +59,13 @@ namespace GridTariffApi.Lib.Services.V2
             return retVal;
         }
 
-        private TariffPriceStructureRoot GetRootElement()
+        public List<Holiday> GetHolidays(DateTimeOffset fromDate, DateTimeOffset toDate)
+        {
+            GetTariffRootElement(); //refresh cache
+            return _holidayRoot.Where(a => a.Date >= fromDate && a.Date <= toDate).ToList();
+        }
+
+        private TariffPriceStructureRoot GetTariffRootElement()
         {
             try
             {
@@ -77,6 +92,7 @@ namespace GridTariffApi.Lib.Services.V2
         private void RefreshCache()
         {
             _tariffPriceStructureRoot = _tariffPersistence.GetTariffPriceStructure();
+            _holidayRoot = _holidayPersistence.GetHolidays();
         }
     }
 }

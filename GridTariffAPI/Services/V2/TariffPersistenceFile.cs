@@ -12,7 +12,7 @@ namespace GridTariffApi.Services.V2
 {
     public class TariffPersistenceFile : ITariffPersistence
     {
-        private static string _filename = "Artifacts\\GridTariffPriceConfiguration.v0_9_gridtariffprices_json_example.json";
+        private static string _tariffPriceFileName = "Artifacts\\GridTariffPriceConfiguration.v0_9_gridtariffprices_json_example.json";
         public TariffPersistenceFile()
         {
 
@@ -20,7 +20,7 @@ namespace GridTariffApi.Services.V2
 
         public TariffPriceStructureRoot GetTariffPriceStructure()
         {
-            string jsonString = File.ReadAllText(_filename);
+            string jsonString = File.ReadAllText(_tariffPriceFileName);
 
             var tariffPriceStructureRoot = JsonConvert.DeserializeObject<TariffPriceStructureRoot>(jsonString);
             return tariffPriceStructureRoot;
