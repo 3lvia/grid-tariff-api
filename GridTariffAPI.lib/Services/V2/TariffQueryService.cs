@@ -375,7 +375,7 @@ namespace GridTariffApi.Lib.Services.V2
         {
             foreach (var powerPricePrice in powerPricePrices.PowerPriceLevel)
             {
-                var powerPriceLevel = powerPrices.PriceLevel.FirstOrDefault(a => a.Id == powerPricePrice.LevelId);
+                var powerPriceLevel = powerPrices.PriceLevel.FirstOrDefault(a => a.Id == powerPricePrice.Id);
                 if (powerPriceLevel == null)
                 {
                     powerPriceLevel = PriceLevelPowerPriceToPowerPriceLevel(powerPricePrice, powerPriceTaxes);
@@ -417,11 +417,11 @@ namespace GridTariffApi.Lib.Services.V2
             var retVal = new Models.V2.Digin.PowerPriceLevel();
             var vatTax = powerPriceTaxes.FirstOrDefault(x => x.TaxType == "vat");
 
-            retVal.Id = powerPriceLevel.LevelId;
-            retVal.ValueMin = powerPriceLevel.LevelValueMin;
-            retVal.ValueMax = powerPriceLevel.LevelValueMax;
-            retVal.NextIdDown = powerPriceLevel.NextLevelIdDown;
-            retVal.NextIdUp = powerPriceLevel.NextLevelIdUp;
+            retVal.Id = powerPriceLevel.Id;
+            retVal.ValueMin = powerPriceLevel.ValueMin;
+            retVal.ValueMax = powerPriceLevel.ValueMax;
+            retVal.NextIdDown = powerPriceLevel.NextIdDown;
+            retVal.NextIdUp = powerPriceLevel.NextIdUp;
             retVal.ValueUnitOfMeasure = powerPriceLevel.ValueUnitOfMeasure;
             retVal.MonthlyActivePowerTotalExVat = powerPriceLevel.MonthlyActivePowerTotalExVat;
             retVal.MonthlyActivePowerTotal = AddTaxes(retVal.MonthlyActivePowerTotalExVat, vatTax.TaxValue);
@@ -431,7 +431,7 @@ namespace GridTariffApi.Lib.Services.V2
             retVal.MonthlyReactivePowerTotal = AddTaxes(retVal.MonthlyReactivePowerTotalExVat, vatTax.TaxValue);
             retVal.MonthlyReactivePowerExTaxes = powerPriceLevel.MonthlyReactivePowerTotalExVat;
             retVal.MonthlyReactivePowerTaxes = retVal.MonthlyReactivePowerTotal - retVal.MonthlyReactivePowerTotalExVat;
-            retVal.MonthlyUnitOfMeasure = powerPriceLevel.MonthlyTotalUnitOfMeasure;
+            retVal.MonthlyUnitOfMeasure = powerPriceLevel.MonthlyUnitOfMeasure;
             retVal.HourPrices = new List<HourPowerPrices>();
             retVal.LevelInfo = powerPriceLevel.LevelInfo;
             retVal.Currency = powerPriceLevel.Currency;
