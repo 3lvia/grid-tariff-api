@@ -17,6 +17,7 @@ namespace GridTariffApi.Lib.Models.Internal
             TariffPrice.PriceInfo.FixedPrices = new List<Models.V2.Digin.FixedPrices>();
             TariffPrice.PriceInfo.PowerPrices = new List<Models.V2.Digin.PowerPrices>();
             TariffPrice.PriceInfo.EnergyPrices = new List<Models.V2.Digin.EnergyPrices>();
+            TariffPrice.Hours = new List<Hours>();
         }
         public bool[] FixedPricesDaysInMonthProcessed { get; set; }
         public bool[] PowerPricesDaysInMonthProcessed { get; set; }
