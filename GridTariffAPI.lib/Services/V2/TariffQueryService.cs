@@ -35,7 +35,7 @@ namespace GridTariffApi.Lib.Services.V2
             var company = _tariffPriceCache.GetCompany();
 
             var gridTariffCollection = new GridTariffCollection();
-            gridTariffCollection.GridTariff = ToGridTariff(company, tariff);    //todo sjekk nye attributter
+            gridTariffCollection.GridTariff = ToGridTariff(company, tariff);
             tariff.TariffPrices.RemoveAll(x => x.EndDate <= paramFromDate || x.StartDate > paramToDate);
             var tariffPrice = ProcessTariffPrices(tariff, paramFromDate, paramToDate);
             gridTariffCollection.GridTariff.TariffPrice = tariffPrice;
@@ -58,26 +58,22 @@ namespace GridTariffApi.Lib.Services.V2
             var holidays = _tariffPriceCache.GetHolidays(paramFromDate, paramToDate);
             foreach (var tariffPricePrice in tariffType.TariffPrices)
             {
-                processTariffPrice(paramFromDate, 
-                    paramToDate, 
-                    tariffPrice, 
-                    tariffPricePrice, 
+                ProcessTariffPrice(paramFromDate,
+                    paramToDate,
+                    tariffPrice,
+                    tariffPricePrice,
                     holidays,
-                    tariffType.UsePublicHolidayOverride, 
-                    tariffType.UseWeekendPriceOverride,
-                    tariffType.Resolution);
+                    tariffType);
             }
             return tariffPrice;
         }
 
-        private void processTariffPrice(DateTimeOffset paramFromDate, 
+        private void ProcessTariffPrice(DateTimeOffset paramFromDate, 
             DateTimeOffset paramToDate, 
             TariffPrice tariffPrice, 
             Models.V2.PriceStructure.TariffPrice tariffPricePrice,
             List<Holiday> holidays,
-            string usePublicHolidayOverride,
-            string useWeekendPriceOverride,
-            int tariffResolutionMinutes)
+            Models.V2.PriceStructure.TariffType tariffType)
         {
 
             var startDate = tariffPricePrice.StartDate <= paramFromDate ? paramFromDate : tariffPricePrice.StartDate;
@@ -92,28 +88,14 @@ namespace GridTariffApi.Lib.Services.V2
                     startDate,
                     endDate,
                     filteredHolidays,
-                    usePublicHolidayOverride,
-                    useWeekendPriceOverride,
-                    tariffResolutionMinutes);
+                    tariffType);
 
                 if (accumulator != null)
                 {
-                    foreach (var fixedPrice in accumulator.TariffPrice.PriceInfo.FixedPrices)
-                    {
-                        tariffPrice.PriceInfo.FixedPrices.Add(fixedPrice);
-                    }
-                    foreach (var powerPrice in accumulator.TariffPrice.PriceInfo.PowerPrices)
-                    {
-                        tariffPrice.PriceInfo.PowerPrices.Add(powerPrice);
-                    }
-                    foreach (var energyPrice in accumulator.TariffPrice.PriceInfo.EnergyPrices)
-                    {
-                        tariffPrice.PriceInfo.EnergyPrices.Add(energyPrice);
-                    }
-                    foreach (var element in accumulator.TariffPrice.Hours)
-                    {
-                        tariffPrice.Hours.Add(element);
-                    }
+                    tariffPrice.PriceInfo.FixedPrices.AddRange(accumulator.TariffPrice.PriceInfo.FixedPrices);
+                    tariffPrice.PriceInfo.PowerPrices.AddRange(accumulator.TariffPrice.PriceInfo.PowerPrices);
+                    tariffPrice.PriceInfo.EnergyPrices.AddRange(accumulator.TariffPrice.PriceInfo.EnergyPrices);
+                    tariffPrice.Hours.AddRange(accumulator.TariffPrice.Hours);
                 }
             }
         }
@@ -123,9 +105,7 @@ namespace GridTariffApi.Lib.Services.V2
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate,
             List<Holiday> holidays,
-            string usePublicHolidayOverride,
-            string useWeekendPriceOverride,
-            int tariffResolutionMinutes)
+            Models.V2.PriceStructure.TariffType tariffType)
         {
             var dataAccumulator = new SeasonDataNew() { };
             if (season.FixedPrices != null)
@@ -149,8 +129,8 @@ namespace GridTariffApi.Lib.Services.V2
                     dataAccumulator = AddEnergyPrices(season.EnergyPrice, tariffPricePrice.Taxes.EnergyPriceTaxes, daysInMonth, dataAccumulator,season.Name, paramFromDate, paramToDate); //todo korrekt fra/tuldato
 
                     var filteredHolidays = holidays.Where(a => a.Date >= fromDate && a.Date <= currMonthEndToDate).ToList();
-                    var hourSeasonIndex = BuildHourSeasonIndex(dataAccumulator.TariffPrice.PriceInfo, season.EnergyPrice, daysInMonth, usePublicHolidayOverride, useWeekendPriceOverride);
-                    dataAccumulator = ProcessMonth(dataAccumulator, fromDate, currMonthEndToDate, hourSeasonIndex, filteredHolidays, tariffResolutionMinutes);
+                    var hourSeasonIndex = BuildHourSeasonIndex(dataAccumulator.TariffPrice.PriceInfo, season.EnergyPrice, daysInMonth, tariffType.UsePublicHolidayOverride, tariffType.UseWeekendPriceOverride);
+                    dataAccumulator = ProcessMonth(dataAccumulator, fromDate, currMonthEndToDate, hourSeasonIndex, filteredHolidays, tariffType.Resolution);
                 }
                 fromDate = currMonthEndToDate;
             }
@@ -251,7 +231,7 @@ namespace GridTariffApi.Lib.Services.V2
                 bool isPublicHoliday = holidays.Exists(a => a.Date.Day == fromDate.Day);
                 bool isWeekend = fromDate.DayOfWeek == DayOfWeek.Saturday || fromDate.DayOfWeek == DayOfWeek.Sunday;
                 var toDate = fromDate.AddDays(1) < paramToDate ? fromDate.AddDays(1) : paramToDate;
-                dataAccumulator = ProcessDay(dataAccumulator, fromDate, toDate, hourSeasonIndex, tariffResolutionMinutes, isPublicHoliday, isWeekend);       //todo resolution, todo holiday
+                dataAccumulator = ProcessDay(dataAccumulator, fromDate, toDate, hourSeasonIndex, tariffResolutionMinutes, isPublicHoliday, isWeekend);
                 fromDate = fromDate.AddDays(1);
 
             }
@@ -441,7 +421,7 @@ namespace GridTariffApi.Lib.Services.V2
 
         void AppendPowerPriceLevels(
             Models.V2.Digin.PowerPrices powerPrices,
-            Models.V2.PriceStructure.PowerPrices powerPricePrices, //todo her er det vel feil
+            Models.V2.PriceStructure.PowerPrices powerPricePrices,
             List<Models.V2.PriceStructure.PowerPriceTax> powerPriceTaxes,
             int daysInMonth)
         {

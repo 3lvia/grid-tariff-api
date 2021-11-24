@@ -33,6 +33,9 @@ namespace GridTariffApi.Lib.Services.V2
             retVal.CompanyOrgNo = company.CompanyOrgNo;
             retVal.Title = tariffType.Title;
             retVal.ConsumptionFlag = tariffType.ConsumptionFlag;
+            //retVal.LastUpdated;   todo
+            retVal.UsePublicHolidayPrices = !String.IsNullOrEmpty(tariffType.UsePublicHolidayOverride);
+            retVal.UseWeekendPrices = !string.IsNullOrEmpty(tariffType.UseWeekendPriceOverride);
             retVal.FixedPriceConfiguration = ToFixedPriceConfiguration(tariffType.FixedPriceConfiguration);
             retVal.PowerPriceConfiguration = ToPowerPriceConfiguration(tariffType.PowerPriceConfiguration);
             retVal.Resolution = tariffType.Resolution;

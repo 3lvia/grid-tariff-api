@@ -215,7 +215,7 @@ namespace GridTariffApi.Lib.Models.V2.Digin
     public partial class TariffPrice
     {
         [Newtonsoft.Json.JsonProperty("hours", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<Hours> Hours { get; set; }
+        public System.Collections.Generic.List<Hours> Hours { get; set; }
 
         [Newtonsoft.Json.JsonProperty("priceInfo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public PriceInfo PriceInfo { get; set; }
@@ -264,15 +264,15 @@ namespace GridTariffApi.Lib.Models.V2.Digin
         /// <summary>Object with list of fixed prices</summary>
         [Newtonsoft.Json.JsonProperty("fixedPrices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
 //        public List<FixedPrices> FixedPrices { get; set; }
-        public System.Collections.Generic.ICollection<FixedPrices> FixedPrices { get; set; }
+        public System.Collections.Generic.List<FixedPrices> FixedPrices { get; set; }
 
         /// <summary>Object with list of power prices</summary>
         [Newtonsoft.Json.JsonProperty("powerPrices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<PowerPrices> PowerPrices { get; set; }
+        public System.Collections.Generic.List<PowerPrices> PowerPrices { get; set; }
 
         /// <summary>Object with list of energy prices</summary>
         [Newtonsoft.Json.JsonProperty("energyPrices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<EnergyPrices> EnergyPrices { get; set; }
+        public System.Collections.Generic.List<EnergyPrices> EnergyPrices { get; set; }
 
 
     }
