@@ -37,14 +37,14 @@ namespace GridTariffApi.Lib.Services.V2
             var gridTariffCollection = new GridTariffCollection();
             gridTariffCollection.GridTariff = ToGridTariff(company, tariff);    //todo sjekk nye attributter
             tariff.TariffPrices.RemoveAll(x => x.EndDate <= paramFromDate || x.StartDate > paramToDate);
-            var tariffPrice = ProcessTariffPrices(tariff.TariffPrices, paramFromDate, paramToDate);
+            var tariffPrice = ProcessTariffPrices(tariff, paramFromDate, paramToDate);
             gridTariffCollection.GridTariff.TariffPrice = tariffPrice;
             await Task.CompletedTask;
             return gridTariffCollection;
         }
 
         public Models.V2.Digin.TariffPrice ProcessTariffPrices(
-            List<Models.V2.PriceStructure.TariffPrice> tariffPricePrices,
+            Models.V2.PriceStructure.TariffType tariffType,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate)
         {
@@ -56,9 +56,15 @@ namespace GridTariffApi.Lib.Services.V2
             tariffPrice.Hours = new List<Models.V2.Digin.Hours>();
 
             var holidays = _tariffPriceCache.GetHolidays(paramFromDate, paramToDate);
-            foreach (var tariffPricePrice in tariffPricePrices)
+            foreach (var tariffPricePrice in tariffType.TariffPrices)
             {
-                processTariffPrice(paramFromDate, paramToDate, tariffPrice, tariffPricePrice, holidays);
+                processTariffPrice(paramFromDate, 
+                    paramToDate, 
+                    tariffPrice, 
+                    tariffPricePrice, 
+                    holidays,
+                    tariffType.UsePublicHolidayOverride, 
+                    tariffType.UseWeekendPriceOverride);
             }
             return tariffPrice;
         }
@@ -67,7 +73,9 @@ namespace GridTariffApi.Lib.Services.V2
             DateTimeOffset paramToDate, 
             TariffPrice tariffPrice, 
             Models.V2.PriceStructure.TariffPrice tariffPricePrice,
-            List<Holiday> holidays)
+            List<Holiday> holidays,
+            string usePublicHolidayOverride,
+            string useWeekendPriceOverride)
         {
 
             var startDate = tariffPricePrice.StartDate <= paramFromDate ? paramFromDate : tariffPricePrice.StartDate;
@@ -81,7 +89,9 @@ namespace GridTariffApi.Lib.Services.V2
                     tariffPricePrice,
                     startDate,
                     endDate,
-                    filteredHolidays);
+                    filteredHolidays,
+                    usePublicHolidayOverride,
+                    useWeekendPriceOverride);
 
                 if (accumulator != null)
                 {
@@ -101,8 +111,6 @@ namespace GridTariffApi.Lib.Services.V2
                     {
                         tariffPrice.Hours.Add(element);
                     }
-
-                    //todo energyPrices
                 }
             }
         }
@@ -111,7 +119,9 @@ namespace GridTariffApi.Lib.Services.V2
             Models.V2.PriceStructure.TariffPrice tariffPricePrice,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate,
-            List<Holiday> holidays)
+            List<Holiday> holidays,
+            string usePublicHolidayOverride,
+            string useWeekendPriceOverride)
         {
             var dataAccumulator = new SeasonDataNew() { };
             if (season.FixedPrices != null)
@@ -135,7 +145,7 @@ namespace GridTariffApi.Lib.Services.V2
                     dataAccumulator = AddEnergyPrices(season.EnergyPrice, tariffPricePrice.Taxes.EnergyPriceTaxes, daysInMonth, dataAccumulator,season.Name, paramFromDate, paramToDate); //todo korrekt fra/tuldato
 
                     var filteredHolidays = holidays.Where(a => a.Date >= fromDate && a.Date <= currMonthEndToDate).ToList();
-                    var hourSeasonIndex = BuildHourSeasonIndex(dataAccumulator.TariffPrice.PriceInfo, season.EnergyPrice, daysInMonth);
+                    var hourSeasonIndex = BuildHourSeasonIndex(dataAccumulator.TariffPrice.PriceInfo, season.EnergyPrice, daysInMonth, usePublicHolidayOverride, useWeekendPriceOverride);
                     dataAccumulator = ProcessMonth(dataAccumulator, fromDate, currMonthEndToDate, hourSeasonIndex, filteredHolidays);
                 }
                 fromDate = currMonthEndToDate;
@@ -149,7 +159,10 @@ namespace GridTariffApi.Lib.Services.V2
 
         HourSeasonIndex BuildHourSeasonIndex(Models.V2.Digin.PriceInfo priceInfo
             , Models.V2.PriceStructure.EnergyPrice energyPrice
-            , int daysInMonth)
+            , int daysInMonth,
+            string usePublicHolidayOverride,
+            string useWeekendPriceOverride)
+
         {
             var retVal = new HourSeasonIndex();
 
@@ -183,16 +196,42 @@ namespace GridTariffApi.Lib.Services.V2
                 foreach (var priceLevel in energyPrice.EnergyPriceLevel)
                 {
                     var energyPriceLevel = priceInfo.EnergyPrices.FirstOrDefault(a => a.Id == priceLevel.Id);
-
                     foreach (var hour in priceLevel.Hours)
                     {
                         retVal.EnergyInformation.HourArray[hour] = energyPriceLevel;
-
                     }
+                }
+            }
+            if (!String.IsNullOrEmpty(usePublicHolidayOverride))
+            {
+                retVal.EnergyInformationWeekend = GenerateOverrideEnergyPricesData(energyPrice, priceInfo, usePublicHolidayOverride);
+            }
+            if (!String.IsNullOrEmpty(useWeekendPriceOverride))
+            {
+                retVal.EnergyInformationWeekend = GenerateOverrideEnergyPricesData( energyPrice, priceInfo, useWeekendPriceOverride);
+            }
+
+            return retVal;
+        }
+
+        EnergyInformation GenerateOverrideEnergyPricesData(
+            Models.V2.PriceStructure.EnergyPrice energyPrice, 
+            Models.V2.Digin.PriceInfo priceInfo, string level)
+        {
+            var retVal = new EnergyInformation();
+            retVal.HourArray = new EnergyPrices[Constants.HoursInDay];
+            var priceLevelPrice = energyPrice.EnergyPriceLevel.FirstOrDefault(a => a.Level == level);
+            var priceLevel = priceInfo.EnergyPrices.FirstOrDefault(a => a.Id == priceLevelPrice.Id);
+            if (priceLevel != null)
+            {
+                for (int hour = 0; hour < Constants.HoursInDay; hour++)
+                {
+                    retVal.HourArray[hour] = priceLevel;
                 }
             }
             return retVal;
         }
+
 
         SeasonDataNew ProcessMonth(SeasonDataNew dataAccumulator,
             DateTimeOffset paramFromDate,
@@ -205,9 +244,11 @@ namespace GridTariffApi.Lib.Services.V2
             while (fromDate.Ticks < paramToDate.Ticks)
             {
                 bool isPublicHoliday = holidays.Exists(a => a.Date.Day == fromDate.Day);
+                bool isWeekend = fromDate.DayOfWeek == DayOfWeek.Saturday || fromDate.DayOfWeek == DayOfWeek.Sunday;
                 var toDate = fromDate.AddDays(1) < paramToDate ? fromDate.AddDays(1) : paramToDate;
-                dataAccumulator = ProcessDay(dataAccumulator,fromDate,toDate,hourSeasonIndex, 60,isPublicHoliday);       //todo resolution, todo holiday
+                dataAccumulator = ProcessDay(dataAccumulator, fromDate, toDate, hourSeasonIndex, 60, isPublicHoliday, isWeekend);       //todo resolution, todo holiday
                 fromDate = fromDate.AddDays(1);
+
             }
             return dataAccumulator;
         }
@@ -217,23 +258,43 @@ namespace GridTariffApi.Lib.Services.V2
             ,DateTimeOffset paramToDate
             ,HourSeasonIndex hourSeasonIndex
             ,int resolution,
-            bool isPublicHoliday)
+            bool isPublicHoliday,
+            bool isWeekend)
         {
             var fromDate = paramFromDate;
             while (fromDate < paramToDate)
             {
                 var endDate = fromDate.AddMinutes(resolution);
-                var priceData = ToHours(fromDate,endDate,hourSeasonIndex,isPublicHoliday);
-
+                EnergyInformation energyInformation = DeciceEneryInformation(hourSeasonIndex, isPublicHoliday, isWeekend);
+                var priceData = ToHours(fromDate, endDate, hourSeasonIndex, energyInformation, isPublicHoliday);
                 dataAccumulator.TariffPrice.Hours.Add(priceData);
                 fromDate = endDate;
             }
             return dataAccumulator;
         }
 
+        private static EnergyInformation DeciceEneryInformation(HourSeasonIndex hourSeasonIndex, bool isPublicHoliday, bool isWeekend)
+        {
+            EnergyInformation energyInformation;
+            if (isPublicHoliday && hourSeasonIndex.EnergyInformationHoliday != null)
+            {
+                energyInformation = hourSeasonIndex.EnergyInformationHoliday;
+            }
+            else if (isWeekend && hourSeasonIndex.EnergyInformationWeekend != null)
+            {
+                energyInformation = hourSeasonIndex.EnergyInformationWeekend;
+            }
+            else
+            {
+                energyInformation = hourSeasonIndex.EnergyInformation;
+            }
+            return energyInformation;
+        }
+
         Models.V2.Digin.Hours ToHours(DateTimeOffset startTime
             , DateTimeOffset expireAt
             , HourSeasonIndex hourSeasonIndex,
+            EnergyInformation energyInformation,
             bool isPublicHoliday)
         {
             var retVal = new Models.V2.Digin.Hours();
@@ -256,9 +317,9 @@ namespace GridTariffApi.Lib.Services.V2
             }
 
             retVal.EnergyPrice = new EnergyPrice();
-            retVal.EnergyPrice.Id = hourSeasonIndex.EnergyInformation.HourArray[startTime.Hour].Id;
-            retVal.EnergyPrice.Total = hourSeasonIndex.EnergyInformation.HourArray[startTime.Hour].Total;
-            retVal.EnergyPrice.TotalExVat = hourSeasonIndex.EnergyInformation.HourArray[startTime.Hour].TotalExVat;
+            retVal.EnergyPrice.Id = energyInformation.HourArray[startTime.Hour].Id;
+            retVal.EnergyPrice.Total = energyInformation.HourArray[startTime.Hour].Total;
+            retVal.EnergyPrice.TotalExVat = energyInformation.HourArray[startTime.Hour].TotalExVat;
             retVal.IsPublicHoliday = isPublicHoliday;
             retVal.ShortName = $"{((startTime.Hour * 100) + startTime.Minute).ToString().PadLeft(4, '0')}-{((expireAt.Hour * 100) + expireAt.Minute).ToString().PadLeft(4, '0')}";
             return retVal;

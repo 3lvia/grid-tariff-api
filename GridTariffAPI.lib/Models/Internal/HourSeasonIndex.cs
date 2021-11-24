@@ -11,6 +11,8 @@ namespace GridTariffApi.Lib.Models.Internal
         public PriceElement PowerPriceValue{ get; set; }
 
         public EnergyInformation EnergyInformation { get; set; }
+        public EnergyInformation EnergyInformationHoliday { get; set; }
+        public EnergyInformation EnergyInformationWeekend { get; set; }
     }
 
     public class PriceElement
@@ -22,6 +24,5 @@ namespace GridTariffApi.Lib.Models.Internal
     public class EnergyInformation
     {
         public EnergyPrices[] HourArray { get; set; }
-
     }
 }
