@@ -48,7 +48,7 @@ namespace GridTariffApi.Lib.Services.V2
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate)
         {
-            var tariffPrice = new Models.V2.Digin.TariffPrice();    //todo generere tariff
+            var tariffPrice = new Models.V2.Digin.TariffPrice();
             tariffPrice.PriceInfo = new Models.V2.Digin.PriceInfo();
             tariffPrice.PriceInfo.FixedPrices = new List<Models.V2.Digin.FixedPrices>();
             tariffPrice.PriceInfo.PowerPrices = new List<Models.V2.Digin.PowerPrices>();
@@ -64,7 +64,8 @@ namespace GridTariffApi.Lib.Services.V2
                     tariffPricePrice, 
                     holidays,
                     tariffType.UsePublicHolidayOverride, 
-                    tariffType.UseWeekendPriceOverride);
+                    tariffType.UseWeekendPriceOverride,
+                    tariffType.Resolution);
             }
             return tariffPrice;
         }
@@ -75,7 +76,8 @@ namespace GridTariffApi.Lib.Services.V2
             Models.V2.PriceStructure.TariffPrice tariffPricePrice,
             List<Holiday> holidays,
             string usePublicHolidayOverride,
-            string useWeekendPriceOverride)
+            string useWeekendPriceOverride,
+            int tariffResolutionMinutes)
         {
 
             var startDate = tariffPricePrice.StartDate <= paramFromDate ? paramFromDate : tariffPricePrice.StartDate;
@@ -91,7 +93,8 @@ namespace GridTariffApi.Lib.Services.V2
                     endDate,
                     filteredHolidays,
                     usePublicHolidayOverride,
-                    useWeekendPriceOverride);
+                    useWeekendPriceOverride,
+                    tariffResolutionMinutes);
 
                 if (accumulator != null)
                 {
@@ -121,7 +124,8 @@ namespace GridTariffApi.Lib.Services.V2
             DateTimeOffset paramToDate,
             List<Holiday> holidays,
             string usePublicHolidayOverride,
-            string useWeekendPriceOverride)
+            string useWeekendPriceOverride,
+            int tariffResolutionMinutes)
         {
             var dataAccumulator = new SeasonDataNew() { };
             if (season.FixedPrices != null)
@@ -146,7 +150,7 @@ namespace GridTariffApi.Lib.Services.V2
 
                     var filteredHolidays = holidays.Where(a => a.Date >= fromDate && a.Date <= currMonthEndToDate).ToList();
                     var hourSeasonIndex = BuildHourSeasonIndex(dataAccumulator.TariffPrice.PriceInfo, season.EnergyPrice, daysInMonth, usePublicHolidayOverride, useWeekendPriceOverride);
-                    dataAccumulator = ProcessMonth(dataAccumulator, fromDate, currMonthEndToDate, hourSeasonIndex, filteredHolidays);
+                    dataAccumulator = ProcessMonth(dataAccumulator, fromDate, currMonthEndToDate, hourSeasonIndex, filteredHolidays, tariffResolutionMinutes);
                 }
                 fromDate = currMonthEndToDate;
             }
@@ -237,7 +241,8 @@ namespace GridTariffApi.Lib.Services.V2
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate,
             HourSeasonIndex hourSeasonIndex,
-            List<Holiday> holidays)
+            List<Holiday> holidays,
+            int tariffResolutionMinutes)
 
         {
             var fromDate = paramFromDate;
@@ -246,7 +251,7 @@ namespace GridTariffApi.Lib.Services.V2
                 bool isPublicHoliday = holidays.Exists(a => a.Date.Day == fromDate.Day);
                 bool isWeekend = fromDate.DayOfWeek == DayOfWeek.Saturday || fromDate.DayOfWeek == DayOfWeek.Sunday;
                 var toDate = fromDate.AddDays(1) < paramToDate ? fromDate.AddDays(1) : paramToDate;
-                dataAccumulator = ProcessDay(dataAccumulator, fromDate, toDate, hourSeasonIndex, 60, isPublicHoliday, isWeekend);       //todo resolution, todo holiday
+                dataAccumulator = ProcessDay(dataAccumulator, fromDate, toDate, hourSeasonIndex, tariffResolutionMinutes, isPublicHoliday, isWeekend);       //todo resolution, todo holiday
                 fromDate = fromDate.AddDays(1);
 
             }

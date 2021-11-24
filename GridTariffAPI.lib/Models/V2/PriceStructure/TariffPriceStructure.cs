@@ -12,9 +12,6 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
 
         [JsonProperty("companyOrgNo")]
         public string CompanyOrgNo { get; set; }
-
-        [JsonProperty("resolution")]
-        public int Resolution { get; set; }
     }
 
     public class FixedPriceConfiguration
@@ -306,6 +303,9 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
 
         [JsonProperty("usePowerPriceConfiguration")]
         public bool UsePowerPriceConfiguration { get; set; }
+
+        [JsonProperty("resolution")]
+        public int Resolution { get; set; }
 
         [JsonProperty("fixedPriceConfiguration")]
         public FixedPriceConfiguration FixedPriceConfiguration { get; set; }

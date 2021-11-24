@@ -35,7 +35,7 @@ namespace GridTariffApi.Lib.Services.V2
             retVal.ConsumptionFlag = tariffType.ConsumptionFlag;
             retVal.FixedPriceConfiguration = ToFixedPriceConfiguration(tariffType.FixedPriceConfiguration);
             retVal.PowerPriceConfiguration = ToPowerPriceConfiguration(tariffType.PowerPriceConfiguration);
-            retVal.Resolution = company.Resolution;
+            retVal.Resolution = tariffType.Resolution;
             retVal.Description = tariffType.Description;
             return retVal;
         }
