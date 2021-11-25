@@ -79,35 +79,79 @@ namespace GridTariffApi.Lib.Services.V2
             var startDate = tariffPricePrice.StartDate <= paramFromDate ? paramFromDate : tariffPricePrice.StartDate;
             var endDate = tariffPricePrice.EndDate > paramToDate ? paramToDate : tariffPricePrice.EndDate;
             var filteredHolidays = holidays.Where(a => a.Date >= startDate && a.Date <= endDate).ToList();
-
-            foreach (var season in tariffPricePrice.Seasons)
+            var taxTimePeriods = SegmentByChangingTaxes(tariffPricePrice.Taxes, startDate, endDate);
+            foreach (var taxTimePeriod in taxTimePeriods)
             {
-                var accumulator = ProcessSeason(
-                    season,
-                    tariffPricePrice,
-                    startDate,
-                    endDate,
-                    filteredHolidays,
-                    tariffType);
-
-                if (accumulator != null)
+                foreach (var season in tariffPricePrice.Seasons)
                 {
-                    tariffPrice.PriceInfo.FixedPrices.AddRange(accumulator.TariffPrice.PriceInfo.FixedPrices);
-                    tariffPrice.PriceInfo.PowerPrices.AddRange(accumulator.TariffPrice.PriceInfo.PowerPrices);
-                    tariffPrice.PriceInfo.EnergyPrices.AddRange(accumulator.TariffPrice.PriceInfo.EnergyPrices);
-                    tariffPrice.Hours.AddRange(accumulator.TariffPrice.Hours);
+                    var accumulator = InitAccumulator(tariffPricePrice,
+                        taxTimePeriod.StartDate,
+                        taxTimePeriod.EndDate);
+
+                    accumulator = ProcessSeason(accumulator,
+                        season,
+                        tariffPricePrice,
+                        taxTimePeriod.StartDate,
+                        taxTimePeriod.EndDate,
+                        filteredHolidays,
+                        tariffType);
+
+                    if (accumulator != null)
+                    {
+                        tariffPrice.PriceInfo.FixedPrices.AddRange(accumulator.TariffPrice.PriceInfo.FixedPrices);
+                        tariffPrice.PriceInfo.PowerPrices.AddRange(accumulator.TariffPrice.PriceInfo.PowerPrices);
+                        tariffPrice.PriceInfo.EnergyPrices.AddRange(accumulator.TariffPrice.PriceInfo.EnergyPrices);
+                        tariffPrice.Hours.AddRange(accumulator.TariffPrice.Hours);
+                    }
                 }
             }
         }
 
-        SeasonDataNew ProcessSeason(Models.V2.PriceStructure.Season season,
+        SeasonDataNew InitAccumulator(Models.V2.PriceStructure.TariffPrice tariffPrice, DateTimeOffset fromDate, DateTimeOffset toDate)
+        {
+            var retVal = new SeasonDataNew();
+            retVal.Taxes.FixedPriceTaxes = FilterByDate(tariffPrice.Taxes.FixedPriceTaxes, fromDate, toDate);
+            retVal.Taxes.PowerPriceTaxes = FilterByDate(tariffPrice.Taxes.PowerPriceTaxes, fromDate, toDate);
+            retVal.Taxes.EnergyPriceTaxes = FilterByDate(tariffPrice.Taxes.EnergyPriceTaxes, fromDate, toDate);
+            return retVal;
+        }
+
+        List<TimpePeriod> SegmentByChangingTaxes(Models.V2.PriceStructure.Taxes taxes, DateTimeOffset startDate, DateTimeOffset endDate)
+        {
+            var retVal = new List<TimpePeriod>();
+            var dates = new List<DateTimeOffset>();
+            dates.Add(startDate);
+            dates.Add(endDate);
+
+            if (taxes.EnergyPriceTaxes != null)
+            {
+                dates.AddRange(taxes.EnergyPriceTaxes.Select(a => a.StartDate));
+            }
+            if (taxes.PowerPriceTaxes != null)
+            {
+                dates.AddRange(taxes.PowerPriceTaxes.Select(a => a.StartDate));
+            }
+            if (taxes.FixedPriceTaxes != null)
+            {
+                dates.AddRange(taxes.FixedPriceTaxes.Select(a => a.StartDate));
+            }
+            dates.RemoveAll(a => a < startDate || a > endDate);
+            dates = dates.Distinct().OrderBy(a => a).ToList();
+            for (int i = 0; i < dates.Count-1;i++)
+            {
+                retVal.Add(new TimpePeriod() { StartDate = dates[i], EndDate = dates[i + 1] });
+            }
+            return retVal;
+        }
+
+        SeasonDataNew ProcessSeason(SeasonDataNew dataAccumulator,
+            Models.V2.PriceStructure.Season season,
             Models.V2.PriceStructure.TariffPrice tariffPricePrice,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate,
             List<Holiday> holidays,
             Models.V2.PriceStructure.TariffType tariffType)
         {
-            var dataAccumulator = new SeasonDataNew() { };
             if (season.FixedPrices != null)
             {
                 dataAccumulator.TariffPrice.PriceInfo.FixedPrices.Add(ToFixedPrice(tariffPricePrice, season.FixedPrices));
@@ -124,9 +168,21 @@ namespace GridTariffApi.Lib.Services.V2
                 if (season.Months.Contains(fromDate.Month))
                 {
                     var daysInMonth = DateTime.DaysInMonth(fromDate.Year,fromDate.Month);
-                    dataAccumulator = AddFixedPrices(season.FixedPrices, tariffPricePrice.Taxes.FixedPriceTaxes, daysInMonth, dataAccumulator);
-                    dataAccumulator = AddPowerPrices(season.PowerPrices, tariffPricePrice.Taxes.PowerPriceTaxes, daysInMonth, dataAccumulator);
-                    dataAccumulator = AddEnergyPrices(season.EnergyPrice, tariffPricePrice.Taxes.EnergyPriceTaxes, daysInMonth, dataAccumulator,season.Name, paramFromDate, paramToDate); //todo korrekt fra/tuldato
+
+                    dataAccumulator = AddFixedPrices(season.FixedPrices,
+                        daysInMonth, 
+                        dataAccumulator);
+
+                    dataAccumulator = AddPowerPrices(season.PowerPrices,
+                        daysInMonth, 
+                        dataAccumulator);
+
+                    dataAccumulator = AddEnergyPrices(season.EnergyPrice,
+                        daysInMonth,
+                        dataAccumulator,
+                        season.Name,
+                        paramFromDate,      //faktisk bruk for denne ?
+                        paramToDate);       //faktisk bruk for denne ?
 
                     var filteredHolidays = holidays.Where(a => a.Date >= fromDate && a.Date <= currMonthEndToDate).ToList();
                     var hourSeasonIndex = BuildHourSeasonIndex(dataAccumulator.TariffPrice.PriceInfo, season.EnergyPrice, daysInMonth, tariffType.UsePublicHolidayOverride, tariffType.UseWeekendPriceOverride);
@@ -140,6 +196,33 @@ namespace GridTariffApi.Lib.Services.V2
             }
             return dataAccumulator;
         }
+
+        List<Models.V2.PriceStructure.FixedPriceTax> FilterByDate(List<Models.V2.PriceStructure.FixedPriceTax> taxes, DateTimeOffset fromDate, DateTimeOffset toDate)
+        {
+            if (taxes != null)
+            {
+                return taxes.Where(a => a.StartDate < toDate && a.EndDate >= fromDate).ToList();
+            }
+            return taxes;
+        }
+
+        List<Models.V2.PriceStructure.PowerPriceTax> FilterByDate(List<Models.V2.PriceStructure.PowerPriceTax> taxes, DateTimeOffset fromDate, DateTimeOffset toDate)
+        {
+            if (taxes != null)
+            {
+                return taxes.Where(a => a.StartDate < toDate && a.EndDate >= fromDate).ToList();
+            }
+            return taxes;
+        }
+        List<Models.V2.PriceStructure.EnergyPriceTax> FilterByDate(List<Models.V2.PriceStructure.EnergyPriceTax> taxes, DateTimeOffset fromDate, DateTimeOffset toDate)
+        {
+            if (taxes != null)
+            {
+                return taxes.Where(a => a.StartDate < toDate && a.EndDate >= fromDate).ToList();
+            }
+            return taxes;
+        }
+
 
         HourSeasonIndex BuildHourSeasonIndex(Models.V2.Digin.PriceInfo priceInfo
             , Models.V2.PriceStructure.EnergyPrice energyPrice
@@ -313,7 +396,6 @@ namespace GridTariffApi.Lib.Services.V2
 
         SeasonDataNew AddEnergyPrices(
             Models.V2.PriceStructure.EnergyPrice energyPricesPrices,
-            List<Models.V2.PriceStructure.EnergyPriceTax> energyPriceTaxes,
             int daysInMonth,
             SeasonDataNew dataAccumulator,
             string season,
@@ -322,7 +404,7 @@ namespace GridTariffApi.Lib.Services.V2
         {
             if (!dataAccumulator.EnergyPricesDaysInMonthProcessed[daysInMonth])
             {
-                AppendEnergyPriceLevels(dataAccumulator.TariffPrice.PriceInfo/*.EnergyPrices.FirstOrDefault()*/, energyPricesPrices, energyPriceTaxes,season, fromDate, toDate);
+                AppendEnergyPriceLevels(dataAccumulator.TariffPrice.PriceInfo, energyPricesPrices, dataAccumulator.Taxes.EnergyPriceTaxes, season, fromDate, toDate);
                 dataAccumulator.EnergyPricesDaysInMonthProcessed[daysInMonth] = true;
             }
             return dataAccumulator;
@@ -342,11 +424,17 @@ namespace GridTariffApi.Lib.Services.V2
                 var energyPriceLevel = priceInfo.EnergyPrices.FirstOrDefault(a => a.Id == energyPriceLevelPrice.Id);
                 if (energyPriceLevel == null)
                 {
-                    energyPriceLevel = PriceLevelEnergyPriceToEnergyPriceLevel(energyPricePrices, energyPriceLevelPrice, energyPriceTaxes, season, fromDate, toDate);
+                    energyPriceLevel = PriceLevelEnergyPriceToEnergyPriceLevel(energyPricePrices,
+                        energyPriceLevelPrice,
+                        energyPriceTaxes,
+                        season,
+                        fromDate,
+                        toDate); ;
                     priceInfo.EnergyPrices.Add(energyPriceLevel);
                 }
             }
         }
+
 
         EnergyPrices PriceLevelEnergyPriceToEnergyPriceLevel(
             Models.V2.PriceStructure.EnergyPrice energyPricePrices,
@@ -362,6 +450,9 @@ namespace GridTariffApi.Lib.Services.V2
             var consumptionTax = energyPriceTaxes.FirstOrDefault(x => x.TaxType == "consumptionTax");
             var enovaTax = energyPriceTaxes.FirstOrDefault(x => x.TaxType == "enovaTax");
 
+
+            //todo her kan vi ikke benytte energypricelevel.total fordi vi har skatter/avgifter som kan endre seg.
+            //har bedt are om å se på dette.
             var energyExTaxes = CalcVariablePriceEnergyExTaxes(         //todo sjekk med are om beregningene er korrekt, endret siden presizeopt struktur
                 energyPriceLevel.Total,
                 consumptionTax,
@@ -392,13 +483,14 @@ namespace GridTariffApi.Lib.Services.V2
 
         SeasonDataNew AddFixedPrices(
             Models.V2.PriceStructure.FixedPrices fixedPricesPrices,
-            List<Models.V2.PriceStructure.FixedPriceTax> fixedPriceTaxes,
             int daysInMonth,
             SeasonDataNew dataAccumulator)
         {
             if (!dataAccumulator.FixedPricesDaysInMonthProcessed[daysInMonth])
             {
-                AppendFixedPriceLevels(dataAccumulator.TariffPrice.PriceInfo.FixedPrices.FirstOrDefault(), fixedPricesPrices, fixedPriceTaxes, daysInMonth);
+                AppendFixedPriceLevels(dataAccumulator.TariffPrice.PriceInfo.FixedPrices.FirstOrDefault(), 
+                    fixedPricesPrices, dataAccumulator.Taxes.FixedPriceTaxes, 
+                    daysInMonth);
                 dataAccumulator.FixedPricesDaysInMonthProcessed[daysInMonth] = true;
             }
             return dataAccumulator;
@@ -407,13 +499,16 @@ namespace GridTariffApi.Lib.Services.V2
 
         SeasonDataNew AddPowerPrices(
             Models.V2.PriceStructure.PowerPrices powerPricePrices,
-            List<Models.V2.PriceStructure.PowerPriceTax> powerPriceTaxes,
             int daysInMonth,
             SeasonDataNew dataAccumulator)
         {
             if (!dataAccumulator.PowerPricesDaysInMonthProcessed[daysInMonth] && powerPricePrices != null)
             {
-                AppendPowerPriceLevels(dataAccumulator.TariffPrice.PriceInfo.PowerPrices.FirstOrDefault(), powerPricePrices, powerPriceTaxes, daysInMonth);
+                AppendPowerPriceLevels(
+                    dataAccumulator.TariffPrice.PriceInfo.PowerPrices.FirstOrDefault(), 
+                    powerPricePrices, 
+                    dataAccumulator.Taxes.PowerPriceTaxes, 
+                    daysInMonth);
                 dataAccumulator.PowerPricesDaysInMonthProcessed[daysInMonth] = true;
             }
             return dataAccumulator;
@@ -605,6 +700,7 @@ namespace GridTariffApi.Lib.Services.V2
 
         public double CalcVariablePriceEnergyExTaxes(double total, Models.V2.PriceStructure.EnergyPriceTax consumptionTax, Models.V2.PriceStructure.EnergyPriceTax enovaTax, Models.V2.PriceStructure.EnergyPriceTax vatTax)
         {
+            //todo benytt taxes fra accumulator
             double consTax = consumptionTax != null ? consumptionTax.TaxValue : 0;
             double enoTax = enovaTax != null ? enovaTax.TaxValue : 0;
             double vatTaxes = vatTax != null ? vatTax.TaxValue : 0;
@@ -616,6 +712,7 @@ namespace GridTariffApi.Lib.Services.V2
 
         public double GetEnergyPriceTax(List<Models.V2.PriceStructure.EnergyPriceTax> taxes, string taxType)
         {
+            //todo benytt taxes fra accumulator
             var tax = taxes.FirstOrDefault(x => x.TaxType == taxType);
             if (tax != null)
             {
@@ -626,6 +723,7 @@ namespace GridTariffApi.Lib.Services.V2
 
         public double GetPowerPriceTax(List<Models.V2.PriceStructure.PowerPriceTax> taxes, string taxType)
         {
+            //todo benytt taxes fra accumulator
             var tax = taxes.FirstOrDefault(x => x.TaxType == taxType);
             if (tax != null)
             {

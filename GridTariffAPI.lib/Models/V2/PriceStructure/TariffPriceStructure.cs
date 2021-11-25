@@ -41,10 +41,10 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
     public class FixedPriceTax
     {
         [JsonProperty("startDate")]
-        public string StartDate { get; set; }
+        public DateTimeOffset StartDate { get; set; }
 
         [JsonProperty("endDate")]
-        public string EndDate { get; set; }
+        public DateTimeOffset EndDate { get; set; }
 
         [JsonProperty("taxType")]
         public string TaxType { get; set; }
@@ -62,10 +62,10 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
     public class EnergyPriceTax
     {
         [JsonProperty("startDate")]
-        public string StartDate { get; set; }
+        public DateTimeOffset StartDate { get; set; }
 
         [JsonProperty("endDate")]
-        public string EndDate { get; set; }
+        public DateTimeOffset EndDate { get; set; }
 
         [JsonProperty("taxType")]
         public string TaxType { get; set; }
@@ -83,10 +83,10 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
     public class PowerPriceTax
     {
         [JsonProperty("startDate")]
-        public string StartDate { get; set; }
+        public DateTimeOffset StartDate { get; set; }
 
         [JsonProperty("endDate")]
-        public string EndDate { get; set; }
+        public DateTimeOffset EndDate { get; set; }
 
         [JsonProperty("taxType")]
         public string TaxType { get; set; }

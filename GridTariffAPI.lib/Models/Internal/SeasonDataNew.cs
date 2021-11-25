@@ -18,12 +18,15 @@ namespace GridTariffApi.Lib.Models.Internal
             TariffPrice.PriceInfo.PowerPrices = new List<Models.V2.Digin.PowerPrices>();
             TariffPrice.PriceInfo.EnergyPrices = new List<Models.V2.Digin.EnergyPrices>();
             TariffPrice.Hours = new List<Hours>();
+            Taxes = new V2.PriceStructure.Taxes();
         }
         public bool[] FixedPricesDaysInMonthProcessed { get; set; }
         public bool[] PowerPricesDaysInMonthProcessed { get; set; }
         public bool[] EnergyPricesDaysInMonthProcessed { get; set; }
 
         public TariffPrice TariffPrice { get; set; }
-//        public List<Hours> Hours { get; set; }
+
+        public Models.V2.PriceStructure.Taxes Taxes { get; set; }
+        //        public List<Hours> Hours { get; set; }
     }
 }
