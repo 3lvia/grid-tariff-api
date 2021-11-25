@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace GridTariffApi.Lib.Models.V2.PriceStructure
 {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
+// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
     public class Company
     {
         [JsonProperty("companyName")]
@@ -133,8 +133,8 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         [JsonProperty("valueUnitOfMeasure")]
         public string ValueUnitOfMeasure { get; set; }
 
-        [JsonProperty("monthlyTotalExVat")]
-        public double MonthlyTotalExVat { get; set; }
+        [JsonProperty("monthlyFixedExTaxes")]
+        public double MonthlyFixedExTaxes { get; set; }
 
         [JsonProperty("monthlyUnitOfMeasure")]
         public string MonthlyUnitOfMeasure { get; set; }
@@ -166,14 +166,11 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         [JsonProperty("level")]
         public string Level { get; set; }
 
-        [JsonProperty("total")]
-        public double Total { get; set; }
+        [JsonProperty("energyExTaxes")]
+        public double EnergyExTaxes { get; set; }
 
         [JsonProperty("hours")]
         public List<int> Hours { get; set; }
-
-        [JsonProperty("totalExVat")]
-        public double? TotalExVat { get; set; }
     }
 
     public class EnergyPrice
@@ -208,11 +205,11 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         [JsonProperty("valueUnitOfMeasure")]
         public string ValueUnitOfMeasure { get; set; }
 
-        [JsonProperty("monthlyActivePowerTotalExVat")]
-        public double MonthlyActivePowerTotalExVat { get; set; }
+        [JsonProperty("monthlyActivePowerExTaxes")]
+        public double MonthlyActivePowerExTaxes { get; set; }
 
-        [JsonProperty("monthlyReactivePowerTotalExVat")]
-        public double MonthlyReactivePowerTotalExVat { get; set; }
+        [JsonProperty("monthlyReactivePowerExTaxes")]
+        public double MonthlyReactivePowerExTaxes { get; set; }
 
         [JsonProperty("monthlyUnitOfMeasure")]
         public string MonthlyUnitOfMeasure { get; set; }
@@ -304,11 +301,11 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         [JsonProperty("usePowerPriceConfiguration")]
         public bool UsePowerPriceConfiguration { get; set; }
 
-        [JsonProperty("resolution")]
-        public int Resolution { get; set; }
-
         [JsonProperty("fixedPriceConfiguration")]
         public FixedPriceConfiguration FixedPriceConfiguration { get; set; }
+
+        [JsonProperty("resolution")]
+        public int Resolution { get; set; }
 
         [JsonProperty("tariffPrices")]
         public List<TariffPrice> TariffPrices { get; set; }
