@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace GridTariffApi.Lib.Models.V2.PriceStructure
 {
-// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
     public class Company
     {
         [JsonProperty("companyName")]

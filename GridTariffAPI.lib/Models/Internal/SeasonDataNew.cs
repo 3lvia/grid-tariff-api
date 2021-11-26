@@ -27,6 +27,5 @@ namespace GridTariffApi.Lib.Models.Internal
         public TariffPrice TariffPrice { get; set; }
 
         public Models.V2.PriceStructure.Taxes Taxes { get; set; }
-        //        public List<Hours> Hours { get; set; }
     }
 }

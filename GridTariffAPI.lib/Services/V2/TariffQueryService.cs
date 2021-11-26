@@ -167,25 +167,11 @@ namespace GridTariffApi.Lib.Services.V2
                 var currMonthEndToDate = GetNextMonthEndDate(fromDate, paramToDate);
                 if (season.Months.Contains(fromDate.Month))
                 {
-                    var daysInMonth = DateTime.DaysInMonth(fromDate.Year,fromDate.Month);
-
-                    dataAccumulator = AddFixedPrices(season.FixedPrices,
-                        daysInMonth, 
-                        dataAccumulator);
-
-                    dataAccumulator = AddPowerPrices(season.PowerPrices,
-                        daysInMonth, 
-                        dataAccumulator);
-
-                    dataAccumulator = AddEnergyPrices(season.EnergyPrice,
-                        daysInMonth,
-                        dataAccumulator,
-                        season.Name,
-                        paramFromDate,      //faktisk bruk for denne ?
-                        paramToDate);       //faktisk bruk for denne ?
+                    var daysInMonth = DateTime.DaysInMonth(fromDate.Year, fromDate.Month);
+                    dataAccumulator = AdPriceLevels(dataAccumulator, season, paramFromDate, paramToDate, daysInMonth);
+                    var hourSeasonIndex = BuildHourSeasonIndex(dataAccumulator.TariffPrice.PriceInfo, season.EnergyPrice, daysInMonth, tariffType.UsePublicHolidayOverride, tariffType.UseWeekendPriceOverride);
 
                     var filteredHolidays = holidays.Where(a => a.Date >= fromDate && a.Date <= currMonthEndToDate).ToList();
-                    var hourSeasonIndex = BuildHourSeasonIndex(dataAccumulator.TariffPrice.PriceInfo, season.EnergyPrice, daysInMonth, tariffType.UsePublicHolidayOverride, tariffType.UseWeekendPriceOverride);
                     dataAccumulator = ProcessMonth(dataAccumulator, fromDate, currMonthEndToDate, hourSeasonIndex, filteredHolidays, tariffType.Resolution);
                 }
                 fromDate = currMonthEndToDate;
@@ -194,6 +180,14 @@ namespace GridTariffApi.Lib.Services.V2
             {
                 return null;
             }
+            return dataAccumulator;
+        }
+
+        private SeasonDataNew AdPriceLevels(SeasonDataNew dataAccumulator, Models.V2.PriceStructure.Season season, DateTimeOffset paramFromDate, DateTimeOffset paramToDate, int daysInMonth)
+        {
+            dataAccumulator = AddFixedPrices(season.FixedPrices,daysInMonth,dataAccumulator);
+            dataAccumulator = AddPowerPrices(season.PowerPrices,daysInMonth,dataAccumulator);
+            dataAccumulator = AddEnergyPrices(season.EnergyPrice,daysInMonth,dataAccumulator,season.Name,paramFromDate,paramToDate);
             return dataAccumulator;
         }
 
@@ -275,7 +269,7 @@ namespace GridTariffApi.Lib.Services.V2
             }
             if (!String.IsNullOrEmpty(useWeekendPriceOverride))
             {
-                retVal.EnergyInformationWeekend = GenerateOverrideEnergyPricesData( energyPrice, priceInfo, useWeekendPriceOverride);
+                retVal.EnergyInformationWeekend = GenerateOverrideEnergyPricesData(energyPrice, priceInfo, useWeekendPriceOverride);
             }
 
             return retVal;
