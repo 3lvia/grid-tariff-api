@@ -11,6 +11,7 @@ using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services.TariffQuery;
 using GridTariffApi.Lib.Services.TariffType;
 using GridTariffApi.Lib.Swagger;
+using GridTariffApi.Services.V2;
 using GridTariffApi.Synchronizer.Lib.Config;
 using GridTariffApi.Synchronizer.Lib.Services;
 using Microsoft.ApplicationInsights.DataContracts;
@@ -29,6 +30,10 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.InteropServices;
 using System.Text;
+using GridTariffApi.Lib.Interfaces.V2.External;
+using GridTariffApi.Lib.Services.V2;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.IO.Compression;
 
 namespace GridTariff.Api
 {
@@ -52,7 +57,9 @@ namespace GridTariff.Api
             });
 
             AddAuthorizations(services);
+            AddCompression(services);
 
+            //v1
             GridTariffApiConfig gridTariffApiConfig = GetGridTariffApiConfig();
             services.AddSingleton(gridTariffApiConfig);
             GridTariffApiSynchronizerConfig gridTariffApiSynchronizerConfig = GetGridTariffApiSynchronizerConfig();
@@ -62,10 +69,32 @@ namespace GridTariff.Api
             services.AddTransient(u => bigQueryClient);
             services.AddTransient<IBigQueryReader, BigQueryReader>();
             services.AddTransient<IGridTariffApiSynchronizer, GridTariffApiSynchronizer>();
-            services.AddTransient<ITariffTypeService, TariffTypeService>();
-            services.AddTransient<ITariffQueryService, TariffQueryService>();
+            services.AddTransient<GridTariffApi.Lib.Services.TariffType.ITariffTypeService, GridTariffApi.Lib.Services.TariffType.TariffTypeService>();
+            services.AddTransient<GridTariffApi.Lib.Services.TariffQuery.ITariffQueryService, GridTariffApi.Lib.Services.TariffQuery.TariffQueryService>();
             services.AddTransient<IServiceHelper, ServiceHelper>();
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString));
+
+            //v2
+            services.AddSingleton<ITariffPersistence, TariffPersistenceFile>();
+            services.AddSingleton<IHolidayPersistence, HolidayPersistenceFile>();
+            services.AddTransient<ITariffPriceCache, TariffPriceCache>();
+            services.AddTransient<GridTariffApi.Lib.Services.V2.IObjectConversionHelper, GridTariffApi.Lib.Services.V2.ObjectConversionHelper>();
+            services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffQueryService, GridTariffApi.Lib.Services.V2.TariffQueryService>();
+            services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffTypeService, GridTariffApi.Lib.Services.V2.TariffTypeService>();
+
+            //some testing
+//            ITariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPersistenceFile(), new HolidayPersistenceFile());
+//            IObjectConversionHelper objectConversionHelper = new ObjectConversionHelper();
+////            IHolidayPersistence holidayPersistence = 
+
+//            var tariffQueryService = new GridTariffApi.Lib.Services.V2.TariffQueryService(tariffPriceCache, objectConversionHelper);
+//            tariffQueryService.QueryTariffAsync("standard", new DateTime(2022, 3, 31), new DateTime(2022, 04, 2));
+//            tariffQueryService.QueryTariffAsync("power_ls_dn", new DateTime(2022, 02, 01), new DateTime(2022, 02, 3));
+//            var tariffTypeService = new GridTariffApi.Lib.Services.V2.TariffTypeService(tariffPriceCache, objectConversionHelper);
+            //var tariffTypes = tariffTypeService.GetTariffTypes();
+
+            //var tariffTypeController = new GridTariffApi.Lib.Controllers.v2.TariffTypeController(tariffTypeService);
+            //var test = tariffTypeController.Get();
 
             services.AddStandardElviaTelemetryLogging(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true, retainTelemetryWhere: telemetryItem => telemetryItem switch
             {
@@ -84,7 +113,7 @@ namespace GridTariff.Api
             services.AddSwaggerConfiguration(swaggerSettings);
             services.ConfigureSwaggerGen(options =>
             {
-               options.CustomSchemaIds(x => x.FullName);
+                options.CustomSchemaIds(x => x.FullName);
             });
 
             ConfigureAuth(services, gridTariffApiConfig.Username, gridTariffApiConfig.Password);
@@ -179,5 +208,25 @@ namespace GridTariff.Api
             var norwegianTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
             return norwegianTimeZone;
         }
+
+        private static void AddCompression(IServiceCollection services)
+        {
+            services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
+                options.Providers.Add<BrotliCompressionProvider>();
+                options.Providers.Add<GzipCompressionProvider>();
+            });
+
+            services.Configure<BrotliCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Fastest;
+            });
+            services.Configure<GzipCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Fastest;
+            });
+        }
+
     }
 }

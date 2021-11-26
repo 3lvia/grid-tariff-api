@@ -10,6 +10,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Release\netcoreapp3.1\GridTariffAPI.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
+    <WarningLevel>5</WarningLevel>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -22,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Artifacts\" />
     <Folder Include="SQL\" />
   </ItemGroup>
 
@@ -37,6 +39,15 @@
   <ItemGroup>
     <ProjectReference Include="..\GridTariffAPI.lib\GridTariffApi.Lib.csproj" />
     <ProjectReference Include="..\GridTariffApi.Synchronizer.Lib\GridTariffApi.Synchronizer.Lib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Artifacts\GridTariffPriceConfiguration.v0_9_gridtariffprices_json_example.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Artifacts\holidays.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 

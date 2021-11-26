@@ -13,7 +13,7 @@ namespace GridTariffApi.Synchronizer.Lib.Services
         private System.Timers.Timer _timer;
         private readonly CronExpression _expression;
         private readonly TimeZoneInfo _timeZoneInfo;
-        readonly ITelemetryInsightsLogger _logger;
+        private readonly ITelemetryInsightsLogger _logger;
 
         protected CronJobService(string cronExpression, TimeZoneInfo timeZoneInfo, ITelemetryInsightsLogger logger)
         {
