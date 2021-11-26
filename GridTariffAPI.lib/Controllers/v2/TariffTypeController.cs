@@ -1,4 +1,5 @@
 ﻿using GridTariffApi.Lib.Services.V2;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,8 +12,8 @@ namespace GridTariffApi.Lib.Controllers.v2
 {
     [Produces(MediaTypeNames.Application.Json)]
     [ApiController]
-    //    [Authorize]       todo
-    [ApiVersion("2.0")]
+    [Authorize]
+    [ApiVersion("1.0")]
     [Route("api/{v:apiVersion}")]
 
     public class TariffTypeController : ControllerBase
@@ -29,7 +30,7 @@ namespace GridTariffApi.Lib.Controllers.v2
         /// <remarks>Service returns all available tariffs</remarks>
         /// <returns>All tariffs</returns>
         [HttpGet]
-        [Route("tarifftype")]
+        [Route("tarifftypepower")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]

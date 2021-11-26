@@ -17,9 +17,9 @@ namespace GridTariffApi.Lib.Controllers.v2
 {
     [Produces(MediaTypeNames.Application.Json)]
     [ApiController]
-    //    [Authorize]       todo
-    [ApiVersion("2.0")]
-    [Route("api/{v:apiVersion}/tariffquerytest")]
+    [Authorize]
+    [ApiVersion("1.0")]
+    [Route("api/{v:apiVersion}/tariffquerypower")]
     public class TariffQueryController : ControllerBase
     {
         private readonly ITariffQueryService _tariffQueryService;
