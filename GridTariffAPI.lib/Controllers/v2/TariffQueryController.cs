@@ -19,7 +19,7 @@ namespace GridTariffApi.Lib.Controllers.v2
     [ApiController]
     [Authorize]
     [ApiVersion("1.0")]
-    [Route("api/{v:apiVersion}/tariffquerypower")]
+    [Route("api/{v:apiVersion}/powerbased")]
     public class TariffQueryController : ControllerBase
     {
         private readonly ITariffQueryService _tariffQueryService;
