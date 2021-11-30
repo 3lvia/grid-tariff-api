@@ -14,7 +14,7 @@ namespace GridTariffApi.Lib.Controllers.v2
     [ApiController]
     [Authorize]
     [ApiVersion("1.0")]
-    [Route("api/{v:apiVersion}")]
+    [Route("api/{v:apiVersion}/powerbased")]
 
     public class TariffTypeController : ControllerBase
     {
@@ -30,7 +30,7 @@ namespace GridTariffApi.Lib.Controllers.v2
         /// <remarks>Service returns all available tariffs</remarks>
         /// <returns>All tariffs</returns>
         [HttpGet]
-        [Route("tarifftypepower")]
+        [Route("tarifftype")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]

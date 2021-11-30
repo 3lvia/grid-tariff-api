@@ -1,4 +1,5 @@
-﻿using GridTariffApi.Lib.Interfaces.V2.External;
+﻿using Elvia.Telemetry;
+using GridTariffApi.Lib.Interfaces.V2.External;
 using GridTariffApi.Lib.Models.V2.PriceStructure;
 using Newtonsoft.Json;
 using System;
@@ -12,18 +13,28 @@ namespace GridTariffApi.Services.V2
 {
     public class TariffPersistenceFile : ITariffPersistence
     {
-        private static string _tariffPriceFileName = "Artifacts\\GridTariffPriceConfiguration.v0_9_gridtariffprices_json_example.json";
-        public TariffPersistenceFile()
-        {
+        private static string _tariffPriceFileName = Path.Join( "Artifacts","GridTariffPriceConfiguration.v0_9_gridtariffprices_json_example.json");
+        private readonly ITelemetryInsightsLogger _telemetryLogger;
 
+        public TariffPersistenceFile(ITelemetryInsightsLogger telemetryLogger)
+        {
+            _telemetryLogger = telemetryLogger;
         }
 
         public TariffPriceStructureRoot GetTariffPriceStructure()
         {
-            string jsonString = File.ReadAllText(_tariffPriceFileName);
-
-            var tariffPriceStructureRoot = JsonConvert.DeserializeObject<TariffPriceStructureRoot>(jsonString);
-            return tariffPriceStructureRoot;
+            TariffPriceStructureRoot retVal = null;
+            try
+            {
+                string jsonString = File.ReadAllText(_tariffPriceFileName);
+                retVal = JsonConvert.DeserializeObject<TariffPriceStructureRoot>(jsonString);
+            }
+            catch (Exception e)
+            {
+                _telemetryLogger.TrackException(e);
+                throw;
+            }
+            return retVal;
         }
     }
 }
