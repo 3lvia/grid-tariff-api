@@ -1,6 +1,7 @@
 ﻿using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Lib.Models.V2.Digin;
 using GridTariffApi.Lib.Models.V2.Holidays;
+using GridTariffApi.Lib.Services.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +19,15 @@ namespace GridTariffApi.Lib.Services.V2
     {
         private readonly ITariffPriceCache _tariffPriceCache;
         private readonly IObjectConversionHelper _objectConversionHelper;
+        private readonly IServiceHelper _serviceHelper;
         public TariffQueryService(
             ITariffPriceCache tariffPriceCache,
-            IObjectConversionHelper objectConversionHelper)
+            IObjectConversionHelper objectConversionHelper,
+            IServiceHelper serviceHelper)
         {
             _tariffPriceCache = tariffPriceCache;
             _objectConversionHelper = objectConversionHelper;
+            _serviceHelper = serviceHelper;
         }
 
         public async Task<GridTariffCollection> QueryTariffAsync(
@@ -360,8 +364,8 @@ namespace GridTariffApi.Lib.Services.V2
             bool isPublicHoliday)
         {
             var retVal = new Models.V2.Digin.Hours();
-            retVal.StartTime = startTime;
-            retVal.ExpiredAt = expireAt;
+            retVal.StartTime = _serviceHelper.DbTimeZoneDateToUtc(startTime.DateTime);
+            retVal.ExpiredAt = _serviceHelper.DbTimeZoneDateToUtc(expireAt.DateTime);
 
             retVal.FixedPrice = new FixedPrice()
             {
