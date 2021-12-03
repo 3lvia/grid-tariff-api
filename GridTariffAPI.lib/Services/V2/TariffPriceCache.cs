@@ -12,8 +12,8 @@ namespace GridTariffApi.Lib.Services.V2
     public interface ITariffPriceCache
     {
         Models.V2.PriceStructure.Company GetCompany();
-        Models.V2.PriceStructure.TariffType GetTariff(String tariffKey, DateTimeOffset fromDate, DateTimeOffset toDate);
-        List<Models.V2.PriceStructure.TariffType> GetTariffs();
+        Models.V2.PriceStructure.TariffType GetTariff(String tariffKey);
+        IReadOnlyList<Models.V2.PriceStructure.TariffType> GetTariffs();
 
         List<Holiday> GetHolidays(DateTimeOffset fromDate, DateTimeOffset toDate);
     }
@@ -41,21 +41,17 @@ namespace GridTariffApi.Lib.Services.V2
 
         }
 
-        public List<Models.V2.PriceStructure.TariffType> GetTariffs()
+        public IReadOnlyList<Models.V2.PriceStructure.TariffType> GetTariffs()
         {
             var tariffPriceStructureRoot = GetTariffRootElement();
             return tariffPriceStructureRoot.GridTariffPriceConfiguration.GridTariff.TariffTypes;
         }
 
 
-        public Models.V2.PriceStructure.TariffType GetTariff(String tariffKey, DateTimeOffset fromDate, DateTimeOffset toDate)
+        public Models.V2.PriceStructure.TariffType GetTariff(String tariffKey)
         {
             var tariffPriceStructureRoot = GetTariffRootElement();
             var retVal = tariffPriceStructureRoot.GridTariffPriceConfiguration.GridTariff.TariffTypes.FirstOrDefault(a => a.TariffKey == tariffKey);
-            if (retVal != null)
-            {
-                retVal.TariffPrices.RemoveAll(a => a.StartDate > toDate || a.EndDate < fromDate);
-            }
             return retVal;
         }
 
