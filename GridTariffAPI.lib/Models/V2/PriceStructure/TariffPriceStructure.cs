@@ -6,102 +6,202 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
 {
     public class Company
     {
+        [JsonConstructor]
+        public Company(
+            [JsonProperty("companyName")] string companyName,
+            [JsonProperty("companyOrgNo")] string companyOrgNo
+        )
+        {
+            this.CompanyName = companyName;
+            this.CompanyOrgNo = companyOrgNo;
+        }
+
         [JsonProperty("companyName")]
-        public string CompanyName { get; set; }
+        public string CompanyName { get; }
 
         [JsonProperty("companyOrgNo")]
-        public string CompanyOrgNo { get; set; }
+        public string CompanyOrgNo { get; }
     }
 
     public class FixedPriceConfiguration
     {
+        [JsonConstructor]
+        public FixedPriceConfiguration(
+            [JsonProperty("basis")] string basis,
+            [JsonProperty("maxhoursPerDay")] object maxhoursPerDay,
+            [JsonProperty("daysPerMonth")] object daysPerMonth,
+            [JsonProperty("allDaysPerMonth")] object allDaysPerMonth,
+            [JsonProperty("maxhoursPerMonth")] int? maxhoursPerMonth,
+            [JsonProperty("months")] int? months,
+            [JsonProperty("monthsOffset")] int? monthsOffset
+        )
+        {
+            this.Basis = basis;
+            this.MaxhoursPerDay = maxhoursPerDay;
+            this.DaysPerMonth = daysPerMonth;
+            this.AllDaysPerMonth = allDaysPerMonth;
+            this.MaxhoursPerMonth = maxhoursPerMonth;
+            this.Months = months;
+            this.MonthsOffset = monthsOffset;
+        }
+
         [JsonProperty("basis")]
-        public string Basis { get; set; }
+        public string Basis { get; }
 
         [JsonProperty("maxhoursPerDay")]
-        public object MaxhoursPerDay { get; set; }
+        public object MaxhoursPerDay { get; }
 
         [JsonProperty("daysPerMonth")]
-        public object DaysPerMonth { get; set; }
+        public object DaysPerMonth { get; }
 
         [JsonProperty("allDaysPerMonth")]
-        public object AllDaysPerMonth { get; set; }
+        public object AllDaysPerMonth { get; }
 
         [JsonProperty("maxhoursPerMonth")]
-        public int? MaxhoursPerMonth { get; set; }
+        public int? MaxhoursPerMonth { get; }
 
         [JsonProperty("months")]
-        public int? Months { get; set; }
+        public int? Months { get; }
 
         [JsonProperty("monthsOffset")]
-        public int? MonthsOffset { get; set; }
+        public int? MonthsOffset { get; }
     }
 
     public class FixedPriceTax
     {
+        [JsonConstructor]
+        public FixedPriceTax(
+            [JsonProperty("startDate")] DateTimeOffset startDate,
+            [JsonProperty("endDate")] DateTimeOffset endDate,
+            [JsonProperty("taxType")] string taxType,
+            [JsonProperty("taxValue")] double taxValue,
+            [JsonProperty("taxUom")] string taxUom,
+            [JsonProperty("taxTypeDescription")] string taxTypeDescription
+        )
+        {
+            this.StartDate = startDate;
+            this.EndDate = endDate;
+            this.TaxType = taxType;
+            this.TaxValue = taxValue;
+            this.TaxUom = taxUom;
+            this.TaxTypeDescription = taxTypeDescription;
+        }
+
         [JsonProperty("startDate")]
-        public DateTimeOffset StartDate { get; set; }
+        public DateTimeOffset StartDate { get; }
 
         [JsonProperty("endDate")]
-        public DateTimeOffset EndDate { get; set; }
+        public DateTimeOffset EndDate { get; }
 
         [JsonProperty("taxType")]
-        public string TaxType { get; set; }
+        public string TaxType { get; }
 
         [JsonProperty("taxValue")]
-        public double TaxValue { get; set; }
+        public double TaxValue { get; }
 
         [JsonProperty("taxUom")]
-        public string TaxUom { get; set; }
+        public string TaxUom { get; }
 
         [JsonProperty("taxTypeDescription")]
-        public string TaxTypeDescription { get; set; }
+        public string TaxTypeDescription { get; }
     }
 
     public class EnergyPriceTax
     {
+        [JsonConstructor]
+        public EnergyPriceTax(
+            [JsonProperty("startDate")] DateTimeOffset startDate,
+            [JsonProperty("endDate")] DateTimeOffset endDate,
+            [JsonProperty("taxType")] string taxType,
+            [JsonProperty("taxValue")] double taxValue,
+            [JsonProperty("taxUom")] string taxUom,
+            [JsonProperty("taxTypeDescription")] string taxTypeDescription
+        )
+        {
+            this.StartDate = startDate;
+            this.EndDate = endDate;
+            this.TaxType = taxType;
+            this.TaxValue = taxValue;
+            this.TaxUom = taxUom;
+            this.TaxTypeDescription = taxTypeDescription;
+        }
+
         [JsonProperty("startDate")]
-        public DateTimeOffset StartDate { get; set; }
+        public DateTimeOffset StartDate { get; }
 
         [JsonProperty("endDate")]
-        public DateTimeOffset EndDate { get; set; }
+        public DateTimeOffset EndDate { get; }
 
         [JsonProperty("taxType")]
-        public string TaxType { get; set; }
+        public string TaxType { get; }
 
         [JsonProperty("taxValue")]
-        public double TaxValue { get; set; }
+        public double TaxValue { get; }
 
         [JsonProperty("taxUom")]
-        public string TaxUom { get; set; }
+        public string TaxUom { get; }
 
         [JsonProperty("taxTypeDescription")]
-        public string TaxTypeDescription { get; set; }
+        public string TaxTypeDescription { get; }
     }
 
     public class PowerPriceTax
     {
+        [JsonConstructor]
+        public PowerPriceTax(
+            [JsonProperty("startDate")] DateTimeOffset startDate,
+            [JsonProperty("endDate")] DateTimeOffset endDate,
+            [JsonProperty("taxType")] string taxType,
+            [JsonProperty("taxValue")] double taxValue,
+            [JsonProperty("taxUom")] string taxUom,
+            [JsonProperty("taxTypeDescription")] string taxTypeDescription
+        )
+        {
+            this.StartDate = startDate;
+            this.EndDate = endDate;
+            this.TaxType = taxType;
+            this.TaxValue = taxValue;
+            this.TaxUom = taxUom;
+            this.TaxTypeDescription = taxTypeDescription;
+        }
+
         [JsonProperty("startDate")]
-        public DateTimeOffset StartDate { get; set; }
+        public DateTimeOffset StartDate { get; }
 
         [JsonProperty("endDate")]
-        public DateTimeOffset EndDate { get; set; }
+        public DateTimeOffset EndDate { get; }
 
         [JsonProperty("taxType")]
-        public string TaxType { get; set; }
+        public string TaxType { get; }
 
         [JsonProperty("taxValue")]
-        public double TaxValue { get; set; }
+        public double TaxValue { get; }
 
         [JsonProperty("taxUom")]
-        public string TaxUom { get; set; }
+        public string TaxUom { get; }
 
         [JsonProperty("taxTypeDescription")]
-        public string TaxTypeDescription { get; set; }
+        public string TaxTypeDescription { get; }
     }
 
     public class Taxes
     {
+        [JsonConstructor]
+        public Taxes(
+            [JsonProperty("fixedPriceTaxes")] List<FixedPriceTax> fixedPriceTaxes,
+            [JsonProperty("energyPriceTaxes")] List<EnergyPriceTax> energyPriceTaxes,
+            [JsonProperty("powerPriceTaxes")] List<PowerPriceTax> powerPriceTaxes
+        )
+        {
+            this.FixedPriceTaxes = fixedPriceTaxes;
+            this.EnergyPriceTaxes = energyPriceTaxes;
+            this.PowerPriceTaxes = powerPriceTaxes;
+        }
+        public Taxes()
+        {
+
+        }
+
         [JsonProperty("fixedPriceTaxes")]
         public List<FixedPriceTax> FixedPriceTaxes { get; set; }
 
@@ -114,224 +214,424 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
 
     public class FixedPriceLevel
     {
+        [JsonConstructor]
+        public FixedPriceLevel(
+            [JsonProperty("id")] string id,
+            [JsonProperty("valueMin")] double valueMin,
+            [JsonProperty("valueMax")] double? valueMax,
+            [JsonProperty("nextIdDown")] string nextIdDown,
+            [JsonProperty("nextIdUp")] string nextIdUp,
+            [JsonProperty("valueUnitOfMeasure")] string valueUnitOfMeasure,
+            [JsonProperty("monthlyFixedExTaxes")] double monthlyFixedExTaxes,
+            [JsonProperty("monthlyUnitOfMeasure")] string monthlyUnitOfMeasure,
+            [JsonProperty("levelInfo")] string levelInfo,
+            [JsonProperty("currency")] string currency,
+            [JsonProperty("monetaryUnitOfMeasure")] string monetaryUnitOfMeasure
+        )
+        {
+            this.Id = id;
+            this.ValueMin = valueMin;
+            this.ValueMax = valueMax;
+            this.NextIdDown = nextIdDown;
+            this.NextIdUp = nextIdUp;
+            this.ValueUnitOfMeasure = valueUnitOfMeasure;
+            this.MonthlyFixedExTaxes = monthlyFixedExTaxes;
+            this.MonthlyUnitOfMeasure = monthlyUnitOfMeasure;
+            this.LevelInfo = levelInfo;
+            this.Currency = currency;
+            this.MonetaryUnitOfMeasure = monetaryUnitOfMeasure;
+        }
+
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string Id { get; }
 
         [JsonProperty("valueMin")]
-        public double ValueMin { get; set; }
+        public double ValueMin { get; }
 
         [JsonProperty("valueMax")]
-        public double? ValueMax { get; set; }
+        public double? ValueMax { get; }
 
         [JsonProperty("nextIdDown")]
-        public string NextIdDown { get; set; }
+        public string NextIdDown { get; }
 
         [JsonProperty("nextIdUp")]
-        public string NextIdUp { get; set; }
+        public string NextIdUp { get; }
 
         [JsonProperty("valueUnitOfMeasure")]
-        public string ValueUnitOfMeasure { get; set; }
+        public string ValueUnitOfMeasure { get; }
 
         [JsonProperty("monthlyFixedExTaxes")]
-        public double MonthlyFixedExTaxes { get; set; }
+        public double MonthlyFixedExTaxes { get; }
 
         [JsonProperty("monthlyUnitOfMeasure")]
-        public string MonthlyUnitOfMeasure { get; set; }
+        public string MonthlyUnitOfMeasure { get; }
 
         [JsonProperty("levelInfo")]
-        public string LevelInfo { get; set; }
+        public string LevelInfo { get; }
 
         [JsonProperty("currency")]
-        public string Currency { get; set; }
+        public string Currency { get; }
 
         [JsonProperty("monetaryUnitOfMeasure")]
-        public string MonetaryUnitOfMeasure { get; set; }
+        public string MonetaryUnitOfMeasure { get; }
     }
 
     public class FixedPrices
     {
+        [JsonConstructor]
+        public FixedPrices(
+            [JsonProperty("id")] string id,
+            [JsonProperty("fixedPriceLevel")] List<FixedPriceLevel> fixedPriceLevel
+        )
+        {
+            this.Id = id;
+            this.FixedPriceLevel = fixedPriceLevel;
+        }
+
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string Id { get; }
 
         [JsonProperty("fixedPriceLevel")]
-        public List<FixedPriceLevel> FixedPriceLevel { get; set; }
+        public IReadOnlyList<FixedPriceLevel> FixedPriceLevel { get; }
     }
 
     public class EnergyPriceLevel
     {
+        [JsonConstructor]
+        public EnergyPriceLevel(
+            [JsonProperty("id")] string id,
+            [JsonProperty("level")] string level,
+            [JsonProperty("energyExTaxes")] double energyExTaxes,
+            [JsonProperty("hours")] List<int> hours
+        )
+        {
+            this.Id = id;
+            this.Level = level;
+            this.EnergyExTaxes = energyExTaxes;
+            this.Hours = hours;
+        }
+
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string Id { get; }
 
         [JsonProperty("level")]
-        public string Level { get; set; }
+        public string Level { get; }
 
         [JsonProperty("energyExTaxes")]
-        public double EnergyExTaxes { get; set; }
+        public double EnergyExTaxes { get; }
 
         [JsonProperty("hours")]
-        public List<int> Hours { get; set; }
+        public IReadOnlyList<int> Hours { get; }
     }
 
     public class EnergyPrice
     {
+        [JsonConstructor]
+        public EnergyPrice(
+            [JsonProperty("energyPriceLevel")] List<EnergyPriceLevel> energyPriceLevel,
+            [JsonProperty("currency")] string currency,
+            [JsonProperty("monetaryUnitOfMeasure")] string monetaryUnitOfMeasure
+        )
+        {
+            this.EnergyPriceLevel = energyPriceLevel;
+            this.Currency = currency;
+            this.MonetaryUnitOfMeasure = monetaryUnitOfMeasure;
+        }
+
         [JsonProperty("energyPriceLevel")]
-        public List<EnergyPriceLevel> EnergyPriceLevel { get; set; }
+        public IReadOnlyList<EnergyPriceLevel> EnergyPriceLevel { get; }
 
         [JsonProperty("currency")]
-        public string Currency { get; set; }
+        public string Currency { get; }
 
         [JsonProperty("monetaryUnitOfMeasure")]
-        public string MonetaryUnitOfMeasure { get; set; }
+        public string MonetaryUnitOfMeasure { get; }
     }
 
     public class PowerPriceLevel
     {
+        [JsonConstructor]
+        public PowerPriceLevel(
+            [JsonProperty("id")] string id,
+            [JsonProperty("valueMin")] double? valueMin,
+            [JsonProperty("valueMax")] double? valueMax,
+            [JsonProperty("nextIdDown")] string nextIdDown,
+            [JsonProperty("nextIdUp")] string nextIdUp,
+            [JsonProperty("valueUnitOfMeasure")] string valueUnitOfMeasure,
+            [JsonProperty("monthlyActivePowerExTaxes")] double monthlyActivePowerExTaxes,
+            [JsonProperty("monthlyReactivePowerExTaxes")] double monthlyReactivePowerExTaxes,
+            [JsonProperty("monthlyUnitOfMeasure")] string monthlyUnitOfMeasure,
+            [JsonProperty("levelInfo")] string levelInfo,
+            [JsonProperty("currency")] string currency,
+            [JsonProperty("monetaryUnitOfMeasure")] string monetaryUnitOfMeasure
+        )
+        {
+            this.Id = id;
+            this.ValueMin = valueMin;
+            this.ValueMax = valueMax;
+            this.NextIdDown = nextIdDown;
+            this.NextIdUp = nextIdUp;
+            this.ValueUnitOfMeasure = valueUnitOfMeasure;
+            this.MonthlyActivePowerExTaxes = monthlyActivePowerExTaxes;
+            this.MonthlyReactivePowerExTaxes = monthlyReactivePowerExTaxes;
+            this.MonthlyUnitOfMeasure = monthlyUnitOfMeasure;
+            this.LevelInfo = levelInfo;
+            this.Currency = currency;
+            this.MonetaryUnitOfMeasure = monetaryUnitOfMeasure;
+        }
+
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string Id { get; }
 
         [JsonProperty("valueMin")]
-        public double? ValueMin { get; set; }
+        public double? ValueMin { get; }
 
         [JsonProperty("valueMax")]
-        public double? ValueMax { get; set; }
+        public double? ValueMax { get; }
 
         [JsonProperty("nextIdDown")]
-        public string NextIdDown { get; set; }
+        public string NextIdDown { get; }
 
         [JsonProperty("nextIdUp")]
-        public string NextIdUp { get; set; }
+        public string NextIdUp { get; }
 
         [JsonProperty("valueUnitOfMeasure")]
-        public string ValueUnitOfMeasure { get; set; }
+        public string ValueUnitOfMeasure { get; }
 
         [JsonProperty("monthlyActivePowerExTaxes")]
-        public double MonthlyActivePowerExTaxes { get; set; }
+        public double MonthlyActivePowerExTaxes { get; }
 
         [JsonProperty("monthlyReactivePowerExTaxes")]
-        public double MonthlyReactivePowerExTaxes { get; set; }
+        public double MonthlyReactivePowerExTaxes { get; }
 
         [JsonProperty("monthlyUnitOfMeasure")]
-        public string MonthlyUnitOfMeasure { get; set; }
+        public string MonthlyUnitOfMeasure { get; }
 
         [JsonProperty("levelInfo")]
-        public string LevelInfo { get; set; }
+        public string LevelInfo { get; }
 
         [JsonProperty("currency")]
-        public string Currency { get; set; }
+        public string Currency { get; }
 
         [JsonProperty("monetaryUnitOfMeasure")]
-        public string MonetaryUnitOfMeasure { get; set; }
+        public string MonetaryUnitOfMeasure { get; }
     }
 
     public class PowerPrices
     {
+        [JsonConstructor]
+        public PowerPrices(
+            [JsonProperty("powerPriceLevel")] List<PowerPriceLevel> powerPriceLevel,
+            [JsonProperty("id")] string id
+        )
+        {
+            this.PowerPriceLevel = powerPriceLevel;
+            this.Id = id;
+        }
+
         [JsonProperty("powerPriceLevel")]
-        public List<PowerPriceLevel> PowerPriceLevel { get; set; }
+        public IReadOnlyList<PowerPriceLevel> PowerPriceLevel { get; }
 
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string Id { get; }
     }
 
     public class Season
     {
+        [JsonConstructor]
+        public Season(
+            [JsonProperty("name")] string name,
+            [JsonProperty("months")] List<int> months,
+            [JsonProperty("fixedPrices")] FixedPrices fixedPrices,
+            [JsonProperty("energyPrice")] EnergyPrice energyPrice,
+            [JsonProperty("powerPrices")] PowerPrices powerPrices
+        )
+        {
+            this.Name = name;
+            this.Months = months;
+            this.FixedPrices = fixedPrices;
+            this.EnergyPrice = energyPrice;
+            this.PowerPrices = powerPrices;
+        }
+
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string Name { get; }
 
         [JsonProperty("months")]
-        public List<int> Months { get; set; }
+        public IReadOnlyList<int> Months { get; }
 
         [JsonProperty("fixedPrices")]
-        public FixedPrices FixedPrices { get; set; }
+        public FixedPrices FixedPrices { get; }
 
         [JsonProperty("energyPrice")]
-        public EnergyPrice EnergyPrice { get; set; }
+        public EnergyPrice EnergyPrice { get; }
 
         [JsonProperty("powerPrices")]
-        public PowerPrices PowerPrices { get; set; }
+        public PowerPrices PowerPrices { get; }
     }
 
     public class TariffPrice
     {
+        [JsonConstructor]
+        public TariffPrice(
+            [JsonProperty("startDate")] DateTimeOffset startDate,
+            [JsonProperty("endDate")] DateTimeOffset endDate,
+            [JsonProperty("taxes")] Taxes taxes,
+            [JsonProperty("seasons")] List<Season> seasons
+        )
+        {
+            this.StartDate = startDate;
+            this.EndDate = endDate;
+            this.Taxes = taxes;
+            this.Seasons = seasons;
+        }
+
         [JsonProperty("startDate")]
-        public DateTimeOffset StartDate { get; set; }
+        public DateTimeOffset StartDate { get; }
 
         [JsonProperty("endDate")]
-        public DateTimeOffset EndDate { get; set; }
+        public DateTimeOffset EndDate { get; }
 
         [JsonProperty("taxes")]
-        public Taxes Taxes { get; set; }
+        public Taxes Taxes { get; }
 
         [JsonProperty("seasons")]
-        public List<Season> Seasons { get; set; }
+        public IReadOnlyList<Season> Seasons { get; }
     }
 
     public class PowerPriceConfiguration
     {
+        [JsonConstructor]
+        public PowerPriceConfiguration(
+            [JsonProperty("reactivePowerPricing")] bool reactivePowerPricing,
+            [JsonProperty("powerFactorPercentage")] double powerFactorPercentage
+        )
+        {
+            this.ReactivePowerPricing = reactivePowerPricing;
+            this.PowerFactorPercentage = powerFactorPercentage;
+        }
+
         [JsonProperty("reactivePowerPricing")]
-        public bool ReactivePowerPricing { get; set; }
+        public bool ReactivePowerPricing { get; }
 
         [JsonProperty("powerFactorPercentage")]
-        public double PowerFactorPercentage { get; set; }
+        public double PowerFactorPercentage { get; }
     }
 
     public class TariffType
     {
+        [JsonConstructor]
+        public TariffType(
+            [JsonProperty("tariffKey")] string tariffKey,
+            [JsonProperty("product")] string product,
+            [JsonProperty("title")] string title,
+            [JsonProperty("description")] string description,
+            [JsonProperty("usePublicHolidayOverride")] string usePublicHolidayOverride,
+            [JsonProperty("useWeekendPriceOverride")] string useWeekendPriceOverride,
+            [JsonProperty("consumptionFlag")] bool consumptionFlag,
+            [JsonProperty("usePowerPriceConfiguration")] bool usePowerPriceConfiguration,
+            [JsonProperty("fixedPriceConfiguration")] FixedPriceConfiguration fixedPriceConfiguration,
+            [JsonProperty("resolution")] int resolution,
+            [JsonProperty("tariffPrices")] List<TariffPrice> tariffPrices,
+            [JsonProperty("powerPriceConfiguration")] PowerPriceConfiguration powerPriceConfiguration
+        )
+        {
+            this.TariffKey = tariffKey;
+            this.Product = product;
+            this.Title = title;
+            this.Description = description;
+            this.UsePublicHolidayOverride = usePublicHolidayOverride;
+            this.UseWeekendPriceOverride = useWeekendPriceOverride;
+            this.ConsumptionFlag = consumptionFlag;
+            this.UsePowerPriceConfiguration = usePowerPriceConfiguration;
+            this.FixedPriceConfiguration = fixedPriceConfiguration;
+            this.Resolution = resolution;
+            this.TariffPrices = tariffPrices;
+            this.PowerPriceConfiguration = powerPriceConfiguration;
+        }
+
         [JsonProperty("tariffKey")]
-        public string TariffKey { get; set; }
+        public string TariffKey { get; }
 
         [JsonProperty("product")]
-        public string Product { get; set; }
+        public string Product { get; }
 
         [JsonProperty("title")]
-        public string Title { get; set; }
+        public string Title { get; }
 
         [JsonProperty("description")]
-        public string Description { get; set; }
+        public string Description { get; }
 
         [JsonProperty("usePublicHolidayOverride")]
-        public string UsePublicHolidayOverride { get; set; }
+        public string UsePublicHolidayOverride { get; }
 
         [JsonProperty("useWeekendPriceOverride")]
-        public string UseWeekendPriceOverride { get; set; }
+        public string UseWeekendPriceOverride { get; }
 
         [JsonProperty("consumptionFlag")]
-        public bool ConsumptionFlag { get; set; }
+        public bool ConsumptionFlag { get; }
 
         [JsonProperty("usePowerPriceConfiguration")]
-        public bool UsePowerPriceConfiguration { get; set; }
+        public bool UsePowerPriceConfiguration { get; }
 
         [JsonProperty("fixedPriceConfiguration")]
-        public FixedPriceConfiguration FixedPriceConfiguration { get; set; }
+        public FixedPriceConfiguration FixedPriceConfiguration { get; }
 
         [JsonProperty("resolution")]
-        public int Resolution { get; set; }
+        public int Resolution { get; }
 
         [JsonProperty("tariffPrices")]
-        public List<TariffPrice> TariffPrices { get; set; }
+        public List<TariffPrice> TariffPrices { get; }
 
         [JsonProperty("powerPriceConfiguration")]
-        public PowerPriceConfiguration PowerPriceConfiguration { get; set; }
+        public PowerPriceConfiguration PowerPriceConfiguration { get; }
     }
 
     public class GridTariff
     {
+        [JsonConstructor]
+        public GridTariff(
+            [JsonProperty("company")] Company company,
+            [JsonProperty("tariffTypes")] List<TariffType> tariffTypes
+        )
+        {
+            this.Company = company;
+            this.TariffTypes = tariffTypes;
+        }
+
         [JsonProperty("company")]
-        public Company Company { get; set; }
+        public Company Company { get; }
 
         [JsonProperty("tariffTypes")]
-        public List<TariffType> TariffTypes { get; set; }
+        public List<TariffType> TariffTypes { get; }
     }
 
     public class GridTariffPriceConfiguration
     {
+        [JsonConstructor]
+        public GridTariffPriceConfiguration(
+            [JsonProperty("gridTariff")] GridTariff gridTariff
+        )
+        {
+            this.GridTariff = gridTariff;
+        }
+
         [JsonProperty("gridTariff")]
-        public GridTariff GridTariff { get; set; }
+        public GridTariff GridTariff { get; }
     }
 
     public class TariffPriceStructureRoot
     {
+        [JsonConstructor]
+        public TariffPriceStructureRoot(
+            [JsonProperty("gridTariffPriceConfiguration")] GridTariffPriceConfiguration gridTariffPriceConfiguration
+        )
+        {
+            this.GridTariffPriceConfiguration = gridTariffPriceConfiguration;
+        }
+
         [JsonProperty("gridTariffPriceConfiguration")]
-        public GridTariffPriceConfiguration GridTariffPriceConfiguration { get; set; }
+        public GridTariffPriceConfiguration GridTariffPriceConfiguration { get; }
     }
 }
 
