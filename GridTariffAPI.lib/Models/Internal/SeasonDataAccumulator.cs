@@ -5,9 +5,9 @@ using System.Text;
 
 namespace GridTariffApi.Lib.Models.Internal
 {
-    class SeasonDataNew
+    class SeasonDataAccumulator
     {
-        public SeasonDataNew()
+        public SeasonDataAccumulator()
         {
             FixedPricesDaysInMonthProcessed = new bool[31 + 1]; //todo constant
             PowerPricesDaysInMonthProcessed = new bool[31 + 1]; //todo constant

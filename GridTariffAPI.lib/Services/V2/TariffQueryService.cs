@@ -140,9 +140,9 @@ namespace GridTariffApi.Lib.Services.V2
         }
 
 
-        SeasonDataNew InitAccumulator(Models.V2.PriceStructure.TariffPrice tariffPrice, DateTimeOffset fromDate, DateTimeOffset toDate)
+        SeasonDataAccumulator InitAccumulator(Models.V2.PriceStructure.TariffPrice tariffPrice, DateTimeOffset fromDate, DateTimeOffset toDate)
         {
-            var retVal = new SeasonDataNew();
+            var retVal = new SeasonDataAccumulator();
             retVal.Taxes.FixedPriceTaxes = FilterByDate(tariffPrice.Taxes.FixedPriceTaxes, fromDate, toDate);
             retVal.Taxes.PowerPriceTaxes = FilterByDate(tariffPrice.Taxes.PowerPriceTaxes, fromDate, toDate);
             retVal.Taxes.EnergyPriceTaxes = FilterByDate(tariffPrice.Taxes.EnergyPriceTaxes, fromDate, toDate);
@@ -177,7 +177,7 @@ namespace GridTariffApi.Lib.Services.V2
             return retVal;
         }
 
-        SeasonDataNew ProcessSeason(SeasonDataNew dataAccumulator,
+        SeasonDataAccumulator ProcessSeason(SeasonDataAccumulator dataAccumulator,
             Models.V2.PriceStructure.Season season,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate,
@@ -225,7 +225,7 @@ namespace GridTariffApi.Lib.Services.V2
         }
 
 
-        private SeasonDataNew AddPriceLevels(SeasonDataNew dataAccumulator, Models.V2.PriceStructure.Season season, DateTimeOffset paramFromDate, DateTimeOffset paramToDate, int daysInMonth)
+        private SeasonDataAccumulator AddPriceLevels(SeasonDataAccumulator dataAccumulator, Models.V2.PriceStructure.Season season, DateTimeOffset paramFromDate, DateTimeOffset paramToDate, int daysInMonth)
         {
             dataAccumulator = AddFixedPrices(season.FixedPrices,daysInMonth,dataAccumulator);
             dataAccumulator = AddPowerPrices(season.PowerPrices,daysInMonth,dataAccumulator);
@@ -336,7 +336,7 @@ namespace GridTariffApi.Lib.Services.V2
         }
 
 
-        SeasonDataNew ProcessMonth(SeasonDataNew dataAccumulator,
+        SeasonDataAccumulator ProcessMonth(SeasonDataAccumulator dataAccumulator,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate,
             HourSeasonIndex hourSeasonIndex,
@@ -357,7 +357,7 @@ namespace GridTariffApi.Lib.Services.V2
             return dataAccumulator;
         }
 
-        SeasonDataNew ProcessDay(SeasonDataNew dataAccumulator
+        SeasonDataAccumulator ProcessDay(SeasonDataAccumulator dataAccumulator
             ,DateTimeOffset paramFromDate
             ,DateTimeOffset paramToDate
             ,HourSeasonIndex hourSeasonIndex
@@ -430,10 +430,10 @@ namespace GridTariffApi.Lib.Services.V2
         }
 
 
-        SeasonDataNew AddEnergyPrices(
+        SeasonDataAccumulator AddEnergyPrices(
             Models.V2.PriceStructure.EnergyPrice energyPricesPrices,
             int daysInMonth,
-            SeasonDataNew dataAccumulator,
+            SeasonDataAccumulator dataAccumulator,
             string season,
             DateTimeOffset fromDate,
             DateTimeOffset toDate)
@@ -514,10 +514,10 @@ namespace GridTariffApi.Lib.Services.V2
 
 
 
-        SeasonDataNew AddFixedPrices(
+        SeasonDataAccumulator AddFixedPrices(
             Models.V2.PriceStructure.FixedPrices fixedPricesPrices,
             int daysInMonth,
-            SeasonDataNew dataAccumulator)
+            SeasonDataAccumulator dataAccumulator)
         {
             if (!dataAccumulator.FixedPricesDaysInMonthProcessed[daysInMonth])
             {
@@ -530,10 +530,10 @@ namespace GridTariffApi.Lib.Services.V2
         }
 
 
-        SeasonDataNew AddPowerPrices(
+        SeasonDataAccumulator AddPowerPrices(
             Models.V2.PriceStructure.PowerPrices powerPricePrices,
             int daysInMonth,
-            SeasonDataNew dataAccumulator)
+            SeasonDataAccumulator dataAccumulator)
         {
             if (!dataAccumulator.PowerPricesDaysInMonthProcessed[daysInMonth] && powerPricePrices != null)
             {
