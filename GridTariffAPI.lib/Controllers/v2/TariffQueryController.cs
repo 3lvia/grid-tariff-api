@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
@@ -70,7 +71,7 @@ namespace GridTariffApi.Lib.Controllers.v2
                 return "Missing model";
             }
 
-            var tariffs = _tariffPriceCache.GetTariffs();
+            var tariffs = _tariffPriceCache.GetTariffs().ToList();
             if (!tariffs.Exists(x => x.TariffKey == tariffQueryModel.TariffKey))
             {
                 return $"TariffType {tariffQueryModel.TariffKey} not found";

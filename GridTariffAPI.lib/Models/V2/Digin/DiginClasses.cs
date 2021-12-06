@@ -220,6 +220,7 @@ namespace GridTariffApi.Lib.Models.V2.Digin
         [Newtonsoft.Json.JsonProperty("priceInfo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public PriceInfo PriceInfo { get; set; }
 
+
     }
 
     /// <summary>The time series with prices per resolution period.</summary>
@@ -263,7 +264,6 @@ namespace GridTariffApi.Lib.Models.V2.Digin
     {
         /// <summary>Object with list of fixed prices</summary>
         [Newtonsoft.Json.JsonProperty("fixedPrices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-//        public List<FixedPrices> FixedPrices { get; set; }
         public System.Collections.Generic.List<FixedPrices> FixedPrices { get; set; }
 
         /// <summary>Object with list of power prices</summary>
@@ -285,14 +285,12 @@ namespace GridTariffApi.Lib.Models.V2.Digin
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Id { get; set; }
 
-        /// <summary>Start date for when this fixed price is valid from. Ex. 2021-01-01</summary>
+        /// <summary>Start date for when this fixed price is valid from, limited to the latest of either the fixed price start date or the request startTime date. Ex. 2021-01-01</summary>
         [Newtonsoft.Json.JsonProperty("startDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-//        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
         public System.DateTimeOffset StartDate { get; set; }
 
-        /// <summary>End date for when this fixed price is valid to. Ex. 2021-12-31</summary>
+        /// <summary>End date is when this fixed price has expired, limited to the earliest of either the fixed price end date or the request endTime date. Ex. 2021-12-31</summary>
         [Newtonsoft.Json.JsonProperty("endDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-//        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
         public System.DateTimeOffset EndDate { get; set; }
 
         [Newtonsoft.Json.JsonProperty("priceLevel", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -311,7 +309,7 @@ namespace GridTariffApi.Lib.Models.V2.Digin
 
         /// <summary>Minimum value the level is based on. Included on this level for monthlymax and dailymax models(Ex. 0.0000 kWh/h). Included for fusesize based(Ex. 50 A). Null if this is the lowest level.</summary>
         [Newtonsoft.Json.JsonProperty("valueMin", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double? ValueMin { get; set; }
+        public double ValueMin { get; set; }
 
         /// <summary>Maximum value the level is based on. Excluded on this level for monthlymax and dailymax models(Ex. 2.0000 kWh/h which is the next level start value). Included for fusesize based(Ex. 50 A). Null if this is the highest level.</summary>
         [Newtonsoft.Json.JsonProperty("valueMax", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -399,14 +397,12 @@ namespace GridTariffApi.Lib.Models.V2.Digin
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Id { get; set; }
 
-        /// <summary>Start date for when this power price is valid from. Ex. 2021-01-01</summary>
+        /// <summary>Start date for when this power price is valid from, limited to the latest of either the power price start date or the request startTime date. Ex. 2021-01-01</summary>
         [Newtonsoft.Json.JsonProperty("startDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-//        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
         public System.DateTimeOffset StartDate { get; set; }
 
-        /// <summary>End date for when this power price is valid to. Ex. 2021-12-31</summary>
+        /// <summary>End date is when this power price has expired, limited to the earliest of either the power price end date or the request endTime date. Ex. 2021-12-31</summary>
         [Newtonsoft.Json.JsonProperty("endDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-//        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
         public System.DateTimeOffset EndDate { get; set; }
 
         [Newtonsoft.Json.JsonProperty("priceLevel", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -537,14 +533,12 @@ namespace GridTariffApi.Lib.Models.V2.Digin
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Id { get; set; }
 
-        /// <summary>Start date for when this energy price is valid from. Ex. 2021-01-01</summary>
+        /// <summary>Start date for when this energy price is valid from, limited to the latest of either the energy price start date or the request startTime date. Ex. 2021-01-01</summary>
         [Newtonsoft.Json.JsonProperty("startDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        //        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
         public System.DateTimeOffset StartDate { get; set; }
 
-        /// <summary>End date for when this energy price is valid to. Ex. 2021-12-31</summary>
+        /// <summary>End date is when this energy price has expired, limited to the earliest of either the energy price end date or the request endTime date. Ex. 2021-12-31</summary>
         [Newtonsoft.Json.JsonProperty("endDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        //        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
         public System.DateTimeOffset EndDate { get; set; }
 
         /// <summary>Season for this resolution period. Ex. summer</summary>
