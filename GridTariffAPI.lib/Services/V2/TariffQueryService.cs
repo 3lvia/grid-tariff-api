@@ -99,7 +99,6 @@ namespace GridTariffApi.Lib.Services.V2
 
                         accumulator = ProcessSeason(accumulator,
                             season,
-                            tariffPricePrice,
                             seasonIntersect.StartDate,
                             seasonIntersect.EndDate,
                             filteredHolidays,
@@ -180,7 +179,6 @@ namespace GridTariffApi.Lib.Services.V2
 
         SeasonDataNew ProcessSeason(SeasonDataNew dataAccumulator,
             Models.V2.PriceStructure.Season season,
-            Models.V2.PriceStructure.TariffPrice tariffPricePrice,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate,
             List<Holiday> holidays,
@@ -300,7 +298,7 @@ namespace GridTariffApi.Lib.Services.V2
 
                 foreach (var priceLevel in energyPrice.EnergyPriceLevel)
                 {
-                    var energyPriceLevel = priceInfo.EnergyPrices.FirstOrDefault(a => a.Id == priceLevel.Id);
+                    var energyPriceLevel = priceInfo.EnergyPrices.FirstOrDefault(a => a.Level == priceLevel.Level);
                     foreach (var hour in priceLevel.Hours)
                     {
                         retVal.EnergyInformation.HourArray[hour] = energyPriceLevel;
@@ -309,7 +307,7 @@ namespace GridTariffApi.Lib.Services.V2
             }
             if (!String.IsNullOrEmpty(usePublicHolidayOverride))
             {
-                retVal.EnergyInformationWeekend = GenerateOverrideEnergyPricesData(energyPrice, priceInfo, usePublicHolidayOverride);
+                retVal.EnergyInformationHoliday = GenerateOverrideEnergyPricesData(energyPrice, priceInfo, usePublicHolidayOverride);
             }
             if (!String.IsNullOrEmpty(useWeekendPriceOverride))
             {
@@ -326,7 +324,7 @@ namespace GridTariffApi.Lib.Services.V2
             var retVal = new EnergyInformation();
             retVal.HourArray = new EnergyPrices[Constants.HoursInDay];
             var priceLevelPrice = energyPrice.EnergyPriceLevel.FirstOrDefault(a => a.Level == level);
-            var priceLevel = priceInfo.EnergyPrices.FirstOrDefault(a => a.Id == priceLevelPrice.Id);
+            var priceLevel = priceInfo.EnergyPrices.FirstOrDefault();
             if (priceLevel != null)
             {
                 for (int hour = 0; hour < Constants.HoursInDay; hour++)
@@ -493,7 +491,7 @@ namespace GridTariffApi.Lib.Services.V2
             var consumptionTaxValue = consumptionTax != null ? consumptionTax.TaxValue : 0;
             var enovaTaxValue = enovaTax != null ? enovaTax.TaxValue : 0;
 
-            retval.Id = energyPriceLevel.Id;
+            retval.Id = Guid.NewGuid().ToString();
             retval.StartDate = fromDate;
             retval.EndDate = toDate;
             retval.Season = season;
