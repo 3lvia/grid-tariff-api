@@ -438,10 +438,9 @@ namespace GridTariffApi.Lib.Services.V2
             DateTimeOffset fromDate,
             DateTimeOffset toDate)
         {
-            if (!dataAccumulator.EnergyPricesDaysInMonthProcessed[daysInMonth])
+            if (dataAccumulator.TariffPrice.PriceInfo.EnergyPrices.Count == 0)
             {
                 AppendEnergyPriceLevels(dataAccumulator.TariffPrice.PriceInfo, energyPricesPrices, dataAccumulator.Taxes.EnergyPriceTaxes, season, fromDate, toDate);
-                dataAccumulator.EnergyPricesDaysInMonthProcessed[daysInMonth] = true;
             }
             return dataAccumulator;
         }
