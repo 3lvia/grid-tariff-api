@@ -198,7 +198,14 @@ namespace GridTariffApi.Lib.Services.V2
             }
             if (season.PowerPrices != null)
             {
-                dataAccumulator.TariffPrice.PriceInfo.PowerPrices.Add(ToPowerPrice(tariffPricePrice, season.PowerPrices));
+                var powerPrice = new PowerPrices
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    StartDate = paramFromDate,
+                    EndDate = paramToDate,
+                    PriceLevel = new List<PowerPriceLevel>()
+                };
+                dataAccumulator.TariffPrice.PriceInfo.PowerPrices.Add(powerPrice);
             }
 
             var fromDate = paramFromDate;
@@ -646,19 +653,6 @@ namespace GridTariffApi.Lib.Services.V2
                 }
                 fixedPriceLevel.HourPrices.Add(CalcMonthlyFixedPrices(fixedPricesPrice, fixedPriceTaxes, daysInMonth));
             }
-        }
-
-        PowerPrices ToPowerPrice(Models.V2.PriceStructure.TariffPrice tariffPricePeriod,
-            Models.V2.PriceStructure.PowerPrices powerPrices)
-        {
-            var retVal = new PowerPrices
-            {
-                Id = powerPrices.Id,
-                StartDate = tariffPricePeriod.StartDate,
-                EndDate = tariffPricePeriod.EndDate,
-                PriceLevel = new List<PowerPriceLevel>()
-            };
-            return retVal;
         }
 
         FixedPriceLevel PriceLevelPriceToFixedPriceLevel(
