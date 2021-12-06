@@ -189,8 +189,8 @@ namespace GridTariffApi.Lib.Services.V2
             {
                 var fixedPrice = new FixedPrices {
                         Id = Guid.NewGuid().ToString(),
-                        StartDate = paramFromDate,
-                        EndDate = paramToDate,
+                        StartDate = _serviceHelper.DbTimeZoneDateToUtc(paramFromDate.DateTime),
+                        EndDate = _serviceHelper.DbTimeZoneDateToUtc(paramToDate.DateTime),
                         PriceLevel = new List<FixedPriceLevel>() };
                 dataAccumulator.TariffPrice.PriceInfo.FixedPrices.Add(fixedPrice);
             }
@@ -199,8 +199,8 @@ namespace GridTariffApi.Lib.Services.V2
                 var powerPrice = new PowerPrices
                 {
                     Id = Guid.NewGuid().ToString(),
-                    StartDate = paramFromDate,
-                    EndDate = paramToDate,
+                    StartDate = _serviceHelper.DbTimeZoneDateToUtc(paramFromDate.DateTime),
+                    EndDate = _serviceHelper.DbTimeZoneDateToUtc(paramToDate.DateTime),
                     PriceLevel = new List<PowerPriceLevel>()
                 };
                 dataAccumulator.TariffPrice.PriceInfo.PowerPrices.Add(powerPrice);
@@ -491,8 +491,8 @@ namespace GridTariffApi.Lib.Services.V2
             var enovaTaxValue = enovaTax != null ? enovaTax.TaxValue : 0;
 
             retval.Id = Guid.NewGuid().ToString();
-            retval.StartDate = fromDate;
-            retval.EndDate = toDate;
+            retval.StartDate = _serviceHelper.DbTimeZoneDateToUtc(fromDate.DateTime);
+            retval.EndDate = _serviceHelper.DbTimeZoneDateToUtc(toDate.DateTime);
             retval.Season = season;
 
             retval.Level = energyPriceLevel.Level;
