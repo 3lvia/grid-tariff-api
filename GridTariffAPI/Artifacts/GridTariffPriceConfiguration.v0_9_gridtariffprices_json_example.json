@@ -27,13 +27,13 @@
           "resolution": 60,
           "tariffPrices": [
             {
-              "startDate": "2021-01-01",
-              "endDate": "2022-12-31",
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2022-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
-                    "startDate": "2021-01-01",
-                    "endDate": "2022-12-31",
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2022-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -42,48 +42,48 @@
                 ],
                 "energyPriceTaxes": [
                   {
-                    "startDate": "2021-01-01",
-                    "endDate": "2021-03-31",
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2021-03-31T22:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.0891,
                     "taxUom": "kr/kWh",
                     "taxTypeDescription": "elavgift"
                   },
                   {
-                    "startDate": "2021-04-01",
-                    "endDate": "2021-12-31",
+                    "startDate": "2021-03-31T22:00:00Z",
+                    "endDate": "2021-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
                     "taxTypeDescription": "elavgift"
                   },
                   {
-                    "startDate": "2021-01-01",
-                    "endDate": "2022-12-31",
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2022-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
                     "taxTypeDescription": "Enovaavgift"
                   },
                   {
-                    "startDate": "2022-01-01",
-                    "endDate": "2022-12-31",
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2022-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
                     "taxTypeDescription": "MVA"
                   },
                   {
-                    "startDate": "2022-01-01",
-                    "endDate": "2022-03-31",
+                    "startDate": "2021-12-31T23:00:00Z",
+                    "endDate": "2022-03-31T22:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.0891,
                     "taxUom": "kr/kWh",
                     "taxTypeDescription": "elavgift"
                   },
                   {
-                    "startDate": "2022-04-01",
-                    "endDate": "2022-12-31",
+                    "startDate": "2022-03-31T22:00:00Z",
+                    "endDate": "2022-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -436,13 +436,13 @@
           "resolution": 60,
           "tariffPrices": [
             {
-              "startDate": "2021-01-01",
-              "endDate": "2022-12-31",
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2022-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
-                    "startDate": "2021-01-01",
-                    "endDate": "2022-12-31",
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2022-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -451,8 +451,8 @@
                 ],
                 "powerPriceTaxes": [
                   {
-                    "startDate": "2021-01-01",
-                    "endDate": "2022-12-31",
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2022-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -461,40 +461,40 @@
                 ],
                 "energyPriceTaxes": [
                   {
-                    "startDate": "2021-01-01",
-                    "endDate": "2021-03-31",
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2021-03-31T22:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.0891,
                     "taxUom": "kr/kWh",
                     "taxTypeDescription": "elavgift"
                   },
                   {
-                    "startDate": "2021-04-01",
-                    "endDate": "2021-12-31",
+                    "startDate": "2021-03-31T22:00:00Z",
+                    "endDate": "2021-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
                     "taxTypeDescription": "elavgift"
                   },
                   {
-                    "startDate": "2022-01-01",
-                    "endDate": "2022-03-31",
+                    "startDate": "2021-12-31T23:00:00Z",
+                    "endDate": "2022-03-31T22:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.0891,
                     "taxUom": "kr/kWh",
                     "taxTypeDescription": "elavgift"
                   },
                   {
-                    "startDate": "2022-04-01",
-                    "endDate": "2022-12-31",
+                    "startDate": "2022-03-31T22:00:00Z",
+                    "endDate": "2022-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
                     "taxTypeDescription": "elavgift"
                   },
                   {
-                    "startDate": "2021-01-01",
-                    "endDate": "2022-12-31",
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2022-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",

@@ -37,7 +37,7 @@ namespace GridTariffApi.Lib.Services.Helpers
         {
             if (startDateTime.HasValue)
             {
-                return TimeZoneInfo.ConvertTimeFromUtc(startDateTime.Value.UtcDateTime, _gridTariffApiConfig.TimeZoneForQueries);
+                return startDateTime.Value;
             }
             DateTimeOffset timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
             return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime);
@@ -47,7 +47,7 @@ namespace GridTariffApi.Lib.Services.Helpers
         {
             if (endDateTime.HasValue)
             {
-                return TimeZoneInfo.ConvertTimeFromUtc(endDateTime.Value.DateTime, _gridTariffApiConfig.TimeZoneForQueries);
+                return endDateTime.Value;
             }
             DateTimeOffset timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
             return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime.AddDays(1).AddSeconds(-1));
@@ -86,7 +86,7 @@ namespace GridTariffApi.Lib.Services.Helpers
             return dateTime;
         }
 #nullable disable
-        private DateTime GetTimeZonedDateTime(DateTime datetime)
+        public DateTime GetTimeZonedDateTime(DateTime datetime)
         {
             var timeZonedDateTime = TimeZoneInfo.ConvertTimeFromUtc(datetime, _gridTariffApiConfig.TimeZoneForQueries);
             return timeZonedDateTime;

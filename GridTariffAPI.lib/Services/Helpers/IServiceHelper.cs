@@ -11,5 +11,8 @@ namespace GridTariffApi.Lib.Services.Helpers
         DateTimeOffset GetStartDateTimeOffset(string range, DateTimeOffset? startDateTime);
 
         DateTimeOffset DbTimeZoneDateToUtc(DateTime dateTime);
+
+        DateTime GetTimeZonedDateTime(DateTime datetime);
+
     }
 }
