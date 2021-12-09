@@ -122,7 +122,7 @@ namespace GridTariffApi.Lib.Services.V2
                 if (fromDateLocaled.Month != startMonth.Value)
                 {
                     fromDateLocaled = fromDateLocaled.AddMonths(startMonth.Value - fromDateLocaled.Month);
-                    fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day);
+                    fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day).AddHours(-fromDateLocaled.Hour).AddMinutes(-fromDate.Minute);
                 }
                 var seasonStart = fromDate.AddTicks(fromDateLocaled.ToUniversalTime().Ticks - fromDate.Ticks);
 //calc season end
@@ -131,7 +131,7 @@ namespace GridTariffApi.Lib.Services.V2
                 {
                     fromDateLocaled = fromDateLocaled.AddMonths(1);
                 }
-                fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day);
+                fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day).AddHours(-fromDateLocaled.Hour).AddMinutes(-fromDate.Minute);
                 var seasonEnd = fromDate.AddTicks(fromDateLocaled.ToUniversalTime().Ticks - fromDate.Ticks);
 
 //return if intersection with fromdate/todate
