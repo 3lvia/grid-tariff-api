@@ -309,7 +309,7 @@ namespace GridTariffApi.Lib.Models.V2.Digin
 
         /// <summary>Minimum value the level is based on. Included on this level for monthlymax and dailymax models(Ex. 0.0000 kWh/h). Included for fusesize based(Ex. 50 A). Null if this is the lowest level.</summary>
         [Newtonsoft.Json.JsonProperty("valueMin", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double ValueMin { get; set; }
+        public double? ValueMin { get; set; }
 
         /// <summary>Maximum value the level is based on. Excluded on this level for monthlymax and dailymax models(Ex. 2.0000 kWh/h which is the next level start value). Included for fusesize based(Ex. 50 A). Null if this is the highest level.</summary>
         [Newtonsoft.Json.JsonProperty("valueMax", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]

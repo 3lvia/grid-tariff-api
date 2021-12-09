@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace GridTariffApi.Lib.Models.V2.PriceStructure
 {
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
     public class Company
     {
         [JsonConstructor]
@@ -216,9 +217,10 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
     {
         [JsonConstructor]
 #pragma warning disable S107 // Methods should not have too many parameters
+
         public FixedPriceLevel(
             [JsonProperty("id")] string id,
-            [JsonProperty("valueMin")] double valueMin,
+            [JsonProperty("valueMin")] double? valueMin,
             [JsonProperty("valueMax")] double? valueMax,
             [JsonProperty("nextIdDown")] string nextIdDown,
             [JsonProperty("nextIdUp")] string nextIdUp,
@@ -230,6 +232,7 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
             [JsonProperty("monetaryUnitOfMeasure")] string monetaryUnitOfMeasure
         )
 #pragma warning restore S107 // Methods should not have too many parameters
+
         {
             this.Id = id;
             this.ValueMin = valueMin;
@@ -248,7 +251,7 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         public string Id { get; }
 
         [JsonProperty("valueMin")]
-        public double ValueMin { get; }
+        public double? ValueMin { get; }
 
         [JsonProperty("valueMax")]
         public double? ValueMax { get; }
@@ -354,6 +357,7 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
     {
         [JsonConstructor]
 #pragma warning disable S107 // Methods should not have too many parameters
+
         public PowerPriceLevel(
             [JsonProperty("id")] string id,
             [JsonProperty("valueMin")] double? valueMin,
@@ -369,6 +373,7 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
             [JsonProperty("monetaryUnitOfMeasure")] string monetaryUnitOfMeasure
         )
 #pragma warning restore S107 // Methods should not have too many parameters
+
         {
             this.Id = id;
             this.ValueMin = valueMin;
@@ -526,6 +531,7 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
     {
         [JsonConstructor]
 #pragma warning disable S107 // Methods should not have too many parameters
+
         public TariffType(
             [JsonProperty("tariffKey")] string tariffKey,
             [JsonProperty("product")] string product,
@@ -534,6 +540,7 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
             [JsonProperty("usePublicHolidayOverride")] string usePublicHolidayOverride,
             [JsonProperty("useWeekendPriceOverride")] string useWeekendPriceOverride,
             [JsonProperty("consumptionFlag")] bool consumptionFlag,
+            [JsonProperty("lastUpdated")] DateTimeOffset lastUpdated,
             [JsonProperty("usePowerPriceConfiguration")] bool usePowerPriceConfiguration,
             [JsonProperty("fixedPriceConfiguration")] FixedPriceConfiguration fixedPriceConfiguration,
             [JsonProperty("resolution")] int resolution,
@@ -549,6 +556,7 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
             this.UsePublicHolidayOverride = usePublicHolidayOverride;
             this.UseWeekendPriceOverride = useWeekendPriceOverride;
             this.ConsumptionFlag = consumptionFlag;
+            this.LastUpdated = lastUpdated;
             this.UsePowerPriceConfiguration = usePowerPriceConfiguration;
             this.FixedPriceConfiguration = fixedPriceConfiguration;
             this.Resolution = resolution;
@@ -576,6 +584,9 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
 
         [JsonProperty("consumptionFlag")]
         public bool ConsumptionFlag { get; }
+
+        [JsonProperty("lastUpdated")]
+        public DateTimeOffset LastUpdated { get; }
 
         [JsonProperty("usePowerPriceConfiguration")]
         public bool UsePowerPriceConfiguration { get; }
@@ -625,7 +636,6 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         [JsonProperty("gridTariff")]
         public GridTariff GridTariff { get; }
     }
-
     public class TariffPriceStructureRoot
     {
         [JsonConstructor]

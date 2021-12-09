@@ -92,6 +92,13 @@ namespace GridTariffApi.Lib.Services.Helpers
             return timeZonedDateTime;
         }
 
+        public DateTimeOffset GetTimeZonedDateTimeOffset(DateTimeOffset dateTimeOffset)
+        {
+            var retVal = TimeZoneInfo.ConvertTime(dateTimeOffset, _gridTariffApiConfig.TimeZoneForQueries);
+            return retVal;
+        }
+
+
         public DateTimeOffset DbTimeZoneDateToUtc(DateTime dateTime)
         {
             return new DateTimeOffset(dateTime, _gridTariffApiConfig.TimeZoneForQueries.GetUtcOffset(dateTime));
