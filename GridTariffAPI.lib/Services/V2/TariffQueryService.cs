@@ -42,6 +42,7 @@ namespace GridTariffApi.Lib.Services.V2
 
             var gridTariffCollection = new GridTariffCollection();
             gridTariffCollection.GridTariff = ToGridTariff(company, tariff);
+            gridTariffCollection.GridTariff.TariffType.LastUpdated = tariff.LastUpdated;
             var tariffPrice = ProcessTariffPrices(tariff, tariffPrices, paramFromDate, paramToDate);
             gridTariffCollection.GridTariff.TariffPrice = tariffPrice;
             await Task.CompletedTask;
