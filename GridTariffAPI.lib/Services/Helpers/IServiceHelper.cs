@@ -6,6 +6,13 @@ namespace GridTariffApi.Lib.Services.Helpers
     {
         DateTime GetEndTime(string range, DateTimeOffset? endDateTime);
         DateTime GetStartTime(string range, DateTimeOffset? startDateTime);
+
+        DateTimeOffset GetEndDateTimeOffset(string range, DateTimeOffset? endDateTime);
+        DateTimeOffset GetStartDateTimeOffset(string range, DateTimeOffset? startDateTime);
+
         DateTimeOffset DbTimeZoneDateToUtc(DateTime dateTime);
+
+        DateTime GetTimeZonedDateTime(DateTime datetime);
+        DateTimeOffset GetTimeZonedDateTimeOffset(DateTimeOffset dateTimeOffset);
     }
 }

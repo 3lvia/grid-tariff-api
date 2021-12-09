@@ -33,6 +33,43 @@ namespace GridTariffApi.Lib.Services.Helpers
             return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime.AddDays(1).AddSeconds(-1));
         }
 
+        public DateTimeOffset GetStartDateTimeOffset(string? range, DateTimeOffset? startDateTime)
+        {
+            if (startDateTime.HasValue)
+            {
+                return startDateTime.Value;
+            }
+            DateTimeOffset timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
+            return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime);
+        }
+
+        public DateTimeOffset GetEndDateTimeOffset(string? range, DateTimeOffset? endDateTime)
+        {
+            if (endDateTime.HasValue)
+            {
+                return endDateTime.Value;
+            }
+            DateTimeOffset timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
+            return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime.AddDays(1).AddSeconds(-1));
+        }
+
+
+        private DateTimeOffset AddDaysUsingQueryRangeParameter(string? range, DateTimeOffset dateTimeOffset)
+        {
+            if (!String.IsNullOrEmpty(range))
+            {
+                if (range.Equals("yesterday"))
+                {
+                    return dateTimeOffset.AddDays(-1);
+                }
+                if (range.Equals("tomorrow"))
+                {
+                    return dateTimeOffset.AddDays(1);
+                }
+            }
+            return dateTimeOffset;
+        }
+
         private DateTime AddDaysUsingQueryRangeParameter(string? range, DateTime dateTime)
         {
             if (!String.IsNullOrEmpty(range))
@@ -49,11 +86,18 @@ namespace GridTariffApi.Lib.Services.Helpers
             return dateTime;
         }
 #nullable disable
-        private DateTime GetTimeZonedDateTime(DateTime datetime)
+        public DateTime GetTimeZonedDateTime(DateTime datetime)
         {
             var timeZonedDateTime = TimeZoneInfo.ConvertTimeFromUtc(datetime, _gridTariffApiConfig.TimeZoneForQueries);
             return timeZonedDateTime;
         }
+
+        public DateTimeOffset GetTimeZonedDateTimeOffset(DateTimeOffset dateTimeOffset)
+        {
+            var retVal = TimeZoneInfo.ConvertTime(dateTimeOffset, _gridTariffApiConfig.TimeZoneForQueries);
+            return retVal;
+        }
+
 
         public DateTimeOffset DbTimeZoneDateToUtc(DateTime dateTime)
         {
