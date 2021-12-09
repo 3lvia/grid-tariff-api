@@ -91,8 +91,8 @@ namespace GridTariffApi.Lib.Services.V2
             {
                 foreach (var season in tariffPricePrice.Seasons)
                 {
-                    var seasonIntersect = CalcSeasonIntersect(taxTimePeriod.StartDate, taxTimePeriod.EndDate, season.Months);
-                    if (seasonIntersect != null)
+                    var seasonIntersects = CalcSeasonIntersects(taxTimePeriod.StartDate, taxTimePeriod.EndDate, season.Months);
+                    foreach (var seasonIntersect in seasonIntersects)
                     {
                         var accumulator = InitAccumulator(tariffPricePrice,
                             seasonIntersect.StartDate,
@@ -105,17 +105,20 @@ namespace GridTariffApi.Lib.Services.V2
                             filteredHolidays,
                             tariffType);
 
-                            tariffPrice.PriceInfo.FixedPrices.AddRange(accumulator.TariffPrice.PriceInfo.FixedPrices);
-                            tariffPrice.PriceInfo.PowerPrices.AddRange(accumulator.TariffPrice.PriceInfo.PowerPrices);
-                            tariffPrice.PriceInfo.EnergyPrices.AddRange(accumulator.TariffPrice.PriceInfo.EnergyPrices);
-                            tariffPrice.Hours.AddRange(accumulator.TariffPrice.Hours);
+                        tariffPrice.PriceInfo.FixedPrices.AddRange(accumulator.TariffPrice.PriceInfo.FixedPrices);
+                        tariffPrice.PriceInfo.PowerPrices.AddRange(accumulator.TariffPrice.PriceInfo.PowerPrices);
+                        tariffPrice.PriceInfo.EnergyPrices.AddRange(accumulator.TariffPrice.PriceInfo.EnergyPrices);
+                        tariffPrice.Hours.AddRange(accumulator.TariffPrice.Hours);
+
                     }
                 }
             }
         }
 
-        TimePeriod CalcSeasonIntersect(DateTimeOffset fromDate, DateTimeOffset toDate, IReadOnlyList<int> months)
+        List<TimePeriod> CalcSeasonIntersects(DateTimeOffset fromDate, DateTimeOffset toDate, IReadOnlyList<int> months)
         {
+            var retVal = new List<TimePeriod>();
+
             var fromDateLocaled = _serviceHelper.GetTimeZonedDateTimeOffset(fromDate);
             int? startMonth = months.OrderBy(x => x).FirstOrDefault(x => x >= fromDateLocaled.Month);
             if (startMonth.HasValue && startMonth.Value > 0)
@@ -147,15 +150,19 @@ namespace GridTariffApi.Lib.Services.V2
 
                     if (finalStartDate != finalEndDate)
                     {
-                        return new TimePeriod()
+                        retVal.Add(new TimePeriod()
                         {
                             StartDate = finalStartDate,
                             EndDate = finalEndDate
-                        };
+                        });
+                    }
+                    if (finalEndDate < toDate)
+                    {
+                        retVal.AddRange(CalcSeasonIntersects(finalEndDate, toDate, months));
                     }
                 }
             }
-            return null;
+            return retVal;
         }
 
         
