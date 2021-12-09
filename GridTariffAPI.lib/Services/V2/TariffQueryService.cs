@@ -653,6 +653,8 @@ namespace GridTariffApi.Lib.Services.V2
             IReadOnlyList<Models.V2.PriceStructure.FixedPriceTax> fixedPriceTaxes,
             int daysInMonth)
         {
+            //var daysInMonthHourIdentificator = Guid.NewGuid().ToString();
+            var daysInMonthHourIdentificator = daysInMonth.ToString();  //todo
             foreach (var fixedPricesPrice in fixedPricesPrices.FixedPriceLevel)
             {
                 var fixedPriceLevel = fixedPrices.PriceLevel.FirstOrDefault(a => a.Id == fixedPricesPrice.Id);
@@ -661,7 +663,7 @@ namespace GridTariffApi.Lib.Services.V2
                     fixedPriceLevel = PriceLevelPriceToFixedPriceLevel(fixedPricesPrice, fixedPriceTaxes);
                     fixedPrices.PriceLevel.Add(fixedPriceLevel);
                 }
-                fixedPriceLevel.HourPrices.Add(CalcMonthlyFixedPrices(fixedPricesPrice, fixedPriceTaxes, daysInMonth));
+                fixedPriceLevel.HourPrices.Add(CalcMonthlyFixedPrices(fixedPricesPrice, fixedPriceTaxes, daysInMonth, daysInMonthHourIdentificator));
             }
         }
 
@@ -693,17 +695,20 @@ namespace GridTariffApi.Lib.Services.V2
         public Models.V2.Digin.HourFixedPrices CalcMonthlyFixedPrices(
             Models.V2.PriceStructure.FixedPriceLevel fixedPricePriceLevel,
             IReadOnlyList<Models.V2.PriceStructure.FixedPriceTax> fixedPriceTaxes,
-            int daysInMonth)
+            int daysInMonth,
+            string daysInMonthHourIdentificator)
         {
             var vatTax = fixedPriceTaxes.FirstOrDefault(x => x.TaxType == "vat");
             int hoursInMonth = daysInMonth * Constants.HoursInDay;
             var totalExVatPerHour = fixedPricePriceLevel.MonthlyFixedExTaxes / hoursInMonth;
 
-            var retVal = new Models.V2.Digin.HourFixedPrices();
-            retVal.Id = Guid.NewGuid().ToString();
-            retVal.NumberOfDaysInMonth = daysInMonth;
-            retVal.TotalExVat = RoundDouble(totalExVatPerHour, Constants.FixedPricesDecimals);
-            retVal.Total = RoundDouble(AddTaxes(totalExVatPerHour, vatTax.TaxValue), Constants.FixedPricesDecimals);
+            var retVal = new Models.V2.Digin.HourFixedPrices
+            {
+                Id = daysInMonthHourIdentificator,
+                NumberOfDaysInMonth = daysInMonth,
+                TotalExVat = RoundDouble(totalExVatPerHour, Constants.FixedPricesDecimals),
+                Total = RoundDouble(AddTaxes(totalExVatPerHour, vatTax.TaxValue), Constants.FixedPricesDecimals)
+            };
             return retVal;
         }
 
@@ -755,7 +760,7 @@ namespace GridTariffApi.Lib.Services.V2
 
         public DateTimeOffset GetNextMonthEndDate(DateTimeOffset fromDate, DateTimeOffset toDate)
         {
-            var localedFromDate = new DateTimeOffset(_serviceHelper.GetTimeZonedDateTime(fromDate.UtcDateTime));
+            var localedFromDate = _serviceHelper.GetTimeZonedDateTimeOffset(fromDate.UtcDateTime);
             var monthEndDate = localedFromDate.AddMonths(1);
             monthEndDate = new DateTimeOffset(monthEndDate.Year, monthEndDate.Month, 1, 0, 0, 0, monthEndDate.Offset).UtcDateTime;
             if (monthEndDate < toDate)
