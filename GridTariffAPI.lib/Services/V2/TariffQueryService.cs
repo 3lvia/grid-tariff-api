@@ -109,7 +109,6 @@ namespace GridTariffApi.Lib.Services.V2
                         tariffPrice.PriceInfo.PowerPrices.AddRange(accumulator.TariffPrice.PriceInfo.PowerPrices);
                         tariffPrice.PriceInfo.EnergyPrices.AddRange(accumulator.TariffPrice.PriceInfo.EnergyPrices);
                         tariffPrice.Hours.AddRange(accumulator.TariffPrice.Hours);
-
                     }
                 }
             }
@@ -118,54 +117,66 @@ namespace GridTariffApi.Lib.Services.V2
         List<TimePeriod> CalcSeasonIntersects(DateTimeOffset fromDate, DateTimeOffset toDate, IReadOnlyList<int> months)
         {
             var retVal = new List<TimePeriod>();
-
             var fromDateLocaled = _serviceHelper.GetTimeZonedDateTimeOffset(fromDate);
             int? startMonth = months.OrderBy(x => x).FirstOrDefault(x => x >= fromDateLocaled.Month);
             if (startMonth.HasValue && startMonth.Value > 0)
             {
-//calc season start
-                if (fromDateLocaled.Month != startMonth.Value)
-                {
-                    fromDateLocaled = fromDateLocaled.AddMonths(startMonth.Value - fromDateLocaled.Month);
-                }
-                fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day).AddHours(-fromDateLocaled.Hour).AddMinutes(-fromDate.Minute);
-                var seasonStartTimeLocaledAndTimeZoneCorrected = _serviceHelper.DbTimeZoneDateToUtc(fromDateLocaled.DateTime);
-                var seasonStart = fromDate.AddTicks(seasonStartTimeLocaledAndTimeZoneCorrected.UtcDateTime.Ticks - fromDate.Ticks);
+                DateTimeOffset seasonStart = CalcSeasonStart(fromDate, ref fromDateLocaled, startMonth);
+                DateTimeOffset seasonEnd = CalcSeasonEnd(fromDate, months, fromDateLocaled);
 
-//calc season end
-                fromDateLocaled = fromDateLocaled.AddMonths(1);
-                while (months.Count(x => x == fromDateLocaled.Month) == 1)
-                {
-                    fromDateLocaled = fromDateLocaled.AddMonths(1);
-                }
-                fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day).AddHours(-fromDateLocaled.Hour).AddMinutes(-fromDate.Minute);
-                var seasonEndTimeLocaledAndTimeZoneCorrected = _serviceHelper.DbTimeZoneDateToUtc(fromDateLocaled.DateTime);
-                var seasonEnd = fromDate.AddTicks(seasonEndTimeLocaledAndTimeZoneCorrected.UtcDateTime.Ticks - fromDate.Ticks);
-
-//return if intersection with fromdate/todate
                 if (!((seasonStart > toDate) || (seasonEnd < fromDate)))
                 {
-                    var finalStartDate = seasonStart > fromDate ? seasonStart : fromDate;
-                    var finalEndDate = seasonEnd < toDate ? seasonEnd : toDate;
-
-                    if (finalStartDate != finalEndDate)
-                    {
-                        retVal.Add(new TimePeriod()
-                        {
-                            StartDate = finalStartDate,
-                            EndDate = finalEndDate
-                        });
-                    }
-                    if (finalEndDate < toDate)
-                    {
-                        retVal.AddRange(CalcSeasonIntersects(finalEndDate, toDate, months));
-                    }
+                    retVal.AddRange(AccumulateSeasonIntersects(fromDate, toDate, months,  seasonStart, seasonEnd));
                 }
             }
             return retVal;
         }
 
-        
+        private List<TimePeriod> AccumulateSeasonIntersects(DateTimeOffset fromDate, DateTimeOffset toDate, IReadOnlyList<int> months,  DateTimeOffset seasonStart, DateTimeOffset seasonEnd)
+        {
+            var retVal = new List<TimePeriod>();
+            var finalStartDate = seasonStart > fromDate ? seasonStart : fromDate;
+            var finalEndDate = seasonEnd < toDate ? seasonEnd : toDate;
+
+            if (finalStartDate != finalEndDate)
+            {
+                retVal.Add(new TimePeriod()
+                {
+                    StartDate = finalStartDate,
+                    EndDate = finalEndDate
+                });
+            }
+            if (finalEndDate < toDate)
+            {
+                retVal.AddRange(CalcSeasonIntersects(finalEndDate, toDate, months));
+            }
+            return retVal;
+        }
+
+        private DateTimeOffset CalcSeasonStart(DateTimeOffset fromDate, ref DateTimeOffset fromDateLocaled, int? startMonth)
+        {
+            if (fromDateLocaled.Month != startMonth.Value)
+            {
+                fromDateLocaled = fromDateLocaled.AddMonths(startMonth.Value - fromDateLocaled.Month);
+            }
+            fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day).AddHours(-fromDateLocaled.Hour).AddMinutes(-fromDate.Minute);
+            var seasonStartTimeLocaledAndTimeZoneCorrected = _serviceHelper.DbTimeZoneDateToUtc(fromDateLocaled.DateTime);
+            var seasonStart = fromDate.AddTicks(seasonStartTimeLocaledAndTimeZoneCorrected.UtcDateTime.Ticks - fromDate.Ticks);
+            return seasonStart;
+        }
+
+        private DateTimeOffset CalcSeasonEnd(DateTimeOffset fromDate, IReadOnlyList<int> months, DateTimeOffset fromDateLocaled)
+        {
+            fromDateLocaled = fromDateLocaled.AddMonths(1);
+            while (months.Count(x => x == fromDateLocaled.Month) == 1)
+            {
+                fromDateLocaled = fromDateLocaled.AddMonths(1);
+            }
+            fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day).AddHours(-fromDateLocaled.Hour).AddMinutes(-fromDate.Minute);
+            var seasonEndTimeLocaledAndTimeZoneCorrected = _serviceHelper.DbTimeZoneDateToUtc(fromDateLocaled.DateTime);
+            var seasonEnd = fromDate.AddTicks(seasonEndTimeLocaledAndTimeZoneCorrected.UtcDateTime.Ticks - fromDate.Ticks);
+            return seasonEnd;
+        }
 
         SeasonDataAccumulator InitAccumulator(Models.V2.PriceStructure.TariffPrice tariffPrice, DateTimeOffset fromDate, DateTimeOffset toDate)
         {
