@@ -425,8 +425,8 @@ namespace GridTariffApi.Lib.Services.V2
             var retVal = new Models.V2.Digin.Hours();
             var localedHour = _serviceHelper.GetTimeZonedDateTimeOffset(startTime).Hour;
 
-            retVal.StartTime = _serviceHelper.DbTimeZoneDateToUtc(startTime.DateTime);
-            retVal.ExpiredAt = _serviceHelper.DbTimeZoneDateToUtc(expireAt.DateTime);
+            retVal.StartTime = startTime.ToUniversalTime();
+            retVal.ExpiredAt = expireAt.ToUniversalTime();
             retVal.FixedPrice = new FixedPrice()
             {
                 Id = hourSeasonIndex.FixedPriceValue.Id,
