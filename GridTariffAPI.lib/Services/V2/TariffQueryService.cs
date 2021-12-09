@@ -45,6 +45,7 @@ namespace GridTariffApi.Lib.Services.V2
             gridTariffCollection.GridTariff.TariffType.LastUpdated = tariff.LastUpdated;
             var tariffPrice = ProcessTariffPrices(tariff, tariffPrices, paramFromDate, paramToDate);
             gridTariffCollection.GridTariff.TariffPrice = tariffPrice;
+            gridTariffCollection.GridTariff.TariffPrice.Hours = gridTariffCollection.GridTariff.TariffPrice.Hours.OrderBy(x => x.StartTime).ToList();    //Not strictly necessary
             await Task.CompletedTask;
             return gridTariffCollection;
         }
@@ -79,7 +80,7 @@ namespace GridTariffApi.Lib.Services.V2
             DateTimeOffset paramToDate, 
             TariffPrice tariffPrice, 
             Models.V2.PriceStructure.TariffPrice tariffPricePrice,
-            List<Holiday> holidays,
+            IReadOnlyList<Holiday> holidays,
             Models.V2.PriceStructure.TariffType tariffType)
         {
             var startDate = tariffPricePrice.StartDate <= paramFromDate ? paramFromDate : tariffPricePrice.StartDate.UtcDateTime;
@@ -141,11 +142,17 @@ namespace GridTariffApi.Lib.Services.V2
 //return if intersection with fromdate/todate
                 if (!((seasonStart > toDate) || (seasonEnd < fromDate)))
                 {
-                    return new TimePeriod()
+                    var finalStartDate = seasonStart > fromDate ? seasonStart : fromDate;
+                    var finalEndDate = seasonEnd < toDate ? seasonEnd : toDate;
+
+                    if (finalStartDate != finalEndDate)
                     {
-                        StartDate = seasonStart > fromDate ? seasonStart: fromDate,
-                        EndDate = seasonEnd < toDate ? seasonEnd : toDate
-                    };
+                        return new TimePeriod()
+                        {
+                            StartDate = finalStartDate,
+                            EndDate = finalEndDate
+                        };
+                    }
                 }
             }
             return null;
