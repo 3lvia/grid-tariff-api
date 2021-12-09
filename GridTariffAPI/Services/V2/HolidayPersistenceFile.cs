@@ -20,9 +20,9 @@ namespace GridTariffApi.Services.V2
             _telemetryLogger = telemetryLogger;
         }
 
-        public List<Holiday> GetHolidays()
+        public IReadOnlyList<Holiday> GetHolidays()
         {
-            List<Holiday> retVal = null;
+            IReadOnlyList<Holiday> retVal = null;
             try
             {
                 string jsonString = File.ReadAllText(_holidayFileName);

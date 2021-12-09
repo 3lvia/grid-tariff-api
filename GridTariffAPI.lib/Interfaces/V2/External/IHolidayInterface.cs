@@ -7,6 +7,6 @@ namespace GridTariffApi.Lib.Interfaces.V2.External
 {
     public interface IHolidayPersistence
     {
-        public List<Holiday> GetHolidays();
+        public IReadOnlyList<Holiday> GetHolidays();
     }
 }
