@@ -15,7 +15,7 @@ namespace GridTariffApi.Lib.Services.V2
         Models.V2.PriceStructure.TariffType GetTariff(String tariffKey);
         IReadOnlyList<Models.V2.PriceStructure.TariffType> GetTariffs();
 
-        List<Holiday> GetHolidays(DateTimeOffset fromDate, DateTimeOffset toDate);
+        IReadOnlyList<Holiday> GetHolidays(DateTimeOffset fromDate, DateTimeOffset toDate);
     }
 
     public class TariffPriceCache : ITariffPriceCache
@@ -24,7 +24,7 @@ namespace GridTariffApi.Lib.Services.V2
         private readonly IHolidayPersistence _holidayPersistence;
 
         private static TariffPriceStructureRoot _tariffPriceStructureRoot;
-        private static List<Holiday> _holidayRoot;
+        private static IReadOnlyList<Holiday> _holidayRoot;
 
         private static DateTime _cacheValidUntil = DateTime.UtcNow;
         private static SemaphoreSlim _lockSemaphore = new SemaphoreSlim(1);
@@ -55,7 +55,7 @@ namespace GridTariffApi.Lib.Services.V2
             return retVal;
         }
 
-        public List<Holiday> GetHolidays(DateTimeOffset fromDate, DateTimeOffset toDate)
+        public IReadOnlyList<Holiday> GetHolidays(DateTimeOffset fromDate, DateTimeOffset toDate)
         {
             GetTariffRootElement(); //refresh cache
             return _holidayRoot.Where(a => a.Date >= fromDate && a.Date <= toDate).ToList();

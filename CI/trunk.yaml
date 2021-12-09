@@ -111,58 +111,58 @@ stages:
   #        environment: prod
   #        helmValuesFile: values.yaml
 
-  - stage: RegisterAzureApiManagementProd
-    dependsOn: DeployProd
-    jobs:
-    - job: RegisterAzureApiManagementProd
-      pool:
-        vmImage: "windows-latest"
-      steps:
-        - task: stephane-eyskens.apim.apimcreateorupdateproduct.apimcreateorupdateproduct@3
-          displayName: 'API Management - Create/Update Product '
-          inputs:
-            ConnectedServiceNameARM: ApiManagementRGProd
-            ResourceGroupName: 'API-RGprod'
-            ApiPortalName: elvia
-            product: 'grid-tariff'
-            DisplayName: 'Grid Tariff'
-            subscriptionRequired: true
-            approvalRequired: true
-            state: true
-            groups: |
-                Administrators
-                Developers
-                Guests
-        - task: stephane-eyskens.apim.apim.apim@3
-          displayName: 'API Management - Create/Update API '
-          inputs:
-            ConnectedServiceNameARM: ApiManagementRGProd
-            ResourceGroupName: 'API-RGprod'
-            ApiPortalName: elvia
-            UseProductCreatedByPreviousTask: true
-            OpenAPISpec: v3
-            swaggerlocation: 'https://grid-tariff-api.elvia.io/swagger/v1/swagger.json'
-            targetapi: gridtariffapi
-            DisplayName: GridTariffApi
-            pathapi: 'grid-tariff'
-            TemplateSelector: Custom
-            Custom: |
-             <policies>
-                 <inbound>
-                     <base />
-                     <authentication-basic username="$(grid-tariff-api-username-prod)" password="$(grid-tariff-api-password-prod)" />
-                     <rate-limit-by-key calls="1200" renewal-period="60"
-                     increment-condition="@((context.Response.StatusCode &gt;= 200) &amp;&amp; (context.Response.StatusCode &lt; 300))"
-                     counter-key="@(context.Subscription.Key)" />					  
-                 </inbound>
-                 <backend>
-                     <base />
-                 </backend>
-                 <outbound>
-                     <base />
-                 </outbound>
-                 <on-error>
-                     <base />
-                 </on-error>
-             </policies>
-            MicrosoftApiManagementAPIVersion: '2018-01-01'
+  #- stage: RegisterAzureApiManagementProd
+  #  dependsOn: DeployProd
+  #  jobs:
+  #  - job: RegisterAzureApiManagementProd
+  #    pool:
+  #      vmImage: "windows-latest"
+  #    steps:
+  #      - task: stephane-eyskens.apim.apimcreateorupdateproduct.apimcreateorupdateproduct@3
+  #        displayName: 'API Management - Create/Update Product '
+  #        inputs:
+  #          ConnectedServiceNameARM: ApiManagementRGProd
+  #          ResourceGroupName: 'API-RGprod'
+  #          ApiPortalName: elvia
+  #          product: 'grid-tariff'
+  #          DisplayName: 'Grid Tariff'
+  #          subscriptionRequired: true
+  #          approvalRequired: true
+  #          state: true
+  #          groups: |
+  #              Administrators
+  #              Developers
+  #              Guests
+  #      - task: stephane-eyskens.apim.apim.apim@3
+  #        displayName: 'API Management - Create/Update API '
+  #        inputs:
+  #          ConnectedServiceNameARM: ApiManagementRGProd
+  #          ResourceGroupName: 'API-RGprod'
+  #          ApiPortalName: elvia
+  #          UseProductCreatedByPreviousTask: true
+  #          OpenAPISpec: v3
+  #          swaggerlocation: 'https://grid-tariff-api.elvia.io/swagger/v1/swagger.json'
+  #          targetapi: gridtariffapi
+  #          DisplayName: GridTariffApi
+  #          pathapi: 'grid-tariff'
+  #          TemplateSelector: Custom
+  #          Custom: |
+  #           <policies>
+  #               <inbound>
+  #                   <base />
+  #                   <authentication-basic username="$(grid-tariff-api-username-prod)" password="$(grid-tariff-api-password-prod)" />
+  #                   <rate-limit-by-key calls="1200" renewal-period="60"
+  #                   increment-condition="@((context.Response.StatusCode &gt;= 200) &amp;&amp; (context.Response.StatusCode &lt; 300))"
+  #                   counter-key="@(context.Subscription.Key)" />					  
+  #               </inbound>
+  #               <backend>
+  #                   <base />
+  #               </backend>
+  #               <outbound>
+  #                   <base />
+  #               </outbound>
+  #               <on-error>
+  #                   <base />
+  #               </on-error>
+  #           </policies>
+  #          MicrosoftApiManagementAPIVersion: '2018-01-01'
