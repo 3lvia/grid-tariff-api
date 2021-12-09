@@ -122,9 +122,11 @@ namespace GridTariffApi.Lib.Services.V2
                 if (fromDateLocaled.Month != startMonth.Value)
                 {
                     fromDateLocaled = fromDateLocaled.AddMonths(startMonth.Value - fromDateLocaled.Month);
-                    fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day).AddHours(-fromDateLocaled.Hour).AddMinutes(-fromDate.Minute);
                 }
-                var seasonStart = fromDate.AddTicks(fromDateLocaled.ToUniversalTime().Ticks - fromDate.Ticks);
+                fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day).AddHours(-fromDateLocaled.Hour).AddMinutes(-fromDate.Minute);
+                var seasonStartTimeLocaledAndTimeZoneCorrected = _serviceHelper.DbTimeZoneDateToUtc(fromDateLocaled.DateTime);
+                var seasonStart = fromDate.AddTicks(seasonStartTimeLocaledAndTimeZoneCorrected.UtcDateTime.Ticks - fromDate.Ticks);
+
 //calc season end
                 fromDateLocaled = fromDateLocaled.AddMonths(1);
                 while (months.Count(x => x == fromDateLocaled.Month) == 1)
@@ -132,7 +134,8 @@ namespace GridTariffApi.Lib.Services.V2
                     fromDateLocaled = fromDateLocaled.AddMonths(1);
                 }
                 fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day).AddHours(-fromDateLocaled.Hour).AddMinutes(-fromDate.Minute);
-                var seasonEnd = fromDate.AddTicks(fromDateLocaled.ToUniversalTime().Ticks - fromDate.Ticks);
+                var seasonEndTimeLocaledAndTimeZoneCorrected = _serviceHelper.DbTimeZoneDateToUtc(fromDateLocaled.DateTime);
+                var seasonEnd = fromDate.AddTicks(seasonEndTimeLocaledAndTimeZoneCorrected.UtcDateTime.Ticks - fromDate.Ticks);
 
 //return if intersection with fromdate/todate
                 if (!((seasonStart > toDate) || (seasonEnd < fromDate)))
@@ -146,6 +149,8 @@ namespace GridTariffApi.Lib.Services.V2
             }
             return null;
         }
+
+        
 
         SeasonDataAccumulator InitAccumulator(Models.V2.PriceStructure.TariffPrice tariffPrice, DateTimeOffset fromDate, DateTimeOffset toDate)
         {
@@ -280,8 +285,7 @@ namespace GridTariffApi.Lib.Services.V2
             var fixedPrice = priceInfo.FixedPrices.FirstOrDefault();
             if (fixedPrice != null)
             {
-                var monthPrice = fixedPrice.PriceLevel.FirstOrDefault().HourPrices.FirstOrDefault(a => a.NumberOfDaysInMonth == daysInMonth);       //todo hvilken hourprices skal egentlig benyttes? venter på samtale med are.
-                //todo are skal det gjenbrukes id, dvs alle fixedprices for en gitt måned skal ha samme id.
+                var monthPrice = fixedPrice.PriceLevel.FirstOrDefault().HourPrices.FirstOrDefault(a => a.NumberOfDaysInMonth == daysInMonth);
                 retVal.FixedPriceValue = new PriceElement
                 {
                     Id = fixedPrice.Id,
@@ -653,8 +657,7 @@ namespace GridTariffApi.Lib.Services.V2
             IReadOnlyList<Models.V2.PriceStructure.FixedPriceTax> fixedPriceTaxes,
             int daysInMonth)
         {
-            //var daysInMonthHourIdentificator = Guid.NewGuid().ToString();
-            var daysInMonthHourIdentificator = daysInMonth.ToString();  //todo
+            var daysInMonthHourIdentificator = Guid.NewGuid().ToString();
             foreach (var fixedPricesPrice in fixedPricesPrices.FixedPriceLevel)
             {
                 var fixedPriceLevel = fixedPrices.PriceLevel.FirstOrDefault(a => a.Id == fixedPricesPrice.Id);
