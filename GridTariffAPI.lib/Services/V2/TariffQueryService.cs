@@ -522,7 +522,6 @@ namespace GridTariffApi.Lib.Services.V2
             DateTimeOffset fromDate,
             DateTimeOffset toDate)
         {
-            //todo refactor for unittestability
             var retval = new EnergyPrices();
 
             var vatTax = energyPriceTaxes.FirstOrDefault(x => x.TaxType == "vat");
@@ -696,7 +695,7 @@ namespace GridTariffApi.Lib.Services.V2
             }
         }
 
-        FixedPriceLevel PriceLevelPriceToFixedPriceLevel(
+        public FixedPriceLevel PriceLevelPriceToFixedPriceLevel(
             Models.V2.PriceStructure.FixedPriceLevel priceLevel,
             IReadOnlyList<Models.V2.PriceStructure.FixedPriceTax> fixedPriceTaxes)
         {
