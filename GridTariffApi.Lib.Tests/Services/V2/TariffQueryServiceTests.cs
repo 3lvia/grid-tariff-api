@@ -132,6 +132,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         [InlineData(300, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 300, 75, 375)]
         [InlineData(376, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 376, 94, 470)]
         [InlineData(452, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 452, 113, 565)]
+        [InlineData(1000, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 1000, 250, 1250)]
         [InlineData(1376, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 1376, 344, 1720)]
         [InlineData(1752, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 1752, 438, 2190)]
         [InlineData(3344, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 3344, 836, 4180)]
@@ -188,6 +189,64 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             Assert.Equal(monthlyTaxes, (decimal)fixedPriceLevel.MonthlyTaxes,4);
             Assert.Equal(monthlyTotal, (decimal)fixedPriceLevel.MonthlyTotal,4);
 
+        }
+
+        [Theory]
+        [InlineData(25, "1", null, 2, "2", "3", "4", 11, 5.61,"5", "6", "7", "8", 11,11,13.75,2.75, 5.61,5.61,7.0125,1.4025)]
+        public void PriceLevelPriceToPowerPriceLevelTest(
+            int vatPercent,
+            string id,
+            double? valueMin,
+            double? valueMax,
+            string nextIdDown,
+            string nextIdUp,
+            string valueUnitOfMeasure,
+            decimal monthlyActivePowerExTaxes,
+            decimal monthlyReactivePowerExTaxes,
+            string monthlyUnitOfMeasure,
+            string levelInfo,
+            string currency,
+            string monetaryUnitOfMeasure,
+
+            decimal MonthlyActivePowerExTaxes,
+            decimal MonthlyActivePowerTotalExVat,
+            decimal MonthlyActivePowerTotal,
+            decimal MonthlyActivePowerTaxes,
+            decimal MonthlyReactivePowerExTaxes,
+            decimal MonthlyReactivePowerTotalExVat,
+            decimal MonthlyReactivePowerTotal,
+            decimal MonthlyReactivePowerTaxes
+
+            )
+        {
+            Setup();
+
+            var vatTax = new PowerPriceTax(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, "vat", vatPercent, "", "");
+            var taxes = new List<PowerPriceTax>();
+            taxes.Add(vatTax);
+            var powerPricePriceLevel = new PowerPriceLevel(id, valueMin, valueMax, nextIdDown, nextIdUp, valueUnitOfMeasure, (double)monthlyActivePowerExTaxes, (double)monthlyReactivePowerExTaxes, monthlyUnitOfMeasure, levelInfo, currency, monetaryUnitOfMeasure);
+
+            var powerPriceLevel = _tariffQueryService.PriceLevelPowerPriceToPowerPriceLevel(powerPricePriceLevel, taxes);
+            Assert.Equal(id, powerPriceLevel.Id);
+            Assert.Equal(valueMin, powerPriceLevel.ValueMin);
+            Assert.Equal(valueMax, powerPriceLevel.ValueMax);
+            Assert.Equal(nextIdDown, powerPriceLevel.NextIdDown);
+            Assert.Equal(nextIdUp, powerPriceLevel.NextIdUp);
+            Assert.Equal(valueUnitOfMeasure, powerPriceLevel.ValueUnitOfMeasure);
+            Assert.Equal(monthlyUnitOfMeasure, powerPriceLevel.MonthlyUnitOfMeasure);
+            Assert.Equal(levelInfo, powerPriceLevel.LevelInfo);
+            Assert.Equal(currency, powerPriceLevel.Currency);
+            Assert.Equal(monthlyUnitOfMeasure, powerPriceLevel.MonthlyUnitOfMeasure);
+
+            Assert.Equal(MonthlyActivePowerExTaxes, (decimal)powerPriceLevel.MonthlyActivePowerExTaxes, 4);
+            Assert.Equal(MonthlyActivePowerTotalExVat, (decimal)powerPriceLevel.MonthlyActivePowerTotalExVat, 4);
+            Assert.Equal(MonthlyActivePowerTotal, (decimal)powerPriceLevel.MonthlyActivePowerTotal, 4);
+            Assert.Equal(MonthlyActivePowerTaxes, (decimal)powerPriceLevel.MonthlyActivePowerTaxes, 4);
+
+            Assert.Equal(MonthlyReactivePowerExTaxes, (decimal)powerPriceLevel.MonthlyReactivePowerExTaxes, 4);
+            Assert.Equal(MonthlyReactivePowerTotalExVat, (decimal)powerPriceLevel.MonthlyReactivePowerTotalExVat, 4);
+            Assert.Equal(MonthlyReactivePowerTotal, (decimal)powerPriceLevel.MonthlyReactivePowerTotal, 4);
+            Assert.Equal(MonthlyReactivePowerTaxes, (decimal)powerPriceLevel.MonthlyReactivePowerTaxes, 4);
         }
     }
 }

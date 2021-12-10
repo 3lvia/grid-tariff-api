@@ -632,7 +632,7 @@ namespace GridTariffApi.Lib.Services.V2
 
 
 
-        PowerPriceLevel PriceLevelPowerPriceToPowerPriceLevel(
+        public PowerPriceLevel PriceLevelPowerPriceToPowerPriceLevel(
             Models.V2.PriceStructure.PowerPriceLevel powerPriceLevel,
             IReadOnlyList<Models.V2.PriceStructure.PowerPriceTax> powerPriceTaxes)
         {
@@ -663,7 +663,7 @@ namespace GridTariffApi.Lib.Services.V2
             powerPriceLevel.MonthlyReactivePowerExTaxes = powerPriceLevelPrice.MonthlyReactivePowerExTaxes;
             powerPriceLevel.MonthlyReactivePowerTotalExVat = powerPriceLevelPrice.MonthlyReactivePowerExTaxes;
             powerPriceLevel.MonthlyReactivePowerTotal = AddTaxes(powerPriceLevel.MonthlyReactivePowerExTaxes, vatTax.TaxValue);
-            powerPriceLevel.MonthlyReactivePowerTotalExVat = powerPriceLevel.MonthlyReactivePowerTotal - powerPriceLevel.MonthlyReactivePowerTotalExVat;
+            powerPriceLevel.MonthlyReactivePowerTaxes = powerPriceLevel.MonthlyReactivePowerTotal - powerPriceLevel.MonthlyReactivePowerTotalExVat;
 
             powerPriceLevel.MonthlyActivePowerExTaxes = RoundDouble(powerPriceLevel.MonthlyActivePowerExTaxes, Constants.PowerPriceDecimals);
             powerPriceLevel.MonthlyActivePowerTotalExVat = RoundDouble(powerPriceLevel.MonthlyActivePowerTotalExVat, Constants.PowerPriceDecimals);
@@ -673,7 +673,7 @@ namespace GridTariffApi.Lib.Services.V2
             powerPriceLevel.MonthlyReactivePowerExTaxes = RoundDouble(powerPriceLevel.MonthlyReactivePowerExTaxes, Constants.PowerPriceDecimals);
             powerPriceLevel.MonthlyReactivePowerTotalExVat = RoundDouble(powerPriceLevel.MonthlyReactivePowerTotalExVat, Constants.PowerPriceDecimals);
             powerPriceLevel.MonthlyReactivePowerTotal = RoundDouble(powerPriceLevel.MonthlyReactivePowerTotal, Constants.PowerPriceDecimals);
-            powerPriceLevel.MonthlyReactivePowerTotalExVat = RoundDouble(powerPriceLevel.MonthlyReactivePowerTotalExVat, Constants.PowerPriceDecimals);
+            powerPriceLevel.MonthlyReactivePowerTaxes = RoundDouble(powerPriceLevel.MonthlyReactivePowerTaxes, Constants.PowerPriceDecimals);
         }
 
         void AppendFixedPriceLevels(
