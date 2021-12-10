@@ -96,12 +96,7 @@ namespace GridTariff.Api
             //var tariffTypeController = new GridTariffApi.Lib.Controllers.v2.TariffTypeController(tariffTypeService);
             //var test = tariffTypeController.Get();
 
-            services.AddStandardElviaTelemetryLogging(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true, retainTelemetryWhere: telemetryItem => telemetryItem switch
-            {
-                DependencyTelemetry d => false,
-                RequestTelemetry r => false,
-                _ => true,
-            });
+            services.AddStandardElviaTelemetryLogging(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true);
 
             services.AddCronJob<ScheduledGridTariffApiSynchronizer>(c =>
             {
