@@ -73,5 +73,57 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             Assert.Equal(totalReActiveExVat, (decimal)hourPowerPrices.ReactiveTotalExVat, 4);
             Assert.Equal(totalReActive, (decimal)hourPowerPrices.ReactiveTotal, 4);
         }
+
+        [Theory]
+        [InlineData("nok", "kr/kwh", "level", 1, 0, 1.1, 1, "season", 3.1, 3.1, 0)]
+        [InlineData("nok", "kr/kwh", "level", 1, 25, 1.1, 1, "season", 3.1, 3.875, 0.775)]
+        [InlineData("nok", "kr/kwh", "level", 0, 25, 0, 0, "season", 0, 0, 0)]
+        [InlineData("nok", "kr/kwh", "level", 10, 25, 0, 0, "season", 10, 12.5, 2.5)]
+        [InlineData("nok", "kr/kwh", "level", 0, 25, 1, 0, "season", 1, 1.25, 0.25)]
+        [InlineData("nok", "kr/kwh", "level", 0, 25, 0, 1, "season", 1, 1.25, 0.25)]
+        [InlineData("nok", "kr/kwh", "level", 0, 25, 1, 1, "season", 2, 2.5, 0.5)]
+        public void PriceLevelEnergyPriceToEnergyPriceLevelTest(
+            string currency,
+            string monetaryUnitOfMeasure,
+            string level,
+            decimal energyExTaxes,
+            int vatPercentValue,
+            double consumptionTaxValue,
+            double enovaTaxValue,
+            string season,
+            decimal totalExVat,
+            decimal total,
+            decimal taxes
+            )
+        {
+            Setup();
+
+            var energyPrice = new EnergyPrice(null, currency, monetaryUnitOfMeasure);
+            var energyPriceLevel = new EnergyPriceLevel(string.Empty, level, (double)energyExTaxes, null);
+
+            var vatTax = new EnergyPriceTax(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, "vat", vatPercentValue, "", "");
+            var cumsumptionTax = new EnergyPriceTax(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, "consumptionTax", consumptionTaxValue, "", "");
+            var enovaTax = new EnergyPriceTax(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, "enovaTax", enovaTaxValue, "", "");
+            var energyTaxes = new List<EnergyPriceTax>
+            {
+                vatTax,
+                cumsumptionTax,
+                enovaTax
+            };
+
+            var energyPrices = _tariffQueryService.PriceLevelEnergyPriceToEnergyPriceLevel(energyPrice, energyPriceLevel, energyTaxes, season, DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
+            Assert.Equal(DateTimeOffset.MinValue, energyPrices.StartDate);
+            Assert.Equal(DateTimeOffset.MaxValue, energyPrices.EndDate);
+            Assert.Equal(season, energyPrices.Season);
+            Assert.Equal(level, energyPrices.Level);
+            Assert.Equal(currency, energyPrices.Currency);
+            Assert.Equal(monetaryUnitOfMeasure, energyPrices.MonetaryUnitOfMeasure);
+
+            Assert.Equal(energyExTaxes, (decimal)energyPrices.EnergyExTaxes, 4);
+            Assert.Equal(totalExVat, (decimal)energyPrices.TotalExVat,4);
+            Assert.Equal(total, (decimal)energyPrices.Total,4);
+            Assert.Equal(taxes, (decimal)energyPrices.Taxes);
+
+        }
     }
 }

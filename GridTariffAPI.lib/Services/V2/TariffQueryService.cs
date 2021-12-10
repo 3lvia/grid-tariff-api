@@ -514,7 +514,7 @@ namespace GridTariffApi.Lib.Services.V2
         }
 
 
-        EnergyPrices PriceLevelEnergyPriceToEnergyPriceLevel(
+        public EnergyPrices PriceLevelEnergyPriceToEnergyPriceLevel(
             Models.V2.PriceStructure.EnergyPrice energyPricePrices,
             Models.V2.PriceStructure.EnergyPriceLevel energyPriceLevel,
             IReadOnlyList<Models.V2.PriceStructure.EnergyPriceTax> energyPriceTaxes,
@@ -542,7 +542,7 @@ namespace GridTariffApi.Lib.Services.V2
 
             retval.EnergyExTaxes = energyPriceLevel.EnergyExTaxes;
             retval.TotalExVat = energyPriceLevel.EnergyExTaxes + consumptionTaxValue + enovaTaxValue;
-            retval.Total = retval.TotalExVat + CalcTaxes(retval.TotalExVat, vatTaxValue);
+            retval.Total = AddTaxes(retval.TotalExVat, vatTaxValue);
             retval.Taxes = retval.Total - retval.TotalExVat;
 
             retval.Currency = energyPricePrices.Currency;
@@ -754,11 +754,6 @@ namespace GridTariffApi.Lib.Services.V2
         {
             double addValue = 1 / Math.Pow(10, numDecimals +1);
             return Math.Round(value + addValue, numDecimals);
-        }
-
-        public double CalcTaxes (double input, double vat)
-        {
-            return input-(input*100/(100+vat));
         }
 
         public double AddTaxes(double input, double vat)
