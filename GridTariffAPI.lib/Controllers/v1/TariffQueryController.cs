@@ -119,6 +119,10 @@ namespace GridTariffApi.Lib.Controllers.v1
             {
                 return $"Query before {_gridTariffApiConfig.MinStartDateAllowedQuery} not supported";
             }
+            if (tariffQueryRequest.MeteringPointIds == null)
+            {
+                return $"Missing {nameof(TariffQueryRequestMeteringPoints.MeteringPointIds)}";
+            }
             return String.Empty;
         }
     }
