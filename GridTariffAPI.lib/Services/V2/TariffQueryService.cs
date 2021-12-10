@@ -408,7 +408,7 @@ namespace GridTariffApi.Lib.Services.V2
             while (endDate < paramToDate)
             {
                 endDate = fromDate.AddMinutes(resolution);
-                EnergyInformation energyInformation = DeciceEneryInformation(hourSeasonIndex, isPublicHoliday, isWeekend);
+                EnergyInformation energyInformation = DecideEneryInformation(hourSeasonIndex, isPublicHoliday, isWeekend);
                 var priceData = ToHour(fromDate, endDate, hourSeasonIndex, energyInformation, isPublicHoliday);
                 dataAccumulator.TariffPrice.Hours.Add(priceData);
                 fromDate = endDate;
@@ -416,7 +416,7 @@ namespace GridTariffApi.Lib.Services.V2
             return dataAccumulator;
         }
 
-        private static EnergyInformation DeciceEneryInformation(HourSeasonIndex hourSeasonIndex, bool isPublicHoliday, bool isWeekend)
+        private static EnergyInformation DecideEneryInformation(HourSeasonIndex hourSeasonIndex, bool isPublicHoliday, bool isWeekend)
         {
             EnergyInformation energyInformation;
             if (isPublicHoliday && hourSeasonIndex.EnergyInformationHoliday != null)
