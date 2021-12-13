@@ -82,20 +82,6 @@ namespace GridTariff.Api
             services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffQueryService, GridTariffApi.Lib.Services.V2.TariffQueryService>();
             services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffTypeService, GridTariffApi.Lib.Services.V2.TariffTypeService>();
 
-            //some testing
-//            ITariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPersistenceFile(), new HolidayPersistenceFile());
-//            IObjectConversionHelper objectConversionHelper = new ObjectConversionHelper();
-////            IHolidayPersistence holidayPersistence = 
-
-//            var tariffQueryService = new GridTariffApi.Lib.Services.V2.TariffQueryService(tariffPriceCache, objectConversionHelper);
-//            tariffQueryService.QueryTariffAsync("standard", new DateTime(2022, 3, 31), new DateTime(2022, 04, 2));
-//            tariffQueryService.QueryTariffAsync("power_ls_dn", new DateTime(2022, 02, 01), new DateTime(2022, 02, 3));
-//            var tariffTypeService = new GridTariffApi.Lib.Services.V2.TariffTypeService(tariffPriceCache, objectConversionHelper);
-            //var tariffTypes = tariffTypeService.GetTariffTypes();
-
-            //var tariffTypeController = new GridTariffApi.Lib.Controllers.v2.TariffTypeController(tariffTypeService);
-            //var test = tariffTypeController.Get();
-
             services.AddStandardElviaTelemetryLogging(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true, retainTelemetryWhere: telemetryItem => telemetryItem switch
             {
                 DependencyTelemetry d => false,
