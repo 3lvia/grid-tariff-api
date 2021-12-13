@@ -89,6 +89,7 @@ namespace GridTariffApi.Lib.Services.V2
         {
             _tariffPriceStructureRoot = _tariffPersistence.GetTariffPriceStructure();
             _holidayRoot = _holidayPersistence.GetHolidays();
+            _cacheValidUntil = DateTime.UtcNow.AddMinutes(Constants.CacheConsideredInvalidMinutes).Date;
         }
     }
 }
