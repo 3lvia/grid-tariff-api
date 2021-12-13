@@ -45,7 +45,7 @@ namespace GridTariffApi.Lib.Services.V2
             gridTariffCollection.GridTariff.TariffType.LastUpdated = tariff.LastUpdated;
             var tariffPrice = ProcessTariffPrices(tariff, tariffPrices, paramFromDate, paramToDate);
             gridTariffCollection.GridTariff.TariffPrice = tariffPrice;
-            gridTariffCollection.GridTariff.TariffPrice.Hours = gridTariffCollection.GridTariff.TariffPrice.Hours.OrderBy(x => x.StartTime).ToList();    //Not strictly necessary
+            //gridTariffCollection.GridTariff.TariffPrice.Hours = gridTariffCollection.GridTariff.TariffPrice.Hours.OrderBy(x => x.StartTime).ToList();    //Not strictly necessary
             await Task.CompletedTask;
             return gridTariffCollection;
         }
