@@ -6,6 +6,7 @@ using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services.V2;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 using Xunit;
@@ -264,12 +265,12 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         }
 
         [Theory]
-        [InlineData("31/12/2021 23:00Z", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100",60)]
-        [InlineData("31/12/2021 23:00Z", true, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100",60)]
-        [InlineData("31/05/2021 22:00Z", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100",60)]
-        [InlineData("28/03/2021 00:00Z", false, 1, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0100-0300",60)]
-        [InlineData("31/10/2021 00:00Z", false, 2, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0200-0200",60)]
-        [InlineData("31/12/2021 23:15Z", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0015-0030",15)]
+        [InlineData("31/12/2021 23:00", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100",60)]
+        [InlineData("31/12/2021 23:00", true, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100",60)]
+        [InlineData("31/05/2021 22:00", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100",60)]
+        [InlineData("28/03/2021 00:00", false, 1, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0100-0300",60)]
+        [InlineData("31/10/2021 00:00", false, 2, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0200-0200",60)]
+        [InlineData("31/12/2021 23:15", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0015-0030",15)]
 
         public void ToHourWithoutPowerTest(
             string startTimeStr, 
@@ -288,7 +289,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         {
             Setup();
 
-            var startTime = DateTimeOffset.Parse(startTimeStr);
+            var startTime = DateTimeOffset.ParseExact(startTimeStr,"dd/MM/yyyy HH:mm",CultureInfo.InvariantCulture);
             var expireAt = startTime.AddMinutes(minutesToAdd);
 
             var energyInformation = new EnergyInformation();
