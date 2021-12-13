@@ -19,7 +19,7 @@ namespace GridTariffApi.Controllers.Tests
 {
     public class TariffQueryControllerTests
     {
-        private TariffQueryController _tariffQueryController;
+        private PilotTariffQueryController _tariffQueryController;
         private TariffQueryService _TariffQueryService;
 
         private TariffTypeService _tariffTypeService;
@@ -42,7 +42,7 @@ namespace GridTariffApi.Controllers.Tests
             _serviceHelper = new ServiceHelper(gridTariffApiConfig);
             _TariffQueryService = new TariffQueryService(_tariffContext, _serviceHelper);
             _tariffTypeService = new TariffTypeService(_tariffContext);
-            _tariffQueryController = new TariffQueryController(_tariffTypeService, _TariffQueryService, gridTariffApiConfig, _serviceHelper);
+            _tariffQueryController = new PilotTariffQueryController(_tariffTypeService, _TariffQueryService, gridTariffApiConfig, _serviceHelper);
 
             TestHelper testHelper = new TestHelper();
 
