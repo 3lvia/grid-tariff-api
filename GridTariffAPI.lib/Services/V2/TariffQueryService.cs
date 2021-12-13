@@ -343,31 +343,25 @@ namespace GridTariffApi.Lib.Services.V2
                     }
                 }
             }
-            if (!String.IsNullOrEmpty(usePublicHolidayOverride))
-            {
-                retVal.EnergyInformationHoliday = GenerateOverrideEnergyPricesData(energyPrice, priceInfo, usePublicHolidayOverride);
-            }
-            if (!String.IsNullOrEmpty(useWeekendPriceOverride))
-            {
-                retVal.EnergyInformationWeekend = GenerateOverrideEnergyPricesData(energyPrice, priceInfo, useWeekendPriceOverride);
-            }
-
+            retVal.EnergyInformationHoliday = GenerateOverrideEnergyPricesData(priceInfo, usePublicHolidayOverride);
+            retVal.EnergyInformationWeekend = GenerateOverrideEnergyPricesData(priceInfo, useWeekendPriceOverride);
             return retVal;
         }
 
-        EnergyInformation GenerateOverrideEnergyPricesData(
-            Models.V2.PriceStructure.EnergyPrice energyPrice, 
-            Models.V2.Digin.PriceInfo priceInfo, string level)
+        public EnergyInformation GenerateOverrideEnergyPricesData(Models.V2.Digin.PriceInfo priceInfo, string level)
         {
-            var retVal = new EnergyInformation();
-            retVal.HourArray = new EnergyPrices[Constants.HoursInDay];
-            var priceLevelPrice = energyPrice.EnergyPriceLevel.FirstOrDefault(a => a.Level == level);
-            var priceLevel = priceInfo.EnergyPrices.FirstOrDefault();
-            if (priceLevel != null)
+            EnergyInformation retVal = null;
+            if (!String.IsNullOrEmpty(level))
             {
-                for (int hour = 0; hour < Constants.HoursInDay; hour++)
+                var priceLevel = priceInfo.EnergyPrices.FirstOrDefault(a => a.Level == level);
+                if (priceLevel != null)
                 {
-                    retVal.HourArray[hour] = priceLevel;
+                    retVal = new EnergyInformation();
+                    retVal.HourArray = new EnergyPrices[Constants.HoursInDay];
+                    for (int hour = 0; hour < Constants.HoursInDay; hour++)
+                    {
+                        retVal.HourArray[hour] = priceLevel;
+                    }
                 }
             }
             return retVal;

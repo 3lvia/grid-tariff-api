@@ -1,5 +1,6 @@
 ﻿using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.Models.Internal;
+
 using GridTariffApi.Lib.Models.V2.PriceStructure;
 using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services.V2;
@@ -327,6 +328,38 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             Assert.Equal((double)energyPriceTotalExVat, hour.EnergyPrice.TotalExVat, 4);
             Assert.Equal(isPublicHoliday, hour.IsPublicHoliday);
             Assert.Equal(expectedShortName, hour.ShortName);
+        }
+
+        [Theory]
+        [InlineData("a")]
+        [InlineData("b")]
+        [InlineData("c")]
+        [InlineData(null)]
+
+        void GenerateOverrideEnergyPricesDataTest(string level)
+        {
+            Setup();
+            var priceLevelA = new Models.V2.Digin.EnergyPrices() { Level = "a" };
+            var priceLevelB = new Models.V2.Digin.EnergyPrices() { Level = "b" };
+            var priceLevelC = new Models.V2.Digin.EnergyPrices() { Level = "c" };
+
+            var priceInfo = new Models.V2.Digin.PriceInfo() { EnergyPrices = new List<Models.V2.Digin.EnergyPrices>() };
+            priceInfo.EnergyPrices.Add(priceLevelA);
+            priceInfo.EnergyPrices.Add(priceLevelB);
+            priceInfo.EnergyPrices.Add(priceLevelC);
+
+            var retVal = _tariffQueryService.GenerateOverrideEnergyPricesData(priceInfo, level);
+            if (String.IsNullOrEmpty(level))
+            {
+                Assert.Null(retVal);
+            }
+            else
+            {
+                foreach (var hour in retVal.HourArray)
+                {
+                    Assert.Equal(level, hour.Level);
+                }
+            }
         }
     }
 }
