@@ -11,11 +11,11 @@ namespace GridTariffApi.Lib.Controllers.v1
     [Authorize]
     [ApiVersion("1.0")]
     [Route("api/{v:apiVersion}/tarifftype")]
-    public class TariffTypeController : ControllerBase
+    public class PilotTariffTypeController : ControllerBase
     {
         private readonly ITariffTypeService _tariffTypeService;
 
-        public TariffTypeController(ITariffTypeService tariffTypeService)
+        public PilotTariffTypeController(ITariffTypeService tariffTypeService)
         {
             _tariffTypeService = tariffTypeService;
         }

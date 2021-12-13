@@ -19,7 +19,7 @@ namespace GridTariffApi.Controllers.Tests
 {
     public class TariffQueryControllerTests
     {
-        private TariffQueryController _tariffQueryController;
+        private PilotTariffQueryController _pilotTariffQueryController;
         private TariffQueryService _TariffQueryService;
 
         private TariffTypeService _tariffTypeService;
@@ -42,7 +42,7 @@ namespace GridTariffApi.Controllers.Tests
             _serviceHelper = new ServiceHelper(gridTariffApiConfig);
             _TariffQueryService = new TariffQueryService(_tariffContext, _serviceHelper);
             _tariffTypeService = new TariffTypeService(_tariffContext);
-            _tariffQueryController = new TariffQueryController(_tariffTypeService, _TariffQueryService, gridTariffApiConfig, _serviceHelper);
+            _pilotTariffQueryController = new PilotTariffQueryController(_tariffTypeService, _TariffQueryService, gridTariffApiConfig, _serviceHelper);
 
             TestHelper testHelper = new TestHelper();
 
@@ -79,7 +79,7 @@ namespace GridTariffApi.Controllers.Tests
         public void GETEmptyCommandTest()
         {
             Setup();
-            var actionResult = _tariffQueryController.Get(null);
+            var actionResult = _pilotTariffQueryController.Get(null);
             BadRequestObjectResult result = actionResult.Result as BadRequestObjectResult;
             Assert.Equal(400, result.StatusCode);
         }
@@ -89,7 +89,7 @@ namespace GridTariffApi.Controllers.Tests
         {
             Setup();
             TariffQueryRequest tariffQueryRequest = new TariffQueryRequest { TariffKey = "private_tou_rush", StartTime = DateTime.UtcNow.AddYears(-10), EndTime = DateTime.UtcNow };
-            var actionResult = _tariffQueryController.Get(tariffQueryRequest);
+            var actionResult = _pilotTariffQueryController.Get(tariffQueryRequest);
             BadRequestObjectResult result = actionResult.Result as BadRequestObjectResult;
             Assert.Equal(400, result.StatusCode);
         }
@@ -156,7 +156,7 @@ namespace GridTariffApi.Controllers.Tests
         {
             Setup();
             var request = new TariffQueryRequestMeteringPoints { StartTime = DateTime.UtcNow.AddYears(-10), EndTime = DateTime.UtcNow };
-            var actionResult = _tariffQueryController.GridTariffsByMeteringPoints(request);
+            var actionResult = _pilotTariffQueryController.GridTariffsByMeteringPoints(request);
             BadRequestObjectResult result = actionResult.Result as BadRequestObjectResult;
             Assert.Equal(400, result.StatusCode);
         }
@@ -233,7 +233,7 @@ namespace GridTariffApi.Controllers.Tests
 
         private List<PriceInfo> ExecuteRequestAndInitialVerify(TariffQueryRequestMeteringPoints request)
         {
-            var okObjectResult = _tariffQueryController.GridTariffsByMeteringPoints(request).Result as OkObjectResult;
+            var okObjectResult = _pilotTariffQueryController.GridTariffsByMeteringPoints(request).Result as OkObjectResult;
             Assert.NotNull(okObjectResult);
             TariffQueryRequestMeteringPointsResult result = okObjectResult.Value as TariffQueryRequestMeteringPointsResult;
             Assert.NotNull(result);
