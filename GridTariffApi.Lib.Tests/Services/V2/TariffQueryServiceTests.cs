@@ -336,7 +336,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         [InlineData("c")]
         [InlineData(null)]
 
-        void GenerateOverrideEnergyPricesDataTest(string level)
+        public void GenerateOverrideEnergyPricesDataTest(string level)
         {
             Setup();
             var priceLevelA = new Models.V2.Digin.EnergyPrices() { Level = "a" };
@@ -360,6 +360,32 @@ namespace GridTariffApi.Lib.Tests.Services.V2
                     Assert.Equal(level, hour.Level);
                 }
             }
+        }
+
+        [Theory]
+        [InlineData(false, false,1)]
+        [InlineData(false, true,100)]
+        [InlineData(true, false,10)]
+        [InlineData(true, true,10)]
+        public void DecideEneryInformationTest(bool isPublicHoliday, bool isWeekend, int numExpectedElements)
+        {
+            Setup();
+            var hourSeasonIndex = new HourSeasonIndex();
+            hourSeasonIndex.EnergyInformation = new EnergyInformation()
+            {
+                HourArray = new Models.V2.Digin.EnergyPrices[1]
+            };
+            hourSeasonIndex.EnergyInformationHoliday = new EnergyInformation()
+            {
+                HourArray = new Models.V2.Digin.EnergyPrices[10]
+            };
+            hourSeasonIndex.EnergyInformationWeekend = new EnergyInformation()
+            {
+                HourArray = new Models.V2.Digin.EnergyPrices[100]
+            };
+
+            var retVal = _tariffQueryService.DecideEneryInformation(hourSeasonIndex, isPublicHoliday, isWeekend);
+            Assert.Equal(numExpectedElements, retVal.HourArray.Length);
         }
     }
 }

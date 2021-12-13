@@ -410,7 +410,7 @@ namespace GridTariffApi.Lib.Services.V2
             return dataAccumulator;
         }
 
-        private static EnergyInformation DecideEneryInformation(HourSeasonIndex hourSeasonIndex, bool isPublicHoliday, bool isWeekend)
+        public EnergyInformation DecideEneryInformation(HourSeasonIndex hourSeasonIndex, bool isPublicHoliday, bool isWeekend)
         {
             EnergyInformation energyInformation;
             if (isPublicHoliday && hourSeasonIndex.EnergyInformationHoliday != null)
