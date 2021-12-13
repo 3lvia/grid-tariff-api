@@ -12,7 +12,7 @@ namespace GridTariffApi.Controllers.Tests
 {
     public class TariffTypeControllerTests
     {
-        private PilotTariffTypeController _pilotTariffTypeController;
+        private PilotTariffTypeController _tariffTypeController;
         private TariffTypeService _tariffTypeService;
         private TariffContext _tariffContext;
 
@@ -26,7 +26,7 @@ namespace GridTariffApi.Controllers.Tests
             var provider = services.BuildServiceProvider();
             _tariffContext = provider.GetRequiredService<TariffContext>();
             _tariffTypeService = new TariffTypeService(_tariffContext);
-            _pilotTariffTypeController = new PilotTariffTypeController(_tariffTypeService);
+            _tariffTypeController = new PilotTariffTypeController(_tariffTypeService);
             TestHelper testHelper = new TestHelper();
             _tariffContext.Company.Add(testHelper.GetCompanyElvia());
             _tariffContext.Company.Add(testHelper.GetCompanyFoobar());
