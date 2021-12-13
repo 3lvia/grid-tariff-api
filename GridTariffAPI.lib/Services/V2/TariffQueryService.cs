@@ -434,17 +434,19 @@ namespace GridTariffApi.Lib.Services.V2
             return energyInformation;
         }
 
-        Models.V2.Digin.Hours ToHour(DateTimeOffset startTime
+        public Models.V2.Digin.Hours ToHour(DateTimeOffset startTime
             , DateTimeOffset expireAt
             , HourSeasonIndex hourSeasonIndex,
             EnergyInformation energyInformation,
             bool isPublicHoliday)
         {
             var retVal = new Models.V2.Digin.Hours();
-            var localedHour = _serviceHelper.GetTimeZonedDateTimeOffset(startTime).Hour;
 
-            retVal.StartTime = startTime.ToUniversalTime();
-            retVal.ExpiredAt = expireAt.ToUniversalTime();
+            var startTimeLocaled = _serviceHelper.GetTimeZonedDateTimeOffset(startTime);
+            var expireAtLocaled = _serviceHelper.GetTimeZonedDateTimeOffset(expireAt);
+
+            retVal.StartTime = startTime;
+            retVal.ExpiredAt = expireAt;
             retVal.FixedPrice = new FixedPrice()
             {
                 Id = hourSeasonIndex.FixedPriceValue.Id,
@@ -461,13 +463,10 @@ namespace GridTariffApi.Lib.Services.V2
             }
 
             retVal.EnergyPrice = new EnergyPrice();
-            retVal.EnergyPrice.Id = energyInformation.HourArray[localedHour].Id;
-            retVal.EnergyPrice.Total = energyInformation.HourArray[localedHour].Total;
-            retVal.EnergyPrice.TotalExVat = energyInformation.HourArray[localedHour].TotalExVat;
+            retVal.EnergyPrice.Id = energyInformation.HourArray[startTimeLocaled.Hour].Id;
+            retVal.EnergyPrice.Total = energyInformation.HourArray[startTimeLocaled.Hour].Total;
+            retVal.EnergyPrice.TotalExVat = energyInformation.HourArray[startTimeLocaled.Hour].TotalExVat;
             retVal.IsPublicHoliday = isPublicHoliday;
-
-            var startTimeLocaled = _serviceHelper.GetTimeZonedDateTimeOffset(retVal.StartTime.DateTime);
-            var expireAtLocaled = _serviceHelper.GetTimeZonedDateTimeOffset(retVal.ExpiredAt.DateTime);
 
             retVal.ShortName = $"{((startTimeLocaled.Hour * 100) + startTimeLocaled.Minute).ToString().PadLeft(4, '0')}-{((expireAtLocaled.Hour * 100) + expireAtLocaled.Minute).ToString().PadLeft(4, '0')}";
             return retVal;

@@ -1,8 +1,11 @@
-﻿using GridTariffApi.Lib.Models.V2.PriceStructure;
+﻿using GridTariffApi.Lib.Config;
+using GridTariffApi.Lib.Models.Internal;
+using GridTariffApi.Lib.Models.V2.PriceStructure;
 using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services.V2;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using Xunit;
 
@@ -14,8 +17,18 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         private TariffQueryService _tariffQueryService;
         private void Setup()
         {
+            var timeZoneId = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
+                "W. Europe Standard Time" :
+                "Europe/Oslo";
+            var norwegianTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
 
-            _tariffQueryService = new TariffQueryService(null, null, null);
+            var gridTariffApIConfig = new GridTariffApiConfig()
+            {
+                TimeZoneForQueries = norwegianTimeZone
+            };
+            var serviceHelper = new ServiceHelper(gridTariffApIConfig);
+
+            _tariffQueryService = new TariffQueryService(null, null, serviceHelper);
 
         }
 
@@ -247,6 +260,73 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             Assert.Equal(MonthlyReactivePowerTotalExVat, (decimal)powerPriceLevel.MonthlyReactivePowerTotalExVat, 4);
             Assert.Equal(MonthlyReactivePowerTotal, (decimal)powerPriceLevel.MonthlyReactivePowerTotal, 4);
             Assert.Equal(MonthlyReactivePowerTaxes, (decimal)powerPriceLevel.MonthlyReactivePowerTaxes, 4);
+        }
+
+        [Theory]
+        [InlineData("31/12/2021 23:00Z", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100",60)]
+        [InlineData("31/12/2021 23:00Z", true, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100",60)]
+        [InlineData("31/05/2021 22:00Z", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100",60)]
+        [InlineData("28/03/2021 00:00Z", false, 1, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0100-0300",60)]
+        [InlineData("31/10/2021 00:00Z", false, 2, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0200-0200",60)]
+        [InlineData("31/12/2021 23:15Z", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0015-0030",15)]
+
+        public void ToHourWithoutPowerTest(
+            string startTimeStr, 
+            bool isPublicHoliday, 
+            int localedHour, 
+            string energyPriceId, 
+            decimal energyPriceTotal, 
+            decimal energyPriceTotalExVat, 
+            string fixePriceId,
+            string fixedPriceHourId,
+            string powerPriceId,
+            string powerPriceHourId,
+
+            string expectedShortName,
+            int minutesToAdd)
+        {
+            Setup();
+
+            var startTime = DateTimeOffset.Parse(startTimeStr);
+            var expireAt = startTime.AddMinutes(minutesToAdd);
+
+            var energyInformation = new EnergyInformation();
+            energyInformation.HourArray = new Models.V2.Digin.EnergyPrices[25];
+            energyInformation.HourArray[localedHour] = new Models.V2.Digin.EnergyPrices();
+            energyInformation.HourArray[localedHour].Id = energyPriceId;
+            energyInformation.HourArray[localedHour].Total = (double)energyPriceTotal;
+            energyInformation.HourArray[localedHour].TotalExVat = (double)energyPriceTotalExVat;
+
+
+            var fixedPriceElement = new PriceElement
+            {
+                Id = fixePriceId,
+                IdDaysInMonth = fixedPriceHourId
+            };
+
+            var powerPriceElement = new PriceElement();
+            powerPriceElement.Id = powerPriceId;
+            powerPriceElement.IdDaysInMonth = powerPriceHourId;
+
+            var hourSeasonIndex = new HourSeasonIndex
+            {
+                FixedPriceValue = fixedPriceElement,
+                PowerPriceValue = powerPriceElement
+            };
+
+            var hour = _tariffQueryService.ToHour(startTime, expireAt, hourSeasonIndex, energyInformation, isPublicHoliday);
+            Assert.Equal(startTime, hour.StartTime);
+            Assert.Equal(expireAt, hour.ExpiredAt);
+            Assert.Equal(fixePriceId, hour.FixedPrice.Id);
+            Assert.Equal(fixedPriceHourId, hour.FixedPrice.HourId);
+            Assert.Equal(powerPriceId, hour.PowerPrice.Id);
+            Assert.Equal(powerPriceHourId, hour.PowerPrice.HourId);
+
+            Assert.Equal(energyPriceId, hour.EnergyPrice.Id);
+            Assert.Equal((double)energyPriceTotal, hour.EnergyPrice.Total,4);
+            Assert.Equal((double)energyPriceTotalExVat, hour.EnergyPrice.TotalExVat, 4);
+            Assert.Equal(isPublicHoliday, hour.IsPublicHoliday);
+            Assert.Equal(expectedShortName, hour.ShortName);
         }
     }
 }
