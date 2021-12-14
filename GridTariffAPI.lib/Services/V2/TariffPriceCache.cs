@@ -23,11 +23,11 @@ namespace GridTariffApi.Lib.Services.V2
         private readonly ITariffPersistence _tariffPersistence;
         private readonly IHolidayPersistence _holidayPersistence;
 
-        private static TariffPriceStructureRoot _tariffPriceStructureRoot;
-        private static IReadOnlyList<Holiday> _holidayRoot;
+        private TariffPriceStructureRoot _tariffPriceStructureRoot;
+        private IReadOnlyList<Holiday> _holidayRoot;
 
-        private static DateTime _cacheValidUntil = DateTime.UtcNow;
-        private static SemaphoreSlim _lockSemaphore = new SemaphoreSlim(1);
+        private  DateTime _cacheValidUntil = DateTime.UtcNow;
+        private SemaphoreSlim _lockSemaphore = new SemaphoreSlim(1);
         public TariffPriceCache(ITariffPersistence tariffPersistence
             , IHolidayPersistence holidayPersistence)
         {
@@ -61,7 +61,7 @@ namespace GridTariffApi.Lib.Services.V2
             return _holidayRoot.Where(a => a.Date >= fromDate && a.Date <= toDate).ToList();
         }
 
-        private TariffPriceStructureRoot GetTariffRootElement()
+        public TariffPriceStructureRoot GetTariffRootElement()
         {
             try
             {
@@ -73,8 +73,8 @@ namespace GridTariffApi.Lib.Services.V2
             }
             catch (Exception e)
             {
-                //todo tracktrace exception
                 _lockSemaphore.Release();
+                throw;
 
             }
             finally
