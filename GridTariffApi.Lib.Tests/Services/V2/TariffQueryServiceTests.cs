@@ -265,20 +265,20 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         }
 
         [Theory]
-        [InlineData("31/12/2021 23:00", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100",60)]
-        [InlineData("31/12/2021 23:00", true, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100",60)]
-        [InlineData("31/05/2021 22:00", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100",60)]
-        [InlineData("28/03/2021 00:00", false, 1, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0100-0300",60)]
-        [InlineData("31/10/2021 00:00", false, 2, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0200-0200",60)]
-        [InlineData("31/12/2021 23:15", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0015-0030",15)]
+        [InlineData("31/12/2021 23:00", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100", 60)]
+        [InlineData("31/12/2021 23:00", true, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100", 60)]
+        [InlineData("31/05/2021 22:00", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100", 60)]
+        [InlineData("28/03/2021 00:00", false, 1, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0100-0300", 60)]
+        [InlineData("31/10/2021 00:00", false, 2, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0200-0200", 60)]
+        [InlineData("31/12/2021 23:15", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0015-0030", 15)]
 
         public void ToHourWithoutPowerTest(
-            string startTimeStr, 
-            bool isPublicHoliday, 
-            int localedHour, 
-            string energyPriceId, 
-            decimal energyPriceTotal, 
-            decimal energyPriceTotalExVat, 
+            string startTimeStr,
+            bool isPublicHoliday,
+            int localedHour,
+            string energyPriceId,
+            decimal energyPriceTotal,
+            decimal energyPriceTotalExVat,
             string fixePriceId,
             string fixedPriceHourId,
             string powerPriceId,
@@ -289,7 +289,9 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         {
             Setup();
 
-            var startTime = DateTimeOffset.ParseExact(startTimeStr,"dd/MM/yyyy HH:mm",CultureInfo.InvariantCulture);
+            var parseDateTimeAsUtc = DateTime.SpecifyKind(DateTime.ParseExact(startTimeStr, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),DateTimeKind.Utc);
+
+            var startTime = new DateTimeOffset(parseDateTimeAsUtc);
             var expireAt = startTime.AddMinutes(minutesToAdd);
 
             var energyInformation = new EnergyInformation();
@@ -325,7 +327,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             Assert.Equal(powerPriceHourId, hour.PowerPrice.HourId);
 
             Assert.Equal(energyPriceId, hour.EnergyPrice.Id);
-            Assert.Equal((double)energyPriceTotal, hour.EnergyPrice.Total,4);
+            Assert.Equal((double)energyPriceTotal, hour.EnergyPrice.Total, 4);
             Assert.Equal((double)energyPriceTotalExVat, hour.EnergyPrice.TotalExVat, 4);
             Assert.Equal(isPublicHoliday, hour.IsPublicHoliday);
             Assert.Equal(expectedShortName, hour.ShortName);
