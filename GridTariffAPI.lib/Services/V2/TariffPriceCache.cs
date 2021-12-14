@@ -27,7 +27,7 @@ namespace GridTariffApi.Lib.Services.V2
         private IReadOnlyList<Holiday> _holidayRoot;
 
         private  DateTime _cacheValidUntil = DateTime.UtcNow;
-        private SemaphoreSlim _lockSemaphore = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim _lockSemaphore = new SemaphoreSlim(1);
         public TariffPriceCache(ITariffPersistence tariffPersistence
             , IHolidayPersistence holidayPersistence)
         {
