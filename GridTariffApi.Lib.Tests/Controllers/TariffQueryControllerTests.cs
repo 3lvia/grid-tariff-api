@@ -19,7 +19,7 @@ namespace GridTariffApi.Controllers.Tests
 {
     public class TariffQueryControllerTests
     {
-        private TariffQueryController _tariffQueryController;
+        private PilotTariffQueryController _tariffQueryController;
         private TariffQueryService _TariffQueryService;
 
         private TariffTypeService _tariffTypeService;
@@ -36,13 +36,13 @@ namespace GridTariffApi.Controllers.Tests
             var provider = services.BuildServiceProvider();
             _tariffContext = provider.GetRequiredService<TariffContext>();
 
-            GridTariffApiConfig gridTariffApiConfig = new GridTariffApiConfig() { MinStartDateAllowedQuery = new DateTime(2020, 11, 01) };
+            GridTariffApiConfig gridTariffApiConfig = new GridTariffApiConfig { MinStartDateAllowedQuery = new DateTime(2020, 11, 01) };
             gridTariffApiConfig.TimeZoneForQueries = NorwegianTimeZoneInfo();
 
             _serviceHelper = new ServiceHelper(gridTariffApiConfig);
             _TariffQueryService = new TariffQueryService(_tariffContext, _serviceHelper);
             _tariffTypeService = new TariffTypeService(_tariffContext);
-            _tariffQueryController = new TariffQueryController(_tariffTypeService, _TariffQueryService, gridTariffApiConfig, _serviceHelper);
+            _tariffQueryController = new PilotTariffQueryController(_tariffTypeService, _TariffQueryService, gridTariffApiConfig, _serviceHelper);
 
             TestHelper testHelper = new TestHelper();
 
@@ -88,7 +88,7 @@ namespace GridTariffApi.Controllers.Tests
         public void GETStartTestBeforeMinDateTest()
         {
             Setup();
-            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", StartTime = DateTime.UtcNow.AddYears(-10), EndTime = DateTime.UtcNow };
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest { TariffKey = "private_tou_rush", StartTime = DateTime.UtcNow.AddYears(-10), EndTime = DateTime.UtcNow };
             var actionResult = _tariffQueryController.Get(tariffQueryRequest);
             BadRequestObjectResult result = actionResult.Result as BadRequestObjectResult;
             Assert.Equal(400, result.StatusCode);
@@ -97,7 +97,7 @@ namespace GridTariffApi.Controllers.Tests
         [Fact()]
         public void GETNoRangeOrPeriodTest()
         {
-            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush" };
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest { TariffKey = "private_tou_rush" };
             List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
             Assert.Equal(3, validationResults.Count);
         }
@@ -105,7 +105,7 @@ namespace GridTariffApi.Controllers.Tests
         [Fact()]
         public void GETRangeAndStartDateTest()
         {
-            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", Range = "today", StartTime = DateTime.UtcNow };
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest { TariffKey = "private_tou_rush", Range = "today", StartTime = DateTime.UtcNow };
             List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
             Assert.Single(validationResults);
         }
@@ -113,7 +113,7 @@ namespace GridTariffApi.Controllers.Tests
         [Fact()]
         public void GETRangeAndEndDateTest()
         {
-            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", Range = "today", EndTime = DateTime.UtcNow };
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest { TariffKey = "private_tou_rush", Range = "today", EndTime = DateTime.UtcNow };
             List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
             Assert.Single(validationResults);
         }
@@ -121,7 +121,7 @@ namespace GridTariffApi.Controllers.Tests
         [Fact()]
         public void GETNonExistingTariffKeyTest()
         {
-            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "NotExisting" };
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest { TariffKey = "NotExisting" };
             List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
             Assert.Equal(3, validationResults.Count);
         }
@@ -129,7 +129,7 @@ namespace GridTariffApi.Controllers.Tests
         [Fact()]
         public void GETStartDateMissingTest()
         {
-            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", EndTime = DateTime.MaxValue };
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest { TariffKey = "private_tou_rush", EndTime = DateTime.MaxValue };
             List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
             Assert.Single(validationResults);
         }
@@ -137,7 +137,7 @@ namespace GridTariffApi.Controllers.Tests
         [Fact()]
         public void GETEndDateMissingTest()
         {
-            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", StartTime = DateTime.MaxValue };
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest { TariffKey = "private_tou_rush", StartTime = DateTime.MaxValue };
             List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
             Assert.Single(validationResults);
         }
@@ -146,7 +146,7 @@ namespace GridTariffApi.Controllers.Tests
         public void StartDateGreaterTest()
         {
             DateTime startDate = new DateTime(2021, 05, 25);
-            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest() { TariffKey = "private_tou_rush", StartTime = startDate, EndTime = startDate.AddDays(-1)} ;
+            TariffQueryRequest tariffQueryRequest = new TariffQueryRequest { TariffKey = "private_tou_rush", StartTime = startDate, EndTime = startDate.AddDays(-1)} ;
             List<ValidationResult> validationResults = tariffQueryRequest.Validate(null).ToList();
             Assert.Single(validationResults);
         }
@@ -155,7 +155,7 @@ namespace GridTariffApi.Controllers.Tests
         public void GETStartDateBeforeMinDateMeteringPointTest()
         {
             Setup();
-            var request = new TariffQueryRequestMeteringPoints() { StartTime = DateTime.UtcNow.AddYears(-10), EndTime = DateTime.UtcNow };
+            var request = new TariffQueryRequestMeteringPoints { StartTime = DateTime.UtcNow.AddYears(-10), EndTime = DateTime.UtcNow };
             var actionResult = _tariffQueryController.GridTariffsByMeteringPoints(request);
             BadRequestObjectResult result = actionResult.Result as BadRequestObjectResult;
             Assert.Equal(400, result.StatusCode);
@@ -166,13 +166,13 @@ namespace GridTariffApi.Controllers.Tests
         {
             var request = new TariffQueryRequestMeteringPoints();
             List<ValidationResult> validationResults = request.Validate(null).ToList();
-            Assert.Equal(3, validationResults.Count);
+            Assert.Equal(4, validationResults.Count);
         }
 
         [Fact()]
         public void GETRangeAndStartDateMeteringPointTest()
         {
-            var request = new TariffQueryRequestMeteringPoints() { Range = "today", StartTime = DateTime.UtcNow };
+            var request = new TariffQueryRequestMeteringPoints { Range = "today", StartTime = DateTime.UtcNow, MeteringPointIds = new List<string>() };
             List<ValidationResult> validationResults = request.Validate(null).ToList();
             Assert.Single(validationResults);
         }
@@ -180,7 +180,7 @@ namespace GridTariffApi.Controllers.Tests
         [Fact()]
         public void GETRangeAndEndDateMeteringPointTest()
         {
-            var request = new TariffQueryRequestMeteringPoints() { Range = "today", EndTime = DateTime.UtcNow };
+            var request = new TariffQueryRequestMeteringPoints { Range = "today", EndTime = DateTime.UtcNow, MeteringPointIds = new List<string>()};
             List<ValidationResult> validationResults = request.Validate(null).ToList();
             Assert.Single(validationResults);
         }
@@ -189,7 +189,7 @@ namespace GridTariffApi.Controllers.Tests
         [Fact()]
         public void GETStartDateMissingMeteringPointTest()
         {
-            var request = new TariffQueryRequestMeteringPoints() {  EndTime = DateTime.MaxValue };
+            var request = new TariffQueryRequestMeteringPoints {  EndTime = DateTime.MaxValue, MeteringPointIds = new List<string>() };
             List<ValidationResult> validationResults = request.Validate(null).ToList();
             Assert.Single(validationResults);
         }
@@ -197,7 +197,7 @@ namespace GridTariffApi.Controllers.Tests
         [Fact()]
         public void GETEndDateMissingMeteringPointTest()
         {
-            var request = new TariffQueryRequestMeteringPoints() { StartTime = DateTime.MaxValue };
+            var request = new TariffQueryRequestMeteringPoints { StartTime = DateTime.MaxValue, MeteringPointIds = new List<string>()};
             List<ValidationResult> validationResults = request.Validate(null).ToList();
             Assert.Single(validationResults);
         }
@@ -206,7 +206,7 @@ namespace GridTariffApi.Controllers.Tests
         public void StartDateGreaterMeteringPointTest()
         {
             DateTime startDate = new DateTime(2021, 05, 25);
-            var request = new TariffQueryRequestMeteringPoints() { StartTime = startDate, EndTime = startDate.AddDays(-1) };
+            var request = new TariffQueryRequestMeteringPoints { StartTime = startDate, EndTime = startDate.AddDays(-1) , MeteringPointIds = new List<string>()};
             List<ValidationResult> validationResults = request.Validate(null).ToList();
             Assert.Single(validationResults);
         }
@@ -217,7 +217,7 @@ namespace GridTariffApi.Controllers.Tests
             Setup();
             var startDateTime = new DateTimeOffset(new DateTime(2021, 01, 04, 0, 0, 0), new TimeSpan(1, 0, 0));
             var endDateTime = new DateTimeOffset(new DateTime(2021, 01, 05, 0, 0, 0), new TimeSpan(1, 0, 0));
-            var request = new TariffQueryRequestMeteringPoints() { MeteringPointIds = new List<string>() { "abc1" }, StartTime = startDateTime, EndTime = endDateTime };
+            var request = new TariffQueryRequestMeteringPoints { MeteringPointIds = new List<string> { "abc1" }, StartTime = startDateTime, EndTime = endDateTime };
             List<PriceInfo> priceInfos = ExecuteRequestAndInitialVerify(request);
             Assert.Equal(24, priceInfos.Count);
             AssertCorrectHours(startDateTime, priceInfos);
@@ -249,7 +249,7 @@ namespace GridTariffApi.Controllers.Tests
             Setup();
             var startDateTime = new DateTimeOffset(new DateTime(2021, 06, 01, 0, 0, 0), new TimeSpan(2, 0, 0));
             var endDateTime = new DateTimeOffset(new DateTime(2021, 06, 02, 0, 0, 0), new TimeSpan(2, 0, 0));
-            var request = new TariffQueryRequestMeteringPoints() { MeteringPointIds = new List<string>() { "abc1" }, StartTime = startDateTime, EndTime = endDateTime };
+            var request = new TariffQueryRequestMeteringPoints { MeteringPointIds = new List<string> { "abc1" }, StartTime = startDateTime, EndTime = endDateTime };
             List<PriceInfo> priceInfos = ExecuteRequestAndInitialVerify(request);
             Assert.Equal(24, priceInfos.Count);
             AssertCorrectHours(startDateTime, priceInfos);

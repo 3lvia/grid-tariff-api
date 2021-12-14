@@ -15,13 +15,13 @@ namespace GridTariffApi.Lib.Controllers.v1
     [Authorize]
     [ApiVersion("1.0")]
     [Route("api/{v:apiVersion}/tariffquery")]
-    public class TariffQueryController : ControllerBase
+    public class PilotTariffQueryController : ControllerBase
     {
         private readonly ITariffTypeService _tariffTypeService;
         private readonly ITariffQueryService _tariffQueryService;
         private readonly GridTariffApiConfig _gridTariffApiConfig;
         private readonly IServiceHelper _serviceHelper;
-        public TariffQueryController(
+        public PilotTariffQueryController(
             ITariffTypeService tariffTypeService,
             ITariffQueryService tariffQueryService,
             GridTariffApiConfig gridTariffApiConfig,
@@ -118,6 +118,10 @@ namespace GridTariffApi.Lib.Controllers.v1
             if (startDateTime < _gridTariffApiConfig.MinStartDateAllowedQuery)
             {
                 return $"Query before {_gridTariffApiConfig.MinStartDateAllowedQuery} not supported";
+            }
+            if (tariffQueryRequest.MeteringPointIds == null)
+            {
+                return $"Missing {nameof(TariffQueryRequestMeteringPoints.MeteringPointIds)}";
             }
             return String.Empty;
         }

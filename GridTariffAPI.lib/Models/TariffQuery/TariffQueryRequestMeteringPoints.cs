@@ -75,6 +75,13 @@ namespace GridTariffApi.Lib.Models.TariffQuery
                       new[] { nameof(StartTime), nameof(EndTime) });
                 }
             }
+
+            if (MeteringPointIds == null)
+            {
+                yield return new ValidationResult(
+                    $"{nameof(MeteringPointIds)} missing",
+                    new[] { nameof(MeteringPointIds)});
+            }
         }
 
     }

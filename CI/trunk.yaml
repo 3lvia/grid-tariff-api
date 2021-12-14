@@ -103,13 +103,13 @@ stages:
              </policies>
             MicrosoftApiManagementAPIVersion: '2018-01-01'
 
-  #- stage: DeployProd
-  #  dependsOn: RegisterAzureApiManagementTest
-  #  jobs:
-  #    - template: deploy.yaml@templates
-  #      parameters:
-  #        environment: prod
-  #        helmValuesFile: values.yaml
+  - stage: DeployProd
+    dependsOn: RegisterAzureApiManagementTest
+    jobs:
+    - template: deploy.yaml@templates
+      parameters:
+        environment: prod
+        helmValuesFile: values.yaml
 
   #- stage: RegisterAzureApiManagementProd
   #  dependsOn: DeployProd

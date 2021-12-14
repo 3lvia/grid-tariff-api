@@ -34,6 +34,10 @@ using GridTariffApi.Lib.Interfaces.V2.External;
 using GridTariffApi.Lib.Services.V2;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
+using System.Threading.Tasks;
+using GridTariffApi.Middleware;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IO;
 
 namespace GridTariff.Api
 {
@@ -58,6 +62,9 @@ namespace GridTariff.Api
 
             AddAuthorizations(services);
             AddCompression(services);
+
+            services.AddSingleton<RecyclableMemoryStreamManager>();
+            services.AddScoped<RequestLogAuthEnricher>();
 
             //v1
             GridTariffApiConfig gridTariffApiConfig = GetGridTariffApiConfig();
@@ -160,6 +167,26 @@ namespace GridTariff.Api
                   options.Authority = authority;
                   options.TokenValidationParameters.ValidateAudience = false;
                   options.TokenValidationParameters.ValidateIssuer = false;
+
+                  IdentityModelEventSource.ShowPII = true;
+                  options.Events = new JwtBearerEvents
+                  {
+                      OnAuthenticationFailed = (authenticationFailedContext) =>
+                      {
+                          var errorLogEnricher = authenticationFailedContext.HttpContext.RequestServices
+                              .GetRequiredService<RequestLogAuthEnricher>();
+                          errorLogEnricher.OnAuthenticationFailed(authenticationFailedContext);
+                          return Task.CompletedTask;
+                      },
+                      OnForbidden = (forbiddenContext) =>
+                      {
+                          // Kan ikke se at denne kalles ved HTTP 403 (Forbidden). Men vi logger detaljer om claims/scopes fra JWT token, som kan gi nyttig info ved feilsøking.
+                          var errorLogEnricher = forbiddenContext.HttpContext.RequestServices
+                              .GetRequiredService<RequestLogAuthEnricher>();
+                          errorLogEnricher.OnForbidden(forbiddenContext);
+                          return Task.CompletedTask;
+                      },
+                  };
               });
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
@@ -176,6 +203,7 @@ namespace GridTariff.Api
             app.UseHttpsRedirection();
             app.UseRouting();
             app.AddStandardElviaAspnetMetrics(); // After AddRouting(), and before UseEndpoints()
+            app.UseMiddleware<RequestLogEnricherMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
