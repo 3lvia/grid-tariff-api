@@ -379,14 +379,25 @@ namespace GridTariffApi.Lib.Services.V2
             var fromDate = paramFromDate;
             while (fromDate.Ticks < paramToDate.Ticks)
             {
-                bool isPublicHoliday = holidays.Exists(a => a.Date.Date == _serviceHelper.GetTimeZonedDateTime(fromDate.UtcDateTime).Date);
-                bool isWeekend = fromDate.DayOfWeek == DayOfWeek.Saturday || fromDate.DayOfWeek == DayOfWeek.Sunday;
+                bool isPublicHoliday = IsPublicHoliday(holidays, fromDate);
+                bool isWeekend = IsWeekend(fromDate);
                 var toDate = fromDate.AddDays(1) < paramToDate ? fromDate.AddDays(1) : paramToDate;
                 dataAccumulator = ProcessDay(dataAccumulator, fromDate, toDate, hourSeasonIndex, tariffResolutionMinutes, isPublicHoliday, isWeekend);
                 fromDate = fromDate.AddDays(1);
 
             }
             return dataAccumulator;
+        }
+
+        public bool IsWeekend(DateTimeOffset fromDate)
+        {
+            var localdDate = _serviceHelper.GetTimeZonedDateTime(fromDate.UtcDateTime).Date;
+            return localdDate.DayOfWeek == DayOfWeek.Saturday || localdDate.DayOfWeek == DayOfWeek.Sunday;
+        }
+
+        public  bool IsPublicHoliday(List<Holiday> holidays, DateTimeOffset fromDate)
+        {
+            return holidays.Exists(a => a.Date.Date == _serviceHelper.GetTimeZonedDateTime(fromDate.UtcDateTime).Date);
         }
 
         SeasonDataAccumulator ProcessDay(SeasonDataAccumulator dataAccumulator
