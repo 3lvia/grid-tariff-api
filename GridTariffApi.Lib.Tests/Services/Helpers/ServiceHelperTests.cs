@@ -56,6 +56,32 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
             return norwegianTimeZone;
         }
 
+        [Theory]
+        [InlineData("yesterday",-1)]
+        [InlineData("today",0)]
+        [InlineData("tomorrow",1)]
+
+        public void GetStartDateTimeOffsetTest(string range, int daysToAdd)
+        {
+            Setup();
+            var startDate = _serviceHelper.GetStartDateTimeOffset(range, null);
+            var testValue = _serviceHelper.GetTimeZonedDateTime(DateTime.UtcNow).Date.AddDays(daysToAdd).ToUniversalTime();
+            Assert.Equal(testValue, startDate);
+        }
+
+
+        [Theory]
+        [InlineData("yesterday", 0)]
+        [InlineData("today", 1)]
+        [InlineData("tomorrow", 2)]
+
+        public void GetEndDateTimeOffsetTest(string range, int daysToAdd)
+        {
+            Setup();
+            var startDate = _serviceHelper.GetEndDateTimeOffset(range, null);
+            var testValue = _serviceHelper.GetTimeZonedDateTime(DateTime.UtcNow).Date.AddDays(daysToAdd).AddSeconds(-1).ToUniversalTime();
+            Assert.Equal(testValue, startDate);
+        }
 
     }
 }

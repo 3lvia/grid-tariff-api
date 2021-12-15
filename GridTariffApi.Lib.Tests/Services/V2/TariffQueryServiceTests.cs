@@ -1,6 +1,6 @@
 ﻿using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.Models.Internal;
-
+using GridTariffApi.Lib.Models.V2.Holidays;
 using GridTariffApi.Lib.Models.V2.PriceStructure;
 using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services.V2;
@@ -17,6 +17,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
     public class TariffQueryServiceTests
     {
         private TariffQueryService _tariffQueryService;
+        private IServiceHelper _serviceHelper;
         private void Setup()
         {
             var timeZoneId = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
@@ -28,10 +29,8 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             {
                 TimeZoneForQueries = norwegianTimeZone
             };
-            var serviceHelper = new ServiceHelper(gridTariffApIConfig);
-
-            _tariffQueryService = new TariffQueryService(null, null, serviceHelper);
-
+            _serviceHelper = new ServiceHelper(gridTariffApIConfig);
+            _tariffQueryService = new TariffQueryService(null, null, _serviceHelper);
         }
 
         [Theory]
@@ -135,8 +134,8 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             Assert.Equal(monetaryUnitOfMeasure, energyPrices.MonetaryUnitOfMeasure);
 
             Assert.Equal(energyExTaxes, (decimal)energyPrices.EnergyExTaxes, 4);
-            Assert.Equal(totalExVat, (decimal)energyPrices.TotalExVat,4);
-            Assert.Equal(total, (decimal)energyPrices.Total,4);
+            Assert.Equal(totalExVat, (decimal)energyPrices.TotalExVat, 4);
+            Assert.Equal(total, (decimal)energyPrices.Total, 4);
             Assert.Equal(taxes, (decimal)energyPrices.Taxes);
         }
 
@@ -153,11 +152,11 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         [InlineData(3344, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 3344, 836, 4180)]
 
         public void PriceLevelPriceToFixedPriceLevelTest(
-            int monthlyPriceExAllTaxes, 
+            int monthlyPriceExAllTaxes,
             int vatPercent,
-            string id, 
-            double? valueMin, 
-            double? valueMax, 
+            string id,
+            double? valueMin,
+            double? valueMax,
             string nextIdDown,
             string nextIdUp,
             string valueUnitOfMeasure,
@@ -175,16 +174,16 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             var taxes = new List<FixedPriceTax>();
             taxes.Add(vatTax);
             var fixedPricePriceLevel = new FixedPriceLevel(
-                id, 
-                valueMin, 
-                valueMax, 
-                nextIdDown, 
-                nextIdUp, 
-                valueUnitOfMeasure, 
-                monthlyPriceExAllTaxes, 
-                monthlyUnitOfMeasure, 
-                levelInfo, 
-                currency, 
+                id,
+                valueMin,
+                valueMax,
+                nextIdDown,
+                nextIdUp,
+                valueUnitOfMeasure,
+                monthlyPriceExAllTaxes,
+                monthlyUnitOfMeasure,
+                levelInfo,
+                currency,
                 monetaryUnitOfMeasure);
 
             var fixedPriceLevel = _tariffQueryService.PriceLevelPriceToFixedPriceLevel(fixedPricePriceLevel, taxes);
@@ -199,15 +198,15 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             Assert.Equal(currency, fixedPriceLevel.Currency);
             Assert.Equal(monthlyUnitOfMeasure, fixedPriceLevel.MonthlyUnitOfMeasure);
 
-            Assert.Equal(monthlyPriceExAllTaxes, fixedPriceLevel.MonthlyExTaxes,4);
-            Assert.Equal(MonthlyTotalExVat, (decimal)fixedPriceLevel.MonthlyExTaxes,4);
-            Assert.Equal(monthlyTaxes, (decimal)fixedPriceLevel.MonthlyTaxes,4);
-            Assert.Equal(monthlyTotal, (decimal)fixedPriceLevel.MonthlyTotal,4);
+            Assert.Equal(monthlyPriceExAllTaxes, fixedPriceLevel.MonthlyExTaxes, 4);
+            Assert.Equal(MonthlyTotalExVat, (decimal)fixedPriceLevel.MonthlyExTaxes, 4);
+            Assert.Equal(monthlyTaxes, (decimal)fixedPriceLevel.MonthlyTaxes, 4);
+            Assert.Equal(monthlyTotal, (decimal)fixedPriceLevel.MonthlyTotal, 4);
 
         }
 
         [Theory]
-        [InlineData(25, "1", null, 2, "2", "3", "4", 11, 5.61,"5", "6", "7", "8", 11,11,13.75,2.75, 5.61,5.61,7.0125,1.4025)]
+        [InlineData(25, "1", null, 2, "2", "3", "4", 11, 5.61, "5", "6", "7", "8", 11, 11, 13.75, 2.75, 5.61, 5.61, 7.0125, 1.4025)]
         public void PriceLevelPriceToPowerPriceLevelTest(
             int vatPercent,
             string id,
@@ -265,20 +264,20 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         }
 
         [Theory]
-        [InlineData("31/12/2021 23:00", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100",60)]
-        [InlineData("31/12/2021 23:00", true, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100",60)]
-        [InlineData("31/05/2021 22:00", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100",60)]
-        [InlineData("28/03/2021 00:00", false, 1, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0100-0300",60)]
-        [InlineData("31/10/2021 00:00", false, 2, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0200-0200",60)]
-        [InlineData("31/12/2021 23:15", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0015-0030",15)]
+        [InlineData("31/12/2021 23:00", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100", 60)]
+        [InlineData("31/12/2021 23:00", true, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100", 60)]
+        [InlineData("31/05/2021 22:00", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0000-0100", 60)]
+        [InlineData("28/03/2021 00:00", false, 1, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0100-0300", 60)]
+        [InlineData("31/10/2021 00:00", false, 2, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0200-0200", 60)]
+        [InlineData("31/12/2021 23:15", false, 0, "energyPriceId", 5, 4, "fixePriceId", "fixedPriceHourId", "powerPriceId", "powerPriceHourId", "0015-0030", 15)]
 
         public void ToHourWithoutPowerTest(
-            string startTimeStr, 
-            bool isPublicHoliday, 
-            int localedHour, 
-            string energyPriceId, 
-            decimal energyPriceTotal, 
-            decimal energyPriceTotalExVat, 
+            string startTimeStr,
+            bool isPublicHoliday,
+            int localedHour,
+            string energyPriceId,
+            decimal energyPriceTotal,
+            decimal energyPriceTotalExVat,
             string fixePriceId,
             string fixedPriceHourId,
             string powerPriceId,
@@ -289,7 +288,9 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         {
             Setup();
 
-            var startTime = DateTimeOffset.ParseExact(startTimeStr,"dd/MM/yyyy HH:mm",CultureInfo.InvariantCulture);
+            var parseDateTimeAsUtc = DateTime.SpecifyKind(DateTime.ParseExact(startTimeStr, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture), DateTimeKind.Utc);
+
+            var startTime = new DateTimeOffset(parseDateTimeAsUtc);
             var expireAt = startTime.AddMinutes(minutesToAdd);
 
             var energyInformation = new EnergyInformation();
@@ -325,7 +326,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             Assert.Equal(powerPriceHourId, hour.PowerPrice.HourId);
 
             Assert.Equal(energyPriceId, hour.EnergyPrice.Id);
-            Assert.Equal((double)energyPriceTotal, hour.EnergyPrice.Total,4);
+            Assert.Equal((double)energyPriceTotal, hour.EnergyPrice.Total, 4);
             Assert.Equal((double)energyPriceTotalExVat, hour.EnergyPrice.TotalExVat, 4);
             Assert.Equal(isPublicHoliday, hour.IsPublicHoliday);
             Assert.Equal(expectedShortName, hour.ShortName);
@@ -364,10 +365,10 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         }
 
         [Theory]
-        [InlineData(false, false,1)]
-        [InlineData(false, true,100)]
-        [InlineData(true, false,10)]
-        [InlineData(true, true,10)]
+        [InlineData(false, false, 1)]
+        [InlineData(false, true, 100)]
+        [InlineData(true, false, 10)]
+        [InlineData(true, true, 10)]
         public void DecideEneryInformationTest(bool isPublicHoliday, bool isWeekend, int numExpectedElements)
         {
             Setup();
@@ -387,6 +388,55 @@ namespace GridTariffApi.Lib.Tests.Services.V2
 
             var retVal = _tariffQueryService.DecideEneryInformation(hourSeasonIndex, isPublicHoliday, isWeekend);
             Assert.Equal(numExpectedElements, retVal.HourArray.Length);
+        }
+
+        [Theory]
+        [InlineData("03/12/2021 22:00", false)]
+        [InlineData("03/12/2021 23:00", true)]
+        [InlineData("04/12/2021 22:00", true)]
+        [InlineData("04/12/2021 23:00", true)]
+        [InlineData("05/12/2021 22:00", true)]
+        [InlineData("05/12/2021 23:00", false)]
+        [InlineData("07/05/2021 21:00", false)]
+        [InlineData("07/05/2021 22:00", true)]
+        [InlineData("08/05/2021 21:00", true)]
+        [InlineData("09/05/2021 22:00", false)]
+
+        public void IsWeekendTest(string queryDateAsUtc, bool expectedVal)
+        {
+            var parseDateTimeAsUtc = DateTime.SpecifyKind(DateTime.ParseExact(queryDateAsUtc, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture), DateTimeKind.Utc);
+            Setup();
+            var isWeekend = _tariffQueryService.IsWeekend(parseDateTimeAsUtc);
+            Assert.Equal(expectedVal, isWeekend);
+        }
+
+        [Theory]
+        [InlineData("02/12/2021 00:00", false, "03/12/2021 00:00")]
+        [InlineData("02/12/2021 22:00", false, "03/12/2021 00:00")]
+        [InlineData("02/12/2021 23:00", true, "03/12/2021 00:00")]
+        [InlineData("03/12/2021 22:00", true, "03/12/2021 00:00")]
+        [InlineData("03/12/2021 23:00", false, "03/12/2021 00:00")]
+        [InlineData("04/12/2021 00:00", false, "03/12/2021 00:00")]
+
+        [InlineData("16/05/2021 00:00", false, "17/05/2021 00:00")]
+        [InlineData("16/05/2021 21:00", false, "17/05/2021 00:00")]
+        [InlineData("16/05/2021 22:00", true, "17/05/2021 00:00")]
+        [InlineData("17/05/2021 21:00", true, "17/05/2021 00:00")]
+        [InlineData("17/05/2021 22:00", false, "17/05/2021 00:00")]
+        [InlineData("18/05/2021 00:00", false, "17/05/2021 00:00")]
+
+        public void IsPublicHolidayTest(string queryDateAsUtc, bool expectedVal, string holidayAsUtc)
+        {
+            Setup();
+
+            var holidayUtc = DateTime.SpecifyKind(DateTime.ParseExact(holidayAsUtc, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture), DateTimeKind.Utc);
+            var holidayLocaled = _serviceHelper.GetTimeZonedDateTime(holidayUtc.Date);
+            var holidays = new List<Holiday>();
+            holidays.Add(new Holiday(holidayLocaled, String.Empty));
+
+            var parseDateTimeAsUtc = DateTime.SpecifyKind(DateTime.ParseExact(queryDateAsUtc, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture), DateTimeKind.Utc);
+            var isPublicHoliday = _tariffQueryService.IsPublicHoliday(holidays, parseDateTimeAsUtc);
+            Assert.Equal(expectedVal, isPublicHoliday);
         }
     }
 }
