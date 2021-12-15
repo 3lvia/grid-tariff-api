@@ -89,12 +89,7 @@ namespace GridTariff.Api
             services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffQueryService, GridTariffApi.Lib.Services.V2.TariffQueryService>();
             services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffTypeService, GridTariffApi.Lib.Services.V2.TariffTypeService>();
 
-            services.AddStandardElviaTelemetryLogging(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true, retainTelemetryWhere: telemetryItem => telemetryItem switch
-            {
-                DependencyTelemetry d => false,
-                RequestTelemetry r => false,
-                _ => true,
-            });
+            services.AddStandardElviaTelemetryLogging(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true); 
 
             services.AddCronJob<ScheduledGridTariffApiSynchronizer>(c =>
             {

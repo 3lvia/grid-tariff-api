@@ -410,10 +410,10 @@ namespace GridTariffApi.Lib.Services.V2
         {
             var fromDate = paramFromDate;
             var endDate = fromDate;
+            EnergyInformation energyInformation = DecideEneryInformation(hourSeasonIndex, isPublicHoliday, isWeekend);
             while (endDate < paramToDate)
             {
                 endDate = fromDate.AddMinutes(resolution);
-                EnergyInformation energyInformation = DecideEneryInformation(hourSeasonIndex, isPublicHoliday, isWeekend);
                 var priceData = ToHour(fromDate, endDate, hourSeasonIndex, energyInformation, isPublicHoliday);
                 dataAccumulator.TariffPrice.Hours.Add(priceData);
                 fromDate = endDate;
