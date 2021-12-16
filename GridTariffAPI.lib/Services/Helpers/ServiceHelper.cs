@@ -40,7 +40,7 @@ namespace GridTariffApi.Lib.Services.Helpers
                 return startDateTime.Value;
             }
             DateTimeOffset timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
-            return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime);
+            return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime).ToUniversalTime(); ;
         }
 
         public DateTimeOffset GetEndDateTimeOffset(string? range, DateTimeOffset? endDateTime)
@@ -50,7 +50,7 @@ namespace GridTariffApi.Lib.Services.Helpers
                 return endDateTime.Value;
             }
             DateTimeOffset timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
-            return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime.AddDays(1).AddSeconds(-1));
+            return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime.AddDays(1).AddSeconds(-1)).ToUniversalTime();
         }
 
 
