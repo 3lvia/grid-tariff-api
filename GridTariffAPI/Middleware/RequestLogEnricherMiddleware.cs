@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-//using System.Text.Json;
 using System.Threading.Tasks;
 using Elvia.Telemetry;
 using Microsoft.ApplicationInsights.DataContracts;
@@ -46,7 +45,7 @@ namespace GridTariffApi.Middleware
             string exceptionInfo = null;
             try
             {
-                requestBody = await GetRequestBody(context); // The request string needs to be extracted upstream, because it is not always available after the downstream processing. So we'll extract it even in cases where we shouldn't log, but that's acceptable.
+                requestBody = await GetRequestBody(context); // The request string needs to be extracted before performing next(), because it is not always available after the downstream processing. So we'll extract it even in cases where we shouldn't log, but that's acceptable.
 
                 responseBody = await GetResponseBodyAndPerformDownstreamProcessing(context, 3000);
             }
@@ -64,8 +63,6 @@ namespace GridTariffApi.Middleware
                     {
                         var enricher = context.RequestServices.GetRequiredService<RequestLogAuthEnricher>(); // Scoped instance used to collect error details other places. The middleware is not scoped, so we need to aquire the scoped instance from the context services.
 
-                        //var requestBodyExtractedFields = AttemptExtractFieldsFromRequestBody(requestBody);
-
                         var requestTelemetry = context.Features.Get<RequestTelemetry>(); // Add fields to automatic request telemetry
                         if(requestTelemetry != null)
                         {
@@ -76,10 +73,6 @@ namespace GridTariffApi.Middleware
                             requestTelemetry.Properties["AuthenticationFailedDetails"] = enricher.AuthenticationFailedDetails;
                             requestTelemetry.Properties["AuthorizationFailedDetails"] = enricher.AuthorizationFailedDetails;
                             requestTelemetry.Properties["ApiVersion"] = GetApiVersion(context);
-                            //requestTelemetry.Properties["Service"] = requestBodyExtractedFields.Service;
-                            //requestTelemetry.Properties["To"] = requestBodyExtractedFields.To;
-                            //requestTelemetry.Properties["From"] = requestBodyExtractedFields.From;
-                            //requestTelemetry.Properties["ConversationId"] = requestBodyExtractedFields.ConversationId;
                         }
                     }
                 }
@@ -230,47 +223,5 @@ namespace GridTariffApi.Middleware
             var version = lowercasePath.Substring(startIndex, stopIndex - startIndex);
             return version;
         }
-
-        //private class RequestBodyExtractedFields
-        //{
-        //    public string Service { get; set; }
-        //    public string To { get; set; }
-        //    public string From { get; set; }
-        //    public string ConversationId { get; set; }
-        //}
-
-        //private static RequestBodyExtractedFields AttemptExtractFieldsFromRequestBody(string requestBody)
-        //{
-        //    var res = new RequestBodyExtractedFields();
-
-        //    try
-        //    {
-        //        var jsonObject = JsonDocument.Parse(requestBody);
-        //        foreach (var jsonProperty in jsonObject.RootElement.EnumerateObject())
-        //        {
-        //            if(jsonProperty.Name.ToLower() == "service")
-        //            {
-        //                res.Service = jsonProperty.Value.GetString();
-        //            }
-        //            if(jsonProperty.Name.ToLower() == "to")
-        //            {
-        //                res.To = jsonProperty.Value.GetString();
-        //            }
-        //            if(jsonProperty.Name.ToLower() == "from")
-        //            {
-        //                res.From = jsonProperty.Value.GetString();
-        //            }
-        //            if(jsonProperty.Name.ToLower() == "conversationid")
-        //            {
-        //                res.ConversationId = jsonProperty.Value.GetString();
-        //            }
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //    }
-
-        //    return res;
-        //}
     }
 }

@@ -1,3 +1,9 @@
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.IO.Compression;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
 using Elvia.Configuration;
 using Elvia.Telemetry;
 using Elvia.Telemetry.Extensions;
@@ -7,39 +13,32 @@ using GridTariffApi.Auth;
 using GridTariffApi.Extensions;
 using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.EntityFramework;
+using GridTariffApi.Lib.Interfaces.V2;
+using GridTariffApi.Lib.Interfaces.V2.External;
 using GridTariffApi.Lib.Services.Helpers;
-using GridTariffApi.Lib.Services.TariffQuery;
-using GridTariffApi.Lib.Services.TariffType;
+using GridTariffApi.Lib.Services.V2;
 using GridTariffApi.Lib.Swagger;
+using GridTariffApi.Metrics;
+using GridTariffApi.Middleware;
 using GridTariffApi.Services.V2;
 using GridTariffApi.Synchronizer.Lib.Config;
 using GridTariffApi.Synchronizer.Lib.Services;
-using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Prometheus;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Runtime.InteropServices;
-using System.Text;
-using GridTariffApi.Lib.Interfaces.V2.External;
-using GridTariffApi.Lib.Services.V2;
-using Microsoft.AspNetCore.ResponseCompression;
-using System.IO.Compression;
-using System.Threading.Tasks;
-using GridTariffApi.Middleware;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IO;
+using Prometheus;
 
-namespace GridTariff.Api
+namespace GridTariffApi
 {
     public class Startup
     {
@@ -88,6 +87,8 @@ namespace GridTariff.Api
             services.AddTransient<GridTariffApi.Lib.Services.V2.IObjectConversionHelper, GridTariffApi.Lib.Services.V2.ObjectConversionHelper>();
             services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffQueryService, GridTariffApi.Lib.Services.V2.TariffQueryService>();
             services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffTypeService, GridTariffApi.Lib.Services.V2.TariffTypeService>();
+            services.AddScoped<ILoggingDataCollector, LoggingDataCollector>();
+            services.AddSingleton<IMetricsLogger, MetricsLogger>();
 
             //some testing
 //            ITariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPersistenceFile(), new HolidayPersistenceFile());
@@ -213,6 +214,7 @@ namespace GridTariff.Api
             app.UseRouting();
             app.AddStandardElviaAspnetMetrics(); // After AddRouting(), and before UseEndpoints()
             app.UseMiddleware<RequestLogEnricherMiddleware>();
+            app.UseMiddleware<CustomMetricsMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
