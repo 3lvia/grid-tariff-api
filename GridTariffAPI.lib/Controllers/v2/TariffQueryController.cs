@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using GridTariffApi.Lib.Interfaces.V2;
 
 namespace GridTariffApi.Lib.Controllers.v2
 {
@@ -23,15 +24,19 @@ namespace GridTariffApi.Lib.Controllers.v2
         private readonly IServiceHelper _serviceHelper;
         private readonly GridTariffApiConfig _gridTariffApiConfig;
         private readonly ITariffPriceCache _tariffPriceCache;
+        private readonly ILoggingDataCollector _loggingDataCollector;
+
         public TariffQueryController(ITariffQueryService tariffQueryService,
             IServiceHelper serviceHelper,
             GridTariffApiConfig gridTariffApiConfig,
-            ITariffPriceCache tariffPriceCache)
+            ITariffPriceCache tariffPriceCache,
+            ILoggingDataCollector loggingDataCollector)
         {
             _tariffQueryService = tariffQueryService;
             _serviceHelper = serviceHelper;
             _gridTariffApiConfig = gridTariffApiConfig;
             _tariffPriceCache = tariffPriceCache;
+            _loggingDataCollector = loggingDataCollector;
         }
 
 
@@ -55,6 +60,7 @@ namespace GridTariffApi.Lib.Controllers.v2
             }
             DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(tariffQueryRequest.Range, tariffQueryRequest.StartTime);
             DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(tariffQueryRequest.Range, tariffQueryRequest.EndTime);
+            _loggingDataCollector?.RecordTariffPeriod(startDateTime, endDateTime);
             var result = await _tariffQueryService.QueryTariffAsync(tariffQueryRequest.TariffKey, startDateTime, endDateTime);
             return Ok(result);
         }
