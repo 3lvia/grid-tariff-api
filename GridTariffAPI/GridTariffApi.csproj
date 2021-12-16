@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Artifacts\" />
     <Folder Include="SQL\" />
   </ItemGroup>
 
@@ -43,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Artifacts\GridTariffPriceConfiguration.v0_9_gridtariffprices_json_example.json">
+    <Content Update="Artifacts\GridTariffPriceConfiguration.v1_0_gridtariffprices.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="Artifacts\holidays.json">

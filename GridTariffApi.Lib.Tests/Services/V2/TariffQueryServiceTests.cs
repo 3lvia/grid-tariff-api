@@ -7,6 +7,7 @@ using GridTariffApi.Lib.Services.V2;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Xunit;
@@ -437,6 +438,282 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             var parseDateTimeAsUtc = DateTime.SpecifyKind(DateTime.ParseExact(queryDateAsUtc, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture), DateTimeKind.Utc);
             var isPublicHoliday = _tariffQueryService.IsPublicHoliday(holidays, parseDateTimeAsUtc);
             Assert.Equal(expectedVal, isPublicHoliday);
+        }
+
+        [Fact]
+        public void FilterFixedTaxesByDate()
+        {
+            
+            Setup();
+            DateTimeOffset date1 = new DateTimeOffset(new DateTime(2020, 01, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset date1Inside = new DateTimeOffset(new DateTime(2020, 02, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset date2 = new DateTimeOffset(new DateTime(2020, 06, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset date2Inside = new DateTimeOffset(new DateTime(2020, 07, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset date3 = new DateTimeOffset(new DateTime(2020, 08, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset date4 = new DateTimeOffset(new DateTime(2020, 12, 01, 0, 0, 0, DateTimeKind.Utc));
+
+            FixedPriceTax tax1 = new FixedPriceTax(date1, date2,
+                "tax1", 0, string.Empty, string.Empty);
+            FixedPriceTax tax2 = new FixedPriceTax(date2, date3,
+                "tax2", 0, string.Empty, string.Empty);
+            FixedPriceTax tax3 = new FixedPriceTax(date3, date4,
+                "tax3", 0, string.Empty, string.Empty);
+
+            var taxes = new List<Models.V2.PriceStructure.FixedPriceTax>
+            {
+                tax1,
+                tax2,
+                tax3
+            };
+
+            Assert.Equal(0,_tariffQueryService.FilterFixedPricesTaxByDate(taxes, DateTime.MinValue, date1).Count);
+            Assert.Equal(0,_tariffQueryService.FilterFixedPricesTaxByDate(taxes, date4, DateTime.MaxValue).Count);
+            Assert.Equal(2, _tariffQueryService.FilterFixedPricesTaxByDate(taxes, DateTime.MinValue, date3).Count);
+            Assert.Null(_tariffQueryService.FilterFixedPricesTaxByDate(null, DateTime.MinValue, DateTime.MinValue));
+
+            var endDateResult = _tariffQueryService.FilterFixedPricesTaxByDate(taxes, DateTime.MinValue, date3);
+            Assert.Equal(2, endDateResult.Count);
+            Assert.Empty(endDateResult.Where(x => x.TaxType == "tax3"));
+
+            var startDateResult = _tariffQueryService.FilterFixedPricesTaxByDate(taxes, date2, DateTimeOffset.MaxValue);
+            Assert.Equal(2, startDateResult.Count);
+            Assert.Empty(startDateResult.Where(x => x.TaxType == "tax1"));
+
+            Assert.Equal(1, _tariffQueryService.FilterFixedPricesTaxByDate(taxes, date1, date1Inside).Count);
+            Assert.Equal(1, _tariffQueryService.FilterFixedPricesTaxByDate(taxes, date1Inside, date2).Count);
+            Assert.Equal(2, _tariffQueryService.FilterFixedPricesTaxByDate(taxes, date1Inside, date2Inside).Count);
+        }
+
+        [Fact]
+        public void FilterPowerPriceTaxesByDate()
+        {
+
+            Setup();
+            DateTimeOffset date1 = new DateTimeOffset(new DateTime(2020, 01, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset date1Inside = new DateTimeOffset(new DateTime(2020, 02, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset date2 = new DateTimeOffset(new DateTime(2020, 06, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset date2Inside = new DateTimeOffset(new DateTime(2020, 07, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset date3 = new DateTimeOffset(new DateTime(2020, 08, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset date4 = new DateTimeOffset(new DateTime(2020, 12, 01, 0, 0, 0, DateTimeKind.Utc));
+
+            PowerPriceTax tax1 = new PowerPriceTax(date1, date2,
+                "tax1", 0, string.Empty, string.Empty);
+            PowerPriceTax tax2 = new PowerPriceTax(date2, date3,
+                "tax2", 0, string.Empty, string.Empty);
+            PowerPriceTax tax3 = new PowerPriceTax(date3, date4,
+                "tax3", 0, string.Empty, string.Empty);
+
+            var taxes = new List<Models.V2.PriceStructure.PowerPriceTax>
+            {
+                tax1,
+                tax2,
+                tax3
+            };
+
+            Assert.Equal(0, _tariffQueryService.FilterPowePriceTaxesByDate(taxes, DateTime.MinValue, date1).Count);
+            Assert.Equal(0, _tariffQueryService.FilterPowePriceTaxesByDate(taxes, date4, DateTime.MaxValue).Count);
+            Assert.Equal(2, _tariffQueryService.FilterPowePriceTaxesByDate(taxes, DateTime.MinValue, date3).Count);
+            Assert.Null(_tariffQueryService.FilterPowePriceTaxesByDate(null, DateTime.MinValue, DateTime.MinValue));
+
+            var endDateResult = _tariffQueryService.FilterPowePriceTaxesByDate(taxes, DateTime.MinValue, date3);
+            Assert.Equal(2, endDateResult.Count);
+            Assert.Empty(endDateResult.Where(x => x.TaxType == "tax3"));
+
+            var startDateResult = _tariffQueryService.FilterPowePriceTaxesByDate(taxes, date2, DateTimeOffset.MaxValue);
+            Assert.Equal(2, startDateResult.Count);
+            Assert.Empty(startDateResult.Where(x => x.TaxType == "tax1"));
+
+            Assert.Equal(1, _tariffQueryService.FilterPowePriceTaxesByDate(taxes, date1, date1Inside).Count);
+            Assert.Equal(1, _tariffQueryService.FilterPowePriceTaxesByDate(taxes, date1Inside, date2).Count);
+            Assert.Equal(2, _tariffQueryService.FilterPowePriceTaxesByDate(taxes, date1Inside, date2Inside).Count);
+        }
+
+        [Fact]
+        public void FilterEnergyPriceTaxesByDate()
+        {
+
+            Setup();
+            DateTimeOffset date1 = new DateTimeOffset(new DateTime(2020, 01, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset date1Inside = new DateTimeOffset(new DateTime(2020, 02, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset date2 = new DateTimeOffset(new DateTime(2020, 06, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset date2Inside = new DateTimeOffset(new DateTime(2020, 07, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset date3 = new DateTimeOffset(new DateTime(2020, 08, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset date4 = new DateTimeOffset(new DateTime(2020, 12, 01, 0, 0, 0, DateTimeKind.Utc));
+
+            EnergyPriceTax tax1 = new EnergyPriceTax(date1, date2,
+                "tax1", 0, string.Empty, string.Empty);
+            EnergyPriceTax tax2 = new EnergyPriceTax(date2, date3,
+                "tax2", 0, string.Empty, string.Empty);
+            EnergyPriceTax tax3 = new EnergyPriceTax(date3, date4,
+                "tax3", 0, string.Empty, string.Empty);
+
+            var taxes = new List<Models.V2.PriceStructure.EnergyPriceTax>
+            {
+                tax1,
+                tax2,
+                tax3
+            };
+
+            Assert.Equal(0, _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, DateTime.MinValue, date1).Count);
+            Assert.Equal(0, _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, date4, DateTime.MaxValue).Count);
+            Assert.Equal(2, _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, DateTime.MinValue, date3).Count);
+            Assert.Null(_tariffQueryService.FilterEnergyPriceTaxesByDate(null, DateTime.MinValue, DateTime.MinValue));
+
+            var endDateResult = _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, DateTime.MinValue, date3);
+            Assert.Equal(2, endDateResult.Count);
+            Assert.Empty(endDateResult.Where(x => x.TaxType == "tax3"));
+
+            var startDateResult = _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, date2, DateTimeOffset.MaxValue);
+            Assert.Equal(2, startDateResult.Count);
+            Assert.Empty(startDateResult.Where(x => x.TaxType == "tax1"));
+
+            Assert.Equal(1, _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, date1, date1Inside).Count);
+            Assert.Equal(1, _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, date1Inside, date2).Count);
+            Assert.Equal(2, _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, date1Inside, date2Inside).Count);
+        }
+
+
+        [Fact]
+        public void GetFixedPriceMonthsTest()
+        {
+            Setup();
+            DateTimeOffset dateYearStart = new DateTimeOffset(new DateTime(2022, 01, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset dateJanuarMiddle = new DateTimeOffset(new DateTime(2022, 01, 15, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset dateJanuarEnd = new DateTimeOffset(new DateTime(2022, 01, 31, 23, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset dateFebruaryMiddle = new DateTimeOffset(new DateTime(2022, 02, 15, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset dateYearEnd = new DateTimeOffset(new DateTime(2022, 12, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset dateLeapYearStart = new DateTimeOffset(new DateTime(2020, 01, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset dateLeapYearEnd = new DateTimeOffset(new DateTime(2020, 12, 01, 0, 0, 0, DateTimeKind.Utc));
+
+            var yearMonths = _tariffQueryService.GetDistinctFixedPriceMonths(dateYearStart, dateYearEnd);
+            Assert.Equal(3, yearMonths.Count);
+            Assert.Contains(28, yearMonths);
+            Assert.Contains(30, yearMonths);
+            Assert.Contains(31, yearMonths);
+
+            var leapYearMonths = _tariffQueryService.GetDistinctFixedPriceMonths(dateLeapYearStart, dateLeapYearEnd);
+            Assert.Equal(3, leapYearMonths.Count);
+            Assert.Contains(29, leapYearMonths);
+            Assert.Contains(30, leapYearMonths);
+            Assert.Contains(31, leapYearMonths);
+
+            var insideMonth = _tariffQueryService.GetDistinctFixedPriceMonths(dateJanuarMiddle, dateFebruaryMiddle);
+            Assert.Equal(2,insideMonth.Count);
+            Assert.Contains(31, insideMonth);
+            Assert.Contains(28, insideMonth);
+
+            var endOfMonth = _tariffQueryService.GetDistinctFixedPriceMonths(dateJanuarMiddle, dateJanuarEnd);
+            Assert.Single(endOfMonth);
+            Assert.Contains(31, endOfMonth);
+
+        }
+
+        [Fact]
+        public void GenerateFixedPricesTopLevelTest()
+        {
+            Setup();
+
+            DateTimeOffset dateYearStart = new DateTimeOffset(new DateTime(2022, 01, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset dateYearEnd = new DateTimeOffset(new DateTime(2022, 12, 01, 0, 0, 0, DateTimeKind.Utc));
+            var fixedPrices = new Models.V2.PriceStructure.FixedPrices("a", new List<FixedPriceLevel>());
+
+            var fixedPrice = _tariffQueryService.GenerateFixedPrices(dateYearStart, dateYearEnd, fixedPrices, null);
+
+            Assert.True(fixedPrice.Id.Length > 0);
+            Assert.Equal(dateYearStart, fixedPrice.StartDate);
+            Assert.Equal(dateYearEnd, fixedPrice.EndDate);
+            Assert.True(fixedPrice.PriceLevel != null);
+            Assert.Empty(fixedPrice.PriceLevel);
+        }
+
+        [Fact]
+        public void GenerateFixedPricesTest()
+        {
+            Setup();
+
+            DateTimeOffset dateYearStart = new DateTimeOffset(new DateTime(2022, 01, 01, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset dateYearEnd = new DateTimeOffset(new DateTime(2022, 12, 01, 0, 0, 0, DateTimeKind.Utc));
+
+            var fixedPriceLevel1 = new FixedPriceLevel("fixedPriceLevel1", 0, 0, String.Empty, String.Empty, String.Empty, 0, String.Empty, String.Empty, String.Empty, String.Empty);
+            var fixedPriceLevel2 = new FixedPriceLevel("fixedPriceLevel2", 0, 0, String.Empty, String.Empty, String.Empty, 0, String.Empty, String.Empty, String.Empty, String.Empty);
+            var fixedPriceLevel3 = new FixedPriceLevel("fixedPriceLevel3", 0, 0, String.Empty, String.Empty, String.Empty, 0, String.Empty, String.Empty, String.Empty, String.Empty);
+
+            var fixedPrices = new Models.V2.PriceStructure.FixedPrices("a", new List<FixedPriceLevel>() {
+                fixedPriceLevel1,
+                fixedPriceLevel2,
+                fixedPriceLevel3 });
+
+            var fixedPriceTaxes = new List<Models.V2.PriceStructure.FixedPriceTax>();
+            fixedPriceTaxes.Add(new FixedPriceTax(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, "vat", 25, "", ""));
+
+            var fixedPrice = _tariffQueryService.GenerateFixedPrices(dateYearStart, dateYearEnd, fixedPrices, fixedPriceTaxes);
+            Assert.True(fixedPrice != null);
+            Assert.True(fixedPrice.PriceLevel != null);
+            Assert.Equal(3,fixedPrice.PriceLevel.Count);
+
+            foreach (var fixedPriceLevel in fixedPrice.PriceLevel)
+            {
+                Assert.True(fixedPriceLevel.HourPrices != null);
+                Assert.Equal(3, fixedPriceLevel.HourPrices.Count);
+                Assert.Single(fixedPriceLevel.HourPrices.Where(a => a.NumberOfDaysInMonth == 31));
+                Assert.Single(fixedPriceLevel.HourPrices.Where(a => a.NumberOfDaysInMonth == 28));
+                Assert.Single(fixedPriceLevel.HourPrices.Where(a => a.NumberOfDaysInMonth == 30));
+            }
+        }
+
+        [Fact]
+        public void AppendFixedPriceLevelsTest()
+        {
+            Setup();
+
+            var fixedPrices = new Models.V2.Digin.FixedPrices();
+            fixedPrices.PriceLevel = new List<Models.V2.Digin.FixedPriceLevel>();
+
+            var fixedPriceLevel1 = new FixedPriceLevel("fixedPriceLevel1", 0, 0, String.Empty, String.Empty, String.Empty, 0, String.Empty, String.Empty, String.Empty, String.Empty);
+            var fixedPriceLevel2 = new FixedPriceLevel("fixedPriceLevel2", 0, 0, String.Empty, String.Empty, String.Empty, 0, String.Empty, String.Empty, String.Empty, String.Empty);
+            var fixedPriceLevel3 = new FixedPriceLevel("fixedPriceLevel3", 0, 0, String.Empty, String.Empty, String.Empty, 0, String.Empty, String.Empty, String.Empty, String.Empty);
+
+            var fixedPricePrices = new Models.V2.PriceStructure.FixedPrices("a", new List<FixedPriceLevel>() {
+                fixedPriceLevel1,
+                fixedPriceLevel2,
+                fixedPriceLevel3 });
+
+            var fixedPriceTaxes = new List<Models.V2.PriceStructure.FixedPriceTax>();
+            fixedPriceTaxes.Add(new FixedPriceTax(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, "vat", 25, "", ""));
+
+//initialize pricelevel and add one monthday
+            _tariffQueryService.AppendFixedPriceLevels(fixedPrices, fixedPricePrices, fixedPriceTaxes, 31);
+            Assert.True(fixedPrices.PriceLevel != null);
+            Assert.Equal(3, fixedPrices.PriceLevel.Count);
+            foreach (var fixedPriceLevel in fixedPrices.PriceLevel)
+            {
+                Assert.True(fixedPriceLevel.HourPrices != null);
+                Assert.Equal(1, fixedPriceLevel.HourPrices.Count);
+                Assert.Single(fixedPriceLevel.HourPrices.Where(a => a.NumberOfDaysInMonth == 31));
+            }
+
+            //no duplicate monthday when adding monthday already existing
+            _tariffQueryService.AppendFixedPriceLevels(fixedPrices, fixedPricePrices, fixedPriceTaxes, 31);
+            Assert.True(fixedPrices.PriceLevel != null);
+            Assert.Equal(3, fixedPrices.PriceLevel.Count);
+            foreach (var fixedPriceLevel in fixedPrices.PriceLevel)
+            {
+                Assert.True(fixedPriceLevel.HourPrices != null);
+                Assert.Equal(1, fixedPriceLevel.HourPrices.Count);
+                Assert.Single(fixedPriceLevel.HourPrices.Where(a => a.NumberOfDaysInMonth == 31));
+            }
+
+            //add new monthday
+            _tariffQueryService.AppendFixedPriceLevels(fixedPrices, fixedPricePrices, fixedPriceTaxes, 30);
+            Assert.True(fixedPrices.PriceLevel != null);
+            Assert.Equal(3, fixedPrices.PriceLevel.Count);
+            foreach (var fixedPriceLevel in fixedPrices.PriceLevel)
+            {
+                Assert.True(fixedPriceLevel.HourPrices != null);
+                Assert.Equal(2, fixedPriceLevel.HourPrices.Count);
+                Assert.Single(fixedPriceLevel.HourPrices.Where(a => a.NumberOfDaysInMonth == 31));
+                Assert.Single(fixedPriceLevel.HourPrices.Where(a => a.NumberOfDaysInMonth == 30));
+            }
         }
     }
 }
