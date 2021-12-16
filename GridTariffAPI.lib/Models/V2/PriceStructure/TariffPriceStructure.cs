@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace GridTariffApi.Lib.Models.V2.PriceStructure
 {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
     public class Company
     {
         [JsonConstructor]
@@ -66,6 +65,92 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
 
         [JsonProperty("monthsOffset")]
         public int? MonthsOffset { get; }
+    }
+
+    public class FixedPriceLevel
+    {
+        [JsonConstructor]
+#pragma warning disable S107 // Methods should not have too many parameters
+        public FixedPriceLevel(
+            [JsonProperty("id")] string id,
+            [JsonProperty("valueMin")] double? valueMin,
+            [JsonProperty("valueMax")] double? valueMax,
+            [JsonProperty("nextIdDown")] string nextIdDown,
+            [JsonProperty("nextIdUp")] string nextIdUp,
+            [JsonProperty("valueUnitOfMeasure")] string valueUnitOfMeasure,
+            [JsonProperty("monthlyFixedExTaxes")] double monthlyFixedExTaxes,
+            [JsonProperty("monthlyUnitOfMeasure")] string monthlyUnitOfMeasure,
+            [JsonProperty("levelInfo")] string levelInfo,
+            [JsonProperty("currency")] string currency,
+            [JsonProperty("monetaryUnitOfMeasure")] string monetaryUnitOfMeasure
+        )
+#pragma warning restore S107 // Methods should not have too many parameters
+
+        {
+            this.Id = id;
+            this.ValueMin = valueMin;
+            this.ValueMax = valueMax;
+            this.NextIdDown = nextIdDown;
+            this.NextIdUp = nextIdUp;
+            this.ValueUnitOfMeasure = valueUnitOfMeasure;
+            this.MonthlyFixedExTaxes = monthlyFixedExTaxes;
+            this.MonthlyUnitOfMeasure = monthlyUnitOfMeasure;
+            this.LevelInfo = levelInfo;
+            this.Currency = currency;
+            this.MonetaryUnitOfMeasure = monetaryUnitOfMeasure;
+        }
+
+        [JsonProperty("id")]
+        public string Id { get; }
+
+        [JsonProperty("valueMin")]
+        public double? ValueMin { get; }
+
+        [JsonProperty("valueMax")]
+        public double? ValueMax { get; }
+
+        [JsonProperty("nextIdDown")]
+        public string NextIdDown { get; }
+
+        [JsonProperty("nextIdUp")]
+        public string NextIdUp { get; }
+
+        [JsonProperty("valueUnitOfMeasure")]
+        public string ValueUnitOfMeasure { get; }
+
+        [JsonProperty("monthlyFixedExTaxes")]
+        public double MonthlyFixedExTaxes { get; }
+
+        [JsonProperty("monthlyUnitOfMeasure")]
+        public string MonthlyUnitOfMeasure { get; }
+
+        [JsonProperty("levelInfo")]
+        public string LevelInfo { get; }
+
+        [JsonProperty("currency")]
+        public string Currency { get; }
+
+        [JsonProperty("monetaryUnitOfMeasure")]
+        public string MonetaryUnitOfMeasure { get; }
+    }
+
+    public class FixedPrices
+    {
+        [JsonConstructor]
+        public FixedPrices(
+            [JsonProperty("id")] string id,
+            [JsonProperty("fixedPriceLevel")] IReadOnlyList<FixedPriceLevel> fixedPriceLevel
+        )
+        {
+            this.Id = id;
+            this.FixedPriceLevel = fixedPriceLevel;
+        }
+
+        [JsonProperty("id")]
+        public string Id { get; }
+
+        [JsonProperty("fixedPriceLevel")]
+        public IReadOnlyList<FixedPriceLevel> FixedPriceLevel { get; }
     }
 
     public class FixedPriceTax
@@ -213,93 +298,6 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         public IReadOnlyList<PowerPriceTax> PowerPriceTaxes { get; set; }
     }
 
-    public class FixedPriceLevel
-    {
-        [JsonConstructor]
-#pragma warning disable S107 // Methods should not have too many parameters
-
-        public FixedPriceLevel(
-            [JsonProperty("id")] string id,
-            [JsonProperty("valueMin")] double? valueMin,
-            [JsonProperty("valueMax")] double? valueMax,
-            [JsonProperty("nextIdDown")] string nextIdDown,
-            [JsonProperty("nextIdUp")] string nextIdUp,
-            [JsonProperty("valueUnitOfMeasure")] string valueUnitOfMeasure,
-            [JsonProperty("monthlyFixedExTaxes")] double monthlyFixedExTaxes,
-            [JsonProperty("monthlyUnitOfMeasure")] string monthlyUnitOfMeasure,
-            [JsonProperty("levelInfo")] string levelInfo,
-            [JsonProperty("currency")] string currency,
-            [JsonProperty("monetaryUnitOfMeasure")] string monetaryUnitOfMeasure
-        )
-#pragma warning restore S107 // Methods should not have too many parameters
-
-        {
-            this.Id = id;
-            this.ValueMin = valueMin;
-            this.ValueMax = valueMax;
-            this.NextIdDown = nextIdDown;
-            this.NextIdUp = nextIdUp;
-            this.ValueUnitOfMeasure = valueUnitOfMeasure;
-            this.MonthlyFixedExTaxes = monthlyFixedExTaxes;
-            this.MonthlyUnitOfMeasure = monthlyUnitOfMeasure;
-            this.LevelInfo = levelInfo;
-            this.Currency = currency;
-            this.MonetaryUnitOfMeasure = monetaryUnitOfMeasure;
-        }
-
-        [JsonProperty("id")]
-        public string Id { get; }
-
-        [JsonProperty("valueMin")]
-        public double? ValueMin { get; }
-
-        [JsonProperty("valueMax")]
-        public double? ValueMax { get; }
-
-        [JsonProperty("nextIdDown")]
-        public string NextIdDown { get; }
-
-        [JsonProperty("nextIdUp")]
-        public string NextIdUp { get; }
-
-        [JsonProperty("valueUnitOfMeasure")]
-        public string ValueUnitOfMeasure { get; }
-
-        [JsonProperty("monthlyFixedExTaxes")]
-        public double MonthlyFixedExTaxes { get; }
-
-        [JsonProperty("monthlyUnitOfMeasure")]
-        public string MonthlyUnitOfMeasure { get; }
-
-        [JsonProperty("levelInfo")]
-        public string LevelInfo { get; }
-
-        [JsonProperty("currency")]
-        public string Currency { get; }
-
-        [JsonProperty("monetaryUnitOfMeasure")]
-        public string MonetaryUnitOfMeasure { get; }
-    }
-
-    public class FixedPrices
-    {
-        [JsonConstructor]
-        public FixedPrices(
-            [JsonProperty("id")] string id,
-            [JsonProperty("fixedPriceLevel")] IReadOnlyList<FixedPriceLevel> fixedPriceLevel
-        )
-        {
-            this.Id = id;
-            this.FixedPriceLevel = fixedPriceLevel;
-        }
-
-        [JsonProperty("id")]
-        public string Id { get; }
-
-        [JsonProperty("fixedPriceLevel")]
-        public IReadOnlyList<FixedPriceLevel> FixedPriceLevel { get; }
-    }
-
     public class EnergyPriceLevel
     {
         [JsonConstructor]
@@ -333,7 +331,7 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
     {
         [JsonConstructor]
         public EnergyPrice(
-            [JsonProperty("energyPriceLevel")] IReadOnlyList<EnergyPriceLevel> energyPriceLevel,
+            [JsonProperty("energyPriceLevel")] List<EnergyPriceLevel> energyPriceLevel,
             [JsonProperty("currency")] string currency,
             [JsonProperty("monetaryUnitOfMeasure")] string monetaryUnitOfMeasure
         )
@@ -357,7 +355,6 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
     {
         [JsonConstructor]
 #pragma warning disable S107 // Methods should not have too many parameters
-
         public PowerPriceLevel(
             [JsonProperty("id")] string id,
             [JsonProperty("valueMin")] double? valueMin,
@@ -373,7 +370,6 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
             [JsonProperty("monetaryUnitOfMeasure")] string monetaryUnitOfMeasure
         )
 #pragma warning restore S107 // Methods should not have too many parameters
-
         {
             this.Id = id;
             this.ValueMin = valueMin;
@@ -430,7 +426,7 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
     {
         [JsonConstructor]
         public PowerPrices(
-            [JsonProperty("powerPriceLevel")] IReadOnlyList<PowerPriceLevel> powerPriceLevel,
+            [JsonProperty("powerPriceLevel")] List<PowerPriceLevel> powerPriceLevel,
             [JsonProperty("id")] string id
         )
         {
@@ -450,15 +446,13 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         [JsonConstructor]
         public Season(
             [JsonProperty("name")] string name,
-            [JsonProperty("months")] IReadOnlyList<int> months,
-            [JsonProperty("fixedPrices")] FixedPrices fixedPrices,
+            [JsonProperty("months")] List<int> months,
             [JsonProperty("energyPrice")] EnergyPrice energyPrice,
             [JsonProperty("powerPrices")] PowerPrices powerPrices
         )
         {
             this.Name = name;
             this.Months = months;
-            this.FixedPrices = fixedPrices;
             this.EnergyPrice = energyPrice;
             this.PowerPrices = powerPrices;
         }
@@ -468,9 +462,6 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
 
         [JsonProperty("months")]
         public IReadOnlyList<int> Months { get; }
-
-        [JsonProperty("fixedPrices")]
-        public FixedPrices FixedPrices { get; }
 
         [JsonProperty("energyPrice")]
         public EnergyPrice EnergyPrice { get; }
@@ -486,13 +477,15 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
             [JsonProperty("startDate")] DateTimeOffset startDate,
             [JsonProperty("endDate")] DateTimeOffset endDate,
             [JsonProperty("taxes")] Taxes taxes,
-            [JsonProperty("seasons")] IReadOnlyList<Season> seasons
+            [JsonProperty("seasons")] List<Season> seasons,
+            [JsonProperty("fixedPrices")] FixedPrices fixedPrices
         )
         {
             this.StartDate = startDate;
             this.EndDate = endDate;
             this.Taxes = taxes;
             this.Seasons = seasons;
+            this.FixedPrices = fixedPrices;
         }
 
         [JsonProperty("startDate")]
@@ -506,6 +499,9 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
 
         [JsonProperty("seasons")]
         public IReadOnlyList<Season> Seasons { get; }
+
+        [JsonProperty("fixedPrices")]
+        public FixedPrices FixedPrices { get; }
     }
 
     public class PowerPriceConfiguration
@@ -531,7 +527,6 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
     {
         [JsonConstructor]
 #pragma warning disable S107 // Methods should not have too many parameters
-
         public TariffType(
             [JsonProperty("tariffKey")] string tariffKey,
             [JsonProperty("product")] string product,
@@ -544,10 +539,11 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
             [JsonProperty("usePowerPriceConfiguration")] bool usePowerPriceConfiguration,
             [JsonProperty("fixedPriceConfiguration")] FixedPriceConfiguration fixedPriceConfiguration,
             [JsonProperty("resolution")] int resolution,
-            [JsonProperty("tariffPrices")] IReadOnlyList<TariffPrice> tariffPrices,
+            [JsonProperty("tariffPrices")] List<TariffPrice> tariffPrices,
             [JsonProperty("powerPriceConfiguration")] PowerPriceConfiguration powerPriceConfiguration
         )
 #pragma warning restore S107 // Methods should not have too many parameters
+
         {
             this.TariffKey = tariffKey;
             this.Product = product;
@@ -609,7 +605,7 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         [JsonConstructor]
         public GridTariff(
             [JsonProperty("company")] Company company,
-            [JsonProperty("tariffTypes")] IReadOnlyList<TariffType> tariffTypes
+            [JsonProperty("tariffTypes")] List<TariffType> tariffTypes
         )
         {
             this.Company = company;
@@ -636,6 +632,7 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         [JsonProperty("gridTariff")]
         public GridTariff GridTariff { get; }
     }
+
     public class TariffPriceStructureRoot
     {
         [JsonConstructor]
