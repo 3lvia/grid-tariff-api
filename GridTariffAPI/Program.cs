@@ -2,7 +2,7 @@ using Elvia.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace GridTariff.Api
+namespace GridTariffApi
 {
     public static class Program
     {
