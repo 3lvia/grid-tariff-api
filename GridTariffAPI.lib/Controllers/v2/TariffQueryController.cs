@@ -45,16 +45,18 @@ namespace GridTariffApi.Lib.Controllers.v2
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
 
-        public async Task<ActionResult<Models.V2.Digin.TariffQueryResult>> TariffQuery([FromQuery] TariffQueryRequest tariffQueryRequest)  
+        public async Task<ActionResult<Models.V2.Digin.TariffQueryResult>> TariffQuery([FromQuery] TariffQueryRequest request)  
         {
-            string validationErrorMsg = ValidateRequestInput(tariffQueryRequest);
+            string validationErrorMsg = ValidateRequestInput(request);
             if (!String.IsNullOrEmpty(validationErrorMsg))
             {
                 return BadRequest(validationErrorMsg);
             }
-            DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(tariffQueryRequest.Range, tariffQueryRequest.StartTime);
-            DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(tariffQueryRequest.Range, tariffQueryRequest.EndTime);
-            var result = await _tariffQueryService.QueryTariffAsync(tariffQueryRequest.TariffKey, startDateTime, endDateTime);
+            DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
+            DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
+
+            var tariffKey = DecideTariffKeyFromInput(request);
+            var result = await _tariffQueryService.QueryTariffAsync(tariffKey, startDateTime, endDateTime);
             return Ok(result);
         }
         public string ValidateRequestInput(TariffQueryRequest request)
@@ -76,7 +78,7 @@ namespace GridTariffApi.Lib.Controllers.v2
             }
 
             var tariffKey = request.TariffKey;
-            var tariffs = _tariffPriceCache.GetTariffs().ToList();
+            var tariffs = _tariffPriceCache.GetTariffs();
 
             if (!String.IsNullOrEmpty(request.Product))
             {
@@ -88,7 +90,7 @@ namespace GridTariffApi.Lib.Controllers.v2
                 tariffKey = tariff.TariffKey;
             }
 
-            if (!tariffs.Exists(x => x.TariffKey == request.TariffKey))
+            if (!tariffs.Any(x => x.TariffKey == tariffKey))
             {
                 return $"TariffType {tariffKey} not found";
             }
@@ -97,6 +99,20 @@ namespace GridTariffApi.Lib.Controllers.v2
             if (startDateTime.DateTime < _gridTariffApiConfig.MinStartDateAllowedQuery)
             {
                 return $"Query before {_gridTariffApiConfig.MinStartDateAllowedQuery} not supported";
+            }
+            return String.Empty;
+        }
+
+        public string DecideTariffKeyFromInput(TariffQueryRequest request)
+        {
+            if (!String.IsNullOrEmpty(request.TariffKey))
+            {
+                return request.TariffKey;
+            }
+            var tariff = _tariffPriceCache.GetTariffs().FirstOrDefault(x => x.Product == request.Product);
+            if (tariff != null)
+            {
+                return tariff.TariffKey;
             }
             return String.Empty;
         }

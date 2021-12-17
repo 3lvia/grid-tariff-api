@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 using GridTariff = GridTariffApi.Lib.Models.V2.PriceStructure.GridTariff;
 using TariffType = GridTariffApi.Lib.Models.V2.PriceStructure.TariffType;
@@ -23,6 +24,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
         TariffQueryController _tariffQueryController;
         private Mock<ITariffPersistence> _tariffPeristenceMock;
         private Mock<IHolidayPersistence> _holidayPeristenceMock;
+        private Mock<ITariffQueryService> _tariffQueryServiceMock;
 
         private void Setup()
         {
@@ -56,7 +58,29 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
                 .Returns(new List<Holiday>());
 
             var tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object);
-            _tariffQueryController = new TariffQueryController(null, serviceHelper, gridTariffApiConfig, tariffPriceCache);
+
+            _tariffQueryServiceMock = new Mock<ITariffQueryService>();
+            _tariffQueryServiceMock
+                .Setup(x => x.QueryTariffAsync("tariffKey", DateTimeOffset.MaxValue, DateTimeOffset.MaxValue))
+                .Returns(Task.FromResult(new GridTariffCollection()));
+
+            _tariffQueryController = new TariffQueryController(_tariffQueryServiceMock.Object, serviceHelper, gridTariffApiConfig, tariffPriceCache);
+        }
+
+
+        [Fact]
+        public async Task ServiceIsCalledTest()
+        {
+            Setup();
+            var request = new TariffQueryRequest()
+            {
+                TariffKey = "tariffKey",
+                StartTime = DateTimeOffset.MaxValue,
+                EndTime = DateTimeOffset.MaxValue
+            };
+
+            await _tariffQueryController.TariffQuery(request);
+            _tariffQueryServiceMock.Verify(x => x.QueryTariffAsync(request.TariffKey, DateTimeOffset.MaxValue, DateTimeOffset.MaxValue), Times.Once);
         }
 
         [Theory]
@@ -92,6 +116,26 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
             Setup();
             var result = _tariffQueryController.ValidateRequestInput(null);
             Assert.Contains("Missing model", result);
+        }
+
+        [Theory]
+        [InlineData("", "", "")]
+        [InlineData("tariffKey", "", "tariffKey")]
+        [InlineData("", "product", "tariffKey")]
+        [InlineData("tariffKey", "product", "tariffKey")]
+        [InlineData("", "notfound", "")]
+
+        public void DecideTariffKeyFromInputTest(string tariffKey, string productKey, string expected)
+        {
+            Setup();
+            var request = new TariffQueryRequest()
+            {
+                TariffKey = tariffKey,
+                Product = productKey
+            };
+
+            var actual = _tariffQueryController.DecideTariffKeyFromInput(request);
+            Assert.Equal(expected, actual);
         }
     }
 }
