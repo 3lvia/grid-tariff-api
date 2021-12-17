@@ -59,11 +59,6 @@ namespace GridTariffApi.Lib.Controllers.v2
             }
             DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
             DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
-
-            var tariffKey = DecideTariffKeyFromInput(request);
-            var result = await _tariffQueryService.QueryTariffAsync(tariffKey, startDateTime, endDateTime);
-            DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(tariffQueryRequest.Range, tariffQueryRequest.StartTime);
-            DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(tariffQueryRequest.Range, tariffQueryRequest.EndTime);
             _loggingDataCollector?.RecordTariffPeriod(startDateTime, endDateTime);
             var tariffKey = DecideTariffKeyFromInput(request);
             var result = await _tariffQueryService.QueryTariffAsync(tariffKey, startDateTime, endDateTime);

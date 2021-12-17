@@ -64,7 +64,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
                 .Setup(x => x.QueryTariffAsync("tariffKey", DateTimeOffset.MaxValue, DateTimeOffset.MaxValue))
                 .Returns(Task.FromResult(new GridTariffCollection()));
 
-            _tariffQueryController = new TariffQueryController(_tariffQueryServiceMock.Object, serviceHelper, gridTariffApiConfig, tariffPriceCache);
+            _tariffQueryController = new TariffQueryController(_tariffQueryServiceMock.Object, serviceHelper, gridTariffApiConfig, tariffPriceCache,null);
         }
 
 
