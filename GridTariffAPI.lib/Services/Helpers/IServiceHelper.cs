@@ -13,6 +13,6 @@ namespace GridTariffApi.Lib.Services.Helpers
         DateTimeOffset DbTimeZoneDateToUtc(DateTime dateTime);
 
         DateTime GetTimeZonedDateTime(DateTime datetime);
-        DateTimeOffset GetTimeZonedDateTimeOffset(DateTimeOffset dateTimeOffset);
+        DateTimeOffset ToConfiguredTimeZone(DateTimeOffset dateTimeOffset);
     }
 }
