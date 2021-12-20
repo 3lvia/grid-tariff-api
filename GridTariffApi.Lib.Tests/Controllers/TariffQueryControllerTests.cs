@@ -1,4 +1,9 @@
-﻿using GridTariffApi.Lib.Config;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Runtime.InteropServices;
+using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.Controllers.v1;
 using GridTariffApi.Lib.EntityFramework;
 using GridTariffApi.Lib.Models.TariffQuery;
@@ -8,19 +13,14 @@ using GridTariffApi.Lib.Services.TariffType;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Runtime.InteropServices;
 using Xunit;
 
-namespace GridTariffApi.Controllers.Tests
+namespace GridTariffApi.Lib.Tests.Controllers
 {
     public class TariffQueryControllerTests
     {
         private PilotTariffQueryController _tariffQueryController;
-        private TariffQueryService _TariffQueryService;
+        private TariffQueryService _tariffQueryService;
 
         private TariffTypeService _tariffTypeService;
         private TariffContext _tariffContext;
@@ -40,9 +40,9 @@ namespace GridTariffApi.Controllers.Tests
             gridTariffApiConfig.TimeZoneForQueries = NorwegianTimeZoneInfo();
 
             _serviceHelper = new ServiceHelper(gridTariffApiConfig);
-            _TariffQueryService = new TariffQueryService(_tariffContext, _serviceHelper);
+            _tariffQueryService = new TariffQueryService(_tariffContext, _serviceHelper);
             _tariffTypeService = new TariffTypeService(_tariffContext);
-            _tariffQueryController = new PilotTariffQueryController(_tariffTypeService, _TariffQueryService, gridTariffApiConfig, _serviceHelper);
+            _tariffQueryController = new PilotTariffQueryController(_tariffTypeService, _tariffQueryService, gridTariffApiConfig, _serviceHelper);
 
             TestHelper testHelper = new TestHelper();
 
