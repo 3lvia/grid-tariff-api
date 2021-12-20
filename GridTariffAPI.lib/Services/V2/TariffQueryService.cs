@@ -126,8 +126,8 @@ namespace GridTariffApi.Lib.Services.V2
             var retVal = new FixedPrices()
             {
                 Id = Guid.NewGuid().ToString(),
-                StartDate = fromDateUtc.ToUniversalTime(),
-                EndDate = toDateUtc.ToUniversalTime(),
+                StartDate = _serviceHelper.ToConfiguredTimeZone(fromDateUtc),
+                EndDate = _serviceHelper.ToConfiguredTimeZone(toDateUtc),
                 PriceLevel = new List<FixedPriceLevel>()
             };
             List<int> daysInMonthToBeProcessed = GetDistinctFixedPriceMonths(fromDateUtc, toDateUtc);
@@ -163,9 +163,9 @@ namespace GridTariffApi.Lib.Services.V2
 
         public List<int> GetDistinctFixedPriceMonths(DateTimeOffset fromDateUtc, DateTimeOffset toDateUtc)
         {
-            var fromDateLocaled = _serviceHelper.GetTimeZonedDateTimeOffset(fromDateUtc.DateTime);
+            var fromDateLocaled = _serviceHelper.ToConfiguredTimeZone(fromDateUtc.DateTime);
             fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day);
-            var toDateLocaled = _serviceHelper.GetTimeZonedDateTimeOffset(toDateUtc.DateTime);
+            var toDateLocaled = _serviceHelper.ToConfiguredTimeZone(toDateUtc.DateTime);
 
             List<int> daysInMonthToBeProcessed = new List<int>();
             while (fromDateLocaled < toDateLocaled)
@@ -180,7 +180,7 @@ namespace GridTariffApi.Lib.Services.V2
         List<TimePeriod> CalcSeasonIntersects(DateTimeOffset fromDate, DateTimeOffset toDate, IReadOnlyList<int> months)
         {
             var retVal = new List<TimePeriod>();
-            var fromDateLocaled = _serviceHelper.GetTimeZonedDateTimeOffset(fromDate);
+            var fromDateLocaled = _serviceHelper.ToConfiguredTimeZone(fromDate);
             int? startMonth = months.OrderBy(x => x).FirstOrDefault(x => x >= fromDateLocaled.Month);
             if (startMonth.HasValue && startMonth.Value > 0)
             {
@@ -290,8 +290,8 @@ namespace GridTariffApi.Lib.Services.V2
                 var powerPrice = new PowerPrices
                 {
                     Id = Guid.NewGuid().ToString(),
-                    StartDate = paramFromDate.ToUniversalTime(),
-                    EndDate = paramToDate.ToUniversalTime(),
+                    StartDate = _serviceHelper.ToConfiguredTimeZone(paramFromDate),
+                    EndDate = _serviceHelper.ToConfiguredTimeZone(paramToDate),
                     PriceLevel = new List<PowerPriceLevel>()
                 };
                 dataAccumulator.TariffPrice.PriceInfo.PowerPrices.Add(powerPrice);
@@ -499,11 +499,8 @@ namespace GridTariffApi.Lib.Services.V2
         {
             var retVal = new Models.V2.Digin.Hours();
 
-            var startTimeLocaled = _serviceHelper.GetTimeZonedDateTimeOffset(startTime);
-            var expireAtLocaled = _serviceHelper.GetTimeZonedDateTimeOffset(expireAt);
-
-            retVal.StartTime = startTime;
-            retVal.ExpiredAt = expireAt;
+            retVal.StartTime = _serviceHelper.ToConfiguredTimeZone(startTime);
+            retVal.ExpiredAt = _serviceHelper.ToConfiguredTimeZone(expireAt);
             retVal.FixedPrice = new FixedPrice()
             {
                 Id = hourSeasonIndex.FixedPriceValue.Id,
@@ -520,12 +517,11 @@ namespace GridTariffApi.Lib.Services.V2
             }
 
             retVal.EnergyPrice = new EnergyPrice();
-            retVal.EnergyPrice.Id = energyInformation.HourArray[startTimeLocaled.Hour].Id;
-            retVal.EnergyPrice.Total = energyInformation.HourArray[startTimeLocaled.Hour].Total;
-            retVal.EnergyPrice.TotalExVat = energyInformation.HourArray[startTimeLocaled.Hour].TotalExVat;
+            retVal.EnergyPrice.Id = energyInformation.HourArray[retVal.StartTime.Hour].Id;
+            retVal.EnergyPrice.Total = energyInformation.HourArray[retVal.StartTime.Hour].Total;
+            retVal.EnergyPrice.TotalExVat = energyInformation.HourArray[retVal.StartTime.Hour].TotalExVat;
             retVal.IsPublicHoliday = isPublicHoliday;
-
-            retVal.ShortName = $"{((startTimeLocaled.Hour * 100) + startTimeLocaled.Minute).ToString().PadLeft(4, '0')}-{((expireAtLocaled.Hour * 100) + expireAtLocaled.Minute).ToString().PadLeft(4, '0')}";
+            retVal.ShortName = $"{((retVal.StartTime.Hour * 100) + retVal.StartTime.Minute).ToString().PadLeft(4, '0')}-{((retVal.ExpiredAt.Hour * 100) + retVal.ExpiredAt.Minute).ToString().PadLeft(4, '0')}";
             return retVal;
         }
 
@@ -589,8 +585,8 @@ namespace GridTariffApi.Lib.Services.V2
             var enovaTaxValue = enovaTax != null ? enovaTax.TaxValue : 0;
 
             retval.Id = Guid.NewGuid().ToString();
-            retval.StartDate = fromDate.UtcDateTime;
-            retval.EndDate = toDate.UtcDateTime;
+            retval.StartDate = _serviceHelper.ToConfiguredTimeZone(fromDate);
+            retval.EndDate = _serviceHelper.ToConfiguredTimeZone(toDate);
             retval.Season = season;
 
             retval.Level = energyPriceLevel.Level;
@@ -785,7 +781,7 @@ namespace GridTariffApi.Lib.Services.V2
 
         public DateTimeOffset GetNextMonthEndDate(DateTimeOffset fromDate, DateTimeOffset toDate)
         {
-            var localedFromDate = _serviceHelper.GetTimeZonedDateTimeOffset(fromDate.UtcDateTime);
+            var localedFromDate = _serviceHelper.ToConfiguredTimeZone(fromDate.UtcDateTime);
             var monthEndDate = localedFromDate.AddMonths(1);
             monthEndDate = new DateTimeOffset(monthEndDate.Year, monthEndDate.Month, 1, 0, 0, 0, monthEndDate.Offset).UtcDateTime;
             if (monthEndDate < toDate)
