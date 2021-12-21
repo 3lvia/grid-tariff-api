@@ -12,7 +12,6 @@ namespace GridTariffApi.Synchronizer.Lib.Services
 {
     public class GridTariffApiSynchronizer : IGridTariffApiSynchronizer
     {
-        private readonly GridTariffApiSynchronizerConfig _gridTariffApiSynchronizerConfig;
         private readonly IBigQueryReader _bigQueryReader;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly ITelemetryInsightsLogger _logger;
@@ -22,12 +21,10 @@ namespace GridTariffApi.Synchronizer.Lib.Services
 
         public GridTariffApiSynchronizer(
             ITelemetryInsightsLogger logger,
-            GridTariffApiSynchronizerConfig gridTariffAPISynchronizerConfig,
             IServiceScopeFactory serviceScopeFactory,
             IBigQueryReader bigQueryReader)
         {
             _logger = logger;
-            _gridTariffApiSynchronizerConfig = gridTariffAPISynchronizerConfig;
             _serviceScopeFactory = serviceScopeFactory;
             _bigQueryReader = bigQueryReader;
         }

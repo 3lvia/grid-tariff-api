@@ -42,14 +42,15 @@ namespace GridTariffApi.Synchronizer.Lib.Services
                 if (next.HasValue)
                 {
                     var delay = next.Value - DateTimeOffset.Now;
-                    if (delay.TotalMilliseconds <= 0)   // prevent non-positive values from being passed into Timer
+                    if (delay.TotalMilliseconds <= 0) // prevent non-positive values from being passed into Timer
                     {
                         await ScheduleJob(cancellationToken);
                     }
+
                     _timer = new System.Timers.Timer(delay.TotalMilliseconds);
                     _timer.Elapsed += async (sender, args) =>
                     {
-                        _timer.Dispose();  // reset and dispose timer
+                        _timer.Dispose(); // reset and dispose timer
                         _timer = null;
 
                         if (!cancellationToken.IsCancellationRequested)
@@ -59,13 +60,13 @@ namespace GridTariffApi.Synchronizer.Lib.Services
 
                         if (!cancellationToken.IsCancellationRequested)
                         {
-                            await ScheduleJob(cancellationToken);    // reschedule next
+                            await ScheduleJob(cancellationToken); // reschedule next
                         }
                     };
                     _timer.Start();
                 }
-                await Task.CompletedTask;
 
+                await Task.CompletedTask;
             }
             catch (Exception e)
             {
@@ -76,7 +77,7 @@ namespace GridTariffApi.Synchronizer.Lib.Services
 
         public virtual async Task DoWork(CancellationToken cancellationToken)
         {
-            await Task.Delay(5000, cancellationToken);  // do the work
+            await Task.Delay(5000, cancellationToken); // do the work
         }
 
         public virtual async Task StopAsync(CancellationToken cancellationToken)
@@ -85,7 +86,13 @@ namespace GridTariffApi.Synchronizer.Lib.Services
             await Task.CompletedTask;
         }
 
-        public virtual void Dispose()
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
         {
             _timer?.Dispose();
         }
@@ -111,12 +118,14 @@ namespace GridTariffApi.Synchronizer.Lib.Services
             {
                 throw new ArgumentNullException(nameof(options), @"Please provide Schedule Configurations.");
             }
+
             var config = new ScheduleConfig<T>();
             options.Invoke(config);
             if (string.IsNullOrWhiteSpace(config.CronExpression))
             {
-                throw new ArgumentNullException(nameof(ScheduleConfig<T>.CronExpression), @"Empty Cron Expression is not allowed.");
+                throw new ArgumentNullException(nameof(config.CronExpression), @"Empty Cron Expression is not allowed.");
             }
+
             services.AddSingleton<IScheduleConfig<T>>(config);
             services.AddHostedService<T>();
             return services;

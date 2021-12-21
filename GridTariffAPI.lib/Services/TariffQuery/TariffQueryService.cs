@@ -39,6 +39,23 @@ namespace GridTariffApi.Lib.Services.TariffQuery
             return result;
         }
 
+        public TariffQueryResult QueryTariff(string tariffKey, DateTime paramFromDate, DateTime paramToDate)
+        {
+            DateTime dbQueryFromDate = paramFromDate.Date;
+            DateTime dbQueryToDate = paramToDate.Date.AddDays(1).AddMinutes(-1);
+
+            String fixedPriceUnitOfMeasure = _tariffContext.Uom.FirstOrDefault(u => u.Id == _fixedPriceUnitOfMeasureId).Unit;
+            var tariffType = _tariffContext.TariffType.Where(t => t.TariffKey.Equals(tariffKey)).Include(t => t.Company).FirstOrDefault();
+            Dictionary<DateTime, String> publicHolidays = _tariffContext.PublicHoliday.Where(
+                    p => p.HolidayDate >= dbQueryFromDate
+                         && p.HolidayDate <= dbQueryToDate)
+                .ToDictionary(p => p.HolidayDate, p => p.Description);
+
+            TariffQueryResult tariffQueryResult = InitTariffQueryResult(tariffType);
+            tariffQueryResult = ProcessTimePeriodPerDay(paramFromDate, paramToDate, tariffType.Id, fixedPriceUnitOfMeasure, publicHolidays, tariffQueryResult);
+            return tariffQueryResult;
+        }
+
         public List<GridTariffWithMeteringPoints> GetMeteringPointTariffs(List<string> meteringPoints)
         {
             return _tariffContext.MeteringPointProducts.Where(m => meteringPoints.Contains(m.MeteringpointId)).Select(
@@ -47,23 +64,6 @@ namespace GridTariffApi.Lib.Services.TariffQuery
                     MeteringPoint = s.MeteringpointId,
                     GridTariff = s.TariffKey
                 }).ToList();
-        }
-
-        public TariffQueryResult QueryTariff(string tariffKey, DateTime paramFromDate, DateTime paramToDate)
-        {
-            DateTime dbQueryFromDate = paramFromDate.Date;
-            DateTime dbQueryToDate = paramToDate.Date.AddDays(1).AddMinutes(-1);
-
-            String fixedPriceUnitOfMeasure = _tariffContext.Uom.Where(u => u.Id == _fixedPriceUnitOfMeasureId).FirstOrDefault().Unit;
-            var tariffType = _tariffContext.TariffType.Where(t => t.TariffKey.Equals(tariffKey)).Include(t => t.Company).FirstOrDefault();
-            Dictionary<DateTime, String> publicHolidays = _tariffContext.PublicHoliday.Where(
-                p => p.HolidayDate >= dbQueryFromDate
-                && p.HolidayDate <= dbQueryToDate)
-                .ToDictionary(p => p.HolidayDate, p => p.Description);
-
-            TariffQueryResult tariffQueryResult = InitTariffQueryResult(tariffType);
-            tariffQueryResult = ProcessTimePeriodPerDay(paramFromDate, paramToDate, tariffType.Id, fixedPriceUnitOfMeasure, publicHolidays, tariffQueryResult);
-            return tariffQueryResult;
         }
 
         private TariffQueryResult ProcessTimePeriodPerDay(DateTime paramFromDate,

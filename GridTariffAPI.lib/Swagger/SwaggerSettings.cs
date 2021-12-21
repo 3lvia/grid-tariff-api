@@ -21,7 +21,7 @@ namespace GridTariffApi.Lib.Swagger
         {
             if (!UseSwaggerUI.HasValue)
             {
-                throw new ArgumentNullException($"{nameof(UseSwaggerUI)} must be either true or false");
+                throw new ArgumentNullException(nameof(UseSwaggerUI), $"{nameof(UseSwaggerUI)} must be either true or false");
             }
         }
     }
