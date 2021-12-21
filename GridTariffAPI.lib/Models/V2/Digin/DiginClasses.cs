@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace GridTariffApi.Lib.Models.V2.Digin
@@ -663,7 +664,92 @@ namespace GridTariffApi.Lib.Models.V2.Digin
         /// <summary>Total price of energy component for this resolution period included all taxes except VAT. This is for easier access to the hourly energy price. Ex. 0.2280</summary>
         [Newtonsoft.Json.JsonProperty("totalExVat", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double TotalExVat { get; set; }
-
-
     }
+
+    public class TariffQueryRequest : IValidatableObject
+    {
+        /// <summary>
+        /// TariffKey dictates which tariff will be queried
+        /// </summary>
+        /// <example>standard</example>
+
+        [StringLength(100)]
+        public String TariffKey { get; set; }
+
+        /// <summary>
+        /// Internal product code or name to be used internally at the grid company. Exclusive OR with TariffKey
+        /// </summary>
+        /// <example>HN ELHA avr</example>
+
+        [StringLength(100)]
+        public String Product { get; set; }
+
+
+        /// <summary>
+        /// Mutual exclusive with startTime/EndTime.  Valid values: yesterday,today,tomorrow. 
+        /// </summary>
+        /// <example>tomorrow</example>
+        [StringLength(10)]
+        [RegularExpression("yesterday|today|tomorrow", ErrorMessage = "Valid values is 'yesterday','today','tomorrow'")]
+        public String Range { get; set; }
+
+        /// <summary>
+        /// Mutual exclusive with Range. Used together with EndTime. Sample value: 2020-11-09T00:00:00.000Z
+        /// </summary>
+        /// <example>2020-11-09T00:00:00.000Z</example>
+        [DataType(DataType.DateTime)]
+        public DateTimeOffset? StartTime { get; set; }
+
+        /// <summary>
+        /// Mutual exclusive with Range. Used together with StartTime. Sample value: 2020-12-31T00:00:00.000Z
+        /// </summary>
+        /// <example>2020-12-31T00:00:00.000Z</example>
+        [DataType(DataType.DateTime)]
+        public DateTimeOffset? EndTime { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            bool hasRange = !String.IsNullOrEmpty(Range);
+            bool hasStart = StartTime.HasValue;
+            bool hasEnd = EndTime.HasValue;
+            if (!hasRange && !(hasStart || hasEnd))
+            {
+                yield return new ValidationResult(
+                              $"Neither range nor StartTime/Endtime specified",
+                              new[] { nameof(Range), nameof(StartTime), nameof(EndTime) });
+            }
+            if (hasRange)
+            {
+                if (hasStart || hasEnd)
+                {
+                    yield return new ValidationResult(
+                      $"Both range and StartTime/Endtime specified",
+                      new[] { nameof(Range), nameof(StartTime), nameof(EndTime) });
+                }
+            }
+            else
+            {
+                if (!hasStart)
+                {
+                    yield return new ValidationResult(
+                      $"StartTime Not specified",
+                      new[] { nameof(StartTime) });
+                }
+                if (!hasEnd)
+                {
+                    yield return new ValidationResult(
+                      $"Endtime Not specified",
+                      new[] { nameof(EndTime) });
+
+                }
+                if (StartTime > EndTime)
+                {
+                    yield return new ValidationResult(
+                      $"StartTime greather than EndTime",
+                      new[] { nameof(StartTime), nameof(EndTime) });
+                }
+            }
+        }
+    }
+
 }

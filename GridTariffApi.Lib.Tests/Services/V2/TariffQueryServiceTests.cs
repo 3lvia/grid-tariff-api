@@ -466,12 +466,12 @@ namespace GridTariffApi.Lib.Tests.Services.V2
                 tax3
             };
 
-            Assert.Equal(0,_tariffQueryService.FilterFixedPricesTaxByDate(taxes, DateTime.MinValue, date1).Count);
-            Assert.Equal(0,_tariffQueryService.FilterFixedPricesTaxByDate(taxes, date4, DateTime.MaxValue).Count);
-            Assert.Equal(2, _tariffQueryService.FilterFixedPricesTaxByDate(taxes, DateTime.MinValue, date3).Count);
-            Assert.Null(_tariffQueryService.FilterFixedPricesTaxByDate(null, DateTime.MinValue, DateTime.MinValue));
+            Assert.Equal(0,_tariffQueryService.FilterFixedPricesTaxByDate(taxes, DateTimeOffset.MinValue, date1).Count);
+            Assert.Equal(0,_tariffQueryService.FilterFixedPricesTaxByDate(taxes, date4, DateTimeOffset.MaxValue).Count);
+            Assert.Equal(2, _tariffQueryService.FilterFixedPricesTaxByDate(taxes, DateTimeOffset.MinValue, date3).Count);
+            Assert.Null(_tariffQueryService.FilterFixedPricesTaxByDate(null, DateTimeOffset.MinValue, DateTimeOffset.MinValue));
 
-            var endDateResult = _tariffQueryService.FilterFixedPricesTaxByDate(taxes, DateTime.MinValue, date3);
+            var endDateResult = _tariffQueryService.FilterFixedPricesTaxByDate(taxes, DateTimeOffset.MinValue, date3);
             Assert.Equal(2, endDateResult.Count);
             Assert.Empty(endDateResult.Where(x => x.TaxType == "tax3"));
 
@@ -510,12 +510,12 @@ namespace GridTariffApi.Lib.Tests.Services.V2
                 tax3
             };
 
-            Assert.Equal(0, _tariffQueryService.FilterPowePriceTaxesByDate(taxes, DateTime.MinValue, date1).Count);
-            Assert.Equal(0, _tariffQueryService.FilterPowePriceTaxesByDate(taxes, date4, DateTime.MaxValue).Count);
-            Assert.Equal(2, _tariffQueryService.FilterPowePriceTaxesByDate(taxes, DateTime.MinValue, date3).Count);
-            Assert.Null(_tariffQueryService.FilterPowePriceTaxesByDate(null, DateTime.MinValue, DateTime.MinValue));
+            Assert.Equal(0, _tariffQueryService.FilterPowePriceTaxesByDate(taxes, DateTimeOffset.MinValue, date1).Count);
+            Assert.Equal(0, _tariffQueryService.FilterPowePriceTaxesByDate(taxes, date4, DateTimeOffset.MaxValue).Count);
+            Assert.Equal(2, _tariffQueryService.FilterPowePriceTaxesByDate(taxes, DateTimeOffset.MinValue, date3).Count);
+            Assert.Null(_tariffQueryService.FilterPowePriceTaxesByDate(null, DateTimeOffset.MinValue, DateTimeOffset.MinValue));
 
-            var endDateResult = _tariffQueryService.FilterPowePriceTaxesByDate(taxes, DateTime.MinValue, date3);
+            var endDateResult = _tariffQueryService.FilterPowePriceTaxesByDate(taxes, DateTimeOffset.MinValue, date3);
             Assert.Equal(2, endDateResult.Count);
             Assert.Empty(endDateResult.Where(x => x.TaxType == "tax3"));
 
@@ -554,12 +554,12 @@ namespace GridTariffApi.Lib.Tests.Services.V2
                 tax3
             };
 
-            Assert.Equal(0, _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, DateTime.MinValue, date1).Count);
-            Assert.Equal(0, _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, date4, DateTime.MaxValue).Count);
-            Assert.Equal(2, _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, DateTime.MinValue, date3).Count);
-            Assert.Null(_tariffQueryService.FilterEnergyPriceTaxesByDate(null, DateTime.MinValue, DateTime.MinValue));
+            Assert.Equal(0, _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, DateTimeOffset.MinValue, date1).Count);
+            Assert.Equal(0, _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, date4, DateTimeOffset.MaxValue).Count);
+            Assert.Equal(2, _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, DateTimeOffset.MinValue, date3).Count);
+            Assert.Null(_tariffQueryService.FilterEnergyPriceTaxesByDate(null, DateTimeOffset.MinValue, DateTimeOffset.MinValue));
 
-            var endDateResult = _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, DateTime.MinValue, date3);
+            var endDateResult = _tariffQueryService.FilterEnergyPriceTaxesByDate(taxes, DateTimeOffset.MinValue, date3);
             Assert.Equal(2, endDateResult.Count);
             Assert.Empty(endDateResult.Where(x => x.TaxType == "tax3"));
 
