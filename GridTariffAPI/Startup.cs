@@ -88,8 +88,10 @@ namespace GridTariffApi
             services.AddTransient<GridTariffApi.Lib.Services.V2.IObjectConversionHelper, GridTariffApi.Lib.Services.V2.ObjectConversionHelper>();
             services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffQueryService, GridTariffApi.Lib.Services.V2.TariffQueryService>();
             services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffTypeService, GridTariffApi.Lib.Services.V2.TariffTypeService>();
+            services.AddTransient<IControllerValidationHelper, ControllerValidationHelper>();
             services.AddScoped<ILoggingDataCollector, LoggingDataCollector>();
             services.AddSingleton<IMetricsLogger, MetricsLogger>();
+            
 
             services.AddStandardElviaTelemetryLogging(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true); 
 

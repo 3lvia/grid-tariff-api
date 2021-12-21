@@ -9,16 +9,14 @@ namespace GridTariffApi.Synchronizer.Lib.Services
 {
     public class BigQueryReader : IBigQueryReader
     {
-        private readonly ITelemetryInsightsLogger _logger;
         private readonly BigQueryClient _bigQueryClient;
 
         private readonly string _meteringPointProductQueryAll = "select meteringpointid, netproduct, source from `grid.v_amisite_latest` where netProduct is not null";
         private readonly string _meteringPointProductQueryIncremental = "select meteringpointid, netproduct, source from `grid.v_amisite_latest` where _updatedTimestamp > @updatedTimeStamp";
 
-        public BigQueryReader(ITelemetryInsightsLogger logger, BigQueryClient bigQueryClient)
+        public BigQueryReader(BigQueryClient bigQueryClient)
         {
             _bigQueryClient = bigQueryClient;
-            _logger = logger;
         }
 
         public async Task<List<BqMeteringPointProduct>> GetAllMeteringPointProductAsync()

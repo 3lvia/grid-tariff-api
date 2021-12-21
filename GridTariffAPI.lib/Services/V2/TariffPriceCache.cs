@@ -95,7 +95,7 @@ namespace GridTariffApi.Lib.Services.V2
                     RefreshCache();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 _lockSemaphore.Release();
                 throw;

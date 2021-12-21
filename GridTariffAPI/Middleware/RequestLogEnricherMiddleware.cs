@@ -67,7 +67,7 @@ namespace GridTariffApi.Middleware
                         if(requestTelemetry != null)
                         {
                             requestTelemetry.Properties["RequestBody"] = string.IsNullOrEmpty(requestBody) ? "<empty>" : requestBody;
-                            requestTelemetry.Properties["ResponseBody"] = string.IsNullOrEmpty(responseBody) ? (exceptionOccured ? "<empty due to exception>" : "<empty>") : responseBody;
+                            requestTelemetry.Properties["ResponseBody"] = BodyStringForTelemetryProperty(responseBody, exceptionOccured);
                             requestTelemetry.Properties["ExceptionInfo"] = exceptionInfo;
                             requestTelemetry.Properties["JwtTokenDetails"] = GetJwtBearerTokenDetailsWithoutSignature(context);
                             requestTelemetry.Properties["AuthenticationFailedDetails"] = enricher.AuthenticationFailedDetails;
@@ -96,6 +96,16 @@ namespace GridTariffApi.Middleware
                     // We've tried logging the exception that occured during tracing. Don't throw, but continue focusing on the original exception from request handling.
                 }
             }
+        }
+
+        private static string BodyStringForTelemetryProperty(string responseBody, bool exceptionOccured)
+        {
+            if (!string.IsNullOrEmpty(responseBody))
+            {
+                return responseBody;
+            }
+
+            return exceptionOccured ? "<empty due to exception>" : "<empty>";
         }
 
         /// <summary>
