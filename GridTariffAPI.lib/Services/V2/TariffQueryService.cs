@@ -1,6 +1,7 @@
 ﻿using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Lib.Models.V2.Digin;
 using GridTariffApi.Lib.Models.V2.Holidays;
+using GridTariffApi.Lib.Models.V2.Internal;
 using GridTariffApi.Lib.Services.Helpers;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,63 @@ namespace GridTariffApi.Lib.Services.V2
             _tariffPriceCache = tariffPriceCache;
             _objectConversionHelper = objectConversionHelper;
             _serviceHelper = serviceHelper;
+        }
+
+        public async Task<TariffQueryRequestMeteringPointsResult> QueryMeteringPointsTariffsAsync(
+            DateTimeOffset paramFromDate,
+            DateTimeOffset paramToDate,
+            List<String> meteringPoints)
+        {
+            var retVal = new TariffQueryRequestMeteringPointsResult();
+            retVal.GridTariffCollections = new List<GridTariffCollection>();
+            var meteringPointsTariffs = _tariffPriceCache.GetMeteringPointsTariffs(meteringPoints);
+            var meteringPointMaxConsumption = _tariffPriceCache.GetMeteringPointMaxConsumptions(meteringPoints);
+
+            foreach (var tariffKey in meteringPointsTariffs.Select(x => x.TariffKey).Distinct())
+            {
+                var gridTariffMeteringPoints = meteringPointsTariffs.Where(x => x.TariffKey == tariffKey).Select(x => x.MeteringPointId).ToList();
+                var gridTariffMeteringPointMaxConsumptions = meteringPointMaxConsumption.Where(x => gridTariffMeteringPoints.Contains(x.MeteringPointId)).ToList();
+                var gridTariff = await GenerateTariffAndAppendMeteringPoints(tariffKey, paramFromDate, paramToDate, gridTariffMeteringPointMaxConsumptions);
+                retVal.GridTariffCollections.Add(gridTariff);
+            }
+            return retVal;
+        }
+
+        public async Task<GridTariffCollection> GenerateTariffAndAppendMeteringPoints(string tariffKey, 
+            DateTimeOffset paramFromDate, 
+            DateTimeOffset paramToDate,
+            List<MeteringPointMaxConsumption> meteringPointMaxConsumptions)
+        {
+            var gridTariff = await QueryTariffAsync(tariffKey, paramFromDate, paramToDate);
+            gridTariff.MeteringPointsAndPriceLevels = new List<MeteringPointsAndPriceLevels>();
+
+            //todo should be some of filtering here (only current month?), thus no need for foreach fixedprices
+            foreach (var fixedPrice in gridTariff.GridTariff.TariffPrice.PriceInfo.FixedPrices)
+            {
+                foreach (var fixedPriceLevel in fixedPrice.PriceLevel)
+                {
+                    var minVal = fixedPriceLevel.ValueMin.HasValue ? fixedPriceLevel.ValueMin.Value : double.MinValue;
+                    var maxVal = fixedPriceLevel.ValueMax.HasValue ? fixedPriceLevel.ValueMax.Value : double.MaxValue;
+                    var test = meteringPointMaxConsumptions.Where(x => minVal <= x.MaxConsumption && x.MaxConsumption < maxVal).ToList();
+                    if (test.Count > 0)
+                    {
+                        var test2 = new MeteringPointsAndPriceLevels();
+                        test2.MeteringPointIds = new MeteringPointIds();
+                        test2.MeteringPointIds.Add(test.Select(x => x.MeteringPointId).ToString());
+
+                        test2.CurrentFixedPriceLevel = new CurrentFixedPriceLevel();
+                        test2.CurrentFixedPriceLevel.Id = fixedPrice.Id;
+                        test2.CurrentFixedPriceLevel.LevelId = fixedPriceLevel.Id;
+                        //todo
+                        //test2.CurrentFixedPriceLevel.LevelValue ==
+                        //test2.CurrentFixedPriceLevel.LastUpdated
+
+                        gridTariff.MeteringPointsAndPriceLevels.Add(test2);
+
+                    }
+                }
+            }
+            return gridTariff;
         }
 
         public async Task<GridTariffCollection> QueryTariffAsync(

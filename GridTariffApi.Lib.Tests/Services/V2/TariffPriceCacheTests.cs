@@ -32,7 +32,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         public void TariffPersistenceCalledOnceTest()
         {
             Setup();
-            TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object);
+            TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object,null,null);
 
             for (int i = 0; i < 10; i++)
             {
@@ -45,7 +45,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         public void HolidayPersistenceCalledOnceTest()
         {
             Setup();
-            TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object);
+            TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object,null,null);
             for (int i = 0; i < 10; i++)
             {
                 tariffPriceCache.GetHolidays(DateTimeOffset.MinValue,DateTimeOffset.MaxValue);
