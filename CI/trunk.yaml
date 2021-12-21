@@ -27,7 +27,7 @@ stages:
             **/*Tests/*.csproj
             !**/*IntegrationTests/*.csproj
             !**/*SmokeTests/*.csproj
-          sonarcloudProjectName: "grid-tariff-api"
+          sonarcloudProjectName: "3lvia_kunde-tariff-api"
       - template: build.yaml@templates
         parameters:
           dockerfile: Dockerfile
