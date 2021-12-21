@@ -47,7 +47,7 @@ namespace GridTariffApi.Lib.Tests.Helpers
                 .Returns(new List<Holiday>());
 
             var serviceHelper = new ServiceHelper(gridTariffApiConfig);
-            var tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object);
+            var tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object,null,null);
 
             _controllerValidationHelper = new ControllerValidationHelper(gridTariffApiConfig, tariffPriceCache, serviceHelper);
         }
