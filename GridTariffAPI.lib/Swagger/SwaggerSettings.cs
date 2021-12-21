@@ -17,11 +17,11 @@ namespace GridTariffApi.Lib.Swagger
 
         public string RelativeUrl => string.IsNullOrEmpty(PathPrefix) ? "/" : PathPrefix;
 
-        public void EnsureValid()
+        public void IfInvalid(Action<string> invalidHandler)
         {
             if (!UseSwaggerUI.HasValue)
             {
-                throw new ArgumentNullException(nameof(UseSwaggerUI), $"{nameof(UseSwaggerUI)} must be either true or false");
+                invalidHandler($"{nameof(UseSwaggerUI)} must be either true or false");
             }
         }
     }
