@@ -25,6 +25,9 @@ stages:
         parameters:
           unitTestProjects: |
             **/*Tests/*.csproj
+            !**/*IntegrationTests/*.csproj
+            !**/*SmokeTests/*.csproj
+          sonarcloudProjectName: "nextin"
       - template: build.yaml@templates
         parameters:
           dockerfile: Dockerfile
