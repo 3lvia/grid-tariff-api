@@ -64,7 +64,8 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
                 .Setup(x => x.QueryTariffAsync("tariffKey", DateTimeOffset.MaxValue, DateTimeOffset.MaxValue))
                 .Returns(Task.FromResult(new GridTariffCollection()));
 
-            _tariffQueryController = new TariffQueryController(_tariffQueryServiceMock.Object, serviceHelper, gridTariffApiConfig, tariffPriceCache,null);
+            var controllerValidationHelper = new ControllerValidationHelper(gridTariffApiConfig, tariffPriceCache, serviceHelper);
+            _tariffQueryController = new TariffQueryController(_tariffQueryServiceMock.Object, serviceHelper,null, controllerValidationHelper);
         }
 
 
@@ -81,61 +82,6 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
 
             await _tariffQueryController.TariffQuery(request);
             _tariffQueryServiceMock.Verify(x => x.QueryTariffAsync(request.TariffKey, DateTimeOffset.MaxValue, DateTimeOffset.MaxValue), Times.Once);
-        }
-
-        [Theory]
-        [InlineData("", "", "Neither TariffKey nor Product present in request", "")]
-        [InlineData("a", "b", "Both TariffKey and Product present in request. These are mutually exclusive", "")]
-        [InlineData("", "b", "Tariff with productcode b not found", "")]
-        [InlineData("a", "", "TariffType a not found", "")]
-        [InlineData("tariffKey", "", "Query before", "31/12/2019 23:15")]
-        [InlineData("tariffKey", "", "", "31/12/2021 23:15")]
-        [InlineData("", "product", "", "31/12/2021 23:15")]
-
-        public void ValidateRequestInput(string tariffKey, string productKey, string expectedError, string queryStartDateUtc)
-        {
-            Setup();
-
-            var request = new TariffQueryRequest()
-            {
-                TariffKey = tariffKey,
-                Product = productKey
-            };
-            if (queryStartDateUtc.Length > 0)
-            {
-                request.StartTime = DateTime.SpecifyKind(DateTime.ParseExact(queryStartDateUtc, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture), DateTimeKind.Utc);
-            }
-
-            var result = _tariffQueryController.ValidateRequestInput(request);
-            Assert.Contains(expectedError, result);
-        }
-
-        [Fact]
-        public void ValidateRequestInputNull()
-        {
-            Setup();
-            var result = _tariffQueryController.ValidateRequestInput(null);
-            Assert.Contains("Missing model", result);
-        }
-
-        [Theory]
-        [InlineData("", "", "")]
-        [InlineData("tariffKey", "", "tariffKey")]
-        [InlineData("", "product", "tariffKey")]
-        [InlineData("tariffKey", "product", "tariffKey")]
-        [InlineData("", "notfound", "")]
-
-        public void DecideTariffKeyFromInputTest(string tariffKey, string productKey, string expected)
-        {
-            Setup();
-            var request = new TariffQueryRequest()
-            {
-                TariffKey = tariffKey,
-                Product = productKey
-            };
-
-            var actual = _tariffQueryController.DecideTariffKeyFromInput(request);
-            Assert.Equal(expected, actual);
         }
     }
 }

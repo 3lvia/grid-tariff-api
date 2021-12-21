@@ -22,21 +22,18 @@ namespace GridTariffApi.Lib.Controllers.v2
     {
         private readonly ITariffQueryService _tariffQueryService;
         private readonly IServiceHelper _serviceHelper;
-        private readonly GridTariffApiConfig _gridTariffApiConfig;
-        private readonly ITariffPriceCache _tariffPriceCache;
         private readonly ILoggingDataCollector _loggingDataCollector;
+        private readonly IControllerValidationHelper _controllerValidationHelper;
 
         public TariffQueryController(ITariffQueryService tariffQueryService,
             IServiceHelper serviceHelper,
-            GridTariffApiConfig gridTariffApiConfig,
-            ITariffPriceCache tariffPriceCache,
-            ILoggingDataCollector loggingDataCollector)
+            ILoggingDataCollector loggingDataCollector,
+            IControllerValidationHelper controllerValidationHelper)
         {
             _tariffQueryService = tariffQueryService;
             _serviceHelper = serviceHelper;
-            _gridTariffApiConfig = gridTariffApiConfig;
-            _tariffPriceCache = tariffPriceCache;
             _loggingDataCollector = loggingDataCollector;
+            _controllerValidationHelper = controllerValidationHelper;
         }
 
 
@@ -52,7 +49,7 @@ namespace GridTariffApi.Lib.Controllers.v2
 
         public async Task<ActionResult<Models.V2.Digin.TariffQueryResult>> TariffQuery([FromQuery] TariffQueryRequest request)  
         {
-            string validationErrorMsg = ValidateRequestInput(request);
+            string validationErrorMsg = _controllerValidationHelper.ValidateRequestInput(request);
             if (!String.IsNullOrEmpty(validationErrorMsg))
             {
                 return BadRequest(validationErrorMsg);
@@ -60,66 +57,9 @@ namespace GridTariffApi.Lib.Controllers.v2
             DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
             DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
             _loggingDataCollector?.RecordTariffPeriod(startDateTime, endDateTime);
-            var tariffKey = DecideTariffKeyFromInput(request);
+            var tariffKey = _controllerValidationHelper.DecideTariffKeyFromInput(request);
             var result = await _tariffQueryService.QueryTariffAsync(tariffKey, startDateTime, endDateTime);
             return Ok(result);
-        }
-        public string ValidateRequestInput(TariffQueryRequest request)
-        {
-            if (request == null)
-            {
-                return "Missing model";
-            }
-
-            bool tariffKeyAndProductMissing = String.IsNullOrEmpty(request.TariffKey) && String.IsNullOrEmpty(request.Product);
-            bool tariffKeyAndProductBothPresent = !String.IsNullOrEmpty(request.TariffKey) && !String.IsNullOrEmpty(request.Product);
-            if (tariffKeyAndProductMissing)
-            {
-                return $"Neither TariffKey nor Product present in request";
-            }
-            if (tariffKeyAndProductBothPresent)
-            {
-                return $"Both TariffKey and Product present in request. These are mutually exclusive";
-            }
-
-            var tariffKey = request.TariffKey;
-            var tariffs = _tariffPriceCache.GetTariffs();
-
-            if (!String.IsNullOrEmpty(request.Product))
-            {
-                var tariff = tariffs.FirstOrDefault(x => x.Product == request.Product);
-                if (tariff == null)
-                {
-                    return $"Tariff with productcode {request.Product} not found";
-                }
-                tariffKey = tariff.TariffKey;
-            }
-
-            if (!tariffs.Any(x => x.TariffKey == tariffKey))
-            {
-                return $"TariffType {tariffKey} not found";
-            }
-
-            var startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
-            if (startDateTime.DateTime < _gridTariffApiConfig.MinStartDateAllowedQuery)
-            {
-                return $"Query before {_gridTariffApiConfig.MinStartDateAllowedQuery} not supported";
-            }
-            return String.Empty;
-        }
-
-        public string DecideTariffKeyFromInput(TariffQueryRequest request)
-        {
-            if (!String.IsNullOrEmpty(request.TariffKey))
-            {
-                return request.TariffKey;
-            }
-            var tariff = _tariffPriceCache.GetTariffs().FirstOrDefault(x => x.Product == request.Product);
-            if (tariff != null)
-            {
-                return tariff.TariffKey;
-            }
-            return String.Empty;
         }
     }
 }
