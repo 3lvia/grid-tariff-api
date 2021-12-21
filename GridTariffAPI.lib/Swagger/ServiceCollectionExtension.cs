@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace GridTariffApi.Lib.Swagger
         /// <param name="settings"></param>
         public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services, SwaggerSettings settings)
         {
-            settings.EnsureValid();
+            settings.IfInvalid(errorMessage => throw new ArgumentException(errorMessage, nameof(settings)));
             services.AddSwaggerGen(options =>
             {
                 options.AddSecurityDefinition("basic", new OpenApiSecurityScheme
@@ -48,7 +49,7 @@ namespace GridTariffApi.Lib.Swagger
         /// <param name="settings"></param>
         public static IApplicationBuilder UseSwaggerConfiguration(this IApplicationBuilder application, SwaggerSettings settings)
         {
-            settings.EnsureValid();
+            settings.IfInvalid(errorMessage => throw new ArgumentException(errorMessage, nameof(settings)));
             var servers = new List<OpenApiServer>
             {
                 new OpenApiServer { Url = settings.RelativeUrl },

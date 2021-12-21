@@ -123,7 +123,7 @@ namespace GridTariffApi.Synchronizer.Lib.Services
             options.Invoke(config);
             if (string.IsNullOrWhiteSpace(config.CronExpression))
             {
-                throw new ArgumentNullException(nameof(config.CronExpression), @"Empty Cron Expression is not allowed.");
+                throw new ArgumentException("Empty CronExpression is not allowed.", nameof(options));
             }
 
             services.AddSingleton<IScheduleConfig<T>>(config);
