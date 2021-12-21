@@ -27,7 +27,7 @@ stages:
             **/*Tests/*.csproj
             !**/*IntegrationTests/*.csproj
             !**/*SmokeTests/*.csproj
-          sonarcloudProjectName: "nextin"
+          sonarcloudProjectName: "grid-tariff-api"
       - template: build.yaml@templates
         parameters:
           dockerfile: Dockerfile
