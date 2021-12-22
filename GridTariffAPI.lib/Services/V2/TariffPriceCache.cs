@@ -16,53 +16,67 @@ namespace GridTariffApi.Lib.Services.V2
         Models.V2.PriceStructure.Company GetCompany();
         Models.V2.PriceStructure.TariffType GetTariff(String tariffKey);
         IReadOnlyList<Models.V2.PriceStructure.TariffType> GetTariffs();
-
         IReadOnlyList<Holiday> GetHolidays(DateTimeOffset fromDate, DateTimeOffset toDate);
-
-        IReadOnlyList<MeteringPointTariff> GetMeteringPointsTariffs(List<String> meteringPoints);
-        IReadOnlyList<MeteringPointMaxConsumption> GetMeteringPointMaxConsumptions(List<string> meteringPoints);
+        List<MeteringPointInformation> GetMeteringPointInformation(List<String> meteringPoints);
     }
 
     public class TariffPriceCache : ITariffPriceCache
     {
         private readonly ITariffPersistence _tariffPersistence;
         private readonly IHolidayPersistence _holidayPersistence;
-        private readonly IMeteringPointTariffPersistence _meteringPointTariffPersistence;
-        private readonly IMeteringPointConsumptionPersistence _meteringPointConsumptionPersistence;
+        private readonly IMeteringPointPersistence _meteringPointTariffPersistence;
 
         private TariffPriceStructureRoot _tariffPriceStructureRoot;
         private IReadOnlyList<Holiday> _holidayRoot;
+        private Dictionary<string, MeteringPointInformation> _meteringPointIndex;
 
         private  DateTime _cacheValidUntil = DateTime.UtcNow;
-        private readonly SemaphoreSlim _lockSemaphore = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim _tariffLockSemaphore = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim _meteringPointLockSemaphore = new SemaphoreSlim(1);
         public TariffPriceCache(ITariffPersistence tariffPersistence
             , IHolidayPersistence holidayPersistence,
-            IMeteringPointTariffPersistence meteringPointTariffPersistence,
-            IMeteringPointConsumptionPersistence meteringPointConsumptionPersistence)
+            IMeteringPointPersistence meteringPointTariffPersistence)
         {
             _tariffPersistence = tariffPersistence;
             _holidayPersistence = holidayPersistence;
             _meteringPointTariffPersistence = meteringPointTariffPersistence;
-            _meteringPointConsumptionPersistence = meteringPointConsumptionPersistence;
         }
 
-
-        public IReadOnlyList<MeteringPointMaxConsumption> GetMeteringPointMaxConsumptions(List<string> meteringPoints)
+        public List<MeteringPointInformation> GetMeteringPointInformation(List<String> meteringPoints)
         {
-            //todo cache implementation or querying db through some other IMeteringPointConsumptionPersistence implementation
-            return _meteringPointConsumptionPersistence.GetMeteringPointsMaxConsumption().Where(x => meteringPoints.Contains(x.MeteringPointId)).ToList();
+            InitMeteringPointIndex();
+            return _meteringPointIndex.Where(a => meteringPoints.Contains(a.Key)).Select(a => a.Value).ToList();
         }
 
-
-        public IReadOnlyList<MeteringPointTariff> GetMeteringPointsTariffs(List<String> meteringPoints)
+        public void InitMeteringPointIndex()
         {
-            //todo cache implementation or querying db through some other IMeteringPointTariffPersistence implementation
-            return _meteringPointTariffPersistence.GetMeteringPointsTariffs().Where(x => meteringPoints.Contains(x.MeteringPointId)).ToList();
+            try
+            {
+                _meteringPointLockSemaphore.Wait();
+                if (_meteringPointIndex == null)
+                 {
+                    _meteringPointIndex = new Dictionary<string, MeteringPointInformation>();
+                    var meteringPointsInformation = _meteringPointTariffPersistence.GetMeteringPointsInformation();
+                    foreach (var meterinPoint in meteringPointsInformation)
+                    {
+                        _meteringPointIndex.Add(meterinPoint.MeteringPointId, meterinPoint);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                _meteringPointLockSemaphore.Release();
+                throw;
+            }
+            finally
+            {
+                _meteringPointLockSemaphore.Release();
+            }
         }
+
         public Models.V2.PriceStructure.Company GetCompany()
         {
             return GetTariffRootElement().GridTariffPriceConfiguration.GridTariff.Company;
-
         }
 
         public IReadOnlyList<Models.V2.PriceStructure.TariffType> GetTariffs()
@@ -89,7 +103,7 @@ namespace GridTariffApi.Lib.Services.V2
         {
             try
             {
-                _lockSemaphore.Wait();
+                _tariffLockSemaphore.Wait();
                 if (_cacheValidUntil.Ticks < DateTime.UtcNow.Ticks)
                 {
                     RefreshCache();
@@ -97,13 +111,13 @@ namespace GridTariffApi.Lib.Services.V2
             }
             catch (Exception)
             {
-                _lockSemaphore.Release();
+                _tariffLockSemaphore.Release();
                 throw;
 
             }
             finally
             {
-                _lockSemaphore.Release();
+                _tariffLockSemaphore.Release();
             }
             return _tariffPriceStructureRoot;
         }

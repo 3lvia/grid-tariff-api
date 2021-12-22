@@ -66,7 +66,7 @@ namespace GridTariffApi.Lib.Controllers.v2
         /// Returns tariff data for a given set of meteringpoints for a given timeperiod.
         /// </summary>
         /// Range and StartTime/Endtime is mutual exclusive, meaning either one must be present, but not bot. Date time formats using Edielstandard, see README file
-        [HttpGet]
+        [HttpPost]
         [Route("meteringpointstariffquery")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -74,20 +74,16 @@ namespace GridTariffApi.Lib.Controllers.v2
 
         public async Task<ActionResult<Models.V2.Digin.TariffQueryRequestMeteringPointsResult>> MeteringPointsTariffQuery([FromBody] TariffQueryRequestMeteringPoints request)
         {
-            await Task.CompletedTask;
-            //string validationErrorMsg = ValidateRequestInput(request);
-            //if (!String.IsNullOrEmpty(validationErrorMsg))
-            //{
-            //    return BadRequest(validationErrorMsg);
-            //}
-            //DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
-            //DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
-            //_loggingDataCollector?.RecordTariffPeriod(startDateTime, endDateTime);
-            //var tariffKey = DecideTariffKeyFromInput(request);
-            //var result = await _tariffQueryService.QueryTariffAsync(tariffKey, startDateTime, endDateTime);
-            return Ok(null);
+            string validationErrorMsg = _controllerValidationHelper.ValidateRequestInput(request);
+            if (!String.IsNullOrEmpty(validationErrorMsg))
+            {
+                return BadRequest(validationErrorMsg);
+            }
+            DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
+            DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
+            _loggingDataCollector?.RecordTariffPeriod(startDateTime, endDateTime);
+            var result = await _tariffQueryService.QueryMeteringPointsTariffsAsync(startDateTime, endDateTime,request.MeteringPointIds.ToList());
+            return Ok(result);
         }
-
-
     }
 }

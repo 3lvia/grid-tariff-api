@@ -83,7 +83,7 @@ namespace GridTariffApi
             //v2
             services.AddSingleton<ITariffPersistence, TariffPersistenceFile>();
             services.AddSingleton<IHolidayPersistence, HolidayPersistenceFile>();
-            services.AddSingleton<IMeteringPointTariffPersistence, MeteringPointTariffPersistenceDummy>();
+            services.AddSingleton<IMeteringPointPersistence, MeteringPointTariffPersistenceDummy>();
             services.AddSingleton<ITariffPriceCache, TariffPriceCache>();
             services.AddTransient<GridTariffApi.Lib.Services.V2.IObjectConversionHelper, GridTariffApi.Lib.Services.V2.ObjectConversionHelper>();
             services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffQueryService, GridTariffApi.Lib.Services.V2.TariffQueryService>();

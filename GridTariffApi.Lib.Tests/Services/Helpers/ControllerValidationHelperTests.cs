@@ -47,7 +47,7 @@ namespace GridTariffApi.Lib.Tests.Helpers
                 .Returns(new List<Holiday>());
 
             var serviceHelper = new ServiceHelper(gridTariffApiConfig);
-            var tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object,null,null);
+            var tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object,null);
 
             _controllerValidationHelper = new ControllerValidationHelper(gridTariffApiConfig, tariffPriceCache, serviceHelper);
         }
@@ -93,7 +93,7 @@ namespace GridTariffApi.Lib.Tests.Helpers
         public void ValidateRequestInputNull()
         {
             Setup();
-            var result = _controllerValidationHelper.ValidateRequestInput(null);
+            var result = _controllerValidationHelper.ValidateRequestInput((TariffQueryRequest)null);
             Assert.Contains("Missing model", result);
         }
 

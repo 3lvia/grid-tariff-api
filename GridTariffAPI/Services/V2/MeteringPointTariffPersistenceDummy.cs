@@ -8,22 +8,22 @@ using System.Threading.Tasks;
 namespace GridTariffApi.Services.V2
 {
     //currently used for mocking code. to be replaced with acutal implementation fetching data from actual source
-    public class MeteringPointTariffPersistenceDummy : IMeteringPointTariffPersistence
+    public class MeteringPointTariffPersistenceDummy : IMeteringPointPersistence
     {
         public MeteringPointTariffPersistenceDummy()
         {
 
         }
 
-        public IReadOnlyList<MeteringPointTariff> GetMeteringPointsTariffs()
+        public IReadOnlyList<MeteringPointInformation> GetMeteringPointsInformation()
         {
-            var retVal = new List<MeteringPointTariff>();
-            retVal.Add(new MeteringPointTariff("standarda", "standard"));
-            retVal.Add(new MeteringPointTariff("standardb", "standard"));
-            retVal.Add(new MeteringPointTariff("standardc", "standard"));
-            retVal.Add(new MeteringPointTariff("powera", "power_ls_dn"));
-            retVal.Add(new MeteringPointTariff("powerb", "power_ls_dn"));
-            retVal.Add(new MeteringPointTariff("powerc", "power_ls_dn"));
+            var retVal = new List<MeteringPointInformation>();
+            retVal.Add(new MeteringPointInformation("standarda", "standard", 6));
+            retVal.Add(new MeteringPointInformation("standardb", "standard", 6.1 ));
+            retVal.Add(new MeteringPointInformation("standardc", "standard", 104));
+            retVal.Add(new MeteringPointInformation("powera", "power_ls_dn",12));
+            retVal.Add(new MeteringPointInformation("powerb", "power_ls_dn",12));
+            retVal.Add(new MeteringPointInformation("powerc", "power_ls_dn",42));
             return retVal;
         }
     }
