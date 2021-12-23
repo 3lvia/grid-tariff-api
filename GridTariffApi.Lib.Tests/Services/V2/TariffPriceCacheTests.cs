@@ -114,7 +114,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             }
             if (fourthId != "")
             {
-                Assert.NotNull(retVal.FirstOrDefault(x => x.MeteringPointId == fourthId));
+                Assert.Null(retVal.FirstOrDefault(x => x.MeteringPointId == fourthId));
             }
         }
     }

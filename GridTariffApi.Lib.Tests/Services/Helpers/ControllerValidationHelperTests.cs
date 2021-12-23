@@ -90,12 +90,21 @@ namespace GridTariffApi.Lib.Tests.Helpers
         }
 
         [Fact]
-        public void ValidateRequestInputNull()
+        public void ValidateTariffQueryRequestInputNull()
         {
             Setup();
             var result = _controllerValidationHelper.ValidateRequestInput((TariffQueryRequest)null);
             Assert.Contains("Missing model", result);
         }
+
+        [Fact]
+        public void ValidatTariffQueryRequestMeteringPointInputNull()
+        {
+            Setup();
+            var result = _controllerValidationHelper.ValidateRequestInput((TariffQueryRequestMeteringPoints)null);
+            Assert.Contains("Missing model", result);
+        }
+
 
         [Theory]
         [InlineData("", "", "")]

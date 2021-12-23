@@ -55,7 +55,7 @@ namespace GridTariffApi.Lib.Services.V2
             return retVal;
         }
 
-        public async Task<GridTariffCollection> GenerateTariffAndAppendMeteringPoints(string tariffKey, 
+        public virtual async Task<GridTariffCollection> GenerateTariffAndAppendMeteringPoints(string tariffKey, 
             DateTimeOffset paramFromDate, 
             DateTimeOffset paramToDate,
             List<MeteringPointInformation> meteringPointInformation)
@@ -119,7 +119,7 @@ namespace GridTariffApi.Lib.Services.V2
             return meteringPointAndPriceLevel;
         }
 
-        public async Task<GridTariffCollection> QueryTariffAsync(
+        public virtual async Task<GridTariffCollection> QueryTariffAsync(
             string tariffKey, 
             DateTimeOffset paramFromDate, 
             DateTimeOffset paramToDate)
