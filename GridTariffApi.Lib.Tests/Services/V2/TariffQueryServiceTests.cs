@@ -23,9 +23,6 @@ namespace GridTariffApi.Lib.Tests.Services.V2
     {
         private TariffQueryService _tariffQueryService;
         private IServiceHelper _serviceHelper;
-        private Mock<ITariffPersistence> _tariffPeristenceMock;
-        private Mock<IHolidayPersistence> _holidayPeristenceMock;
-        private Mock<IMeteringPointPersistence> _meteringPointPersistence;
 
         private void Setup()
         {
@@ -878,6 +875,25 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             Assert.NotNull(retVal);
             Assert.NotNull(retVal.GridTariffCollections);
             Assert.Equal(2, retVal.GridTariffCollections.Count);
+        }
+
+        [Fact]
+        public async Task GenerateTariffAndAppendMeteringPointsTests()
+        {
+            Setup();
+            var tariffPriceCache = new Mock<ITariffPriceCache>();
+            var gridTariffCollectionStandard = new Models.V2.Digin.GridTariffCollection() { GridTariff = new Models.V2.Digin.GridTariff() { TariffType = new Models.V2.Digin.TariffType() { TariffKey = "standard" } } };
+
+            var mock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, _serviceHelper);
+            mock.CallBase = true;
+            mock.Setup(x => x.QueryTariffAsync(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(gridTariffCollectionStandard));
+            mock.Setup(x => x.AppendMeteringPointsToPriceLevels(It.IsAny<List<MeteringPointInformation>>(),It.IsAny< Models.V2.Digin.GridTariffCollection>())).Returns(gridTariffCollectionStandard);
+
+            var test = await mock.Object.GenerateTariffAndAppendMeteringPoints("", DateTimeOffset.MinValue, DateTimeOffset.MaxValue, new List<MeteringPointInformation>());
+            mock.Verify(x => x.QueryTariffAsync(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()), Times.Once);
+            mock.Verify(x => x.AppendMeteringPointsToPriceLevels(It.IsAny<List<MeteringPointInformation>>(), It.IsAny<Models.V2.Digin.GridTariffCollection>()), Times.Once);
+            Assert.NotNull(test);
+            Assert.NotNull(test.MeteringPointsAndPriceLevels);
         }
     }
 }

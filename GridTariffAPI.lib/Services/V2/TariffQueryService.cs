@@ -67,7 +67,7 @@ namespace GridTariffApi.Lib.Services.V2
             return gridTariff;
         }
 
-        public GridTariffCollection AppendMeteringPointsToPriceLevels(List<MeteringPointInformation> meteringPointInformation, GridTariffCollection gridTariff)
+        public virtual GridTariffCollection AppendMeteringPointsToPriceLevels(List<MeteringPointInformation> meteringPointInformation, GridTariffCollection gridTariff)
         {
             //todo should be some of filtering here (only current month?), thus no need for foreach fixedprices
             foreach (var fixedPrice in gridTariff.GridTariff.TariffPrice.PriceInfo.FixedPrices)
