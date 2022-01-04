@@ -1,4 +1,5 @@
-﻿using GridTariffApi.Lib.Interfaces.V2.External;
+﻿using GridTariffApi.Lib.EntityFramework;
+using GridTariffApi.Lib.Interfaces.V2.External;
 using GridTariffApi.Lib.Models.V2.Holidays;
 using GridTariffApi.Lib.Models.V2.Internal;
 using GridTariffApi.Lib.Models.V2.PriceStructure;
@@ -79,47 +80,6 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             _meteringPointPersistence.Verify(x => x.GetMeteringPointsInformation(reqParam), Times.Once);
             tariffPriceCache.GetMeteringPointInformation(reqParam);
             _meteringPointPersistence.Verify(x => x.GetMeteringPointsInformation(reqParam), Times.Once);
-        }
-
-        [Theory]
-        [InlineData("", "", "", "", 0)]
-        [InlineData("mp1", "", "", "", 1)]
-        [InlineData("mp1", "mp2", "", "", 2)]
-        [InlineData("mp1", "mp2", "mp3", "", 3)]
-        [InlineData("mp1", "mp2", "mp3", "mp4", 3)]
-        public void GetMeteringPointInformationTest(string firstId, string secondId, string thirdId, string fourthId, int numExpected)
-        {
-            Setup();
-            TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object, _meteringPointPersistence.Object);
-
-            var param = new List<String>();
-            param.Add(firstId);
-            param.Add(secondId);
-            param.Add(thirdId);
-            param.Add(fourthId);
-            param.RemoveAll(a => a == "");
-
-            var retVal = tariffPriceCache.GetMeteringPointInformation(param);
-            Assert.Equal(numExpected, retVal.Count);
-
-            if (firstId != "")
-            {
-                Assert.NotNull(retVal.FirstOrDefault(x => x.MeteringPointId == firstId));
-            }
-
-            if (secondId != "")
-            {
-                Assert.NotNull(retVal.FirstOrDefault(x => x.MeteringPointId == secondId));
-            }
-
-            if (thirdId != "")
-            {
-                Assert.NotNull(retVal.FirstOrDefault(x => x.MeteringPointId == thirdId));
-            }
-            if (fourthId != "")
-            {
-                Assert.Null(retVal.FirstOrDefault(x => x.MeteringPointId == fourthId));
-            }
         }
     }
 }

@@ -9,15 +9,6 @@ using System.Threading;
 
 namespace GridTariffApi.Lib.Services.V2
 {
-    public interface ITariffPriceCache
-    {
-        Models.V2.PriceStructure.Company GetCompany();
-        Models.V2.PriceStructure.TariffType GetTariff(String tariffKey);
-        IReadOnlyList<Models.V2.PriceStructure.TariffType> GetTariffs();
-        IReadOnlyList<Holiday> GetHolidays(DateTimeOffset fromDate, DateTimeOffset toDate);
-        List<MeteringPointInformation> GetMeteringPointInformation(List<String> meteringPoints);
-    }
-
     public class TariffPriceCache : ITariffPriceCache
     {
         private readonly ITariffPersistence _tariffPersistence;
@@ -28,7 +19,7 @@ namespace GridTariffApi.Lib.Services.V2
         private IReadOnlyList<Holiday> _holidayRoot;
         private readonly Dictionary<string, MeteringPointInformation> _meteringPointIndex;
 
-        private  DateTime _cacheValidUntil = DateTime.UtcNow;
+        private DateTime _cacheValidUntil = DateTime.UtcNow;
         private readonly SemaphoreSlim _tariffLockSemaphore = new SemaphoreSlim(1);
         private readonly SemaphoreSlim _meteringPointLockSemaphore = new SemaphoreSlim(1);
         public TariffPriceCache(ITariffPersistence tariffPersistence
@@ -43,19 +34,18 @@ namespace GridTariffApi.Lib.Services.V2
 
         public List<MeteringPointInformation> GetMeteringPointInformation(List<String> meteringPoints)
         {
-            var distinctMeteringPoints = meteringPoints.Distinct().ToList();
-            var retVal = _meteringPointIndex.Where(a => distinctMeteringPoints.Contains(a.Key)).Select(a => a.Value).ToList();
-            if (retVal.Count < distinctMeteringPoints.Count)
+            var retVal = _meteringPointIndex.Where(a => meteringPoints.Contains(a.Key)).Select(a => a.Value).ToList();
+            if (retVal.Count < meteringPoints.Count)
             {
-                var missingMeteringPoints = distinctMeteringPoints.Where(x => !retVal.Any(a => a.MeteringPointId == x)).ToList();
-                IndexMeteringPoints(missingMeteringPoints);
-                retVal.AddRange(_meteringPointIndex.Where(a => missingMeteringPoints.Contains(a.Key)).Select(a => a.Value));
+                var missingMeteringPoints = meteringPoints.Where(x => !retVal.Any(a => a.MeteringPointId == x)).ToList();
+                retVal.AddRange(IndexMeteringPoints(missingMeteringPoints));
             }
             return retVal;
         }
 
-        public void IndexMeteringPoints(List<String> meteringPoints)
+        public List<MeteringPointInformation> IndexMeteringPoints(List<String> meteringPoints)
         {
+            var retVal = new List<MeteringPointInformation>();
             try
             {
                 _meteringPointLockSemaphore.Wait();
@@ -63,6 +53,7 @@ namespace GridTariffApi.Lib.Services.V2
                 foreach (var meterinPoint in meteringPointsInformation)
                 {
                     _meteringPointIndex.Add(meterinPoint.MeteringPointId, meterinPoint);
+                    retVal.Add(meterinPoint);
                 }
             }
             catch (Exception)
@@ -74,6 +65,7 @@ namespace GridTariffApi.Lib.Services.V2
             {
                 _meteringPointLockSemaphore.Release();
             }
+            return retVal;
         }
 
 
