@@ -50,7 +50,7 @@ namespace GridTariffApi.Lib.Services.V2
             {
                 return new Models.V2.Digin.PowerPriceConfiguration()
                 {
-                    PowerFactorPercentage = (int)(priceConfiguration.PowerFactorPercentage + 0.5),  //todo should be double in digin according to are
+                    PowerFactorPercentage = priceConfiguration.PowerFactorPercentage,
                     ReactivePowerPricing = priceConfiguration.ReactivePowerPricing
                 };
             }

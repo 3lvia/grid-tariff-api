@@ -754,7 +754,6 @@ namespace GridTariffApi.Lib.Models.V2.Digin
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            //todo mer validering (tariffkey/product)
             bool hasRange = !String.IsNullOrEmpty(Range);
             bool hasStart = StartTime.HasValue;
             bool hasEnd = EndTime.HasValue;

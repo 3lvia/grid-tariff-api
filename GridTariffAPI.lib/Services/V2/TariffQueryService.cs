@@ -114,8 +114,8 @@ namespace GridTariffApi.Lib.Services.V2
             meteringPointAndPriceLevel.CurrentFixedPriceLevel.Id = fixedPrice.Id;
             meteringPointAndPriceLevel.CurrentFixedPriceLevel.LevelId = fixedPriceLevel.Id;
             meteringPointAndPriceLevel.CurrentFixedPriceLevel.LevelValue = null;
-            //todo what to do about these ?
-            //meteringPointAndPriceLevel.CurrentFixedPriceLevel.LastUpdated
+//TODO LastUpdated should be set per meteringpoint. Change needed in DIGIN.
+//            meteringPointAndPriceLevel.CurrentFixedPriceLevel.LastUpdated
             return meteringPointAndPriceLevel;
         }
 

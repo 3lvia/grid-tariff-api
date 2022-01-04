@@ -735,10 +735,10 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             fixedPriceLevel.Id = fixedPriceLevelId;
             var mpInformations = new List<MeteringPointInformation>
             {
-                new MeteringPointInformation("a", "", 0),
-                new MeteringPointInformation("b", "", 0),
-                new MeteringPointInformation("c", "", 0),
-                new MeteringPointInformation("d", "", 0)
+                new MeteringPointInformation("a", "",0, DateTimeOffset.MaxValue),
+                new MeteringPointInformation("b", "",0, DateTimeOffset.MaxValue),
+                new MeteringPointInformation("c", "",0, DateTimeOffset.MaxValue),
+                new MeteringPointInformation("d", "",0, DateTimeOffset.MaxValue)
             };
 
             var meteringPointsAndPriceLevels = _tariffQueryService.MeteringPointsToPriceLevel(fixedPrices, fixedPriceLevel, mpInformations);
@@ -752,6 +752,8 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             Assert.Equal(fixedPriceId, meteringPointsAndPriceLevels.CurrentFixedPriceLevel.Id);
             Assert.Equal(fixedPriceLevelId, meteringPointsAndPriceLevels.CurrentFixedPriceLevel.LevelId);
             Assert.Null(meteringPointsAndPriceLevels.CurrentFixedPriceLevel.LevelValue);
+            //TODO LastUpdated should be set per meteringpoint. Change needed in DIGIN.
+            //Assert.Equal(DateTimeOffset.MaxValue,meteringPointsAndPriceLevels.CurrentFixedPriceLevel.LastUpdated);
         }
 
         [Theory]
@@ -777,10 +779,10 @@ namespace GridTariffApi.Lib.Tests.Services.V2
 
             var mpInformations = new List<MeteringPointInformation>
             {
-                new MeteringPointInformation("a", "", 0),
-                new MeteringPointInformation("b", "", 5),
-                new MeteringPointInformation("c", "", 15),
-                new MeteringPointInformation("d", "", 100)
+                new MeteringPointInformation("a", "", 0,DateTimeOffset.MaxValue),
+                new MeteringPointInformation("b", "", 5,DateTimeOffset.MaxValue),
+                new MeteringPointInformation("c", "", 15,DateTimeOffset.MaxValue),
+                new MeteringPointInformation("d", "", 100,DateTimeOffset.MaxValue)
             };
             var meteringPointsAndPriceLevels = _tariffQueryService.CheckPriceLevelForMeteringPoints(mpInformations, fixedPrices, fixedPriceLevel);
             Assert.Equal(expectingNotNull, meteringPointsAndPriceLevels != null);
@@ -821,10 +823,10 @@ namespace GridTariffApi.Lib.Tests.Services.V2
 
             var mpInformations = new List<MeteringPointInformation>
             {
-                new MeteringPointInformation("a", "", 0),
-                new MeteringPointInformation("b", "", 5),
-                new MeteringPointInformation("c", "", 15),
-                new MeteringPointInformation("d", "", 100)
+                new MeteringPointInformation("a", "", 0,DateTimeOffset.MaxValue),
+                new MeteringPointInformation("b", "", 5,DateTimeOffset.MaxValue),
+                new MeteringPointInformation("c", "", 15,DateTimeOffset.MaxValue),
+                new MeteringPointInformation("d", "", 100,DateTimeOffset.MaxValue)
             };
 
             var test = _tariffQueryService.AppendMeteringPointsToPriceLevels(mpInformations, gridTariffCollection);
@@ -847,9 +849,9 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             };
 
             var mockRetVal = new List<MeteringPointInformation>();
-            mockRetVal.Add(new MeteringPointInformation("mp_a", "standard", 0));
-            mockRetVal.Add(new MeteringPointInformation("mp_b", "standard", 0));
-            mockRetVal.Add(new MeteringPointInformation("mp_b", "fobar", 0));
+            mockRetVal.Add(new MeteringPointInformation("mp_a", "standard", 0, DateTimeOffset.MaxValue));
+            mockRetVal.Add(new MeteringPointInformation("mp_b", "standard", 0, DateTimeOffset.MaxValue));
+            mockRetVal.Add(new MeteringPointInformation("mp_b", "fobar", 0, DateTimeOffset.MaxValue));
 
             var tariffPriceCache = new Mock<ITariffPriceCache>();
             tariffPriceCache

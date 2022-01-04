@@ -21,7 +21,7 @@ namespace GridTariffApi.Services.V2
             var retVal = new List<MeteringPointInformation>();
             foreach (var meteringPointProduct in _tariffContext.MeteringPointProducts.Where(x => meteringPointIds.Contains(x.MeteringpointId)))
             {
-                retVal.Add(new MeteringPointInformation(meteringPointProduct.MeteringpointId, meteringPointProduct.TariffKey, 0));
+                retVal.Add(new MeteringPointInformation(meteringPointProduct.MeteringpointId, meteringPointProduct.TariffKey, 0,meteringPointProduct.LastUpdatedDate));
             }
             return retVal;
         }

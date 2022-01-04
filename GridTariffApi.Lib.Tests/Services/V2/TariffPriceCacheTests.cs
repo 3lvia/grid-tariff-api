@@ -31,9 +31,9 @@ namespace GridTariffApi.Lib.Tests.Services.V2
 
 
             var meteringPointInformations = new List<MeteringPointInformation>();
-            meteringPointInformations.Add(new MeteringPointInformation("mp1", null, null));
-            meteringPointInformations.Add(new MeteringPointInformation("mp2", null, null));
-            meteringPointInformations.Add(new MeteringPointInformation("mp3", null, null));
+            meteringPointInformations.Add(new MeteringPointInformation("mp1", null, null, DateTimeOffset.MaxValue));
+            meteringPointInformations.Add(new MeteringPointInformation("mp2", null, null, DateTimeOffset.MaxValue));
+            meteringPointInformations.Add(new MeteringPointInformation("mp3", null, null, DateTimeOffset.MaxValue));
 
             _meteringPointPersistence = new Mock<IMeteringPointPersistence>();
             _meteringPointPersistence
