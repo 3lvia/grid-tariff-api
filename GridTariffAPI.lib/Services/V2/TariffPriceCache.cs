@@ -26,7 +26,7 @@ namespace GridTariffApi.Lib.Services.V2
 
         private TariffPriceStructureRoot _tariffPriceStructureRoot;
         private IReadOnlyList<Holiday> _holidayRoot;
-        private Dictionary<string, MeteringPointInformation> _meteringPointIndex;
+        private readonly Dictionary<string, MeteringPointInformation> _meteringPointIndex;
 
         private  DateTime _cacheValidUntil = DateTime.UtcNow;
         private readonly SemaphoreSlim _tariffLockSemaphore = new SemaphoreSlim(1);

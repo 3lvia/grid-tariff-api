@@ -33,7 +33,7 @@ namespace GridTariffApi.Lib.Services.V2
             retVal.CompanyOrgNo = company.CompanyOrgNo;
             retVal.Title = tariffType.Title;
             retVal.ConsumptionFlag = tariffType.ConsumptionFlag;
-            //retVal.LastUpdated;   todo
+            retVal.LastUpdated = tariffType.LastUpdated;
             retVal.UsePublicHolidayPrices = !String.IsNullOrEmpty(tariffType.UsePublicHolidayOverride);
             retVal.UseWeekendPrices = !string.IsNullOrEmpty(tariffType.UseWeekendPriceOverride);
             retVal.FixedPriceConfiguration = ToFixedPriceConfiguration(tariffType.FixedPriceConfiguration);
@@ -63,27 +63,26 @@ namespace GridTariffApi.Lib.Services.V2
             {
                 retVal = new Models.V2.Digin.FixedPriceConfiguration();
                 retVal.Basis = priceConfiguration.Basis;
-//todo
-                //if (priceConfiguration.MaxhoursPerDay.HasValue)
-                //{
-                //    retVal.MaxhoursPerDay = priceConfiguration.MaxhoursPerDay.Value;
-                //}
-                //if (priceConfiguration.DaysPerMonth.HasValue)
-                //{
-                //    retVal.DaysPerMonth = priceConfiguration.DaysPerMonth.Value;
-                //}
-                //if (priceConfiguration.AllDaysPerMonth.HasValue)
-                //{
-                //    retVal.AllDaysPerMonth = priceConfiguration.AllDaysPerMonth.Value;
-                //}
-                //if (priceConfiguration.MaxhoursPerMonth.HasValue)
-                //{
-                //    retVal.MaxhoursPerMonth = priceConfiguration.MaxhoursPerMonth.Value;
-                //}
-                //if (priceConfiguration.Months.HasValue)
-                //{
-                //    retVal.Months = priceConfiguration.Months.Value;
-                //}
+                if (priceConfiguration.MaxhoursPerDay.HasValue)
+                {
+                    retVal.MaxhoursPerDay = priceConfiguration.MaxhoursPerDay.Value;
+                }
+                if (priceConfiguration.DaysPerMonth.HasValue)
+                {
+                    retVal.DaysPerMonth = priceConfiguration.DaysPerMonth.Value;
+                }
+                if (priceConfiguration.AllDaysPerMonth.HasValue)
+                {
+                    retVal.AllDaysPerMonth = priceConfiguration.AllDaysPerMonth.Value;
+                }
+                if (priceConfiguration.MaxhoursPerMonth.HasValue)
+                {
+                    retVal.MaxhoursPerMonth = priceConfiguration.MaxhoursPerMonth.Value;
+                }
+                if (priceConfiguration.Months.HasValue)
+                {
+                    retVal.Months = priceConfiguration.Months.Value;
+                }
             }
             return retVal;
         }

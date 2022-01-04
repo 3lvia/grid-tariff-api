@@ -28,9 +28,9 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         [JsonConstructor]
         public FixedPriceConfiguration(
             [JsonProperty("basis")] string basis,
-            [JsonProperty("maxhoursPerDay")] object maxhoursPerDay,
-            [JsonProperty("daysPerMonth")] object daysPerMonth,
-            [JsonProperty("allDaysPerMonth")] object allDaysPerMonth,
+            [JsonProperty("maxhoursPerDay")] int? maxhoursPerDay,
+            [JsonProperty("daysPerMonth")] int? daysPerMonth,
+            [JsonProperty("allDaysPerMonth")] bool? allDaysPerMonth,
             [JsonProperty("maxhoursPerMonth")] int? maxhoursPerMonth,
             [JsonProperty("months")] int? months,
             [JsonProperty("monthsOffset")] int? monthsOffset
@@ -49,13 +49,13 @@ namespace GridTariffApi.Lib.Models.V2.PriceStructure
         public string Basis { get; }
 
         [JsonProperty("maxhoursPerDay")]
-        public object MaxhoursPerDay { get; }
+        public int? MaxhoursPerDay { get; }
 
         [JsonProperty("daysPerMonth")]
-        public object DaysPerMonth { get; }
+        public int? DaysPerMonth { get; }
 
         [JsonProperty("allDaysPerMonth")]
-        public object AllDaysPerMonth { get; }
+        public bool? AllDaysPerMonth { get; }
 
         [JsonProperty("maxhoursPerMonth")]
         public int? MaxhoursPerMonth { get; }
