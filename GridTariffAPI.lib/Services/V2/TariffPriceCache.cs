@@ -1,12 +1,10 @@
 ﻿using GridTariffApi.Lib.Interfaces.V2.External;
-using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Lib.Models.V2.Holidays;
 using GridTariffApi.Lib.Models.V2.Internal;
 using GridTariffApi.Lib.Models.V2.PriceStructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace GridTariffApi.Lib.Services.V2
@@ -40,27 +38,31 @@ namespace GridTariffApi.Lib.Services.V2
             _tariffPersistence = tariffPersistence;
             _holidayPersistence = holidayPersistence;
             _meteringPointTariffPersistence = meteringPointTariffPersistence;
+            _meteringPointIndex = new Dictionary<string, MeteringPointInformation>();
         }
 
         public List<MeteringPointInformation> GetMeteringPointInformation(List<String> meteringPoints)
         {
-            InitMeteringPointIndex();
-            return _meteringPointIndex.Where(a => meteringPoints.Contains(a.Key)).Select(a => a.Value).ToList();
+            var distinctMeteringPoints = meteringPoints.Distinct().ToList();
+            var retVal = _meteringPointIndex.Where(a => distinctMeteringPoints.Contains(a.Key)).Select(a => a.Value).ToList();
+            if (retVal.Count < distinctMeteringPoints.Count)
+            {
+                var missingMeteringPoints = distinctMeteringPoints.Where(x => !retVal.Any(a => a.MeteringPointId == x)).ToList();
+                IndexMeteringPoints(missingMeteringPoints);
+                retVal.AddRange(_meteringPointIndex.Where(a => missingMeteringPoints.Contains(a.Key)).Select(a => a.Value));
+            }
+            return retVal;
         }
 
-        public void InitMeteringPointIndex()
+        public void IndexMeteringPoints(List<String> meteringPoints)
         {
             try
             {
                 _meteringPointLockSemaphore.Wait();
-                if (_meteringPointIndex == null)
-                 {
-                    _meteringPointIndex = new Dictionary<string, MeteringPointInformation>();
-                    var meteringPointsInformation = _meteringPointTariffPersistence.GetMeteringPointsInformation();
-                    foreach (var meterinPoint in meteringPointsInformation)
-                    {
-                        _meteringPointIndex.Add(meterinPoint.MeteringPointId, meterinPoint);
-                    }
+                var meteringPointsInformation = _meteringPointTariffPersistence.GetMeteringPointsInformation(meteringPoints);
+                foreach (var meterinPoint in meteringPointsInformation)
+                {
+                    _meteringPointIndex.Add(meterinPoint.MeteringPointId, meterinPoint);
                 }
             }
             catch (Exception)
@@ -73,6 +75,7 @@ namespace GridTariffApi.Lib.Services.V2
                 _meteringPointLockSemaphore.Release();
             }
         }
+
 
         public Models.V2.PriceStructure.Company GetCompany()
         {
@@ -122,7 +125,6 @@ namespace GridTariffApi.Lib.Services.V2
             return _tariffPriceStructureRoot;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S2696:Instance members should not write to \"static\" fields", Justification = "Performed inside semaphore")]
         private void RefreshCache()
         {
             _tariffPriceStructureRoot = _tariffPersistence.GetTariffPriceStructure();

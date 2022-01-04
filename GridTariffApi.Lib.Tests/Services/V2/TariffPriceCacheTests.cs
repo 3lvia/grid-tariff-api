@@ -37,7 +37,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
 
             _meteringPointPersistence = new Mock<IMeteringPointPersistence>();
             _meteringPointPersistence
-                .Setup(x => x.GetMeteringPointsInformation())
+                .Setup(x => x.GetMeteringPointsInformation(It.IsAny<List<String>>()))
                 .Returns((IReadOnlyList<Models.V2.Internal.MeteringPointInformation>)meteringPointInformations);
         }
 
@@ -71,10 +71,14 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         {
             Setup();
             TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object, _meteringPointPersistence.Object);
-            tariffPriceCache.InitMeteringPointIndex();
-            _meteringPointPersistence.Verify(x => x.GetMeteringPointsInformation(), Times.Once);
-            tariffPriceCache.InitMeteringPointIndex();
-            _meteringPointPersistence.Verify(x => x.GetMeteringPointsInformation(), Times.Once);
+
+            var reqParam = new List<String>();
+            reqParam.Add("mp1");
+            _meteringPointPersistence.Verify(x => x.GetMeteringPointsInformation(reqParam), Times.Never);
+            tariffPriceCache.GetMeteringPointInformation(reqParam);
+            _meteringPointPersistence.Verify(x => x.GetMeteringPointsInformation(reqParam), Times.Once);
+            tariffPriceCache.GetMeteringPointInformation(reqParam);
+            _meteringPointPersistence.Verify(x => x.GetMeteringPointsInformation(reqParam), Times.Once);
         }
 
         [Theory]

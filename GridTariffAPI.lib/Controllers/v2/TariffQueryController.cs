@@ -1,5 +1,4 @@
-﻿using GridTariffApi.Lib.Config;
-using GridTariffApi.Lib.Models.V2.Digin;
+﻿using GridTariffApi.Lib.Models.V2.Digin;
 using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services.V2;
 using Microsoft.AspNetCore.Authorization;
@@ -82,7 +81,7 @@ namespace GridTariffApi.Lib.Controllers.v2
             DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
             DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
             _loggingDataCollector?.RecordTariffPeriod(startDateTime, endDateTime);
-            var result = await _tariffQueryService.QueryMeteringPointsTariffsAsync(startDateTime, endDateTime,request.MeteringPointIds.ToList());
+            var result = await _tariffQueryService.QueryMeteringPointsTariffsAsync(startDateTime, endDateTime,request.MeteringPointIds.Distinct().ToList());
             return Ok(result);
         }
     }

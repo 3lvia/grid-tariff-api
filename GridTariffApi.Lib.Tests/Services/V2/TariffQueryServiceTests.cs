@@ -839,7 +839,6 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         public async Task QueryMeteringPointsTariffsAsyncTests()
         {
             Setup();
-
             var meteringPoints = new List<String>
             {
                 "mp_a",
@@ -852,7 +851,6 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             mockRetVal.Add(new MeteringPointInformation("mp_b", "standard", 0));
             mockRetVal.Add(new MeteringPointInformation("mp_b", "fobar", 0));
 
-
             var tariffPriceCache = new Mock<ITariffPriceCache>();
             tariffPriceCache
                 .Setup(x => x.GetMeteringPointInformation(It.IsAny<List<String>>()))
@@ -862,8 +860,8 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             var gridTariffCollectionFobar = new Models.V2.Digin.GridTariffCollection() { GridTariff = new Models.V2.Digin.GridTariff() { TariffType = new Models.V2.Digin.TariffType() { TariffKey = "fobar" } } };
 
             var mock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, _serviceHelper);
-            mock.Setup(x => x.QueryTariffAsync("standard", DateTime.MinValue, DateTime.MaxValue)).Returns(Task.FromResult(gridTariffCollectionStandard));
-            mock.Setup(x => x.QueryTariffAsync("fobar", DateTime.MinValue, DateTime.MaxValue)).Returns(Task.FromResult(gridTariffCollectionFobar));
+            mock.Setup(x => x.QueryTariffAsync("standard", DateTimeOffset.MinValue, DateTimeOffset.MaxValue)).Returns(Task.FromResult(gridTariffCollectionStandard));
+            mock.Setup(x => x.QueryTariffAsync("fobar", DateTimeOffset.MinValue, DateTimeOffset.MaxValue)).Returns(Task.FromResult(gridTariffCollectionFobar));
             mock.Setup(x => x.GenerateTariffAndAppendMeteringPoints(It.IsAny<String>(), DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<MeteringPointInformation>>()))
                 .Returns(Task.FromResult(new Models.V2.Digin.GridTariffCollection()));
 
