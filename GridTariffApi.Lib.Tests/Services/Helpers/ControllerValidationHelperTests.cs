@@ -20,8 +20,8 @@ namespace GridTariffApi.Lib.Tests.Helpers
     public class ControllerValidationHelperTests
     {
         private IControllerValidationHelper _controllerValidationHelper;
-        private Mock<ITariffPersistence> _tariffPeristenceMock;
-        private Mock<IHolidayPersistence> _holidayPeristenceMock;
+        private Mock<ITariffRepository> _tariffPeristenceMock;
+        private Mock<IHolidayRepository> _holidayPeristenceMock;
 
         private void Setup()
         {
@@ -36,18 +36,18 @@ namespace GridTariffApi.Lib.Tests.Helpers
             var gridTariffPriceConfiguration = new GridTariffPriceConfiguration(gridTariff);
             var TariffPriceStructureRoot = new TariffPriceStructureRoot(gridTariffPriceConfiguration);
 
-            _tariffPeristenceMock = new Mock<ITariffPersistence>();
+            _tariffPeristenceMock = new Mock<ITariffRepository>();
             _tariffPeristenceMock
                 .Setup(x => x.GetTariffPriceStructure())
                 .Returns(TariffPriceStructureRoot);
 
-            _holidayPeristenceMock = new Mock<IHolidayPersistence>();
+            _holidayPeristenceMock = new Mock<IHolidayRepository>();
             _holidayPeristenceMock
                 .Setup(x => x.GetHolidays())
                 .Returns(new List<Holiday>());
 
             var serviceHelper = new ServiceHelper(gridTariffApiConfig);
-            var tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object);
+            var tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object,null);
 
             _controllerValidationHelper = new ControllerValidationHelper(gridTariffApiConfig, tariffPriceCache, serviceHelper);
         }
@@ -90,12 +90,21 @@ namespace GridTariffApi.Lib.Tests.Helpers
         }
 
         [Fact]
-        public void ValidateRequestInputNull()
+        public void ValidateTariffQueryRequestInputNull()
         {
             Setup();
-            var result = _controllerValidationHelper.ValidateRequestInput(null);
+            var result = _controllerValidationHelper.ValidateRequestInput((TariffQueryRequest)null);
             Assert.Contains("Missing model", result);
         }
+
+        [Fact]
+        public void ValidatTariffQueryRequestMeteringPointInputNull()
+        {
+            Setup();
+            var result = _controllerValidationHelper.ValidateRequestInput((TariffQueryRequestMeteringPoints)null);
+            Assert.Contains("Missing model", result);
+        }
+
 
         [Theory]
         [InlineData("", "", "")]

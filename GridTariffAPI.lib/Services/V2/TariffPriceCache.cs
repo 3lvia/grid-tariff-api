@@ -1,44 +1,66 @@
 ﻿using GridTariffApi.Lib.Interfaces.V2.External;
 using GridTariffApi.Lib.Models.V2.Holidays;
+using GridTariffApi.Lib.Models.V2.Internal;
 using GridTariffApi.Lib.Models.V2.PriceStructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace GridTariffApi.Lib.Services.V2
 {
-    public interface ITariffPriceCache
-    {
-        Models.V2.PriceStructure.Company GetCompany();
-        Models.V2.PriceStructure.TariffType GetTariff(String tariffKey);
-        IReadOnlyList<Models.V2.PriceStructure.TariffType> GetTariffs();
-
-        IReadOnlyList<Holiday> GetHolidays(DateTimeOffset fromDate, DateTimeOffset toDate);
-    }
-
     public class TariffPriceCache : ITariffPriceCache
     {
-        private readonly ITariffPersistence _tariffPersistence;
-        private readonly IHolidayPersistence _holidayPersistence;
+        private readonly ITariffRepository _tariffRepository;
+        private readonly IHolidayRepository _holidayRepository;
+        private readonly IMeteringPointRepository _meteringPointTariffRepository;
 
         private TariffPriceStructureRoot _tariffPriceStructureRoot;
         private IReadOnlyList<Holiday> _holidayRoot;
+        private readonly Dictionary<string, MeteringPointInformation> _meteringPointIndex;
 
-        private  DateTime _cacheValidUntil = DateTime.UtcNow;
-        private readonly SemaphoreSlim _lockSemaphore = new SemaphoreSlim(1);
-        public TariffPriceCache(ITariffPersistence tariffPersistence
-            , IHolidayPersistence holidayPersistence)
+        private DateTime _tariffCacheValidUntil = DateTime.UtcNow;
+        public TariffPriceCache(ITariffRepository tariffRepository
+            , IHolidayRepository holidayRepository,
+            IMeteringPointRepository meteringPointTariffRepository)
         {
-            _tariffPersistence = tariffPersistence;
-            _holidayPersistence = holidayPersistence;
+            _tariffRepository = tariffRepository;
+            _holidayRepository = holidayRepository;
+            _meteringPointTariffRepository = meteringPointTariffRepository;
+            _meteringPointIndex = new Dictionary<string, MeteringPointInformation>();
+            RefreshCache();
         }
+
+        public List<MeteringPointInformation> GetMeteringPointInformation(List<String> meteringPoints)
+        {
+            var retVal = _meteringPointIndex.Where(a => meteringPoints.Contains(a.Key)).Select(a => a.Value).ToList();
+            if (retVal.Count < meteringPoints.Count)
+            {
+                var missingMeteringPoints = meteringPoints.Where(x => !retVal.Any(a => a.MeteringPointId == x)).ToList();
+                retVal.AddRange(IndexMeteringPoints(missingMeteringPoints));
+            }
+            return retVal;
+        }
+
+        public List<MeteringPointInformation> IndexMeteringPoints(List<String> meteringPoints)
+        {
+            var retVal = new List<MeteringPointInformation>();
+            lock (_meteringPointIndex)
+            {
+                var meteringPointsInformation = _meteringPointTariffRepository.GetMeteringPointsInformation(meteringPoints);
+                foreach (var meterinPoint in meteringPointsInformation)
+                {
+                    _meteringPointIndex.Add(meterinPoint.MeteringPointId, meterinPoint);
+                    retVal.Add(meterinPoint);
+                }
+            }
+            return retVal;
+        }
+
 
         public Models.V2.PriceStructure.Company GetCompany()
         {
             return GetTariffRootElement().GridTariffPriceConfiguration.GridTariff.Company;
-
         }
 
         public IReadOnlyList<Models.V2.PriceStructure.TariffType> GetTariffs()
@@ -63,33 +85,22 @@ namespace GridTariffApi.Lib.Services.V2
 
         public TariffPriceStructureRoot GetTariffRootElement()
         {
-            try
+            lock(_tariffPriceStructureRoot)
             {
-                _lockSemaphore.Wait();
-                if (_cacheValidUntil.Ticks < DateTime.UtcNow.Ticks)
+                if (_tariffCacheValidUntil.Ticks < DateTime.UtcNow.Ticks)
                 {
                     RefreshCache();
                 }
-            }
-            catch (Exception)
-            {
-                _lockSemaphore.Release();
-                throw;
 
-            }
-            finally
-            {
-                _lockSemaphore.Release();
             }
             return _tariffPriceStructureRoot;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S2696:Instance members should not write to \"static\" fields", Justification = "Performed inside semaphore")]
         private void RefreshCache()
         {
-            _tariffPriceStructureRoot = _tariffPersistence.GetTariffPriceStructure();
-            _holidayRoot = _holidayPersistence.GetHolidays();
-            _cacheValidUntil = DateTime.UtcNow.AddMinutes(Constants.CacheConsideredInvalidMinutes).Date;
+            _tariffPriceStructureRoot = _tariffRepository.GetTariffPriceStructure();
+            _holidayRoot = _holidayRepository.GetHolidays();
+            _tariffCacheValidUntil = DateTime.UtcNow.AddMinutes(Constants.CacheConsideredInvalidMinutes).Date;
         }
     }
 }

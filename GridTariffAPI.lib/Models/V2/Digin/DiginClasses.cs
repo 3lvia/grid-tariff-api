@@ -19,8 +19,6 @@ namespace GridTariffApi.Lib.Models.V2.Digin
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-
-
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
@@ -34,17 +32,64 @@ namespace GridTariffApi.Lib.Models.V2.Digin
 
         /// <summary>Start timestamp for the time range. Inclusive AND with endTime. Exclusive OR with range. Example 2021-09-17T00:00:00+02:00</summary>
         [Newtonsoft.Json.JsonProperty("startTime", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset StartTime { get; set; }
+        public System.DateTimeOffset? StartTime { get; set; }
 
         /// <summary>End timestamp for the time range. Inclusive AND with startTime. Exclusive OR with range. Example 2021-09-18T00:00:00+02:00</summary>
         [Newtonsoft.Json.JsonProperty("endTime", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset EndTime { get; set; }
+        public System.DateTimeOffset? EndTime { get; set; }
 
         /// <summary>List of meteringpoint-ids you are the registered owner of as a private person or your company has e legal reason to request in a customer/provider relationship. Example 707057500000000001</summary>
         [Newtonsoft.Json.JsonProperty("meteringPointIds", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<string> MeteringPointIds { get; set; }
 
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            bool hasRange = !String.IsNullOrEmpty(Range);
+            bool hasStart = StartTime.HasValue;
+            bool hasEnd = EndTime.HasValue;
+            if (!hasRange && !(hasStart || hasEnd))
+            {
+                yield return new ValidationResult(
+                              $"Neither range nor StartTime/Endtime specified",
+                              new[] { nameof(Range), nameof(StartTime), nameof(EndTime) });
+            }
+            if (hasRange)
+            {
+                if (hasStart || hasEnd)
+                {
+                    yield return new ValidationResult(
+                      $"Both range and StartTime/Endtime specified",
+                      new[] { nameof(Range), nameof(StartTime), nameof(EndTime) });
+                }
+            }
+            else
+            {
+                if (!hasStart)
+                {
+                    yield return new ValidationResult(
+                      $"StartTime Not specified",
+                      new[] { nameof(StartTime) });
+                }
+                if (!hasEnd)
+                {
+                    yield return new ValidationResult(
+                      $"Endtime Not specified",
+                      new[] { nameof(EndTime) });
 
+                }
+                if (StartTime > EndTime)
+                {
+                    yield return new ValidationResult(
+                      $"StartTime greather than EndTime",
+                      new[] { nameof(StartTime), nameof(EndTime) });
+                }
+            }
+            if (MeteringPointIds == null)
+            {
+                yield return new ValidationResult(
+                  $"No meteringpoints in request");
+            }
+        }
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
@@ -606,7 +651,7 @@ namespace GridTariffApi.Lib.Models.V2.Digin
 
         /// <summary>Value of the max hour setting the level of fixedprice. NOT IN USE YET AS IT REQUIRES A HIGHER LEVEL OF AUTHENTICATION AND AUTHORIZATION. Ex. 9.0000</summary>
         [Newtonsoft.Json.JsonProperty("levelValue", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double LevelValue { get; set; }
+        public double? LevelValue { get; set; }
 
         /// <summary>Time of when the last metervalues were received from the meters to calculate basis for the fixed level. Ex. 2021-09-17T02:00:00+02:00</summary>
         [Newtonsoft.Json.JsonProperty("lastUpdated", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]

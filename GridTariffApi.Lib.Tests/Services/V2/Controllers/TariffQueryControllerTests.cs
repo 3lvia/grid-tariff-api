@@ -22,8 +22,8 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
     public class TariffQueryControllerTests
     {
         TariffQueryController _tariffQueryController;
-        private Mock<ITariffPersistence> _tariffPeristenceMock;
-        private Mock<IHolidayPersistence> _holidayPeristenceMock;
+        private Mock<ITariffRepository> _tariffPeristenceMock;
+        private Mock<IHolidayRepository> _holidayPeristenceMock;
         private Mock<ITariffQueryService> _tariffQueryServiceMock;
 
         private void Setup()
@@ -47,22 +47,27 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
             var gridTariffPriceConfiguration = new GridTariffPriceConfiguration(gridTariff);
             var TariffPriceStructureRoot = new TariffPriceStructureRoot(gridTariffPriceConfiguration);
 
-            _tariffPeristenceMock = new Mock<ITariffPersistence>();
+            _tariffPeristenceMock = new Mock<ITariffRepository>();
             _tariffPeristenceMock
                 .Setup(x => x.GetTariffPriceStructure())
                 .Returns(TariffPriceStructureRoot);
 
-            _holidayPeristenceMock = new Mock<IHolidayPersistence>();
+            _holidayPeristenceMock = new Mock<IHolidayRepository>();
             _holidayPeristenceMock
                 .Setup(x => x.GetHolidays())
                 .Returns(new List<Holiday>());
 
-            var tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object);
+            var tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object,null);
 
             _tariffQueryServiceMock = new Mock<ITariffQueryService>();
             _tariffQueryServiceMock
                 .Setup(x => x.QueryTariffAsync("tariffKey", DateTimeOffset.MaxValue, DateTimeOffset.MaxValue))
                 .Returns(Task.FromResult(new GridTariffCollection()));
+
+            _tariffQueryServiceMock
+                .Setup(x => x.QueryMeteringPointsTariffsAsync(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>(),It.IsAny< List<String>>()))
+    .           Returns(Task.FromResult(new TariffQueryRequestMeteringPointsResult()));
+
 
             var controllerValidationHelper = new ControllerValidationHelper(gridTariffApiConfig, tariffPriceCache, serviceHelper);
             _tariffQueryController = new TariffQueryController(_tariffQueryServiceMock.Object, serviceHelper,null, controllerValidationHelper);
@@ -70,7 +75,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
 
 
         [Fact]
-        public async Task ServiceIsCalledTest()
+        public async Task TariffQueryServiceIsCalledTest()
         {
             Setup();
             var request = new TariffQueryRequest()
@@ -82,6 +87,22 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
 
             await _tariffQueryController.TariffQuery(request);
             _tariffQueryServiceMock.Verify(x => x.QueryTariffAsync(request.TariffKey, DateTimeOffset.MaxValue, DateTimeOffset.MaxValue), Times.Once);
+        }
+
+        [Fact]
+        public async Task MeteringPointsTariffQueryIsCalledTest()
+        {
+            Setup();
+            var request = new TariffQueryRequestMeteringPoints()
+            {
+                StartTime = DateTimeOffset.MaxValue,
+                EndTime = DateTimeOffset.MaxValue,
+                MeteringPointIds = new List<String>()
+            };
+
+            await _tariffQueryController.MeteringPointsTariffQuery(request);
+            _tariffQueryServiceMock.Verify(x => x.QueryMeteringPointsTariffsAsync(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>(), It.IsAny<List<String>>()), Times.Once);
+
         }
     }
 }

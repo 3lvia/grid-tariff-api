@@ -6,5 +6,6 @@ namespace GridTariffApi.Lib.Services.Helpers
     {
         string DecideTariffKeyFromInput(TariffQueryRequest request);
         string ValidateRequestInput(TariffQueryRequest request);
+        public string ValidateRequestInput(TariffQueryRequestMeteringPoints request);
     }
 }

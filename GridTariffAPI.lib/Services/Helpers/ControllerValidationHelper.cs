@@ -15,7 +15,6 @@ namespace GridTariffApi.Lib.Services.Helpers
         private readonly ITariffPriceCache _tariffPriceCache;
         private readonly IServiceHelper _serviceHelper;
 
-
         public ControllerValidationHelper(
             GridTariffApiConfig gridTariffApiConfig,
             ITariffPriceCache tariffPriceCache,
@@ -27,6 +26,15 @@ namespace GridTariffApi.Lib.Services.Helpers
 
         }
 
+        public string ValidateRequestInput(TariffQueryRequestMeteringPoints request)
+        {
+            if (request == null)
+            {
+                return "Missing model";
+            }
+            return String.Empty;
+        }
+        
         public string ValidateRequestInput(TariffQueryRequest request)
         {
             if (request == null)

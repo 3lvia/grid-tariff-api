@@ -2,7 +2,7 @@
 
 namespace GridTariffApi.Lib.Interfaces.V2.External
 {
-    public interface ITariffPersistence
+    public interface ITariffRepository
     {
         public TariffPriceStructureRoot GetTariffPriceStructure();
     }

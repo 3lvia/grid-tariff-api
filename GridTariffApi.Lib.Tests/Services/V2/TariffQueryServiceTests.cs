@@ -1,15 +1,19 @@
 ﻿using GridTariffApi.Lib.Config;
+using GridTariffApi.Lib.Interfaces.V2.External;
 using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Lib.Models.V2.Holidays;
+using GridTariffApi.Lib.Models.V2.Internal;
 using GridTariffApi.Lib.Models.V2.PriceStructure;
 using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services.V2;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 
@@ -19,6 +23,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
     {
         private TariffQueryService _tariffQueryService;
         private IServiceHelper _serviceHelper;
+
         private void Setup()
         {
             var timeZoneId = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
@@ -714,6 +719,181 @@ namespace GridTariffApi.Lib.Tests.Services.V2
                 Assert.Single(fixedPriceLevel.HourPrices.Where(a => a.NumberOfDaysInMonth == 31));
                 Assert.Single(fixedPriceLevel.HourPrices.Where(a => a.NumberOfDaysInMonth == 30));
             }
+        }
+
+        [Fact]
+        public void MeteringPointsToPriceLevelTests()
+        {
+            const string fixedPriceId = "fixedPriceId";
+            const string fixedPriceLevelId = "fixedPriceLevelId";
+            Setup();
+            var fixedPrices = new Models.V2.Digin.FixedPrices
+            {
+                Id = fixedPriceId
+            };
+            var fixedPriceLevel = new Models.V2.Digin.FixedPriceLevel();
+            fixedPriceLevel.Id = fixedPriceLevelId;
+            var mpInformations = new List<MeteringPointInformation>
+            {
+                new MeteringPointInformation("a", "",0, DateTimeOffset.MaxValue),
+                new MeteringPointInformation("b", "",0, DateTimeOffset.MaxValue),
+                new MeteringPointInformation("c", "",0, DateTimeOffset.MaxValue),
+                new MeteringPointInformation("d", "",0, DateTimeOffset.MaxValue)
+            };
+
+            var meteringPointsAndPriceLevels = _tariffQueryService.MeteringPointsToPriceLevel(fixedPrices, fixedPriceLevel, mpInformations);
+            Assert.NotNull(meteringPointsAndPriceLevels.CurrentFixedPriceLevel);
+            Assert.NotNull(meteringPointsAndPriceLevels.MeteringPointIds);
+            Assert.Equal(4, meteringPointsAndPriceLevels.MeteringPointIds.Count);
+            Assert.Contains("a", meteringPointsAndPriceLevels.MeteringPointIds);
+            Assert.Contains("b", meteringPointsAndPriceLevels.MeteringPointIds);
+            Assert.Contains("c", meteringPointsAndPriceLevels.MeteringPointIds);
+            Assert.Contains("d", meteringPointsAndPriceLevels.MeteringPointIds);
+            Assert.Equal(fixedPriceId, meteringPointsAndPriceLevels.CurrentFixedPriceLevel.Id);
+            Assert.Equal(fixedPriceLevelId, meteringPointsAndPriceLevels.CurrentFixedPriceLevel.LevelId);
+            Assert.Null(meteringPointsAndPriceLevels.CurrentFixedPriceLevel.LevelValue);
+            //TODO LastUpdated should be set per meteringpoint. Change needed in DIGIN.
+            //Assert.Equal(DateTimeOffset.MaxValue,meteringPointsAndPriceLevels.CurrentFixedPriceLevel.LastUpdated);
+        }
+
+        [Theory]
+        [InlineData("fixedPriceId", "fixedPriceLevelId", 0, 10, true)]
+        [InlineData("fixedPriceId", "fixedPriceLevelId", null, 10, true)]
+        [InlineData("fixedPriceId", "fixedPriceLevelId", null, null, true)]
+        [InlineData("fixedPriceId", "fixedPriceLevelId", 101, null, false)]
+        [InlineData("fixedPriceId", "fixedPriceLevelId", 101, 102, false)]
+        [InlineData("fixedPriceId", "fixedPriceLevelId", 100, 102, true)]
+        [InlineData("fixedPriceId", "fixedPriceLevelId", 99, 100, false)]
+
+        public void CheckPriceLevelForMeteringPointsTests(string fixedPriceId, string fixedPriceLevelId, double? fixedPriceLevelValueMin, double? fixedPriceLevelValueMax,bool expectingNotNull)
+        {
+            Setup();
+            var fixedPrices = new Models.V2.Digin.FixedPrices
+            {
+                Id = fixedPriceId
+            };
+            var fixedPriceLevel = new Models.V2.Digin.FixedPriceLevel();
+            fixedPriceLevel.Id = fixedPriceLevelId;
+            fixedPriceLevel.ValueMin = fixedPriceLevelValueMin;
+            fixedPriceLevel.ValueMax = fixedPriceLevelValueMax;
+
+            var mpInformations = new List<MeteringPointInformation>
+            {
+                new MeteringPointInformation("a", "", 0,DateTimeOffset.MaxValue),
+                new MeteringPointInformation("b", "", 5,DateTimeOffset.MaxValue),
+                new MeteringPointInformation("c", "", 15,DateTimeOffset.MaxValue),
+                new MeteringPointInformation("d", "", 100,DateTimeOffset.MaxValue)
+            };
+            var meteringPointsAndPriceLevels = _tariffQueryService.CheckPriceLevelForMeteringPoints(mpInformations, fixedPrices, fixedPriceLevel);
+            Assert.Equal(expectingNotNull, meteringPointsAndPriceLevels != null);
+        }
+
+        [Fact]
+        public void AppendMeteringPointsToPriceLevelsTests()
+        {
+            Setup();
+            var gridTariffCollection= new Models.V2.Digin.GridTariffCollection();
+            gridTariffCollection.MeteringPointsAndPriceLevels = new List<Models.V2.Digin.MeteringPointsAndPriceLevels>();
+            gridTariffCollection.GridTariff = new Models.V2.Digin.GridTariff();
+            gridTariffCollection.GridTariff.TariffPrice = new Models.V2.Digin.TariffPrice();
+            gridTariffCollection.GridTariff.TariffPrice.PriceInfo = new Models.V2.Digin.PriceInfo();
+            gridTariffCollection.GridTariff.TariffPrice.PriceInfo.FixedPrices = new List<Models.V2.Digin.FixedPrices>();
+
+            var fixedPrice = new Models.V2.Digin.FixedPrices();
+            fixedPrice.PriceLevel = new List<Models.V2.Digin.FixedPriceLevel>();
+            fixedPrice.PriceLevel.Add(new Models.V2.Digin.FixedPriceLevel()
+            {
+                Id = "0",
+                ValueMin = null,
+                ValueMax = 20
+            });
+            fixedPrice.PriceLevel.Add(new Models.V2.Digin.FixedPriceLevel()
+            {
+                Id = "20",
+                ValueMin = 20,
+                ValueMax = 104
+            });
+            fixedPrice.PriceLevel.Add(new Models.V2.Digin.FixedPriceLevel()
+            {
+                Id = "104",
+                ValueMin = 104,
+                ValueMax = null
+            });
+            gridTariffCollection.GridTariff.TariffPrice.PriceInfo.FixedPrices.Add(fixedPrice);
+
+            var mpInformations = new List<MeteringPointInformation>
+            {
+                new MeteringPointInformation("a", "", 0,DateTimeOffset.MaxValue),
+                new MeteringPointInformation("b", "", 5,DateTimeOffset.MaxValue),
+                new MeteringPointInformation("c", "", 15,DateTimeOffset.MaxValue),
+                new MeteringPointInformation("d", "", 100,DateTimeOffset.MaxValue)
+            };
+
+            _tariffQueryService.AppendMeteringPointsToPriceLevels(mpInformations, gridTariffCollection);
+            Assert.Equal(2, gridTariffCollection.MeteringPointsAndPriceLevels.Count);
+            Assert.Equal(1, gridTariffCollection.MeteringPointsAndPriceLevels.Count(a => a.CurrentFixedPriceLevel.LevelId == "0"));
+            Assert.Equal(1, gridTariffCollection.MeteringPointsAndPriceLevels.Count(a => a.CurrentFixedPriceLevel.LevelId == "20"));
+            Assert.Equal(3, gridTariffCollection.MeteringPointsAndPriceLevels.FirstOrDefault(a => a.CurrentFixedPriceLevel.LevelId == "0").MeteringPointIds.Count);
+            Assert.Single(gridTariffCollection.MeteringPointsAndPriceLevels.FirstOrDefault(a => a.CurrentFixedPriceLevel.LevelId == "20").MeteringPointIds);
+        }
+
+        [Fact]
+        public async Task QueryMeteringPointsTariffsAsyncTests()
+        {
+            Setup();
+            var meteringPoints = new List<String>
+            {
+                "mp_a",
+                "mp_b",
+                "mp_c"
+            };
+
+            var mockRetVal = new List<MeteringPointInformation>();
+            mockRetVal.Add(new MeteringPointInformation("mp_a", "standard", 0, DateTimeOffset.MaxValue));
+            mockRetVal.Add(new MeteringPointInformation("mp_b", "standard", 0, DateTimeOffset.MaxValue));
+            mockRetVal.Add(new MeteringPointInformation("mp_b", "fobar", 0, DateTimeOffset.MaxValue));
+
+            var tariffPriceCache = new Mock<ITariffPriceCache>();
+            tariffPriceCache
+                .Setup(x => x.GetMeteringPointInformation(It.IsAny<List<String>>()))
+                .Returns(mockRetVal);
+
+            var gridTariffCollectionStandard = new Models.V2.Digin.GridTariffCollection() { GridTariff = new Models.V2.Digin.GridTariff() { TariffType = new Models.V2.Digin.TariffType() { TariffKey = "standard" } } };
+            var gridTariffCollectionFobar = new Models.V2.Digin.GridTariffCollection() { GridTariff = new Models.V2.Digin.GridTariff() { TariffType = new Models.V2.Digin.TariffType() { TariffKey = "fobar" } } };
+
+            var mock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, _serviceHelper);
+            mock.Setup(x => x.QueryTariffAsync("standard", DateTimeOffset.MinValue, DateTimeOffset.MaxValue)).Returns(Task.FromResult(gridTariffCollectionStandard));
+            mock.Setup(x => x.QueryTariffAsync("fobar", DateTimeOffset.MinValue, DateTimeOffset.MaxValue)).Returns(Task.FromResult(gridTariffCollectionFobar));
+            mock.Setup(x => x.GenerateTariffAndAppendMeteringPoints(It.IsAny<String>(), DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<MeteringPointInformation>>()))
+                .Returns(Task.FromResult(new Models.V2.Digin.GridTariffCollection()));
+
+            var retVal = await mock.Object.QueryMeteringPointsTariffsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, meteringPoints);
+            mock.Verify(x => x.GenerateTariffAndAppendMeteringPoints("standard", DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<MeteringPointInformation>>()), Times.Once);
+            mock.Verify(x => x.GenerateTariffAndAppendMeteringPoints("fobar", DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<MeteringPointInformation>>()), Times.Once);
+            mock.Verify(x => x.GenerateTariffAndAppendMeteringPoints(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>(), It.IsAny<List<MeteringPointInformation>>()), Times.Exactly(2));
+
+            Assert.NotNull(retVal);
+            Assert.NotNull(retVal.GridTariffCollections);
+            Assert.Equal(2, retVal.GridTariffCollections.Count);
+        }
+
+        [Fact]
+        public async Task GenerateTariffAndAppendMeteringPointsTests()
+        {
+            Setup();
+            var tariffPriceCache = new Mock<ITariffPriceCache>();
+            var gridTariffCollectionStandard = new Models.V2.Digin.GridTariffCollection() { GridTariff = new Models.V2.Digin.GridTariff() { TariffType = new Models.V2.Digin.TariffType() { TariffKey = "standard" } } };
+
+            var mock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, _serviceHelper);
+            mock.CallBase = true;
+            mock.Setup(x => x.QueryTariffAsync(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(gridTariffCollectionStandard));
+            mock.Setup(x => x.AppendMeteringPointsToPriceLevels(It.IsAny<List<MeteringPointInformation>>(),It.IsAny< Models.V2.Digin.GridTariffCollection>()))/*.Returns(gridTariffCollectionStandard)*/;
+
+            var test = await mock.Object.GenerateTariffAndAppendMeteringPoints("", DateTimeOffset.MinValue, DateTimeOffset.MaxValue, new List<MeteringPointInformation>());
+            mock.Verify(x => x.QueryTariffAsync(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()), Times.Once);
+            mock.Verify(x => x.AppendMeteringPointsToPriceLevels(It.IsAny<List<MeteringPointInformation>>(), It.IsAny<Models.V2.Digin.GridTariffCollection>()), Times.Once);
+            Assert.NotNull(test);
+            Assert.NotNull(test.MeteringPointsAndPriceLevels);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Lib.Models.V2.Digin;
 using GridTariffApi.Lib.Models.V2.Holidays;
+using GridTariffApi.Lib.Models.V2.Internal;
 using GridTariffApi.Lib.Services.Helpers;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,6 @@ using System.Threading.Tasks;
 
 namespace GridTariffApi.Lib.Services.V2
 {
-    public interface ITariffQueryService
-    {
-        Task<GridTariffCollection> QueryTariffAsync(string tariffKey, DateTimeOffset paramFromDate, DateTimeOffset paramToDate);
-    }
 
     public class TariffQueryService : ITariffQueryService
     {
@@ -29,9 +26,90 @@ namespace GridTariffApi.Lib.Services.V2
             _serviceHelper = serviceHelper;
         }
 
-        public async Task<GridTariffCollection> QueryTariffAsync(
-            string tariffKey, 
-            DateTimeOffset paramFromDate, 
+        public async Task<TariffQueryRequestMeteringPointsResult> QueryMeteringPointsTariffsAsync(
+            DateTimeOffset paramFromDate,
+            DateTimeOffset paramToDate,
+            List<String> meteringPoints)
+        {
+            var retVal = new TariffQueryRequestMeteringPointsResult();
+            retVal.GridTariffCollections = new List<GridTariffCollection>();
+            var meteringPointsInformations = _tariffPriceCache.GetMeteringPointInformation(meteringPoints);
+            var tariffKeys = meteringPointsInformations.Select(x => x.TariffKey).Distinct();
+            foreach (var tariffKey in tariffKeys)
+            {
+                var gridTariffMeteringPoints = meteringPointsInformations.Where(x => x.TariffKey == tariffKey).ToList();
+                var gridTariff = await GenerateTariffAndAppendMeteringPoints(tariffKey, paramFromDate, paramToDate, gridTariffMeteringPoints);
+                retVal.GridTariffCollections.Add(gridTariff);
+            }
+            return retVal;
+        }
+
+        public virtual async Task<GridTariffCollection> GenerateTariffAndAppendMeteringPoints(string tariffKey,
+            DateTimeOffset paramFromDate,
+            DateTimeOffset paramToDate,
+            List<MeteringPointInformation> meteringPointInformation)
+        {
+            var gridTariff = await QueryTariffAsync(tariffKey, paramFromDate, paramToDate);
+            gridTariff.MeteringPointsAndPriceLevels = new List<MeteringPointsAndPriceLevels>();
+
+            AppendMeteringPointsToPriceLevels(meteringPointInformation, gridTariff);
+            return gridTariff;
+        }
+
+        public virtual void AppendMeteringPointsToPriceLevels(List<MeteringPointInformation> meteringPointInformation, GridTariffCollection gridTariff)
+        {
+            //todo should be some of filtering here (only current month?), thus no need for foreach fixedprices
+            foreach (var fixedPrice in gridTariff.GridTariff.TariffPrice.PriceInfo.FixedPrices)
+            {
+                foreach (var fixedPriceLevel in fixedPrice.PriceLevel)
+                {
+                    var meteringPointAndPriceLevel = CheckPriceLevelForMeteringPoints(meteringPointInformation, fixedPrice, fixedPriceLevel);
+                    if (meteringPointAndPriceLevel != null)
+                    {
+                        gridTariff.MeteringPointsAndPriceLevels.Add(meteringPointAndPriceLevel);
+                    }
+                }
+            }
+        }
+
+        public MeteringPointsAndPriceLevels CheckPriceLevelForMeteringPoints(List<MeteringPointInformation> meteringPointInformation, FixedPrices fixedPrice, FixedPriceLevel fixedPriceLevel)
+        {
+            MeteringPointsAndPriceLevels retVal = null;
+
+            var minVal = fixedPriceLevel.ValueMin ?? double.MinValue;
+            var maxVal = fixedPriceLevel.ValueMax ?? double.MaxValue;
+
+            var mpInformations = meteringPointInformation.Where(x => minVal <= x.MaxConsumption && x.MaxConsumption < maxVal).ToList();
+            if (mpInformations.Count > 0)
+            {
+                retVal = MeteringPointsToPriceLevel(fixedPrice, fixedPriceLevel, mpInformations);
+            }
+            return retVal;
+        }
+
+        public MeteringPointsAndPriceLevels MeteringPointsToPriceLevel(FixedPrices fixedPrice, FixedPriceLevel fixedPriceLevel, List<MeteringPointInformation> mpInformations)
+        {
+            var meteringPointAndPriceLevel = new MeteringPointsAndPriceLevels()
+            {
+                CurrentFixedPriceLevel = new CurrentFixedPriceLevel(),
+                MeteringPointIds = new MeteringPointIds()
+            };
+
+            foreach (var mpInformation in mpInformations)
+            {
+                meteringPointAndPriceLevel.MeteringPointIds.Add(mpInformation.MeteringPointId);
+            }
+            meteringPointAndPriceLevel.CurrentFixedPriceLevel.Id = fixedPrice.Id;
+            meteringPointAndPriceLevel.CurrentFixedPriceLevel.LevelId = fixedPriceLevel.Id;
+            meteringPointAndPriceLevel.CurrentFixedPriceLevel.LevelValue = null;
+            //TODO LastUpdated should be set per meteringpoint. Change needed in DIGIN.
+            //            meteringPointAndPriceLevel.CurrentFixedPriceLevel.LastUpdated
+            return meteringPointAndPriceLevel;
+        }
+
+        public virtual async Task<GridTariffCollection> QueryTariffAsync(
+            string tariffKey,
+            DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate)
         {
             var tariff = _tariffPriceCache.GetTariff(tariffKey);
@@ -74,9 +152,9 @@ namespace GridTariffApi.Lib.Services.V2
             return tariffPrice;
         }
 
-        private void ProcessTariffPrice(DateTimeOffset paramFromDate, 
-            DateTimeOffset paramToDate, 
-            TariffPrice tariffPrice, 
+        private void ProcessTariffPrice(DateTimeOffset paramFromDate,
+            DateTimeOffset paramToDate,
+            TariffPrice tariffPrice,
             Models.V2.PriceStructure.TariffPrice tariffPricePrice,
             IReadOnlyList<Holiday> holidays,
             Models.V2.PriceStructure.TariffType tariffType)
@@ -118,8 +196,8 @@ namespace GridTariffApi.Lib.Services.V2
             }
         }
 
-        public FixedPrices GenerateFixedPrices(DateTimeOffset fromDateUtc, 
-            DateTimeOffset toDateUtc, 
+        public FixedPrices GenerateFixedPrices(DateTimeOffset fromDateUtc,
+            DateTimeOffset toDateUtc,
             Models.V2.PriceStructure.FixedPrices fixedPricesPrices,
             IReadOnlyList<Models.V2.PriceStructure.FixedPriceTax> fixedPriceTaxes)
         {
@@ -189,13 +267,13 @@ namespace GridTariffApi.Lib.Services.V2
 
                 if (!((seasonStart > toDate) || (seasonEnd < fromDate)))
                 {
-                    retVal.AddRange(AccumulateSeasonIntersects(fromDate, toDate, months,  seasonStart, seasonEnd));
+                    retVal.AddRange(AccumulateSeasonIntersects(fromDate, toDate, months, seasonStart, seasonEnd));
                 }
             }
             return retVal;
         }
 
-        private List<TimePeriod> AccumulateSeasonIntersects(DateTimeOffset fromDate, DateTimeOffset toDate, IReadOnlyList<int> months,  DateTimeOffset seasonStart, DateTimeOffset seasonEnd)
+        private List<TimePeriod> AccumulateSeasonIntersects(DateTimeOffset fromDate, DateTimeOffset toDate, IReadOnlyList<int> months, DateTimeOffset seasonStart, DateTimeOffset seasonEnd)
         {
             var retVal = new List<TimePeriod>();
             var finalStartDate = seasonStart > fromDate ? seasonStart : fromDate;
@@ -270,7 +348,7 @@ namespace GridTariffApi.Lib.Services.V2
             }
             dates.RemoveAll(a => a < startDate || a > endDate);
             dates = dates.Distinct().OrderBy(a => a).ToList();
-            for (int i = 0; i < dates.Count-1;i++)
+            for (int i = 0; i < dates.Count - 1; i++)
             {
                 retVal.Add(new TimePeriod() { StartDate = dates[i], EndDate = dates[i + 1] });
             }
@@ -318,8 +396,8 @@ namespace GridTariffApi.Lib.Services.V2
 
         private SeasonDataAccumulator AddPriceLevels(SeasonDataAccumulator dataAccumulator, Models.V2.PriceStructure.Season season, DateTimeOffset paramFromDate, DateTimeOffset paramToDate, int daysInMonth)
         {
-            dataAccumulator = AddPowerPrices(season.PowerPrices,daysInMonth,dataAccumulator);
-            dataAccumulator = AddEnergyPrices(season.EnergyPrice,dataAccumulator,season.Name,paramFromDate,paramToDate);
+            dataAccumulator = AddPowerPrices(season.PowerPrices, daysInMonth, dataAccumulator);
+            dataAccumulator = AddEnergyPrices(season.EnergyPrice, dataAccumulator, season.Name, paramFromDate, paramToDate);
             return dataAccumulator;
         }
 
@@ -447,16 +525,16 @@ namespace GridTariffApi.Lib.Services.V2
             return localdDate.DayOfWeek == DayOfWeek.Saturday || localdDate.DayOfWeek == DayOfWeek.Sunday;
         }
 
-        public  bool IsPublicHoliday(List<Holiday> holidays, DateTimeOffset fromDate)
+        public bool IsPublicHoliday(List<Holiday> holidays, DateTimeOffset fromDate)
         {
             return holidays.Exists(a => a.Date.Date == _serviceHelper.GetTimeZonedDateTime(fromDate.UtcDateTime).Date);
         }
 
         SeasonDataAccumulator ProcessDay(SeasonDataAccumulator dataAccumulator
-            ,DateTimeOffset paramFromDate
-            ,DateTimeOffset paramToDate
-            ,HourSeasonIndex hourSeasonIndex
-            ,int resolution,
+            , DateTimeOffset paramFromDate
+            , DateTimeOffset paramToDate
+            , HourSeasonIndex hourSeasonIndex
+            , int resolution,
             bool isPublicHoliday,
             bool isWeekend)
         {
@@ -599,7 +677,7 @@ namespace GridTariffApi.Lib.Services.V2
             retval.Currency = energyPricePrices.Currency;
             retval.MonetaryUnitOfMeasure = energyPricePrices.MonetaryUnitOfMeasure;
 
-            retval.Total = RoundDouble(retval.Total,Constants.EnergyPriceDecimals);
+            retval.Total = RoundDouble(retval.Total, Constants.EnergyPriceDecimals);
             retval.TotalExVat = RoundDouble(retval.TotalExVat, Constants.EnergyPriceDecimals);
             retval.EnergyExTaxes = RoundDouble(retval.EnergyExTaxes, Constants.EnergyPriceDecimals);
             retval.Taxes = RoundDouble(retval.Taxes, Constants.EnergyPriceDecimals);
@@ -614,9 +692,9 @@ namespace GridTariffApi.Lib.Services.V2
             if (!dataAccumulator.PowerPricesDaysInMonthProcessed[daysInMonth] && powerPricePrices != null)
             {
                 AppendPowerPriceLevels(
-                    dataAccumulator.TariffPrice.PriceInfo.PowerPrices.FirstOrDefault(), 
-                    powerPricePrices, 
-                    dataAccumulator.Taxes.PowerPriceTaxes, 
+                    dataAccumulator.TariffPrice.PriceInfo.PowerPrices.FirstOrDefault(),
+                    powerPricePrices,
+                    dataAccumulator.Taxes.PowerPriceTaxes,
                     daysInMonth);
                 dataAccumulator.PowerPricesDaysInMonthProcessed[daysInMonth] = true;
             }
@@ -658,7 +736,7 @@ namespace GridTariffApi.Lib.Services.V2
             var retVal = new Models.V2.Digin.HourPowerPrices();
             retVal.Id = Guid.NewGuid().ToString();
             retVal.NumberOfDaysInMonth = daysInMonth;
-            retVal.ActiveTotal = RoundDouble(activeTotal,Constants.PowerPriceDecimals);
+            retVal.ActiveTotal = RoundDouble(activeTotal, Constants.PowerPriceDecimals);
             retVal.ActiveTotalExVat = RoundDouble(activeTotalExVat, Constants.PowerPriceDecimals);
             retVal.ReactiveTotal = RoundDouble(reactiveTotal, Constants.PowerPriceDecimals);
             retVal.ReactiveTotalExVat = RoundDouble(reactiveTotalExVat, Constants.PowerPriceDecimals);
@@ -760,23 +838,23 @@ namespace GridTariffApi.Lib.Services.V2
         }
 
         public Models.V2.Digin.GridTariff ToGridTariff(
-            Models.V2.PriceStructure.Company company, 
+            Models.V2.PriceStructure.Company company,
             Models.V2.PriceStructure.TariffType tariffType)
         {
             var retVal = new Models.V2.Digin.GridTariff();
-            retVal.TariffType = _objectConversionHelper.ToTariffType(company,tariffType);
+            retVal.TariffType = _objectConversionHelper.ToTariffType(company, tariffType);
             return retVal;
         }
 
         public double RoundDouble(double value, int numDecimals)
         {
-            double addValue = 1 / Math.Pow(10, numDecimals +1);
+            double addValue = 1 / Math.Pow(10, numDecimals + 1);
             return Math.Round(value + addValue, numDecimals);
         }
 
         public double AddTaxes(double input, double vat)
         {
-            return input + (input * (vat/100));
+            return input + (input * (vat / 100));
         }
 
         public DateTimeOffset GetNextMonthEndDate(DateTimeOffset fromDate, DateTimeOffset toDate)

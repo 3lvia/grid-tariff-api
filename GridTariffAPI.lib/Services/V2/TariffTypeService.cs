@@ -23,7 +23,6 @@ namespace GridTariffApi.Lib.Services.V2
         }
         public async Task<Models.V2.Digin.TariffTypeContainer> GetTariffTypes()
         {
-            //todo new attribute for timestamp "lastupdated" for each tariff.
             var retVal = new Models.V2.Digin.TariffTypeContainer();
             var company = _tariffPriceCache.GetCompany();
             retVal.TariffTypes = new List<Models.V2.Digin.TariffType>();
