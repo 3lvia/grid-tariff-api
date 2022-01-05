@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
-namespace GridTariffApi.Lib.Controllers.v2
+namespace GridTariffApi.Lib.Controllers.v1
 {
     [Produces(MediaTypeNames.Application.Json)]
     [ApiController]

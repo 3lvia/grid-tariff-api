@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.InteropServices;
 using GridTariffApi.Lib.Config;
-using GridTariffApi.Lib.Controllers.v1;
+using GridTariffApi.Lib.Controllers.Pilot;
 using GridTariffApi.Lib.EntityFramework;
 using GridTariffApi.Lib.Models.Pilot.TariffQuery;
 using GridTariffApi.Lib.Services.Helpers;

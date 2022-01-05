@@ -1,5 +1,5 @@
 ﻿using GridTariffApi.Lib.Config;
-using GridTariffApi.Lib.Controllers.v2;
+using GridTariffApi.Lib.Controllers.v1;
 using GridTariffApi.Lib.Interfaces.External;
 using GridTariffApi.Lib.Models.Digin;
 using GridTariffApi.Lib.Models.Holidays;

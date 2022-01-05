@@ -10,7 +10,7 @@ using System.Net.Mime;
 using System.Threading.Tasks;
 using GridTariffApi.Lib.Interfaces;
 
-namespace GridTariffApi.Lib.Controllers.v2
+namespace GridTariffApi.Lib.Controllers.v1
 {
     [Produces(MediaTypeNames.Application.Json)]
     [ApiController]
