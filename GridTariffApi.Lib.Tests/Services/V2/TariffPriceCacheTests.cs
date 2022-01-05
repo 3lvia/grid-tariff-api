@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace GridTariffApi.Lib.Tests.Services.V2
+namespace GridTariffApi.Lib.Tests.Services
 {
     public class TariffPriceCacheTests
     {

@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using Xunit;
 
 
-namespace GridTariffApi.Lib.Tests.Services.V2
+namespace GridTariffApi.Lib.Tests.Services
 {
     public class TariffQueryServiceTests
     {
