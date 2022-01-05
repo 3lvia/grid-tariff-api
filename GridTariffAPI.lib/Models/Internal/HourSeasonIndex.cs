@@ -1,4 +1,4 @@
-﻿using GridTariffApi.Lib.Models.V2.Digin;
+﻿using GridTariffApi.Lib.Models.Digin;
 
 namespace GridTariffApi.Lib.Models.Internal
 {

@@ -1,4 +1,4 @@
-﻿using GridTariffApi.Lib.Models.V2.PriceStructure;
+﻿using GridTariffApi.Lib.Models.PriceStructure;
 
 namespace GridTariffApi.Lib.Interfaces.V2.External
 {

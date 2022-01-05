@@ -1,4 +1,4 @@
-﻿using GridTariffApi.Lib.Models.V2.Digin;
+﻿using GridTariffApi.Lib.Models.Digin;
 using System.Collections.Generic;
 
 namespace GridTariffApi.Lib.Models.Internal
@@ -12,16 +12,16 @@ namespace GridTariffApi.Lib.Models.Internal
             {
                 PriceInfo = new PriceInfo()
             };
-            TariffPrice.PriceInfo.FixedPrices = new List<Models.V2.Digin.FixedPrices>();
-            TariffPrice.PriceInfo.PowerPrices = new List<Models.V2.Digin.PowerPrices>();
-            TariffPrice.PriceInfo.EnergyPrices = new List<Models.V2.Digin.EnergyPrices>();
+            TariffPrice.PriceInfo.FixedPrices = new List<Models.Digin.FixedPrices>();
+            TariffPrice.PriceInfo.PowerPrices = new List<Models.Digin.PowerPrices>();
+            TariffPrice.PriceInfo.EnergyPrices = new List<Models.Digin.EnergyPrices>();
             TariffPrice.Hours = new List<Hours>();
-            Taxes = new V2.PriceStructure.Taxes();
+            Taxes = new PriceStructure.Taxes();
         }
         public bool[] PowerPricesDaysInMonthProcessed { get; set; }
 
         public TariffPrice TariffPrice { get; set; }
 
-        public Models.V2.PriceStructure.Taxes Taxes { get; set; }
+        public Models.PriceStructure.Taxes Taxes { get; set; }
     }
 }

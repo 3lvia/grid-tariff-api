@@ -1,4 +1,4 @@
-﻿using GridTariffApi.Lib.Models.V2.Digin;
+﻿using GridTariffApi.Lib.Models.Digin;
 using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -46,7 +46,7 @@ namespace GridTariffApi.Lib.Controllers.v2
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
 
-        public async Task<ActionResult<Models.V2.Digin.TariffQueryResult>> TariffQuery([FromQuery] TariffQueryRequest request)  
+        public async Task<ActionResult<Models.Digin.TariffQueryResult>> TariffQuery([FromQuery] TariffQueryRequest request)  
         {
             string validationErrorMsg = _controllerValidationHelper.ValidateRequestInput(request);
             if (!String.IsNullOrEmpty(validationErrorMsg))
@@ -71,7 +71,7 @@ namespace GridTariffApi.Lib.Controllers.v2
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
 
-        public async Task<ActionResult<Models.V2.Digin.TariffQueryRequestMeteringPointsResult>> MeteringPointsTariffQuery([FromBody] TariffQueryRequestMeteringPoints request)
+        public async Task<ActionResult<Models.Digin.TariffQueryRequestMeteringPointsResult>> MeteringPointsTariffQuery([FromBody] TariffQueryRequestMeteringPoints request)
         {
             string validationErrorMsg = _controllerValidationHelper.ValidateRequestInput(request);
             if (!String.IsNullOrEmpty(validationErrorMsg))

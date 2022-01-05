@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace GridTariffApi.Lib.Models.V2.PriceStructure
+namespace GridTariffApi.Lib.Models.PriceStructure
 {
     public class Company
     {

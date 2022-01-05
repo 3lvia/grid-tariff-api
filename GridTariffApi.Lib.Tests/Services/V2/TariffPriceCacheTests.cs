@@ -1,7 +1,7 @@
 ﻿using GridTariffApi.Lib.Interfaces.V2.External;
-using GridTariffApi.Lib.Models.V2.Holidays;
+using GridTariffApi.Lib.Models.Holidays;
 using GridTariffApi.Lib.Models.V2.Internal;
-using GridTariffApi.Lib.Models.V2.PriceStructure;
+using GridTariffApi.Lib.Models.PriceStructure;
 using GridTariffApi.Lib.Services;
 using Moq;
 using System;

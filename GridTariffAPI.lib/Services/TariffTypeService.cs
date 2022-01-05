@@ -5,7 +5,7 @@ namespace GridTariffApi.Lib.Services
 {
     public interface ITariffTypeService
     {
-        Task<Models.V2.Digin.TariffTypeContainer> GetTariffTypes();
+        Task<Models.Digin.TariffTypeContainer> GetTariffTypes();
     }
 
     public class TariffTypeService : ITariffTypeService
@@ -19,11 +19,11 @@ namespace GridTariffApi.Lib.Services
             _tariffPriceCache = tariffPriceCache;
             _objectConversionHelper = objectConversionHelper;
         }
-        public async Task<Models.V2.Digin.TariffTypeContainer> GetTariffTypes()
+        public async Task<Models.Digin.TariffTypeContainer> GetTariffTypes()
         {
-            var retVal = new Models.V2.Digin.TariffTypeContainer();
+            var retVal = new Models.Digin.TariffTypeContainer();
             var company = _tariffPriceCache.GetCompany();
-            retVal.TariffTypes = new List<Models.V2.Digin.TariffType>();
+            retVal.TariffTypes = new List<Models.Digin.TariffType>();
             var tariffTypes = _tariffPriceCache.GetTariffs();
             foreach (var tariffType in tariffTypes)
             {

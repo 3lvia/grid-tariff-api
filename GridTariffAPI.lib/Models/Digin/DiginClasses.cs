@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace GridTariffApi.Lib.Models.V2.Digin
+namespace GridTariffApi.Lib.Models.Digin
 {
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class TariffQueryRequestMeteringPointsResult

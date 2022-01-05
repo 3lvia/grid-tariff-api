@@ -1,6 +1,6 @@
 ﻿using GridTariffApi.Lib.Models.Internal;
-using GridTariffApi.Lib.Models.V2.Digin;
-using GridTariffApi.Lib.Models.V2.Holidays;
+using GridTariffApi.Lib.Models.Digin;
+using GridTariffApi.Lib.Models.Holidays;
 using GridTariffApi.Lib.Models.V2.Internal;
 using GridTariffApi.Lib.Services.Helpers;
 using System;
@@ -129,20 +129,20 @@ namespace GridTariffApi.Lib.Services
             return gridTariffCollection;
         }
 
-        public Models.V2.Digin.TariffPrice ProcessTariffPrices(
-            Models.V2.PriceStructure.TariffType tariffType,
-            List<Models.V2.PriceStructure.TariffPrice> tariffPrices,
+        public Models.Digin.TariffPrice ProcessTariffPrices(
+            Models.PriceStructure.TariffType tariffType,
+            List<Models.PriceStructure.TariffPrice> tariffPrices,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate)
         {
-            var tariffPrice = new Models.V2.Digin.TariffPrice
+            var tariffPrice = new Models.Digin.TariffPrice
             {
-                PriceInfo = new Models.V2.Digin.PriceInfo()
+                PriceInfo = new Models.Digin.PriceInfo()
             };
-            tariffPrice.PriceInfo.FixedPrices = new List<Models.V2.Digin.FixedPrices>();
-            tariffPrice.PriceInfo.PowerPrices = new List<Models.V2.Digin.PowerPrices>();
-            tariffPrice.PriceInfo.EnergyPrices = new List<Models.V2.Digin.EnergyPrices>();
-            tariffPrice.Hours = new List<Models.V2.Digin.Hours>();
+            tariffPrice.PriceInfo.FixedPrices = new List<Models.Digin.FixedPrices>();
+            tariffPrice.PriceInfo.PowerPrices = new List<Models.Digin.PowerPrices>();
+            tariffPrice.PriceInfo.EnergyPrices = new List<Models.Digin.EnergyPrices>();
+            tariffPrice.Hours = new List<Models.Digin.Hours>();
 
             var holidays = _tariffPriceCache.GetHolidays(paramFromDate, paramToDate);
             foreach (var tariffPricePrice in tariffPrices)
@@ -160,9 +160,9 @@ namespace GridTariffApi.Lib.Services
         private void ProcessTariffPrice(DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate,
             TariffPrice tariffPrice,
-            Models.V2.PriceStructure.TariffPrice tariffPricePrice,
+            Models.PriceStructure.TariffPrice tariffPricePrice,
             IReadOnlyList<Holiday> holidays,
-            Models.V2.PriceStructure.TariffType tariffType)
+            Models.PriceStructure.TariffType tariffType)
         {
             var startDate = tariffPricePrice.StartDate <= paramFromDate ? paramFromDate : tariffPricePrice.StartDate.UtcDateTime;
             var endDate = tariffPricePrice.EndDate >= paramToDate ? paramToDate : tariffPricePrice.EndDate.UtcDateTime;
@@ -203,8 +203,8 @@ namespace GridTariffApi.Lib.Services
 
         public FixedPrices GenerateFixedPrices(DateTimeOffset fromDateUtc,
             DateTimeOffset toDateUtc,
-            Models.V2.PriceStructure.FixedPrices fixedPricesPrices,
-            IReadOnlyList<Models.V2.PriceStructure.FixedPriceTax> fixedPriceTaxes)
+            Models.PriceStructure.FixedPrices fixedPricesPrices,
+            IReadOnlyList<Models.PriceStructure.FixedPriceTax> fixedPriceTaxes)
         {
             var retVal = new FixedPrices()
             {
@@ -223,9 +223,9 @@ namespace GridTariffApi.Lib.Services
         }
 
         public void AppendFixedPriceLevels(
-            Models.V2.Digin.FixedPrices fixedPrices,
-            Models.V2.PriceStructure.FixedPrices fixedPricesPrices,
-            IReadOnlyList<Models.V2.PriceStructure.FixedPriceTax> fixedPriceTaxes,
+            Models.Digin.FixedPrices fixedPrices,
+            Models.PriceStructure.FixedPrices fixedPricesPrices,
+            IReadOnlyList<Models.PriceStructure.FixedPriceTax> fixedPriceTaxes,
             int daysInMonth)
         {
             var daysInMonthHourIdentificator = Guid.NewGuid().ToString();
@@ -324,7 +324,7 @@ namespace GridTariffApi.Lib.Services
             return seasonEnd;
         }
 
-        SeasonDataAccumulator InitAccumulator(Models.V2.PriceStructure.TariffPrice tariffPrice, DateTimeOffset fromDate, DateTimeOffset toDate)
+        SeasonDataAccumulator InitAccumulator(Models.PriceStructure.TariffPrice tariffPrice, DateTimeOffset fromDate, DateTimeOffset toDate)
         {
             var retVal = new SeasonDataAccumulator();
             retVal.Taxes.PowerPriceTaxes = FilterPowePriceTaxesByDate(tariffPrice.Taxes.PowerPriceTaxes, fromDate, toDate);
@@ -332,7 +332,7 @@ namespace GridTariffApi.Lib.Services
             return retVal;
         }
 
-        List<TimePeriod> SegmentByChangingTaxes(Models.V2.PriceStructure.Taxes taxes, DateTimeOffset startDate, DateTimeOffset endDate)
+        List<TimePeriod> SegmentByChangingTaxes(Models.PriceStructure.Taxes taxes, DateTimeOffset startDate, DateTimeOffset endDate)
         {
             var retVal = new List<TimePeriod>();
             var dates = new List<DateTimeOffset>
@@ -363,11 +363,11 @@ namespace GridTariffApi.Lib.Services
         }
 
         SeasonDataAccumulator ProcessSeason(SeasonDataAccumulator dataAccumulator,
-            Models.V2.PriceStructure.Season season,
+            Models.PriceStructure.Season season,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate,
             List<Holiday> holidays,
-            Models.V2.PriceStructure.TariffType tariffType,
+            Models.PriceStructure.TariffType tariffType,
             TariffPrice tariffPrice)
         {
             if (season.PowerPrices != null)
@@ -401,14 +401,14 @@ namespace GridTariffApi.Lib.Services
         }
 
 
-        private SeasonDataAccumulator AddPriceLevels(SeasonDataAccumulator dataAccumulator, Models.V2.PriceStructure.Season season, DateTimeOffset paramFromDate, DateTimeOffset paramToDate, int daysInMonth)
+        private SeasonDataAccumulator AddPriceLevels(SeasonDataAccumulator dataAccumulator, Models.PriceStructure.Season season, DateTimeOffset paramFromDate, DateTimeOffset paramToDate, int daysInMonth)
         {
             dataAccumulator = AddPowerPrices(season.PowerPrices, daysInMonth, dataAccumulator);
             dataAccumulator = AddEnergyPrices(season.EnergyPrice, dataAccumulator, season.Name, paramFromDate, paramToDate);
             return dataAccumulator;
         }
 
-        public IReadOnlyList<Models.V2.PriceStructure.FixedPriceTax> FilterFixedPricesTaxByDate(IReadOnlyList<Models.V2.PriceStructure.FixedPriceTax> taxes, DateTimeOffset fromDate, DateTimeOffset toDate)
+        public IReadOnlyList<Models.PriceStructure.FixedPriceTax> FilterFixedPricesTaxByDate(IReadOnlyList<Models.PriceStructure.FixedPriceTax> taxes, DateTimeOffset fromDate, DateTimeOffset toDate)
         {
             if (taxes != null)
             {
@@ -417,7 +417,7 @@ namespace GridTariffApi.Lib.Services
             return taxes;
         }
 
-        public IReadOnlyList<Models.V2.PriceStructure.PowerPriceTax> FilterPowePriceTaxesByDate(IReadOnlyList<Models.V2.PriceStructure.PowerPriceTax> taxes, DateTimeOffset fromDate, DateTimeOffset toDate)
+        public IReadOnlyList<Models.PriceStructure.PowerPriceTax> FilterPowePriceTaxesByDate(IReadOnlyList<Models.PriceStructure.PowerPriceTax> taxes, DateTimeOffset fromDate, DateTimeOffset toDate)
         {
             if (taxes != null)
             {
@@ -426,7 +426,7 @@ namespace GridTariffApi.Lib.Services
             return taxes;
         }
 
-        public IReadOnlyList<Models.V2.PriceStructure.EnergyPriceTax> FilterEnergyPriceTaxesByDate(IReadOnlyList<Models.V2.PriceStructure.EnergyPriceTax> taxes, DateTimeOffset fromDate, DateTimeOffset toDate)
+        public IReadOnlyList<Models.PriceStructure.EnergyPriceTax> FilterEnergyPriceTaxesByDate(IReadOnlyList<Models.PriceStructure.EnergyPriceTax> taxes, DateTimeOffset fromDate, DateTimeOffset toDate)
         {
             if (taxes != null)
             {
@@ -436,9 +436,9 @@ namespace GridTariffApi.Lib.Services
         }
 
 
-        HourSeasonIndex BuildHourSeasonIndex(Models.V2.Digin.PriceInfo accumulatorPriceInfo,
-            Models.V2.Digin.PriceInfo fixedPricePriceInfo,
-            Models.V2.PriceStructure.EnergyPrice energyPrice
+        HourSeasonIndex BuildHourSeasonIndex(Models.Digin.PriceInfo accumulatorPriceInfo,
+            Models.Digin.PriceInfo fixedPricePriceInfo,
+            Models.PriceStructure.EnergyPrice energyPrice
             , int daysInMonth,
             string usePublicHolidayOverride,
             string useWeekendPriceOverride)
@@ -488,7 +488,7 @@ namespace GridTariffApi.Lib.Services
             return retVal;
         }
 
-        public EnergyInformation GenerateOverrideEnergyPricesData(Models.V2.Digin.PriceInfo priceInfo, string level)
+        public EnergyInformation GenerateOverrideEnergyPricesData(Models.Digin.PriceInfo priceInfo, string level)
         {
             EnergyInformation retVal = null;
             if (!String.IsNullOrEmpty(level))
@@ -580,13 +580,13 @@ namespace GridTariffApi.Lib.Services
             return energyInformation;
         }
 
-        public Models.V2.Digin.Hours ToHour(DateTimeOffset startTime
+        public Models.Digin.Hours ToHour(DateTimeOffset startTime
             , DateTimeOffset expireAt
             , HourSeasonIndex hourSeasonIndex,
             EnergyInformation energyInformation,
             bool isPublicHoliday)
         {
-            var retVal = new Models.V2.Digin.Hours
+            var retVal = new Models.Digin.Hours
             {
                 StartTime = _serviceHelper.ToConfiguredTimeZone(startTime),
                 ExpiredAt = _serviceHelper.ToConfiguredTimeZone(expireAt),
@@ -619,7 +619,7 @@ namespace GridTariffApi.Lib.Services
 
 
         SeasonDataAccumulator AddEnergyPrices(
-            Models.V2.PriceStructure.EnergyPrice energyPricesPrices,
+            Models.PriceStructure.EnergyPrice energyPricesPrices,
             SeasonDataAccumulator dataAccumulator,
             string season,
             DateTimeOffset fromDate,
@@ -634,9 +634,9 @@ namespace GridTariffApi.Lib.Services
 
 
         void AppendEnergyPriceLevels(
-            Models.V2.Digin.PriceInfo priceInfo,
-            Models.V2.PriceStructure.EnergyPrice energyPricePrices,
-            IReadOnlyList<Models.V2.PriceStructure.EnergyPriceTax> energyPriceTaxes,
+            Models.Digin.PriceInfo priceInfo,
+            Models.PriceStructure.EnergyPrice energyPricePrices,
+            IReadOnlyList<Models.PriceStructure.EnergyPriceTax> energyPriceTaxes,
             string season,
             DateTimeOffset fromDate,
             DateTimeOffset toDate)
@@ -659,9 +659,9 @@ namespace GridTariffApi.Lib.Services
 
 
         public EnergyPrices PriceLevelEnergyPriceToEnergyPriceLevel(
-            Models.V2.PriceStructure.EnergyPrice energyPricePrices,
-            Models.V2.PriceStructure.EnergyPriceLevel energyPriceLevel,
-            IReadOnlyList<Models.V2.PriceStructure.EnergyPriceTax> energyPriceTaxes,
+            Models.PriceStructure.EnergyPrice energyPricePrices,
+            Models.PriceStructure.EnergyPriceLevel energyPriceLevel,
+            IReadOnlyList<Models.PriceStructure.EnergyPriceTax> energyPriceTaxes,
             string season,
             DateTimeOffset fromDate,
             DateTimeOffset toDate)
@@ -699,7 +699,7 @@ namespace GridTariffApi.Lib.Services
         }
 
         SeasonDataAccumulator AddPowerPrices(
-            Models.V2.PriceStructure.PowerPrices powerPricePrices,
+            Models.PriceStructure.PowerPrices powerPricePrices,
             int daysInMonth,
             SeasonDataAccumulator dataAccumulator)
         {
@@ -716,9 +716,9 @@ namespace GridTariffApi.Lib.Services
         }
 
         void AppendPowerPriceLevels(
-            Models.V2.Digin.PowerPrices powerPrices,
-            Models.V2.PriceStructure.PowerPrices powerPricePrices,
-            IReadOnlyList<Models.V2.PriceStructure.PowerPriceTax> powerPriceTaxes,
+            Models.Digin.PowerPrices powerPrices,
+            Models.PriceStructure.PowerPrices powerPricePrices,
+            IReadOnlyList<Models.PriceStructure.PowerPriceTax> powerPriceTaxes,
             int daysInMonth)
         {
             foreach (var powerPricePrice in powerPricePrices.PowerPriceLevel)
@@ -733,9 +733,9 @@ namespace GridTariffApi.Lib.Services
             }
         }
 
-        public Models.V2.Digin.HourPowerPrices CalcMonthlyPowerPrices(
-            Models.V2.PriceStructure.PowerPriceLevel powerPriceLevel,
-            IReadOnlyList<Models.V2.PriceStructure.PowerPriceTax> powerPriceTaxes,
+        public Models.Digin.HourPowerPrices CalcMonthlyPowerPrices(
+            Models.PriceStructure.PowerPriceLevel powerPriceLevel,
+            IReadOnlyList<Models.PriceStructure.PowerPriceTax> powerPriceTaxes,
             int daysInMonth)
         {
             var vatTax = powerPriceTaxes.FirstOrDefault(x => x.TaxType == "vat");
@@ -747,7 +747,7 @@ namespace GridTariffApi.Lib.Services
             var reactiveTotalExVat = powerPriceLevel.MonthlyReactivePowerExTaxes / hoursInMonth;
             var reactiveTotal = AddTaxes(reactiveTotalExVat, vatTaxValue);
 
-            var retVal = new Models.V2.Digin.HourPowerPrices
+            var retVal = new Models.Digin.HourPowerPrices
             {
                 Id = Guid.NewGuid().ToString(),
                 NumberOfDaysInMonth = daysInMonth,
@@ -762,10 +762,10 @@ namespace GridTariffApi.Lib.Services
 
 
         public PowerPriceLevel PriceLevelPowerPriceToPowerPriceLevel(
-            Models.V2.PriceStructure.PowerPriceLevel powerPriceLevel,
-            IReadOnlyList<Models.V2.PriceStructure.PowerPriceTax> powerPriceTaxes)
+            Models.PriceStructure.PowerPriceLevel powerPriceLevel,
+            IReadOnlyList<Models.PriceStructure.PowerPriceTax> powerPriceTaxes)
         {
-            var retVal = new Models.V2.Digin.PowerPriceLevel
+            var retVal = new Models.Digin.PowerPriceLevel
             {
                 Id = powerPriceLevel.Id,
                 ValueMin = powerPriceLevel.ValueMin,
@@ -783,7 +783,7 @@ namespace GridTariffApi.Lib.Services
             return retVal;
         }
 
-        void CalcPowerPriceLevelValues(Models.V2.Digin.PowerPriceLevel powerPriceLevel, Models.V2.PriceStructure.PowerPriceLevel powerPriceLevelPrice, IReadOnlyList<Models.V2.PriceStructure.PowerPriceTax> powerPriceTaxes)
+        void CalcPowerPriceLevelValues(Models.Digin.PowerPriceLevel powerPriceLevel, Models.PriceStructure.PowerPriceLevel powerPriceLevelPrice, IReadOnlyList<Models.PriceStructure.PowerPriceTax> powerPriceTaxes)
         {
             var vatTax = powerPriceTaxes.FirstOrDefault(x => x.TaxType == "vat");
             double vatTaxValue = vatTax != null ? vatTax.TaxValue : 0;
@@ -809,10 +809,10 @@ namespace GridTariffApi.Lib.Services
         }
 
         public FixedPriceLevel PriceLevelPriceToFixedPriceLevel(
-            Models.V2.PriceStructure.FixedPriceLevel priceLevel,
-            IReadOnlyList<Models.V2.PriceStructure.FixedPriceTax> fixedPriceTaxes)
+            Models.PriceStructure.FixedPriceLevel priceLevel,
+            IReadOnlyList<Models.PriceStructure.FixedPriceTax> fixedPriceTaxes)
         {
-            var retVal = new Models.V2.Digin.FixedPriceLevel();
+            var retVal = new Models.Digin.FixedPriceLevel();
             var vatTax = fixedPriceTaxes.FirstOrDefault(x => x.TaxType == "vat");
             double vatTaxValue = vatTax != null ? vatTax.TaxValue : 0;
 
@@ -834,9 +834,9 @@ namespace GridTariffApi.Lib.Services
             return retVal;
         }
 
-        public Models.V2.Digin.HourFixedPrices CalcMonthlyFixedPrices(
-            Models.V2.PriceStructure.FixedPriceLevel fixedPricePriceLevel,
-            IReadOnlyList<Models.V2.PriceStructure.FixedPriceTax> fixedPriceTaxes,
+        public Models.Digin.HourFixedPrices CalcMonthlyFixedPrices(
+            Models.PriceStructure.FixedPriceLevel fixedPricePriceLevel,
+            IReadOnlyList<Models.PriceStructure.FixedPriceTax> fixedPriceTaxes,
             int daysInMonth,
             string daysInMonthHourIdentificator)
         {
@@ -845,7 +845,7 @@ namespace GridTariffApi.Lib.Services
             int hoursInMonth = daysInMonth * Constants.HoursInDay;
             var totalExVatPerHour = fixedPricePriceLevel.MonthlyFixedExTaxes / hoursInMonth;
 
-            var retVal = new Models.V2.Digin.HourFixedPrices
+            var retVal = new Models.Digin.HourFixedPrices
             {
                 Id = daysInMonthHourIdentificator,
                 NumberOfDaysInMonth = daysInMonth,
@@ -855,11 +855,11 @@ namespace GridTariffApi.Lib.Services
             return retVal;
         }
 
-        public Models.V2.Digin.GridTariff ToGridTariff(
-            Models.V2.PriceStructure.Company company,
-            Models.V2.PriceStructure.TariffType tariffType)
+        public Models.Digin.GridTariff ToGridTariff(
+            Models.PriceStructure.Company company,
+            Models.PriceStructure.TariffType tariffType)
         {
-            var retVal = new Models.V2.Digin.GridTariff
+            var retVal = new Models.Digin.GridTariff
             {
                 TariffType = _objectConversionHelper.ToTariffType(company, tariffType)
             };

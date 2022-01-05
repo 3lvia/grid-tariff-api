@@ -1,10 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Text.Json.Serialization;
 
-namespace GridTariffApi.Lib.Models.V2.Holidays
+namespace GridTariffApi.Lib.Models.Holidays
 {
     public class Holiday
     {

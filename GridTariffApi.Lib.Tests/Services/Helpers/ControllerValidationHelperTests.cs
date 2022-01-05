@@ -1,8 +1,8 @@
 ﻿using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.Interfaces.V2.External;
-using GridTariffApi.Lib.Models.V2.Digin;
-using GridTariffApi.Lib.Models.V2.Holidays;
-using GridTariffApi.Lib.Models.V2.PriceStructure;
+using GridTariffApi.Lib.Models.Digin;
+using GridTariffApi.Lib.Models.Holidays;
+using GridTariffApi.Lib.Models.PriceStructure;
 using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services;
 using Moq;
@@ -12,8 +12,8 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 using Xunit;
-using GridTariff = GridTariffApi.Lib.Models.V2.PriceStructure.GridTariff;
-using TariffType = GridTariffApi.Lib.Models.V2.PriceStructure.TariffType;
+using GridTariff = GridTariffApi.Lib.Models.PriceStructure.GridTariff;
+using TariffType = GridTariffApi.Lib.Models.PriceStructure.TariffType;
 
 namespace GridTariffApi.Lib.Tests.Helpers
 {

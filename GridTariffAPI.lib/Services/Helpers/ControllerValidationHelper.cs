@@ -1,5 +1,5 @@
 ﻿using GridTariffApi.Lib.Config;
-using GridTariffApi.Lib.Models.V2.Digin;
+using GridTariffApi.Lib.Models.Digin;
 using System;
 using System.Linq;
 

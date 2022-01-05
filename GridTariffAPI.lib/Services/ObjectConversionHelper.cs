@@ -4,12 +4,12 @@ namespace GridTariffApi.Lib.Services
 {
     public interface IObjectConversionHelper
     {
-        Models.V2.Digin.FixedPriceConfiguration ToFixedPriceConfiguration(Models.V2.PriceStructure.FixedPriceConfiguration priceConfiguration);
-        Models.V2.Digin.PowerPriceConfiguration ToPowerPriceConfiguration(Models.V2.PriceStructure.PowerPriceConfiguration priceConfiguration);
+        Models.Digin.FixedPriceConfiguration ToFixedPriceConfiguration(Models.PriceStructure.FixedPriceConfiguration priceConfiguration);
+        Models.Digin.PowerPriceConfiguration ToPowerPriceConfiguration(Models.PriceStructure.PowerPriceConfiguration priceConfiguration);
 
-        public Models.V2.Digin.TariffType ToTariffType(
-            Models.V2.PriceStructure.Company company,
-            Models.V2.PriceStructure.TariffType tariffType);
+        public Models.Digin.TariffType ToTariffType(
+            Models.PriceStructure.Company company,
+            Models.PriceStructure.TariffType tariffType);
 
     }
 
@@ -20,11 +20,11 @@ namespace GridTariffApi.Lib.Services
 
         }
 
-        public Models.V2.Digin.TariffType ToTariffType(
-            Models.V2.PriceStructure.Company company,
-            Models.V2.PriceStructure.TariffType tariffType)
+        public Models.Digin.TariffType ToTariffType(
+            Models.PriceStructure.Company company,
+            Models.PriceStructure.TariffType tariffType)
         {
-            var retVal = new Models.V2.Digin.TariffType
+            var retVal = new Models.Digin.TariffType
             {
                 TariffKey = tariffType.TariffKey,
                 Product = tariffType.Product,
@@ -43,12 +43,12 @@ namespace GridTariffApi.Lib.Services
             return retVal;
         }
 
-        public Models.V2.Digin.PowerPriceConfiguration ToPowerPriceConfiguration(Models.V2.PriceStructure.PowerPriceConfiguration priceConfiguration)
+        public Models.Digin.PowerPriceConfiguration ToPowerPriceConfiguration(Models.PriceStructure.PowerPriceConfiguration priceConfiguration)
         {
-            Models.V2.Digin.PowerPriceConfiguration retVal = null;
+            Models.Digin.PowerPriceConfiguration retVal = null;
             if (priceConfiguration != null)
             {
-                return new Models.V2.Digin.PowerPriceConfiguration()
+                return new Models.Digin.PowerPriceConfiguration()
                 {
                     PowerFactorPercentage = priceConfiguration.PowerFactorPercentage,
                     ReactivePowerPricing = priceConfiguration.ReactivePowerPricing
@@ -56,12 +56,12 @@ namespace GridTariffApi.Lib.Services
             }
             return retVal;
         }
-        public Models.V2.Digin.FixedPriceConfiguration ToFixedPriceConfiguration(Models.V2.PriceStructure.FixedPriceConfiguration priceConfiguration)
+        public Models.Digin.FixedPriceConfiguration ToFixedPriceConfiguration(Models.PriceStructure.FixedPriceConfiguration priceConfiguration)
         {
-            Models.V2.Digin.FixedPriceConfiguration retVal = null;
+            Models.Digin.FixedPriceConfiguration retVal = null;
             if (priceConfiguration != null)
             {
-                retVal = new Models.V2.Digin.FixedPriceConfiguration
+                retVal = new Models.Digin.FixedPriceConfiguration
                 {
                     Basis = priceConfiguration.Basis
                 };

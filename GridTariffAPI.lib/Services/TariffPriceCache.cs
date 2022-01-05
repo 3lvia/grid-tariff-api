@@ -1,7 +1,7 @@
 ﻿using GridTariffApi.Lib.Interfaces.V2.External;
-using GridTariffApi.Lib.Models.V2.Holidays;
+using GridTariffApi.Lib.Models.Holidays;
 using GridTariffApi.Lib.Models.V2.Internal;
-using GridTariffApi.Lib.Models.V2.PriceStructure;
+using GridTariffApi.Lib.Models.PriceStructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,19 +57,19 @@ namespace GridTariffApi.Lib.Services
         }
 
 
-        public Models.V2.PriceStructure.Company GetCompany()
+        public Models.PriceStructure.Company GetCompany()
         {
             return GetTariffRootElement().GridTariffPriceConfiguration.GridTariff.Company;
         }
 
-        public IReadOnlyList<Models.V2.PriceStructure.TariffType> GetTariffs()
+        public IReadOnlyList<Models.PriceStructure.TariffType> GetTariffs()
         {
             var tariffPriceStructureRoot = GetTariffRootElement();
             return tariffPriceStructureRoot.GridTariffPriceConfiguration.GridTariff.TariffTypes;
         }
 
 
-        public Models.V2.PriceStructure.TariffType GetTariff(String tariffKey)
+        public Models.PriceStructure.TariffType GetTariff(String tariffKey)
         {
             var tariffPriceStructureRoot = GetTariffRootElement();
             var retVal = tariffPriceStructureRoot.GridTariffPriceConfiguration.GridTariff.TariffTypes.FirstOrDefault(a => a.TariffKey == tariffKey);

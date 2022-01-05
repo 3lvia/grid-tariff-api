@@ -31,7 +31,7 @@ namespace GridTariffApi.Lib.Controllers.v2
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Models.V2.Digin.TariffTypeContainer>> Get()
+        public async Task<ActionResult<Models.Digin.TariffTypeContainer>> Get()
         {
             var result = await _tariffTypeService.GetTariffTypes();
             return Ok(result);

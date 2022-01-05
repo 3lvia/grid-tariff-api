@@ -1,6 +1,6 @@
 ﻿using Elvia.Telemetry;
 using GridTariffApi.Lib.Interfaces.V2.External;
-using GridTariffApi.Lib.Models.V2.Holidays;
+using GridTariffApi.Lib.Models.Holidays;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

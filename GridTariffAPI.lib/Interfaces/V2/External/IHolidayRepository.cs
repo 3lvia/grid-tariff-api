@@ -1,4 +1,4 @@
-﻿using GridTariffApi.Lib.Models.V2.Holidays;
+﻿using GridTariffApi.Lib.Models.Holidays;
 using System;
 using System.Collections.Generic;
 using System.Text;
