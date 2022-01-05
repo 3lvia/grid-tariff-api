@@ -1,4 +1,4 @@
-﻿using GridTariffApi.Lib.Models;
+﻿using GridTariffApi.Lib.Models.Pilot.TariffType;
 using GridTariffApi.Lib.Services.Pilot;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

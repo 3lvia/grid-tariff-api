@@ -57,7 +57,7 @@ namespace GridTariffApi
         }
 
 
-        public bool Contains(List<GridTariffApi.Lib.Models.TariffType> model, GridTariffApi.Lib.EntityFramework.TariffType db)
+        public bool Contains(List<GridTariffApi.Lib.Models.Pilot.TariffType.TariffType> model, GridTariffApi.Lib.EntityFramework.TariffType db)
         {
             foreach (var tariffType in model)
             {

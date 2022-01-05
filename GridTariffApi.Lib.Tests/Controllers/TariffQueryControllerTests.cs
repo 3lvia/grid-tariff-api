@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.Controllers.v1;
 using GridTariffApi.Lib.EntityFramework;
-using GridTariffApi.Lib.Models.TariffQuery;
+using GridTariffApi.Lib.Models.Pilot.TariffQuery;
 using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services.Pilot;
 using Microsoft.AspNetCore.Mvc;

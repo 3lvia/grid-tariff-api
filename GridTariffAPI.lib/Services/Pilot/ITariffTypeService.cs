@@ -1,5 +1,5 @@
 ﻿
-using GridTariffApi.Lib.Models;
+using GridTariffApi.Lib.Models.Pilot.TariffType;
 
 namespace GridTariffApi.Lib.Services.Pilot
 {

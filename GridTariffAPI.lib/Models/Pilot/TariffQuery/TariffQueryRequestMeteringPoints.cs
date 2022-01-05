@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace GridTariffApi.Lib.Models.TariffQuery
+namespace GridTariffApi.Lib.Models.Pilot.TariffQuery
 {
     public class TariffQueryRequestMeteringPoints    {
         /// <summary>

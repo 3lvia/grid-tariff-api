@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GridTariffApi.Lib.Models.TariffQuery
+namespace GridTariffApi.Lib.Models.Pilot.TariffQuery
 {
     public class PriceInfo
     {

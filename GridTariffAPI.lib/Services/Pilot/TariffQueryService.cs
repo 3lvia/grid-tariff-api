@@ -1,6 +1,6 @@
 ﻿using GridTariffApi.Lib.EntityFramework;
 using GridTariffApi.Lib.Models.Internal;
-using GridTariffApi.Lib.Models.TariffQuery;
+using GridTariffApi.Lib.Models.Pilot.TariffQuery;
 using GridTariffApi.Lib.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -118,7 +118,7 @@ namespace GridTariffApi.Lib.Services.Pilot
             {
                 GridTariff = new GridTariff
                 {
-                    TariffType = new Models.TariffQuery.TariffType()
+                    TariffType = new Models.Pilot.TariffQuery.TariffType()
                     {
                         TariffKey = tariffType.TariffKey,
                         Company = tariffType.Company.CompanyName,
@@ -248,8 +248,8 @@ namespace GridTariffApi.Lib.Services.Pilot
 
             foreach (FixedPriceConfig fixedPriceConfig in fixedpriceconfigs.Values)
             {
-                var fixedPriceConfigContainer = new FixedPrices() { PriceLevel = new List<Models.TariffQuery.PriceLevel>() };
-                var priceLevel = new Models.TariffQuery.PriceLevel()
+                var fixedPriceConfigContainer = new FixedPrices() { PriceLevel = new List<Models.Pilot.TariffQuery.PriceLevel>() };
+                var priceLevel = new Models.Pilot.TariffQuery.PriceLevel()
                 {
                     Level = fixedPriceConfig.PriceLevel.PriceLevel,
                     LevelInfo = fixedPriceConfig.PriceLevel.LevelInfo,

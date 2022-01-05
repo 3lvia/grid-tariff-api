@@ -335,9 +335,11 @@ namespace GridTariffApi.Lib.Services
         List<TimePeriod> SegmentByChangingTaxes(Models.V2.PriceStructure.Taxes taxes, DateTimeOffset startDate, DateTimeOffset endDate)
         {
             var retVal = new List<TimePeriod>();
-            var dates = new List<DateTimeOffset>();
-            dates.Add(startDate);
-            dates.Add(endDate);
+            var dates = new List<DateTimeOffset>
+            {
+                startDate,
+                endDate
+            };
 
             if (taxes.EnergyPriceTaxes != null)
             {

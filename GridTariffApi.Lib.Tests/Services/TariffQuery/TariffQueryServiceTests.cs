@@ -1,6 +1,6 @@
 ﻿using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.EntityFramework;
-using GridTariffApi.Lib.Models.TariffQuery;
+using GridTariffApi.Lib.Models.Pilot.TariffQuery;
 using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services.Pilot;
 using Microsoft.EntityFrameworkCore;
@@ -393,7 +393,7 @@ namespace GridTariffApi.Services.TariffQuery.Tests
                     Assert.Single(priceInfo.FixedPrices);
                     FixedPrices fixedPrice = priceInfo.FixedPrices.FirstOrDefault();
                     Assert.Single(fixedPrice.PriceLevel);
-                    GridTariffApi.Lib.Models.TariffQuery.PriceLevel priceLevel = fixedPrice.PriceLevel.FirstOrDefault();
+                    GridTariffApi.Lib.Models.Pilot.TariffQuery.PriceLevel priceLevel = fixedPrice.PriceLevel.FirstOrDefault();
 
                     Assert.Equal(fixedVal, priceLevel.Fixed);
                     Assert.Equal(taxesVal, priceLevel.Taxes);

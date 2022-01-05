@@ -1,6 +1,7 @@
 ﻿using GridTariffApi.Lib.Controllers.v1;
 using GridTariffApi.Lib.EntityFramework;
 using GridTariffApi.Lib.Models;
+using GridTariffApi.Lib.Models.Pilot.TariffType;
 using GridTariffApi.Lib.Services.Pilot;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

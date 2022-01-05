@@ -1,6 +1,6 @@
 ﻿using GridTariffApi.Lib.Config;
-using GridTariffApi.Lib.Models;
-using GridTariffApi.Lib.Models.TariffQuery;
+using GridTariffApi.Lib.Models.Pilot.TariffQuery;
+using GridTariffApi.Lib.Models.Pilot.TariffType;
 using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services.Pilot;
 using Microsoft.AspNetCore.Authorization;

@@ -1,4 +1,5 @@
-﻿using GridTariffApi.Lib.Models.TariffQuery;
+﻿using GridTariffApi.Lib.Models.Pilot.TariffQuery;
+
 using System;
 using System.Collections.Generic;
 

@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\V2\" />
     <Folder Include="SQL\" />
   </ItemGroup>
 

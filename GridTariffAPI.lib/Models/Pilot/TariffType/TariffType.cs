@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GridTariffApi.Lib.Models
+namespace GridTariffApi.Lib.Models.Pilot.TariffType
 {
     public class TariffType
     {
