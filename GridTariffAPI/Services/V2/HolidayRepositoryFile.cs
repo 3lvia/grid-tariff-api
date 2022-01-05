@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace GridTariffApi.Services.V2
 {
-    public class HolidayPersistenceFile : IHolidayPersistence
+    public class HolidayRepositoryFile : IHolidayRepository
     {
         private static string _holidayFileName = Path.Join("Artifacts","holidays.json");
         private readonly ITelemetryInsightsLogger _telemetryLogger;
 
-        public HolidayPersistenceFile(ITelemetryInsightsLogger telemetryLogger)
+        public HolidayRepositoryFile(ITelemetryInsightsLogger telemetryLogger)
         {
             _telemetryLogger = telemetryLogger;
         }

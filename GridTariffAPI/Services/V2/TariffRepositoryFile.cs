@@ -7,12 +7,12 @@ using System.IO;
 
 namespace GridTariffApi.Services.V2
 {
-    public class TariffPersistenceFile : ITariffPersistence
+    public class TariffRepositoryFile : ITariffRepository
     {
         private static readonly string _tariffPriceFileName = Path.Join("Artifacts", "GridTariffPriceConfiguration.v1_0_gridtariffprices.json");
         private readonly ITelemetryInsightsLogger _telemetryLogger;
 
-        public TariffPersistenceFile(ITelemetryInsightsLogger telemetryLogger)
+        public TariffRepositoryFile(ITelemetryInsightsLogger telemetryLogger)
         {
             _telemetryLogger = telemetryLogger;
         }

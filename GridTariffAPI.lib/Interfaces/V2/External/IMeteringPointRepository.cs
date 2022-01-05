@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace GridTariffApi.Lib.Interfaces.V2.External
 {
-    public interface IMeteringPointPersistence
+    public interface IMeteringPointRepository
     {
         public IReadOnlyList<MeteringPointInformation> GetMeteringPointsInformation(List<String> meteringPointIds);
     }

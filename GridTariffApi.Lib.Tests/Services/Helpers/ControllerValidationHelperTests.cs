@@ -20,8 +20,8 @@ namespace GridTariffApi.Lib.Tests.Helpers
     public class ControllerValidationHelperTests
     {
         private IControllerValidationHelper _controllerValidationHelper;
-        private Mock<ITariffPersistence> _tariffPeristenceMock;
-        private Mock<IHolidayPersistence> _holidayPeristenceMock;
+        private Mock<ITariffRepository> _tariffPeristenceMock;
+        private Mock<IHolidayRepository> _holidayPeristenceMock;
 
         private void Setup()
         {
@@ -36,12 +36,12 @@ namespace GridTariffApi.Lib.Tests.Helpers
             var gridTariffPriceConfiguration = new GridTariffPriceConfiguration(gridTariff);
             var TariffPriceStructureRoot = new TariffPriceStructureRoot(gridTariffPriceConfiguration);
 
-            _tariffPeristenceMock = new Mock<ITariffPersistence>();
+            _tariffPeristenceMock = new Mock<ITariffRepository>();
             _tariffPeristenceMock
                 .Setup(x => x.GetTariffPriceStructure())
                 .Returns(TariffPriceStructureRoot);
 
-            _holidayPeristenceMock = new Mock<IHolidayPersistence>();
+            _holidayPeristenceMock = new Mock<IHolidayRepository>();
             _holidayPeristenceMock
                 .Setup(x => x.GetHolidays())
                 .Returns(new List<Holiday>());

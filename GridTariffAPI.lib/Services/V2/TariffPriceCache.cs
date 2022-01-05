@@ -11,22 +11,22 @@ namespace GridTariffApi.Lib.Services.V2
 {
     public class TariffPriceCache : ITariffPriceCache
     {
-        private readonly ITariffPersistence _tariffPersistence;
-        private readonly IHolidayPersistence _holidayPersistence;
-        private readonly IMeteringPointPersistence _meteringPointTariffPersistence;
+        private readonly ITariffRepository _tariffRepository;
+        private readonly IHolidayRepository _holidayRepository;
+        private readonly IMeteringPointRepository _meteringPointTariffRepository;
 
         private TariffPriceStructureRoot _tariffPriceStructureRoot;
         private IReadOnlyList<Holiday> _holidayRoot;
         private readonly Dictionary<string, MeteringPointInformation> _meteringPointIndex;
 
         private DateTime _tariffCacheValidUntil = DateTime.UtcNow;
-        public TariffPriceCache(ITariffPersistence tariffPersistence
-            , IHolidayPersistence holidayPersistence,
-            IMeteringPointPersistence meteringPointTariffPersistence)
+        public TariffPriceCache(ITariffRepository tariffRepository
+            , IHolidayRepository holidayRepository,
+            IMeteringPointRepository meteringPointTariffRepository)
         {
-            _tariffPersistence = tariffPersistence;
-            _holidayPersistence = holidayPersistence;
-            _meteringPointTariffPersistence = meteringPointTariffPersistence;
+            _tariffRepository = tariffRepository;
+            _holidayRepository = holidayRepository;
+            _meteringPointTariffRepository = meteringPointTariffRepository;
             _meteringPointIndex = new Dictionary<string, MeteringPointInformation>();
             RefreshCache();
         }
@@ -47,7 +47,7 @@ namespace GridTariffApi.Lib.Services.V2
             var retVal = new List<MeteringPointInformation>();
             lock (_meteringPointIndex)
             {
-                var meteringPointsInformation = _meteringPointTariffPersistence.GetMeteringPointsInformation(meteringPoints);
+                var meteringPointsInformation = _meteringPointTariffRepository.GetMeteringPointsInformation(meteringPoints);
                 foreach (var meterinPoint in meteringPointsInformation)
                 {
                     _meteringPointIndex.Add(meterinPoint.MeteringPointId, meterinPoint);
@@ -98,8 +98,8 @@ namespace GridTariffApi.Lib.Services.V2
 
         private void RefreshCache()
         {
-            _tariffPriceStructureRoot = _tariffPersistence.GetTariffPriceStructure();
-            _holidayRoot = _holidayPersistence.GetHolidays();
+            _tariffPriceStructureRoot = _tariffRepository.GetTariffPriceStructure();
+            _holidayRoot = _holidayRepository.GetHolidays();
             _tariffCacheValidUntil = DateTime.UtcNow.AddMinutes(Constants.CacheConsideredInvalidMinutes).Date;
         }
     }

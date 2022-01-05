@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GridTariffApi.Lib.Interfaces.V2.External
 {
-    public interface IHolidayPersistence
+    public interface IHolidayRepository
     {
         public IReadOnlyList<Holiday> GetHolidays();
     }

@@ -15,17 +15,17 @@ namespace GridTariffApi.Lib.Tests.Services.V2
 {
     public class TariffPriceCacheTests
     {
-        private Mock<ITariffPersistence> _tariffPeristenceMock;
-        private Mock<IHolidayPersistence> _holidayPeristenceMock;
-        private Mock<IMeteringPointPersistence> _meteringPointPersistence;
+        private Mock<ITariffRepository> _tariffPeristenceMock;
+        private Mock<IHolidayRepository> _holidayPeristenceMock;
+        private Mock<IMeteringPointRepository> _meteringPointRepository;
         private void Setup()
         {
-            _tariffPeristenceMock = new Mock<ITariffPersistence>();
+            _tariffPeristenceMock = new Mock<ITariffRepository>();
             _tariffPeristenceMock
                 .Setup(x => x.GetTariffPriceStructure())
                 .Returns(new TariffPriceStructureRoot(null));
 
-            _holidayPeristenceMock = new Mock<IHolidayPersistence>();
+            _holidayPeristenceMock = new Mock<IHolidayRepository>();
             _holidayPeristenceMock
                 .Setup(x => x.GetHolidays())
                 .Returns(new List<Holiday>());
@@ -36,14 +36,14 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             meteringPointInformations.Add(new MeteringPointInformation("mp2", null, null, DateTimeOffset.MaxValue));
             meteringPointInformations.Add(new MeteringPointInformation("mp3", null, null, DateTimeOffset.MaxValue));
 
-            _meteringPointPersistence = new Mock<IMeteringPointPersistence>();
-            _meteringPointPersistence
+            _meteringPointRepository = new Mock<IMeteringPointRepository>();
+            _meteringPointRepository
                 .Setup(x => x.GetMeteringPointsInformation(It.IsAny<List<String>>()))
                 .Returns((IReadOnlyList<Models.V2.Internal.MeteringPointInformation>)meteringPointInformations);
         }
 
         [Fact]
-        public void TariffPersistenceCalledOnceTest()
+        public void TariffRepositoryCalledOnceTest()
         {
             Setup();
             TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object,null);
@@ -56,7 +56,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         }
 
         [Fact]
-        public void HolidayPersistenceCalledOnceTest()
+        public void HolidayRepositoryCalledOnceTest()
         {
             Setup();
             TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object,null);
@@ -71,15 +71,15 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         public void InitMeteringPointIndexInitOnceTest()
         {
             Setup();
-            TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object, _meteringPointPersistence.Object);
+            TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object, _meteringPointRepository.Object);
 
             var reqParam = new List<String>();
             reqParam.Add("mp1");
-            _meteringPointPersistence.Verify(x => x.GetMeteringPointsInformation(reqParam), Times.Never);
+            _meteringPointRepository.Verify(x => x.GetMeteringPointsInformation(reqParam), Times.Never);
             tariffPriceCache.GetMeteringPointInformation(reqParam);
-            _meteringPointPersistence.Verify(x => x.GetMeteringPointsInformation(reqParam), Times.Once);
+            _meteringPointRepository.Verify(x => x.GetMeteringPointsInformation(reqParam), Times.Once);
             tariffPriceCache.GetMeteringPointInformation(reqParam);
-            _meteringPointPersistence.Verify(x => x.GetMeteringPointsInformation(reqParam), Times.Once);
+            _meteringPointRepository.Verify(x => x.GetMeteringPointsInformation(reqParam), Times.Once);
         }
     }
 }

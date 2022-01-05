@@ -7,11 +7,11 @@ using System.Linq;
 
 namespace GridTariffApi.Services.V2
 {
-    public class MeteringPointPersistenceEF : IMeteringPointPersistence
+    public class MeteringPointRepositoryEF : IMeteringPointRepository
     {
         private readonly TariffContext _tariffContext;
 
-        public MeteringPointPersistenceEF(TariffContext tariffContext)
+        public MeteringPointRepositoryEF(TariffContext tariffContext)
         {
             _tariffContext = tariffContext;
         }

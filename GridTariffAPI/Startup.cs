@@ -81,9 +81,9 @@ namespace GridTariffApi
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString));
 
             //v2
-            services.AddSingleton<ITariffPersistence, TariffPersistenceFile>();
-            services.AddSingleton<IHolidayPersistence, HolidayPersistenceFile>();
-            services.AddSingleton<IMeteringPointPersistence, MeteringPointPersistenceEF>();
+            services.AddSingleton<ITariffRepository, TariffRepositoryFile>();
+            services.AddSingleton<IHolidayRepository, HolidayRepositoryFile>();
+            services.AddSingleton<IMeteringPointRepository, MeteringPointRepositoryEF>();
             services.AddSingleton<ITariffPriceCache, TariffPriceCache>();
             services.AddTransient<GridTariffApi.Lib.Services.V2.IObjectConversionHelper, GridTariffApi.Lib.Services.V2.ObjectConversionHelper>();
             services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffQueryService, GridTariffApi.Lib.Services.V2.TariffQueryService>();

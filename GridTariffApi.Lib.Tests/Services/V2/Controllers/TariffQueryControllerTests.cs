@@ -22,8 +22,8 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
     public class TariffQueryControllerTests
     {
         TariffQueryController _tariffQueryController;
-        private Mock<ITariffPersistence> _tariffPeristenceMock;
-        private Mock<IHolidayPersistence> _holidayPeristenceMock;
+        private Mock<ITariffRepository> _tariffPeristenceMock;
+        private Mock<IHolidayRepository> _holidayPeristenceMock;
         private Mock<ITariffQueryService> _tariffQueryServiceMock;
 
         private void Setup()
@@ -47,12 +47,12 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
             var gridTariffPriceConfiguration = new GridTariffPriceConfiguration(gridTariff);
             var TariffPriceStructureRoot = new TariffPriceStructureRoot(gridTariffPriceConfiguration);
 
-            _tariffPeristenceMock = new Mock<ITariffPersistence>();
+            _tariffPeristenceMock = new Mock<ITariffRepository>();
             _tariffPeristenceMock
                 .Setup(x => x.GetTariffPriceStructure())
                 .Returns(TariffPriceStructureRoot);
 
-            _holidayPeristenceMock = new Mock<IHolidayPersistence>();
+            _holidayPeristenceMock = new Mock<IHolidayRepository>();
             _holidayPeristenceMock
                 .Setup(x => x.GetHolidays())
                 .Returns(new List<Holiday>());
