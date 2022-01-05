@@ -1,6 +1,6 @@
-﻿using GridTariffApi.Lib.Interfaces.V2.External;
+﻿using GridTariffApi.Lib.Interfaces.External;
 using GridTariffApi.Lib.Models.Holidays;
-using GridTariffApi.Lib.Models.V2.Internal;
+using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Lib.Models.PriceStructure;
 using GridTariffApi.Lib.Services;
 using Moq;
@@ -36,7 +36,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             _meteringPointRepository = new Mock<IMeteringPointRepository>();
             _meteringPointRepository
                 .Setup(x => x.GetMeteringPointsInformation(It.IsAny<List<String>>()))
-                .Returns((IReadOnlyList<Models.V2.Internal.MeteringPointInformation>)meteringPointInformations);
+                .Returns((IReadOnlyList<Models.Internal.MeteringPointInformation>)meteringPointInformations);
         }
 
         [Fact]

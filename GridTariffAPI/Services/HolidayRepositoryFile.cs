@@ -1,18 +1,17 @@
 ﻿using Elvia.Telemetry;
-using GridTariffApi.Lib.Interfaces.V2.External;
+using GridTariffApi.Lib.Interfaces.External;
 using GridTariffApi.Lib.Models.Holidays;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace GridTariffApi.Services.V2
+namespace GridTariffApi.Services
 {
     public class HolidayRepositoryFile : IHolidayRepository
     {
-        private static string _holidayFileName = Path.Join("Artifacts","holidays.json");
+        private static readonly string _holidayFileName = Path.Join("Artifacts","holidays.json");
         private readonly ITelemetryInsightsLogger _telemetryLogger;
 
         public HolidayRepositoryFile(ITelemetryInsightsLogger telemetryLogger)

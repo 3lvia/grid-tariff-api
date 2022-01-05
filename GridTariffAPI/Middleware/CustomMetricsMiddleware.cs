@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
-using GridTariffApi.Lib.Interfaces.V2;
+using GridTariffApi.Lib.Interfaces;
 using GridTariffApi.Metrics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;

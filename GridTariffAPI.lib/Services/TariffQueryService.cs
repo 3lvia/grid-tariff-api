@@ -1,7 +1,6 @@
 ﻿using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Lib.Models.Digin;
 using GridTariffApi.Lib.Models.Holidays;
-using GridTariffApi.Lib.Models.V2.Internal;
 using GridTariffApi.Lib.Services.Helpers;
 using System;
 using System.Collections.Generic;

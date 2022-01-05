@@ -1,11 +1,11 @@
 ﻿using Elvia.Telemetry;
-using GridTariffApi.Lib.Interfaces.V2.External;
+using GridTariffApi.Lib.Interfaces.External;
 using GridTariffApi.Lib.Models.PriceStructure;
 using Newtonsoft.Json;
 using System;
 using System.IO;
 
-namespace GridTariffApi.Services.V2
+namespace GridTariffApi.Services
 {
     public class TariffRepositoryFile : ITariffRepository
     {

@@ -1,5 +1,5 @@
 ﻿using GridTariffApi.Lib.Models.Holidays;
-using GridTariffApi.Lib.Models.V2.Internal;
+using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Lib.Models.PriceStructure;
 using System;
 using System.Collections.Generic;

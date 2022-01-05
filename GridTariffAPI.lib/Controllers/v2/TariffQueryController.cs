@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
-using GridTariffApi.Lib.Interfaces.V2;
+using GridTariffApi.Lib.Interfaces;
 
 namespace GridTariffApi.Lib.Controllers.v2
 {

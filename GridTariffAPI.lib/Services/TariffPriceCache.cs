@@ -1,6 +1,6 @@
-﻿using GridTariffApi.Lib.Interfaces.V2.External;
+﻿using GridTariffApi.Lib.Interfaces.External;
 using GridTariffApi.Lib.Models.Holidays;
-using GridTariffApi.Lib.Models.V2.Internal;
+using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Lib.Models.PriceStructure;
 using System;
 using System.Collections.Generic;

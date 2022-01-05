@@ -1,11 +1,11 @@
 ﻿using GridTariffApi.Lib.EntityFramework;
-using GridTariffApi.Lib.Interfaces.V2.External;
-using GridTariffApi.Lib.Models.V2.Internal;
+using GridTariffApi.Lib.Interfaces.External;
+using GridTariffApi.Lib.Models.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GridTariffApi.Services.V2
+namespace GridTariffApi.Services
 {
     public class MeteringPointRepositoryEF : IMeteringPointRepository
     {

@@ -1,9 +1,7 @@
 ﻿using GridTariffApi.Lib.Models.Holidays;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace GridTariffApi.Lib.Interfaces.V2.External
+namespace GridTariffApi.Lib.Interfaces.External
 {
     public interface IHolidayRepository
     {

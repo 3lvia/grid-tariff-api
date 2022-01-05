@@ -1,5 +1,5 @@
 ﻿using System;
-using GridTariffApi.Lib.Interfaces.V2;
+using GridTariffApi.Lib.Interfaces;
 
 namespace GridTariffApi.Middleware
 {

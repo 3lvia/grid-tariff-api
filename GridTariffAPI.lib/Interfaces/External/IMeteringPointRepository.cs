@@ -1,8 +1,8 @@
-﻿using GridTariffApi.Lib.Models.V2.Internal;
+﻿using GridTariffApi.Lib.Models.Internal;
 using System;
 using System.Collections.Generic;
 
-namespace GridTariffApi.Lib.Interfaces.V2.External
+namespace GridTariffApi.Lib.Interfaces.External
 {
     public interface IMeteringPointRepository
     {

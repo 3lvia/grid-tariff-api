@@ -1,6 +1,6 @@
 ﻿using GridTariffApi.Lib.Models.PriceStructure;
 
-namespace GridTariffApi.Lib.Interfaces.V2.External
+namespace GridTariffApi.Lib.Interfaces.External
 {
     public interface ITariffRepository
     {

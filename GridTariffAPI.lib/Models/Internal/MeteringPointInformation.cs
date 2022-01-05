@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace GridTariffApi.Lib.Models.V2.Internal
+namespace GridTariffApi.Lib.Models.Internal
 {
     public class MeteringPointInformation
     {
