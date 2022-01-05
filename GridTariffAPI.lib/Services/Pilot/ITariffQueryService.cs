@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace GridTariffApi.Lib.Services.TariffQuery
+namespace GridTariffApi.Lib.Services.Pilot
 {
     public interface ITariffQueryService
     {

@@ -4,7 +4,7 @@ using GridTariffApi.Lib.Models.V2.PriceStructure;
 using System;
 using System.Collections.Generic;
 
-namespace GridTariffApi.Lib.Services.V2
+namespace GridTariffApi.Lib.Services
 {
     public interface ITariffPriceCache
     {

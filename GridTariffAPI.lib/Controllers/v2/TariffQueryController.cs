@@ -1,6 +1,6 @@
 ﻿using GridTariffApi.Lib.Models.V2.Digin;
 using GridTariffApi.Lib.Services.Helpers;
-using GridTariffApi.Lib.Services.V2;
+using GridTariffApi.Lib.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

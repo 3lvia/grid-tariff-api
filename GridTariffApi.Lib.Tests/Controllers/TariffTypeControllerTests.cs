@@ -1,7 +1,7 @@
 ﻿using GridTariffApi.Lib.Controllers.v1;
 using GridTariffApi.Lib.EntityFramework;
 using GridTariffApi.Lib.Models;
-using GridTariffApi.Lib.Services.TariffType;
+using GridTariffApi.Lib.Services.Pilot;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -12,7 +12,6 @@ namespace GridTariffApi.Controllers.Tests
 {
     public class TariffTypeControllerTests
     {
-        private PilotTariffTypeController _tariffTypeController;
         private TariffTypeService _tariffTypeService;
         private TariffContext _tariffContext;
 
@@ -26,7 +25,6 @@ namespace GridTariffApi.Controllers.Tests
             var provider = services.BuildServiceProvider();
             _tariffContext = provider.GetRequiredService<TariffContext>();
             _tariffTypeService = new TariffTypeService(_tariffContext);
-            _tariffTypeController = new PilotTariffTypeController(_tariffTypeService);
             TestHelper testHelper = new TestHelper();
             _tariffContext.Company.Add(testHelper.GetCompanyElvia());
             _tariffContext.Company.Add(testHelper.GetCompanyFoobar());

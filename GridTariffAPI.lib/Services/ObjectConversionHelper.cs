@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace GridTariffApi.Lib.Services.V2
+namespace GridTariffApi.Lib.Services
 {
     public interface IObjectConversionHelper
     {
@@ -26,20 +24,22 @@ namespace GridTariffApi.Lib.Services.V2
             Models.V2.PriceStructure.Company company,
             Models.V2.PriceStructure.TariffType tariffType)
         {
-            var retVal = new Models.V2.Digin.TariffType();
-            retVal.TariffKey = tariffType.TariffKey;
-            retVal.Product = tariffType.Product;
-            retVal.CompanyName = company.CompanyName;
-            retVal.CompanyOrgNo = company.CompanyOrgNo;
-            retVal.Title = tariffType.Title;
-            retVal.ConsumptionFlag = tariffType.ConsumptionFlag;
-            retVal.LastUpdated = tariffType.LastUpdated;
-            retVal.UsePublicHolidayPrices = !String.IsNullOrEmpty(tariffType.UsePublicHolidayOverride);
-            retVal.UseWeekendPrices = !string.IsNullOrEmpty(tariffType.UseWeekendPriceOverride);
-            retVal.FixedPriceConfiguration = ToFixedPriceConfiguration(tariffType.FixedPriceConfiguration);
-            retVal.PowerPriceConfiguration = ToPowerPriceConfiguration(tariffType.PowerPriceConfiguration);
-            retVal.Resolution = tariffType.Resolution;
-            retVal.Description = tariffType.Description;
+            var retVal = new Models.V2.Digin.TariffType
+            {
+                TariffKey = tariffType.TariffKey,
+                Product = tariffType.Product,
+                CompanyName = company.CompanyName,
+                CompanyOrgNo = company.CompanyOrgNo,
+                Title = tariffType.Title,
+                ConsumptionFlag = tariffType.ConsumptionFlag,
+                LastUpdated = tariffType.LastUpdated,
+                UsePublicHolidayPrices = !String.IsNullOrEmpty(tariffType.UsePublicHolidayOverride),
+                UseWeekendPrices = !string.IsNullOrEmpty(tariffType.UseWeekendPriceOverride),
+                FixedPriceConfiguration = ToFixedPriceConfiguration(tariffType.FixedPriceConfiguration),
+                PowerPriceConfiguration = ToPowerPriceConfiguration(tariffType.PowerPriceConfiguration),
+                Resolution = tariffType.Resolution,
+                Description = tariffType.Description
+            };
             return retVal;
         }
 
@@ -61,8 +61,10 @@ namespace GridTariffApi.Lib.Services.V2
             Models.V2.Digin.FixedPriceConfiguration retVal = null;
             if (priceConfiguration != null)
             {
-                retVal = new Models.V2.Digin.FixedPriceConfiguration();
-                retVal.Basis = priceConfiguration.Basis;
+                retVal = new Models.V2.Digin.FixedPriceConfiguration
+                {
+                    Basis = priceConfiguration.Basis
+                };
                 if (priceConfiguration.MaxhoursPerDay.HasValue)
                 {
                     retVal.MaxhoursPerDay = priceConfiguration.MaxhoursPerDay.Value;

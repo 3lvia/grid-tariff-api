@@ -1,14 +1,11 @@
-﻿using GridTariffApi.Lib.EntityFramework;
-using GridTariffApi.Lib.Interfaces.V2.External;
+﻿using GridTariffApi.Lib.Interfaces.V2.External;
 using GridTariffApi.Lib.Models.V2.Holidays;
 using GridTariffApi.Lib.Models.V2.Internal;
 using GridTariffApi.Lib.Models.V2.PriceStructure;
-using GridTariffApi.Lib.Services.V2;
+using GridTariffApi.Lib.Services;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace GridTariffApi.Lib.Tests.Services.V2

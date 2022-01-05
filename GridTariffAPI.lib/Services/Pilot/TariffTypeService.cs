@@ -3,7 +3,7 @@ using GridTariffApi.Lib.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace GridTariffApi.Lib.Services.TariffType
+namespace GridTariffApi.Lib.Services.Pilot
 {
     public class TariffTypeService : ITariffTypeService
     {

@@ -8,9 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GridTariffApi.Lib.Services.V2
+namespace GridTariffApi.Lib.Services
 {
-
     public class TariffQueryService : ITariffQueryService
     {
         private readonly ITariffPriceCache _tariffPriceCache;
@@ -31,8 +30,10 @@ namespace GridTariffApi.Lib.Services.V2
             DateTimeOffset paramToDate,
             List<String> meteringPoints)
         {
-            var retVal = new TariffQueryRequestMeteringPointsResult();
-            retVal.GridTariffCollections = new List<GridTariffCollection>();
+            var retVal = new TariffQueryRequestMeteringPointsResult
+            {
+                GridTariffCollections = new List<GridTariffCollection>()
+            };
             var meteringPointsInformations = _tariffPriceCache.GetMeteringPointInformation(meteringPoints);
             var tariffKeys = meteringPointsInformations.Select(x => x.TariffKey).Distinct();
             foreach (var tariffKey in tariffKeys)
@@ -117,8 +118,10 @@ namespace GridTariffApi.Lib.Services.V2
             tariffPrices.RemoveAll(x => x.EndDate <= paramFromDate || x.StartDate > paramToDate);
             var company = _tariffPriceCache.GetCompany();
 
-            var gridTariffCollection = new GridTariffCollection();
-            gridTariffCollection.GridTariff = ToGridTariff(company, tariff);
+            var gridTariffCollection = new GridTariffCollection
+            {
+                GridTariff = ToGridTariff(company, tariff)
+            };
             gridTariffCollection.GridTariff.TariffType.LastUpdated = tariff.LastUpdated;
             var tariffPrice = ProcessTariffPrices(tariff, tariffPrices, paramFromDate, paramToDate);
             gridTariffCollection.GridTariff.TariffPrice = tariffPrice;
@@ -132,8 +135,10 @@ namespace GridTariffApi.Lib.Services.V2
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate)
         {
-            var tariffPrice = new Models.V2.Digin.TariffPrice();
-            tariffPrice.PriceInfo = new Models.V2.Digin.PriceInfo();
+            var tariffPrice = new Models.V2.Digin.TariffPrice
+            {
+                PriceInfo = new Models.V2.Digin.PriceInfo()
+            };
             tariffPrice.PriceInfo.FixedPrices = new List<Models.V2.Digin.FixedPrices>();
             tariffPrice.PriceInfo.PowerPrices = new List<Models.V2.Digin.PowerPrices>();
             tariffPrice.PriceInfo.EnergyPrices = new List<Models.V2.Digin.EnergyPrices>();
@@ -462,8 +467,10 @@ namespace GridTariffApi.Lib.Services.V2
 
             if (energyPrice != null)
             {
-                retVal.EnergyInformation = new EnergyInformation();
-                retVal.EnergyInformation.HourArray = new EnergyPrices[Constants.HoursInDay];
+                retVal.EnergyInformation = new EnergyInformation
+                {
+                    HourArray = new EnergyPrices[Constants.HoursInDay]
+                };
 
                 foreach (var priceLevel in energyPrice.EnergyPriceLevel)
                 {
@@ -487,8 +494,10 @@ namespace GridTariffApi.Lib.Services.V2
                 var priceLevel = priceInfo.EnergyPrices.FirstOrDefault(a => a.Level == level);
                 if (priceLevel != null)
                 {
-                    retVal = new EnergyInformation();
-                    retVal.HourArray = new EnergyPrices[Constants.HoursInDay];
+                    retVal = new EnergyInformation
+                    {
+                        HourArray = new EnergyPrices[Constants.HoursInDay]
+                    };
                     for (int hour = 0; hour < Constants.HoursInDay; hour++)
                     {
                         retVal.HourArray[hour] = priceLevel;
@@ -575,14 +584,15 @@ namespace GridTariffApi.Lib.Services.V2
             EnergyInformation energyInformation,
             bool isPublicHoliday)
         {
-            var retVal = new Models.V2.Digin.Hours();
-
-            retVal.StartTime = _serviceHelper.ToConfiguredTimeZone(startTime);
-            retVal.ExpiredAt = _serviceHelper.ToConfiguredTimeZone(expireAt);
-            retVal.FixedPrice = new FixedPrice()
+            var retVal = new Models.V2.Digin.Hours
             {
-                Id = hourSeasonIndex.FixedPriceValue.Id,
-                HourId = hourSeasonIndex.FixedPriceValue.IdDaysInMonth
+                StartTime = _serviceHelper.ToConfiguredTimeZone(startTime),
+                ExpiredAt = _serviceHelper.ToConfiguredTimeZone(expireAt),
+                FixedPrice = new FixedPrice()
+                {
+                    Id = hourSeasonIndex.FixedPriceValue.Id,
+                    HourId = hourSeasonIndex.FixedPriceValue.IdDaysInMonth
+                }
             };
 
             if (hourSeasonIndex.PowerPriceValue != null)
@@ -594,10 +604,12 @@ namespace GridTariffApi.Lib.Services.V2
                 };
             }
 
-            retVal.EnergyPrice = new EnergyPrice();
-            retVal.EnergyPrice.Id = energyInformation.HourArray[retVal.StartTime.Hour].Id;
-            retVal.EnergyPrice.Total = energyInformation.HourArray[retVal.StartTime.Hour].Total;
-            retVal.EnergyPrice.TotalExVat = energyInformation.HourArray[retVal.StartTime.Hour].TotalExVat;
+            retVal.EnergyPrice = new EnergyPrice
+            {
+                Id = energyInformation.HourArray[retVal.StartTime.Hour].Id,
+                Total = energyInformation.HourArray[retVal.StartTime.Hour].Total,
+                TotalExVat = energyInformation.HourArray[retVal.StartTime.Hour].TotalExVat
+            };
             retVal.IsPublicHoliday = isPublicHoliday;
             retVal.ShortName = $"{((retVal.StartTime.Hour * 100) + retVal.StartTime.Minute).ToString().PadLeft(4, '0')}-{((retVal.ExpiredAt.Hour * 100) + retVal.ExpiredAt.Minute).ToString().PadLeft(4, '0')}";
             return retVal;
@@ -733,13 +745,15 @@ namespace GridTariffApi.Lib.Services.V2
             var reactiveTotalExVat = powerPriceLevel.MonthlyReactivePowerExTaxes / hoursInMonth;
             var reactiveTotal = AddTaxes(reactiveTotalExVat, vatTaxValue);
 
-            var retVal = new Models.V2.Digin.HourPowerPrices();
-            retVal.Id = Guid.NewGuid().ToString();
-            retVal.NumberOfDaysInMonth = daysInMonth;
-            retVal.ActiveTotal = RoundDouble(activeTotal, Constants.PowerPriceDecimals);
-            retVal.ActiveTotalExVat = RoundDouble(activeTotalExVat, Constants.PowerPriceDecimals);
-            retVal.ReactiveTotal = RoundDouble(reactiveTotal, Constants.PowerPriceDecimals);
-            retVal.ReactiveTotalExVat = RoundDouble(reactiveTotalExVat, Constants.PowerPriceDecimals);
+            var retVal = new Models.V2.Digin.HourPowerPrices
+            {
+                Id = Guid.NewGuid().ToString(),
+                NumberOfDaysInMonth = daysInMonth,
+                ActiveTotal = RoundDouble(activeTotal, Constants.PowerPriceDecimals),
+                ActiveTotalExVat = RoundDouble(activeTotalExVat, Constants.PowerPriceDecimals),
+                ReactiveTotal = RoundDouble(reactiveTotal, Constants.PowerPriceDecimals),
+                ReactiveTotalExVat = RoundDouble(reactiveTotalExVat, Constants.PowerPriceDecimals)
+            };
             return retVal;
         }
 
@@ -749,13 +763,15 @@ namespace GridTariffApi.Lib.Services.V2
             Models.V2.PriceStructure.PowerPriceLevel powerPriceLevel,
             IReadOnlyList<Models.V2.PriceStructure.PowerPriceTax> powerPriceTaxes)
         {
-            var retVal = new Models.V2.Digin.PowerPriceLevel();
-            retVal.Id = powerPriceLevel.Id;
-            retVal.ValueMin = powerPriceLevel.ValueMin;
-            retVal.ValueMax = powerPriceLevel.ValueMax;
-            retVal.NextIdDown = powerPriceLevel.NextIdDown;
-            retVal.NextIdUp = powerPriceLevel.NextIdUp;
-            retVal.ValueUnitOfMeasure = powerPriceLevel.ValueUnitOfMeasure;
+            var retVal = new Models.V2.Digin.PowerPriceLevel
+            {
+                Id = powerPriceLevel.Id,
+                ValueMin = powerPriceLevel.ValueMin,
+                ValueMax = powerPriceLevel.ValueMax,
+                NextIdDown = powerPriceLevel.NextIdDown,
+                NextIdUp = powerPriceLevel.NextIdUp,
+                ValueUnitOfMeasure = powerPriceLevel.ValueUnitOfMeasure
+            };
             CalcPowerPriceLevelValues(retVal, powerPriceLevel, powerPriceTaxes);
             retVal.MonthlyUnitOfMeasure = powerPriceLevel.MonthlyUnitOfMeasure;
             retVal.HourPrices = new List<HourPowerPrices>();
@@ -841,8 +857,10 @@ namespace GridTariffApi.Lib.Services.V2
             Models.V2.PriceStructure.Company company,
             Models.V2.PriceStructure.TariffType tariffType)
         {
-            var retVal = new Models.V2.Digin.GridTariff();
-            retVal.TariffType = _objectConversionHelper.ToTariffType(company, tariffType);
+            var retVal = new Models.V2.Digin.GridTariff
+            {
+                TariffType = _objectConversionHelper.ToTariffType(company, tariffType)
+            };
             return retVal;
         }
 

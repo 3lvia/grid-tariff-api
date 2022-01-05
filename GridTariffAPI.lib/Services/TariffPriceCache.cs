@@ -5,9 +5,8 @@ using GridTariffApi.Lib.Models.V2.PriceStructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
-namespace GridTariffApi.Lib.Services.V2
+namespace GridTariffApi.Lib.Services
 {
     public class TariffPriceCache : ITariffPriceCache
     {

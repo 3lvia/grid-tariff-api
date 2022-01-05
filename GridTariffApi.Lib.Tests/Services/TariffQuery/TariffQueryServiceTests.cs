@@ -2,8 +2,7 @@
 using GridTariffApi.Lib.EntityFramework;
 using GridTariffApi.Lib.Models.TariffQuery;
 using GridTariffApi.Lib.Services.Helpers;
-using GridTariffApi.Lib.Services.TariffQuery;
-using GridTariffApi.Lib.Services.TariffType;
+using GridTariffApi.Lib.Services.Pilot;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;

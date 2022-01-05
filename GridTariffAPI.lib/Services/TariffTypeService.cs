@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GridTariffApi.Lib.Services.V2
+namespace GridTariffApi.Lib.Services
 {
     public interface ITariffTypeService
     {

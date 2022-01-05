@@ -2,8 +2,7 @@
 using GridTariffApi.Lib.Models;
 using GridTariffApi.Lib.Models.TariffQuery;
 using GridTariffApi.Lib.Services.Helpers;
-using GridTariffApi.Lib.Services.TariffQuery;
-using GridTariffApi.Lib.Services.TariffType;
+using GridTariffApi.Lib.Services.Pilot;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;

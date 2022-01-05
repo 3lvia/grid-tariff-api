@@ -5,7 +5,7 @@ using GridTariffApi.Lib.Models.V2.Digin;
 using GridTariffApi.Lib.Models.V2.Holidays;
 using GridTariffApi.Lib.Models.V2.PriceStructure;
 using GridTariffApi.Lib.Services.Helpers;
-using GridTariffApi.Lib.Services.V2;
+using GridTariffApi.Lib.Services;
 using Moq;
 using System;
 using System.Collections.Generic;
