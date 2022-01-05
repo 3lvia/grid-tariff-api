@@ -46,7 +46,8 @@ namespace GridTariffApi.Lib.Services.V2
             var retVal = new TariffQueryRequestMeteringPointsResult();
             retVal.GridTariffCollections = new List<GridTariffCollection>();
             var meteringPointsTariffs = _tariffPriceCache.GetMeteringPointInformation(meteringPoints);
-            foreach (var tariffKey in meteringPointsTariffs.Select(x => x.TariffKey).Distinct())
+            var tariffKeys = meteringPointsTariffs.Select(x => x.TariffKey).Distinct();
+            foreach (var tariffKey in tariffKeys)
             {
                 var gridTariffMeteringPoints = meteringPointsTariffs.Where(x => x.TariffKey == tariffKey).ToList();
                 var gridTariff = await GenerateTariffAndAppendMeteringPoints(tariffKey, paramFromDate, paramToDate, gridTariffMeteringPoints);
@@ -63,11 +64,11 @@ namespace GridTariffApi.Lib.Services.V2
             var gridTariff = await QueryTariffAsync(tariffKey, paramFromDate, paramToDate);
             gridTariff.MeteringPointsAndPriceLevels = new List<MeteringPointsAndPriceLevels>();
 
-            gridTariff = AppendMeteringPointsToPriceLevels(meteringPointInformation, gridTariff);
+            AppendMeteringPointsToPriceLevels(meteringPointInformation, gridTariff);
             return gridTariff;
         }
 
-        public virtual GridTariffCollection AppendMeteringPointsToPriceLevels(List<MeteringPointInformation> meteringPointInformation, GridTariffCollection gridTariff)
+        public virtual void AppendMeteringPointsToPriceLevels(List<MeteringPointInformation> meteringPointInformation, GridTariffCollection gridTariff)
         {
             //todo should be some of filtering here (only current month?), thus no need for foreach fixedprices
             foreach (var fixedPrice in gridTariff.GridTariff.TariffPrice.PriceInfo.FixedPrices)
@@ -81,7 +82,6 @@ namespace GridTariffApi.Lib.Services.V2
                     }
                 }
             }
-            return gridTariff;
         }
 
         public MeteringPointsAndPriceLevels CheckPriceLevelForMeteringPoints(List<MeteringPointInformation> meteringPointInformation, FixedPrices fixedPrice, FixedPriceLevel fixedPriceLevel)

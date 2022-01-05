@@ -19,9 +19,7 @@ namespace GridTariffApi.Lib.Services.V2
         private IReadOnlyList<Holiday> _holidayRoot;
         private readonly Dictionary<string, MeteringPointInformation> _meteringPointIndex;
 
-        private DateTime _cacheValidUntil = DateTime.UtcNow;
-        private readonly SemaphoreSlim _tariffLockSemaphore = new SemaphoreSlim(1);
-        private readonly SemaphoreSlim _meteringPointLockSemaphore = new SemaphoreSlim(1);
+        private DateTime _tariffCacheValidUntil = DateTime.UtcNow;
         public TariffPriceCache(ITariffPersistence tariffPersistence
             , IHolidayPersistence holidayPersistence,
             IMeteringPointPersistence meteringPointTariffPersistence)
@@ -30,6 +28,7 @@ namespace GridTariffApi.Lib.Services.V2
             _holidayPersistence = holidayPersistence;
             _meteringPointTariffPersistence = meteringPointTariffPersistence;
             _meteringPointIndex = new Dictionary<string, MeteringPointInformation>();
+            RefreshCache();
         }
 
         public List<MeteringPointInformation> GetMeteringPointInformation(List<String> meteringPoints)
@@ -46,24 +45,14 @@ namespace GridTariffApi.Lib.Services.V2
         public List<MeteringPointInformation> IndexMeteringPoints(List<String> meteringPoints)
         {
             var retVal = new List<MeteringPointInformation>();
-            try
+            lock (_meteringPointIndex)
             {
-                _meteringPointLockSemaphore.Wait();
                 var meteringPointsInformation = _meteringPointTariffPersistence.GetMeteringPointsInformation(meteringPoints);
                 foreach (var meterinPoint in meteringPointsInformation)
                 {
                     _meteringPointIndex.Add(meterinPoint.MeteringPointId, meterinPoint);
                     retVal.Add(meterinPoint);
                 }
-            }
-            catch (Exception)
-            {
-                _meteringPointLockSemaphore.Release();
-                throw;
-            }
-            finally
-            {
-                _meteringPointLockSemaphore.Release();
             }
             return retVal;
         }
@@ -96,23 +85,13 @@ namespace GridTariffApi.Lib.Services.V2
 
         public TariffPriceStructureRoot GetTariffRootElement()
         {
-            try
+            lock(_tariffPriceStructureRoot)
             {
-                _tariffLockSemaphore.Wait();
-                if (_cacheValidUntil.Ticks < DateTime.UtcNow.Ticks)
+                if (_tariffCacheValidUntil.Ticks < DateTime.UtcNow.Ticks)
                 {
                     RefreshCache();
                 }
-            }
-            catch (Exception)
-            {
-                _tariffLockSemaphore.Release();
-                throw;
 
-            }
-            finally
-            {
-                _tariffLockSemaphore.Release();
             }
             return _tariffPriceStructureRoot;
         }
@@ -121,7 +100,7 @@ namespace GridTariffApi.Lib.Services.V2
         {
             _tariffPriceStructureRoot = _tariffPersistence.GetTariffPriceStructure();
             _holidayRoot = _holidayPersistence.GetHolidays();
-            _cacheValidUntil = DateTime.UtcNow.AddMinutes(Constants.CacheConsideredInvalidMinutes).Date;
+            _tariffCacheValidUntil = DateTime.UtcNow.AddMinutes(Constants.CacheConsideredInvalidMinutes).Date;
         }
     }
 }
