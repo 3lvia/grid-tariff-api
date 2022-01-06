@@ -35,11 +35,15 @@ namespace GridTariffApi.Lib.Services
             };
             var meteringPointsInformations = _tariffPriceCache.GetMeteringPointInformation(meteringPoints);
             var tariffKeys = meteringPointsInformations.Select(x => x.TariffKey).Distinct();
+            var tasks = new List<Task<GridTariffCollection>>();
             foreach (var tariffKey in tariffKeys)
             {
                 var gridTariffMeteringPoints = meteringPointsInformations.Where(x => x.TariffKey == tariffKey).ToList();
-                var gridTariff = await GenerateTariffAndAppendMeteringPointsAsync(tariffKey, paramFromDate, paramToDate, gridTariffMeteringPoints);
-                retVal.GridTariffCollections.Add(gridTariff);
+                tasks.Add(GenerateTariffAndAppendMeteringPointsAsync(tariffKey, paramFromDate, paramToDate, gridTariffMeteringPoints));
+            }
+            foreach (var task in tasks)
+            {
+                retVal.GridTariffCollections.Add(await task);
             }
             return retVal;
         }
@@ -174,28 +178,38 @@ namespace GridTariffApi.Lib.Services
             {
                 foreach (var season in tariffPricePrice.Seasons)
                 {
+                    var tasks = new List<Task<SeasonDataAccumulator>>();
                     var seasonIntersects = CalcSeasonIntersects(taxTimePeriod.StartDate, taxTimePeriod.EndDate, season.Months);
                     foreach (var seasonIntersect in seasonIntersects)
                     {
-                        var accumulator = InitAccumulator(tariffPricePrice,
-                            seasonIntersect.StartDate,
-                            seasonIntersect.EndDate);
-
-                        accumulator = await ProcessSeasonAsync(accumulator,
-                            season,
-                            seasonIntersect.StartDate,
-                            seasonIntersect.EndDate,
-                            filteredHolidays,
-                            tariffType,
-                            tariffPrice
-                            );
-
+                        tasks.Add(ProcessSeasonAsync(tariffPrice, tariffPricePrice, tariffType, filteredHolidays, season, seasonIntersect));
+                    }
+                    foreach (var task in tasks)
+                    {
+                        var accumulator = await task;
                         tariffPrice.PriceInfo.PowerPrices.AddRange(accumulator.TariffPrice.PriceInfo.PowerPrices);
                         tariffPrice.PriceInfo.EnergyPrices.AddRange(accumulator.TariffPrice.PriceInfo.EnergyPrices);
                         tariffPrice.Hours.AddRange(accumulator.TariffPrice.Hours);
                     }
                 }
             }
+        }
+
+        private async Task<SeasonDataAccumulator> ProcessSeasonAsync(TariffPrice tariffPrice, Models.PriceStructure.TariffPrice tariffPricePrice, Models.PriceStructure.TariffType tariffType, List<Holiday> filteredHolidays, Models.PriceStructure.Season season, TimePeriod seasonIntersect)
+        {
+            var accumulator = InitAccumulator(tariffPricePrice,
+                seasonIntersect.StartDate,
+                seasonIntersect.EndDate);
+
+            accumulator = await ProcessSeasonAsync(accumulator,
+                season,
+                seasonIntersect.StartDate,
+                seasonIntersect.EndDate,
+                filteredHolidays,
+                tariffType,
+                tariffPrice
+                );
+            return accumulator;
         }
 
         public FixedPrices GenerateFixedPrices(DateTimeOffset fromDateUtc,
