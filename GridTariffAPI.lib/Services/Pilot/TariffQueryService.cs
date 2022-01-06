@@ -74,7 +74,7 @@ namespace GridTariffApi.Lib.Services.Pilot
             TariffQueryResult tariffQueryResult)
         {
             int currMonth = int.MinValue;
-            Dictionary<int, FixedPriceConfig> currFixedPrices = null;
+            Dictionary<int, FixedPriceConfig> currFixedPrices;
             Dictionary<int, VariablePriceConfig> currVariablePrices = null;
             List<FixedPrices> currentFixedPrices = null;
             String currSeason = String.Empty;

@@ -38,32 +38,31 @@ namespace GridTariffApi.Lib.Services
             foreach (var tariffKey in tariffKeys)
             {
                 var gridTariffMeteringPoints = meteringPointsInformations.Where(x => x.TariffKey == tariffKey).ToList();
-                var gridTariff = await GenerateTariffAndAppendMeteringPoints(tariffKey, paramFromDate, paramToDate, gridTariffMeteringPoints);
+                var gridTariff = await GenerateTariffAndAppendMeteringPointsAsync(tariffKey, paramFromDate, paramToDate, gridTariffMeteringPoints);
                 retVal.GridTariffCollections.Add(gridTariff);
             }
             return retVal;
         }
 
-        public virtual async Task<GridTariffCollection> GenerateTariffAndAppendMeteringPoints(string tariffKey,
+        public virtual async Task<GridTariffCollection> GenerateTariffAndAppendMeteringPointsAsync(string tariffKey,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate,
             List<MeteringPointInformation> meteringPointInformation)
         {
             var gridTariff = await QueryTariffAsync(tariffKey, paramFromDate, paramToDate);
             gridTariff.MeteringPointsAndPriceLevels = new List<MeteringPointsAndPriceLevels>();
-
-            AppendMeteringPointsToPriceLevels(meteringPointInformation, gridTariff);
+            await AppendMeteringPointsToPriceLevels(meteringPointInformation, gridTariff);
             return gridTariff;
         }
 
-        public virtual void AppendMeteringPointsToPriceLevels(List<MeteringPointInformation> meteringPointInformation, GridTariffCollection gridTariff)
+        public virtual async Task AppendMeteringPointsToPriceLevels(List<MeteringPointInformation> meteringPointInformation, GridTariffCollection gridTariff)
         {
             //todo should be some of filtering here (only current month?), thus no need for foreach fixedprices
             foreach (var fixedPrice in gridTariff.GridTariff.TariffPrice.PriceInfo.FixedPrices)
             {
                 foreach (var fixedPriceLevel in fixedPrice.PriceLevel)
                 {
-                    var meteringPointAndPriceLevel = CheckPriceLevelForMeteringPoints(meteringPointInformation, fixedPrice, fixedPriceLevel);
+                    var meteringPointAndPriceLevel = await CheckPriceLevelForMeteringPoints(meteringPointInformation, fixedPrice, fixedPriceLevel);
                     if (meteringPointAndPriceLevel != null)
                     {
                         gridTariff.MeteringPointsAndPriceLevels.Add(meteringPointAndPriceLevel);
@@ -72,7 +71,7 @@ namespace GridTariffApi.Lib.Services
             }
         }
 
-        public MeteringPointsAndPriceLevels CheckPriceLevelForMeteringPoints(List<MeteringPointInformation> meteringPointInformation, FixedPrices fixedPrice, FixedPriceLevel fixedPriceLevel)
+        public Task<MeteringPointsAndPriceLevels> CheckPriceLevelForMeteringPoints(List<MeteringPointInformation> meteringPointInformation, FixedPrices fixedPrice, FixedPriceLevel fixedPriceLevel)
         {
             MeteringPointsAndPriceLevels retVal = null;
 
@@ -84,7 +83,7 @@ namespace GridTariffApi.Lib.Services
             {
                 retVal = MeteringPointsToPriceLevel(fixedPrice, fixedPriceLevel, mpInformations);
             }
-            return retVal;
+            return Task.FromResult(retVal);
         }
 
         public MeteringPointsAndPriceLevels MeteringPointsToPriceLevel(FixedPrices fixedPrice, FixedPriceLevel fixedPriceLevel, List<MeteringPointInformation> mpInformations)
@@ -122,13 +121,12 @@ namespace GridTariffApi.Lib.Services
                 GridTariff = ToGridTariff(company, tariff)
             };
             gridTariffCollection.GridTariff.TariffType.LastUpdated = tariff.LastUpdated;
-            var tariffPrice = ProcessTariffPrices(tariff, tariffPrices, paramFromDate, paramToDate);
+            var tariffPrice = await ProcessTariffPricesAsync(tariff, tariffPrices, paramFromDate, paramToDate);
             gridTariffCollection.GridTariff.TariffPrice = tariffPrice;
-            await Task.CompletedTask;
             return gridTariffCollection;
         }
 
-        public Models.Digin.TariffPrice ProcessTariffPrices(
+        public async Task<Models.Digin.TariffPrice> ProcessTariffPricesAsync(
             Models.PriceStructure.TariffType tariffType,
             List<Models.PriceStructure.TariffPrice> tariffPrices,
             DateTimeOffset paramFromDate,
@@ -146,7 +144,7 @@ namespace GridTariffApi.Lib.Services
             var holidays = _tariffPriceCache.GetHolidays(paramFromDate, paramToDate);
             foreach (var tariffPricePrice in tariffPrices)
             {
-                ProcessTariffPrice(paramFromDate,
+                await ProcessTariffPriceAsync(paramFromDate,
                     paramToDate,
                     tariffPrice,
                     tariffPricePrice,
@@ -156,7 +154,7 @@ namespace GridTariffApi.Lib.Services
             return tariffPrice;
         }
 
-        private void ProcessTariffPrice(DateTimeOffset paramFromDate,
+        private async Task ProcessTariffPriceAsync(DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate,
             TariffPrice tariffPrice,
             Models.PriceStructure.TariffPrice tariffPricePrice,
@@ -183,7 +181,7 @@ namespace GridTariffApi.Lib.Services
                             seasonIntersect.StartDate,
                             seasonIntersect.EndDate);
 
-                        accumulator = ProcessSeason(accumulator,
+                        accumulator = await ProcessSeasonAsync(accumulator,
                             season,
                             seasonIntersect.StartDate,
                             seasonIntersect.EndDate,
@@ -361,7 +359,7 @@ namespace GridTariffApi.Lib.Services
             return retVal;
         }
 
-        SeasonDataAccumulator ProcessSeason(SeasonDataAccumulator dataAccumulator,
+        async Task<SeasonDataAccumulator> ProcessSeasonAsync(SeasonDataAccumulator dataAccumulator,
             Models.PriceStructure.Season season,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate,
@@ -392,7 +390,7 @@ namespace GridTariffApi.Lib.Services
                     dataAccumulator = AddPriceLevels(dataAccumulator, season, paramFromDate, paramToDate, daysInMonth);
                     var hourSeasonIndex = BuildHourSeasonIndex(dataAccumulator.TariffPrice.PriceInfo, tariffPrice.PriceInfo, season.EnergyPrice, daysInMonth, tariffType.UsePublicHolidayOverride, tariffType.UseWeekendPriceOverride);
                     var filteredHolidays = holidays.Where(a => a.Date >= fromDate && a.Date <= currMonthEndToDate).ToList();
-                    dataAccumulator = ProcessMonth(dataAccumulator, fromDate, currMonthEndToDate, hourSeasonIndex, filteredHolidays, tariffType.Resolution);
+                    dataAccumulator = await ProcessMonthAsync(dataAccumulator, fromDate, currMonthEndToDate, hourSeasonIndex, filteredHolidays, tariffType.Resolution);
                 }
                 fromDate = currMonthEndToDate;
             }
@@ -508,7 +506,7 @@ namespace GridTariffApi.Lib.Services
             return retVal;
         }
 
-        SeasonDataAccumulator ProcessMonth(SeasonDataAccumulator dataAccumulator,
+        async Task<SeasonDataAccumulator> ProcessMonthAsync(SeasonDataAccumulator dataAccumulator,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate,
             HourSeasonIndex hourSeasonIndex,
@@ -522,7 +520,7 @@ namespace GridTariffApi.Lib.Services
                 bool isPublicHoliday = IsPublicHoliday(holidays, fromDate);
                 bool isWeekend = IsWeekend(fromDate);
                 var toDate = fromDate.AddDays(1) < paramToDate ? fromDate.AddDays(1) : paramToDate;
-                dataAccumulator = ProcessDay(dataAccumulator, fromDate, toDate, hourSeasonIndex, tariffResolutionMinutes, isPublicHoliday, isWeekend);
+                dataAccumulator = await ProcessDayAsync(dataAccumulator, fromDate, toDate, hourSeasonIndex, tariffResolutionMinutes, isPublicHoliday, isWeekend);
                 fromDate = fromDate.AddDays(1);
 
             }
@@ -540,7 +538,7 @@ namespace GridTariffApi.Lib.Services
             return holidays.Exists(a => a.Date.Date == _serviceHelper.GetTimeZonedDateTime(fromDate.UtcDateTime).Date);
         }
 
-        SeasonDataAccumulator ProcessDay(SeasonDataAccumulator dataAccumulator
+        async Task<SeasonDataAccumulator> ProcessDayAsync(SeasonDataAccumulator dataAccumulator
             , DateTimeOffset paramFromDate
             , DateTimeOffset paramToDate
             , HourSeasonIndex hourSeasonIndex
@@ -550,7 +548,7 @@ namespace GridTariffApi.Lib.Services
         {
             var fromDate = paramFromDate;
             var endDate = fromDate;
-            EnergyInformation energyInformation = DecideEneryInformation(hourSeasonIndex, isPublicHoliday, isWeekend);
+            EnergyInformation energyInformation = await DecideEneryInformation(hourSeasonIndex, isPublicHoliday, isWeekend);
             while (endDate < paramToDate)
             {
                 endDate = fromDate.AddMinutes(resolution);
@@ -561,7 +559,7 @@ namespace GridTariffApi.Lib.Services
             return dataAccumulator;
         }
 
-        public EnergyInformation DecideEneryInformation(HourSeasonIndex hourSeasonIndex, bool isPublicHoliday, bool isWeekend)
+        public Task<EnergyInformation> DecideEneryInformation(HourSeasonIndex hourSeasonIndex, bool isPublicHoliday, bool isWeekend)
         {
             EnergyInformation energyInformation;
             if (isPublicHoliday && hourSeasonIndex.EnergyInformationHoliday != null)
@@ -576,7 +574,7 @@ namespace GridTariffApi.Lib.Services
             {
                 energyInformation = hourSeasonIndex.EnergyInformation;
             }
-            return energyInformation;
+            return Task.FromResult(energyInformation);
         }
 
         public Models.Digin.Hours ToHour(DateTimeOffset startTime

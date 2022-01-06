@@ -373,7 +373,7 @@ namespace GridTariffApi.Lib.Tests.Services
         [InlineData(false, true, 100)]
         [InlineData(true, false, 10)]
         [InlineData(true, true, 10)]
-        public void DecideEneryInformationTest(bool isPublicHoliday, bool isWeekend, int numExpectedElements)
+        public async Task DecideEneryInformationTest(bool isPublicHoliday, bool isWeekend, int numExpectedElements)
         {
             Setup();
             var hourSeasonIndex = new HourSeasonIndex();
@@ -390,7 +390,7 @@ namespace GridTariffApi.Lib.Tests.Services
                 HourArray = new Models.Digin.EnergyPrices[100]
             };
 
-            var retVal = _tariffQueryService.DecideEneryInformation(hourSeasonIndex, isPublicHoliday, isWeekend);
+            var retVal = await _tariffQueryService.DecideEneryInformation(hourSeasonIndex, isPublicHoliday, isWeekend);
             Assert.Equal(numExpectedElements, retVal.HourArray.Length);
         }
 
@@ -782,12 +782,12 @@ namespace GridTariffApi.Lib.Tests.Services
                 new MeteringPointInformation("c", "", 15,DateTimeOffset.MaxValue),
                 new MeteringPointInformation("d", "", 100,DateTimeOffset.MaxValue)
             };
-            var meteringPointsAndPriceLevels = _tariffQueryService.CheckPriceLevelForMeteringPoints(mpInformations, fixedPrices, fixedPriceLevel);
+            var meteringPointsAndPriceLevels = _tariffQueryService.CheckPriceLevelForMeteringPoints(mpInformations, fixedPrices, fixedPriceLevel).Result;
             Assert.Equal(expectingNotNull, meteringPointsAndPriceLevels != null);
         }
 
         [Fact]
-        public void AppendMeteringPointsToPriceLevelsTests()
+        public async Task AppendMeteringPointsToPriceLevelsTests()
         {
             Setup();
             var gridTariffCollection= new Models.Digin.GridTariffCollection();
@@ -827,7 +827,7 @@ namespace GridTariffApi.Lib.Tests.Services
                 new MeteringPointInformation("d", "", 100,DateTimeOffset.MaxValue)
             };
 
-            _tariffQueryService.AppendMeteringPointsToPriceLevels(mpInformations, gridTariffCollection);
+            await _tariffQueryService.AppendMeteringPointsToPriceLevels(mpInformations, gridTariffCollection);
             Assert.Equal(2, gridTariffCollection.MeteringPointsAndPriceLevels.Count);
             Assert.Equal(1, gridTariffCollection.MeteringPointsAndPriceLevels.Count(a => a.CurrentFixedPriceLevel.LevelId == "0"));
             Assert.Equal(1, gridTariffCollection.MeteringPointsAndPriceLevels.Count(a => a.CurrentFixedPriceLevel.LevelId == "20"));
@@ -862,13 +862,13 @@ namespace GridTariffApi.Lib.Tests.Services
             var mock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, _serviceHelper);
             mock.Setup(x => x.QueryTariffAsync("standard", DateTimeOffset.MinValue, DateTimeOffset.MaxValue)).Returns(Task.FromResult(gridTariffCollectionStandard));
             mock.Setup(x => x.QueryTariffAsync("fobar", DateTimeOffset.MinValue, DateTimeOffset.MaxValue)).Returns(Task.FromResult(gridTariffCollectionFobar));
-            mock.Setup(x => x.GenerateTariffAndAppendMeteringPoints(It.IsAny<String>(), DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<MeteringPointInformation>>()))
+            mock.Setup(x => x.GenerateTariffAndAppendMeteringPointsAsync(It.IsAny<String>(), DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<MeteringPointInformation>>()))
                 .Returns(Task.FromResult(new Models.Digin.GridTariffCollection()));
 
             var retVal = await mock.Object.QueryMeteringPointsTariffsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, meteringPoints);
-            mock.Verify(x => x.GenerateTariffAndAppendMeteringPoints("standard", DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<MeteringPointInformation>>()), Times.Once);
-            mock.Verify(x => x.GenerateTariffAndAppendMeteringPoints("fobar", DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<MeteringPointInformation>>()), Times.Once);
-            mock.Verify(x => x.GenerateTariffAndAppendMeteringPoints(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>(), It.IsAny<List<MeteringPointInformation>>()), Times.Exactly(2));
+            mock.Verify(x => x.GenerateTariffAndAppendMeteringPointsAsync("standard", DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<MeteringPointInformation>>()), Times.Once);
+            mock.Verify(x => x.GenerateTariffAndAppendMeteringPointsAsync("fobar", DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<MeteringPointInformation>>()), Times.Once);
+            mock.Verify(x => x.GenerateTariffAndAppendMeteringPointsAsync(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>(), It.IsAny<List<MeteringPointInformation>>()), Times.Exactly(2));
 
             Assert.NotNull(retVal);
             Assert.NotNull(retVal.GridTariffCollections);
@@ -881,13 +881,16 @@ namespace GridTariffApi.Lib.Tests.Services
             Setup();
             var tariffPriceCache = new Mock<ITariffPriceCache>();
             var gridTariffCollectionStandard = new Models.Digin.GridTariffCollection() { GridTariff = new Models.Digin.GridTariff() { TariffType = new Models.Digin.TariffType() { TariffKey = "standard" } } };
+            gridTariffCollectionStandard.GridTariff.TariffPrice = new Models.Digin.TariffPrice();
+            gridTariffCollectionStandard.GridTariff.TariffPrice.PriceInfo = new Models.Digin.PriceInfo();
+            gridTariffCollectionStandard.GridTariff.TariffPrice.PriceInfo.FixedPrices = new List<Models.Digin.FixedPrices>();
 
             var mock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, _serviceHelper);
             mock.CallBase = true;
             mock.Setup(x => x.QueryTariffAsync(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(gridTariffCollectionStandard));
             mock.Setup(x => x.AppendMeteringPointsToPriceLevels(It.IsAny<List<MeteringPointInformation>>(),It.IsAny< Models.Digin.GridTariffCollection>()))/*.Returns(gridTariffCollectionStandard)*/;
 
-            var test = await mock.Object.GenerateTariffAndAppendMeteringPoints("", DateTimeOffset.MinValue, DateTimeOffset.MaxValue, new List<MeteringPointInformation>());
+            var test = await mock.Object.GenerateTariffAndAppendMeteringPointsAsync("", DateTimeOffset.MinValue, DateTimeOffset.MaxValue, new List<MeteringPointInformation>());
             mock.Verify(x => x.QueryTariffAsync(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()), Times.Once);
             mock.Verify(x => x.AppendMeteringPointsToPriceLevels(It.IsAny<List<MeteringPointInformation>>(), It.IsAny<Models.Digin.GridTariffCollection>()), Times.Once);
             Assert.NotNull(test);
