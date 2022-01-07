@@ -19,24 +19,12 @@ resources:
     cpu: "1"
     memory: "2Gi"
 
-#env:
-#  - name: ELVID__Authority
-#    valueFrom:
-#      configMapKeyRef:
-#        name: pushreceiver-profiledmeterreadings
-#        key: elvid.authority
-#  - name: ELVID__RequiredScope
-#    value: pr.sesam
-#  - name: bigtable__project
-#    valueFrom:
-#      configMapKeyRef:
-#        name: pushreceiver-profiledmeterreadings
-#        key: bigtable.project
-#  - name: bigtable__instanceid
-#    valueFrom:
-#      configMapKeyRef:
-#        name: pushreceiver-profiledmeterreadings
-#        key: bigtable.instanceid
+env:
+ - name: mdmx__host-address
+   valueFrom:
+     configMapKeyRef:
+       name: grid-tariff-api
+       key: mdmx.host-address
 
 service:
   port: 80
@@ -46,19 +34,16 @@ ingress:
   subdomain: grid-tariff-api
   path: "/"
   
-#configmap:
-#  dev:
-#    kvalitetsportalen.environment: DEV
-#    elvid.authority: https://elvid.test-elvia.io/
+configmap:
+  dev:
+    mdmx.host-address: https://mdmx.dev-elvia.io/
 #    bigtable.project: "hafslund-mdm-dev"
 #    bigtable.instanceid: "mdm-meterreadings-dev"
-#  test:
-#    kvalitetsportalen.environment: AMS-T01
-#    elvid.authority: https://elvid.test-elvia.io/
+  test:
+    mdmx.host-address: https://mdmx.test-elvia.io/
 #    bigtable.project: "hafslund-mdm-test"
 #    bigtable.instanceid: "mdm-meterreadings-test"
-#  prod:
-#    kvalitetsportalen.environment: HIPAD
-#    elvid.authority: https://elvid.elvia.io/
+  prod:
+    mdmx.host-address: https://mdmx.elvia.io/
 #    bigtable.project: "hafslund-mdm"
 #    bigtable.instanceid: "mdm-meterreadings"
