@@ -91,7 +91,7 @@ stages:
                      <base />
                      <authentication-basic username="$(grid-tariff-api-username-test)" password="$(grid-tariff-api-password-test)" />
                      <rate-limit-by-key calls="400" renewal-period="3600"
-                     increment-condition="@((context.Response.StatusCode &gt;= 200) &amp;&amp; (context.Response.StatusCode &lt; 600))"
+                     increment-condition="@((context.Response.StatusCode &gt;= 200))"
                      counter-key="@(context.Subscription.Key)" />					  
                  </inbound>
                  <backend>
@@ -155,7 +155,7 @@ stages:
   #                   <base />
   #                   <authentication-basic username="$(grid-tariff-api-username-prod)" password="$(grid-tariff-api-password-prod)" />
   #                   <rate-limit-by-key calls="400" renewal-period="3600"
-  #                   increment-condition="@((context.Response.StatusCode &gt;= 200) &amp;&amp; (context.Response.StatusCode &lt; 600))"
+  #                   increment-condition="@((context.Response.StatusCode &gt;= 200))"
   #                   counter-key="@(context.Subscription.Key)" />					  
   #               </inbound>
   #               <backend>
