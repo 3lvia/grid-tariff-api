@@ -85,30 +85,30 @@ namespace GridTariffApi.Lib.Services
             var mpInformations = meteringPointInformation.Where(x => minVal <= x.MaxConsumption && x.MaxConsumption < maxVal).ToList();
             if (mpInformations.Count > 0)
             {
-                retVal = MeteringPointsToPriceLevel(fixedPrice, fixedPriceLevel, mpInformations);
+//                retVal = MeteringPointsToPriceLevel(fixedPrice, fixedPriceLevel, mpInformations);
             }
             return Task.FromResult(retVal);
         }
 
-        public MeteringPointsAndPriceLevels MeteringPointsToPriceLevel(FixedPrices fixedPrice, FixedPriceLevel fixedPriceLevel, List<MeteringPointInformation> mpInformations)
-        {
-            var meteringPointAndPriceLevel = new MeteringPointsAndPriceLevels()
-            {
-                CurrentFixedPriceLevel = new CurrentFixedPriceLevel(),
-                MeteringPointIds = new MeteringPointIds()
-            };
+        //public MeteringPointsAndPriceLevels MeteringPointsToPriceLevel(FixedPrices fixedPrice, FixedPriceLevel fixedPriceLevel, List<MeteringPointInformation> mpInformations)
+        //{
+        //    var meteringPointAndPriceLevel = new MeteringPointsAndPriceLevels()
+        //    {
+        //        CurrentFixedPriceLevel = new CurrentFixedPriceLevel(),
+        //        MeteringPointIds = new MeteringPointIds()
+        //    };
 
-            foreach (var mpInformation in mpInformations)
-            {
-                meteringPointAndPriceLevel.MeteringPointIds.Add(mpInformation.MeteringPointId);
-            }
-            meteringPointAndPriceLevel.CurrentFixedPriceLevel.Id = fixedPrice.Id;
-            meteringPointAndPriceLevel.CurrentFixedPriceLevel.LevelId = fixedPriceLevel.Id;
-            meteringPointAndPriceLevel.CurrentFixedPriceLevel.LevelValue = null;
-            //TODO LastUpdated should be set per meteringpoint. Change needed in DIGIN.
-            //            meteringPointAndPriceLevel.CurrentFixedPriceLevel.LastUpdated
-            return meteringPointAndPriceLevel;
-        }
+        //    foreach (var mpInformation in mpInformations)
+        //    {
+        //        meteringPointAndPriceLevel.MeteringPointIds.Add(mpInformation.MeteringPointId);
+        //    }
+        //    meteringPointAndPriceLevel.CurrentFixedPriceLevel.Id = fixedPrice.Id;
+        //    meteringPointAndPriceLevel.CurrentFixedPriceLevel.LevelId = fixedPriceLevel.Id;
+        //    meteringPointAndPriceLevel.CurrentFixedPriceLevel.LevelValue = null;
+        //    //TODO LastUpdated should be set per meteringpoint. Change needed in DIGIN.
+        //    //            meteringPointAndPriceLevel.CurrentFixedPriceLevel.LastUpdated
+        //    return meteringPointAndPriceLevel;
+        //}
 
         public virtual async Task<GridTariffCollection> QueryTariffAsync(
             string tariffKey,
