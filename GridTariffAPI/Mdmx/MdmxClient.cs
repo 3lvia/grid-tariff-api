@@ -29,8 +29,6 @@ namespace GridTariffApi.Mdmx
 
         public async Task<List<MeteringPointMaxConsumption>> GetVolumeAggregationsForThisMonth(List<string> meteringPointIds)
         {
-            // TODO: kanskje logge tidsforbruk mot MDMx-tjenesten (som metric?)
-
             NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
 
             var localNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _config.TimeZoneForMonthLimiting);
@@ -88,7 +86,7 @@ namespace GridTariffApi.Mdmx
     [Serializable]
     public class MdmxClientException : Exception
     {
-        public int SmsSenderHttpStatusCode { get; set; }
+        public int HttpStatusCode { get; set; }
         
         public MdmxClientException()
         {
@@ -97,13 +95,13 @@ namespace GridTariffApi.Mdmx
         public MdmxClientException(string message, int httpStatusCode)
             : base(message)
         {
-            SmsSenderHttpStatusCode = httpStatusCode;
+            HttpStatusCode = httpStatusCode;
         }
 
         public MdmxClientException(string message, Exception inner, int httpStatusCode)
             : base(message, inner)
         {
-            SmsSenderHttpStatusCode = httpStatusCode;
+            HttpStatusCode = httpStatusCode;
         }
 
         protected MdmxClientException(SerializationInfo info, StreamingContext context) : base(info, context)

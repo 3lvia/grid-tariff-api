@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using IdentityModel.Client;
 using Microsoft.Extensions.Caching.Memory;
@@ -38,13 +39,30 @@ namespace GridTariffApi.Elvid
 
             if (tokenResponse.IsError)
             {
-                throw new Exception(tokenResponse.Error);
+                throw new AccessTokenException(tokenResponse.Error);
             }
 
             var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromSeconds(tokenResponse.ExpiresIn));
             _memoryCache.Set(AccessTokenMemoryCacheKey, tokenResponse.AccessToken, cacheEntryOptions);
 
             return tokenResponse.AccessToken;
+        }
+    }
+
+    [Serializable]
+    public class AccessTokenException : Exception
+    {
+        public AccessTokenException()
+        {
+        }
+
+        public AccessTokenException(string message, Exception inner = null)
+            : base(message, inner)
+        {
+        }
+
+        protected AccessTokenException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }
