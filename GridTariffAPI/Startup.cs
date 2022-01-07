@@ -13,14 +13,14 @@ using GridTariffApi.Auth;
 using GridTariffApi.Extensions;
 using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.EntityFramework;
-using GridTariffApi.Lib.Interfaces.V2;
-using GridTariffApi.Lib.Interfaces.V2.External;
+using GridTariffApi.Lib.Interfaces;
+using GridTariffApi.Lib.Interfaces.External;
 using GridTariffApi.Lib.Services.Helpers;
-using GridTariffApi.Lib.Services.V2;
+using GridTariffApi.Lib.Services;
 using GridTariffApi.Lib.Swagger;
 using GridTariffApi.Metrics;
 using GridTariffApi.Middleware;
-using GridTariffApi.Services.V2;
+using GridTariffApi.Services;
 using GridTariffApi.Synchronizer.Lib.Config;
 using GridTariffApi.Synchronizer.Lib.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -75,8 +75,8 @@ namespace GridTariffApi
             services.AddTransient(u => bigQueryClient);
             services.AddTransient<IBigQueryReader, BigQueryReader>();
             services.AddTransient<IGridTariffApiSynchronizer, GridTariffApiSynchronizer>();
-            services.AddTransient<GridTariffApi.Lib.Services.TariffType.ITariffTypeService, GridTariffApi.Lib.Services.TariffType.TariffTypeService>();
-            services.AddTransient<GridTariffApi.Lib.Services.TariffQuery.ITariffQueryService, GridTariffApi.Lib.Services.TariffQuery.TariffQueryService>();
+            services.AddTransient<GridTariffApi.Lib.Services.Pilot.ITariffTypeService, GridTariffApi.Lib.Services.Pilot.TariffTypeService>();
+            services.AddTransient<GridTariffApi.Lib.Services.Pilot.ITariffQueryService, GridTariffApi.Lib.Services.Pilot.TariffQueryService>();
             services.AddTransient<IServiceHelper, ServiceHelper>();
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString));
 
@@ -85,9 +85,9 @@ namespace GridTariffApi
             services.AddSingleton<IHolidayRepository, HolidayRepositoryFile>();
             services.AddSingleton<IMeteringPointRepository, MeteringPointRepositoryEF>();
             services.AddSingleton<ITariffPriceCache, TariffPriceCache>();
-            services.AddTransient<GridTariffApi.Lib.Services.V2.IObjectConversionHelper, GridTariffApi.Lib.Services.V2.ObjectConversionHelper>();
-            services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffQueryService, GridTariffApi.Lib.Services.V2.TariffQueryService>();
-            services.AddTransient<GridTariffApi.Lib.Services.V2.ITariffTypeService, GridTariffApi.Lib.Services.V2.TariffTypeService>();
+            services.AddTransient<GridTariffApi.Lib.Services.IObjectConversionHelper, GridTariffApi.Lib.Services.ObjectConversionHelper>();
+            services.AddTransient<GridTariffApi.Lib.Services.ITariffQueryService, GridTariffApi.Lib.Services.TariffQueryService>();
+            services.AddTransient<GridTariffApi.Lib.Services.ITariffTypeService, GridTariffApi.Lib.Services.TariffTypeService>();
             services.AddTransient<IControllerValidationHelper, ControllerValidationHelper>();
             services.AddScoped<ILoggingDataCollector, LoggingDataCollector>();
             services.AddSingleton<IMetricsLogger, MetricsLogger>();
@@ -125,22 +125,26 @@ namespace GridTariffApi
 
         private GridTariffApiConfig GetGridTariffApiConfig()
         {
-            GridTariffApiConfig gridTariffApiConfig = new GridTariffApiConfig();
-            gridTariffApiConfig.DBConnectionString = _configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string");
-            gridTariffApiConfig.InstrumentationKey = _configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key");
-            gridTariffApiConfig.Username = _configuration.EnsureHasValue("kunde:kv:nett-tariff-api:username");
-            gridTariffApiConfig.Password = _configuration.EnsureHasValue("kunde:kv:nett-tariff-api:password");
-            gridTariffApiConfig.MinStartDateAllowedQuery = _configuration.GetValue<DateTime>("minStartDateAllowedQuery");
-            gridTariffApiConfig.TimeZoneForQueries = NorwegianTimeZoneInfo();
+            GridTariffApiConfig gridTariffApiConfig = new GridTariffApiConfig
+            {
+                DBConnectionString = _configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string"),
+                InstrumentationKey = _configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"),
+                Username = _configuration.EnsureHasValue("kunde:kv:nett-tariff-api:username"),
+                Password = _configuration.EnsureHasValue("kunde:kv:nett-tariff-api:password"),
+                MinStartDateAllowedQuery = _configuration.GetValue<DateTime>("minStartDateAllowedQuery"),
+                TimeZoneForQueries = NorwegianTimeZoneInfo()
+            };
             return gridTariffApiConfig;
         }
 
         private GridTariffApiSynchronizerConfig GetGridTariffApiSynchronizerConfig()
         {
-            var gridTariffApiSynchronizerConfig = new GridTariffApiSynchronizerConfig();
-            gridTariffApiSynchronizerConfig.BigQueryProjectId = _configuration.EnsureHasValue("bad:kv:info:bigquery:bad:project-id");
-            gridTariffApiSynchronizerConfig.BigQueryAccountKey = _configuration.EnsureHasValue("bad:kv:bigquery:bad:service-account-key-sa-bigquery");
-            gridTariffApiSynchronizerConfig.InstrumentationKey = _configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key");
+            var gridTariffApiSynchronizerConfig = new GridTariffApiSynchronizerConfig
+            {
+                BigQueryProjectId = _configuration.EnsureHasValue("bad:kv:info:bigquery:bad:project-id"),
+                BigQueryAccountKey = _configuration.EnsureHasValue("bad:kv:bigquery:bad:service-account-key-sa-bigquery"),
+                InstrumentationKey = _configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key")
+            };
             return gridTariffApiSynchronizerConfig;
         }
 

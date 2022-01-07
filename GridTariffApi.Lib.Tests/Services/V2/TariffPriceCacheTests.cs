@@ -1,17 +1,14 @@
-﻿using GridTariffApi.Lib.EntityFramework;
-using GridTariffApi.Lib.Interfaces.V2.External;
-using GridTariffApi.Lib.Models.V2.Holidays;
-using GridTariffApi.Lib.Models.V2.Internal;
-using GridTariffApi.Lib.Models.V2.PriceStructure;
-using GridTariffApi.Lib.Services.V2;
+﻿using GridTariffApi.Lib.Interfaces.External;
+using GridTariffApi.Lib.Models.Holidays;
+using GridTariffApi.Lib.Models.Internal;
+using GridTariffApi.Lib.Models.PriceStructure;
+using GridTariffApi.Lib.Services;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Xunit;
 
-namespace GridTariffApi.Lib.Tests.Services.V2
+namespace GridTariffApi.Lib.Tests.Services
 {
     public class TariffPriceCacheTests
     {
@@ -39,7 +36,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             _meteringPointRepository = new Mock<IMeteringPointRepository>();
             _meteringPointRepository
                 .Setup(x => x.GetMeteringPointsInformation(It.IsAny<List<String>>()))
-                .Returns((IReadOnlyList<Models.V2.Internal.MeteringPointInformation>)meteringPointInformations);
+                .Returns((IReadOnlyList<Models.Internal.MeteringPointInformation>)meteringPointInformations);
         }
 
         [Fact]
