@@ -10,7 +10,5 @@ namespace GridTariffApi.Lib
         public const int PowerPriceDecimals = 4;
         public const int EnergyPriceDecimals = 4;
         public const int HoursInDay = 24;
-
-        public const int CacheConsideredInvalidMinutes = 24*60;
     }
 }

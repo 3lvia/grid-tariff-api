@@ -22,7 +22,7 @@ namespace GridTariffApi.Lib.Services
         private readonly Dictionary<string, MeteringPointTariff> _meteringPointTariffIndex;
         private readonly IMemoryCache _meteringPointMaxConsumptionMemoryCache;
 
-        private DateTime _tariffCacheValidUntil = DateTime.UtcNow;
+        private DateTimeOffset _tariffCacheValidUntil = DateTime.UtcNow;
         public TariffPriceCache(ITariffRepository tariffRepository
             , IHolidayRepository holidayRepository,
             IMeteringPointTariffRepository meteringPointTariffRepository, IMeteringPointMaxConsumptionRepository meteringPointMaxConsumptionRepository)
@@ -171,7 +171,6 @@ namespace GridTariffApi.Lib.Services
                 {
                     RefreshCache();
                 }
-
             }
             return _tariffPriceStructureRoot;
         }
@@ -180,7 +179,7 @@ namespace GridTariffApi.Lib.Services
         {
             _tariffPriceStructureRoot = _tariffRepository.GetTariffPriceStructure();
             _holidayRoot = _holidayRepository.GetHolidays();
-            _tariffCacheValidUntil = DateTime.UtcNow.AddMinutes(Constants.CacheConsideredInvalidMinutes).Date; // TODO: endre logikk eller navngiving. Virker merkelig å angi cache-levetiden i minutter, sette den til 24*60 og så trunkere til midnatt. Og dette gjelder jo bare prislistedelen av cachen, ikke per-målepunkt-delen.
+            _tariffCacheValidUntil = DateTimeOffset.UtcNow.AddDays(1).Date;
         }
     }
 }
