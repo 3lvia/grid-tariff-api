@@ -6,12 +6,12 @@ namespace GridTariffApi.Lib.Models.Internal
     {
         public string MeteringPointId { get; set; }
         /// <summary>
-        /// The maximum hourly energy consumption (max measured volume) for the meteringPoint this current month
+        /// The maximum hourly energy consumption (max measured volume) for the meteringPoint this current month. Null if no measured volumes are available.
         /// </summary>
-        public double MaxHourlyEnergyConsumption { get; set; }
+        public double? MaxHourlyEnergyConsumption { get; set; }
         /// <summary>
-        /// The max LastMeasurementTime from all the aggregated volumes (except estimated volumes). An indication of the freshness of the meter values that the aggregation is based on.
+        /// The end time of the newest volume that the MaxHourlyEnergyConsumption is based on. An indication of the freshness of the data that the aggregation is based on.
         /// </summary>
-        public DateTimeOffset? LatestMeasurementTime { get; set; }
+        public DateTimeOffset? LastVolumeEndTime { get; set; }
     }
 }

@@ -50,7 +50,7 @@ namespace GridTariffApi.Tests.Mdmx.UnitTests
             });
 
             var mpids = new List<string> { "707057599999990530", "707057599999990540" };
-            var maxConsumptions = await mdmxClient.GetVolumeAggregationsForThisMonth(mpids);
+            var maxConsumptions = await mdmxClient.GetVolumeAggregationsForThisMonthAsync(mpids);
 
             httpMessageHandlerMock.Verify();
             accessTokenServiceMock.Verify(service => service.GetAccessToken(), Times.Once);
@@ -59,7 +59,7 @@ namespace GridTariffApi.Tests.Mdmx.UnitTests
             Assert.Equal(2, maxConsumptions.Count);
             var sample1 = maxConsumptions.FirstOrDefault(maxConsumption => maxConsumption.MeteringPointId == "707057599999990530");
             Assert.NotNull(sample1);
-            Assert.Equal(DateTimeOffset.Parse("2022-01-06T11:00:00+00:00"), sample1.LatestMeasurementTime);
+            Assert.Equal(DateTimeOffset.Parse("2022-01-06T11:00:00+00:00"), sample1.LastVolumeEndTime);
             Assert.Equal(56.52d, sample1.MaxHourlyEnergyConsumption);
         }
     }
