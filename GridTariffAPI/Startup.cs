@@ -85,7 +85,8 @@ namespace GridTariffApi
             //v2
             services.AddSingleton<ITariffRepository, TariffRepositoryFile>();
             services.AddSingleton<IHolidayRepository, HolidayRepositoryFile>();
-            services.AddSingleton<IMeteringPointRepository, MeteringPointRepositoryEF>();
+            services.AddSingleton<IMeteringPointTariffRepository, MeteringPointTariffRepositoryEf>();
+            services.AddSingleton<IMeteringPointMaxConsumptionRepository, MeteringPointMaxConsumptionRepository>();
             services.AddSingleton<ITariffPriceCache, TariffPriceCache>();
             services.AddTransient<GridTariffApi.Lib.Services.IObjectConversionHelper, GridTariffApi.Lib.Services.ObjectConversionHelper>();
             services.AddTransient<GridTariffApi.Lib.Services.ITariffQueryService, GridTariffApi.Lib.Services.TariffQueryService>();

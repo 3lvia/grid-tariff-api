@@ -27,7 +27,7 @@ namespace GridTariffApi.Mdmx
         }
 
 
-        public async Task<List<MeteringPointMaxConsumption>> GetVolumeAggregationsForThisMonth(List<string> meteringPointIds)
+        public async Task<List<MeteringPointMaxConsumption>> GetVolumeAggregationsForThisMonthAsync(List<string> meteringPointIds)
         {
             NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
 
@@ -69,7 +69,7 @@ namespace GridTariffApi.Mdmx
                 {
                     MeteringPointId = agg.MeteringPointId,
                     MaxHourlyEnergyConsumption = agg.Max,
-                    LatestMeasurementTime = agg.LatestMeasurementTime
+                    LastVolumeEndTime = agg.LatestMeasurementTime
                 })
                 .ToList();
         }

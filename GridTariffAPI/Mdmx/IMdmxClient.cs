@@ -6,6 +6,6 @@ namespace GridTariffApi.Mdmx
 {
     public interface IMdmxClient
     {
-        Task<List<MeteringPointMaxConsumption>> GetVolumeAggregationsForThisMonth(List<string> meteringPointIds);
+        Task<List<MeteringPointMaxConsumption>> GetVolumeAggregationsForThisMonthAsync(List<string> meteringPointIds);
     }
 }

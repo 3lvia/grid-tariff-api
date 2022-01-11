@@ -24,7 +24,7 @@ namespace GridTariffApi.Tests.Mdmx.DeveloperAdHocTests
 
             var mpids = Enumerable.Range(1, numMpids).Select(_ => "707057599999990530").ToList();
 
-            var maxConsumptions = await mdmxClient.GetVolumeAggregationsForThisMonth(mpids);
+            var maxConsumptions = await mdmxClient.GetVolumeAggregationsForThisMonthAsync(mpids);
 
             Assert.NotNull(maxConsumptions);
             Assert.Equal(numMpids, maxConsumptions.Count);
@@ -41,13 +41,13 @@ namespace GridTariffApi.Tests.Mdmx.DeveloperAdHocTests
 
             var mpids = new List<string> { mpid };
 
-            var maxConsumptions = await mdmxClient.GetVolumeAggregationsForThisMonth(mpids);
+            var maxConsumptions = await mdmxClient.GetVolumeAggregationsForThisMonthAsync(mpids);
 
             Assert.NotNull(maxConsumptions);
             var maxConsumption = Assert.Single(maxConsumptions);
             Assert.Equal(mpid, maxConsumption.MeteringPointId);
             Assert.True(maxConsumption.MaxHourlyEnergyConsumption > 0); // Usually true, might be false just after a new month has started or if something doesn't work.
-            Assert.NotNull(maxConsumption.LatestMeasurementTime); // Usually true.
+            Assert.NotNull(maxConsumption.LastVolumeEndTime); // Usually true.
         }
     }
 }
