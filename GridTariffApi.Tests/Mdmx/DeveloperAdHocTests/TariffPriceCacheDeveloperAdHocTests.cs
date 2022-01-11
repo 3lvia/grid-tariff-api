@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using GridTariffApi.Lib.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -17,7 +18,7 @@ namespace GridTariffApi.Tests.Mdmx.DeveloperAdHocTests
         }
 
         [DeveloperAdHocFactSkippedUnlessDebugging]
-        public void TestGetMeteringPointInformation()
+        public async Task TestGetMeteringPointInformation()
         {
             // Manual integration test for the metering point part of TariffPriceCache. Will read tariff from database and maxConsumption from the MDMx API.
 
@@ -27,7 +28,7 @@ namespace GridTariffApi.Tests.Mdmx.DeveloperAdHocTests
 
             var mpid = "707057599999990530";
 
-            var mpInformations = tariffPriceCache.GetMeteringPointInformation(new List<string> { mpid });
+            var mpInformations = await tariffPriceCache.GetMeteringPointInformationAsync(new List<string> { mpid });
 
             Assert.NotNull(mpInformations);
             var mpInformation = Assert.Single(mpInformations);

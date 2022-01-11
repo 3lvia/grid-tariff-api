@@ -36,13 +36,7 @@ namespace GridTariffApi.Lib.Services
             RefreshCache();
         }
 
-        public List<MeteringPointInformation> GetMeteringPointInformation(List<String> meteringPoints)
-        {
-            // TODO: Gjøre denne metoden (public interface-metode) async. Midlertidig sync-to-async-hack:
-            return GetMeteringPointInformationAsync(meteringPoints).Result;
-        }
-
-        private async Task<List<MeteringPointInformation>> GetMeteringPointInformationAsync(List<String> meteringPoints)
+        public  async Task<List<MeteringPointInformation>> GetMeteringPointInformationAsync(List<String> meteringPoints)
         {
             // We combine MeteringPointTariffs and MeteringPointMaxConsumptions (separate caching and data sources) into one MeteringPointInformation per metering point.
 

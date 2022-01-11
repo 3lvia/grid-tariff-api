@@ -973,8 +973,8 @@ namespace GridTariffApi.Lib.Tests.Services
 
             var tariffPriceCache = new Mock<ITariffPriceCache>();
             tariffPriceCache
-                .Setup(x => x.GetMeteringPointInformation(It.IsAny<List<String>>()))
-                .Returns(mockRetVal);
+                .Setup(x => x.GetMeteringPointInformationAsync(It.IsAny<List<String>>()))
+                .Returns(Task.FromResult(mockRetVal));
 
             var gridTariffCollectionStandard = new Models.Digin.GridTariffCollection() { GridTariff = new Models.Digin.GridTariff() { TariffType = new Models.Digin.TariffType() { TariffKey = "standard" } } };
             var gridTariffCollectionFobar = new Models.Digin.GridTariffCollection() { GridTariff = new Models.Digin.GridTariff() { TariffType = new Models.Digin.TariffType() { TariffKey = "fobar" } } };

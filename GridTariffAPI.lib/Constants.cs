@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GridTariffApi.Lib
+﻿namespace GridTariffApi.Lib
 {
     public static class Constants
     {

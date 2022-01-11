@@ -81,7 +81,7 @@ namespace GridTariffApi.Lib.Tests.Services
         }
 
         [Fact]
-        public void MeteringPointCacheOnFirstUseTest()
+        public async Task MeteringPointCacheOnFirstUseTest()
         {
             Setup();
             TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffRepositoryMock.Object, _holidayRepositoryMock.Object, _meteringPointTariffRepository.Object, _meteringPointMaxConsumptionRepository.Object);
@@ -89,24 +89,24 @@ namespace GridTariffApi.Lib.Tests.Services
             _meteringPointTariffRepository.Verify(x => x.GetMeteringPointTariffsAsync(_meteringPointIds), Times.Never);
             _meteringPointMaxConsumptionRepository.Verify(x => x.GetMeteringPointMaxConsumptionsAsync(_meteringPointIds), Times.Never);
 
-            tariffPriceCache.GetMeteringPointInformation(_meteringPointIds);
+            await tariffPriceCache.GetMeteringPointInformationAsync(_meteringPointIds);
             _meteringPointTariffRepository.Verify(x => x.GetMeteringPointTariffsAsync(_meteringPointIds), Times.Once);
             _meteringPointMaxConsumptionRepository.Verify(x => x.GetMeteringPointMaxConsumptionsAsync(_meteringPointIds), Times.Once);
 
-            tariffPriceCache.GetMeteringPointInformation(_meteringPointIds);
+            await tariffPriceCache.GetMeteringPointInformationAsync(_meteringPointIds);
             _meteringPointTariffRepository.Verify(x => x.GetMeteringPointTariffsAsync(_meteringPointIds), Times.Once);
             _meteringPointMaxConsumptionRepository.Verify(x => x.GetMeteringPointMaxConsumptionsAsync(_meteringPointIds), Times.Once);
         }
 
         [Fact]
-        public void MeteringPointInformationMergedFromMpTariffRepositoryAndMpMaxConsumptionRepositoryTest()
+        public async Task MeteringPointInformationMergedFromMpTariffRepositoryAndMpMaxConsumptionRepositoryTest()
         {
             var tariffKey = "test-tariff";
             var maxConsumption = 33.33;
             Setup(tariffKey, maxConsumption);
             TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffRepositoryMock.Object, _holidayRepositoryMock.Object, _meteringPointTariffRepository.Object, _meteringPointMaxConsumptionRepository.Object);
 
-            var mpInformations = tariffPriceCache.GetMeteringPointInformation(_meteringPointIds);
+            var mpInformations = await tariffPriceCache .GetMeteringPointInformationAsync(_meteringPointIds);
 
             Assert.NotNull(mpInformations);
             Assert.Equal(_meteringPointIds.Count, mpInformations.Count);
