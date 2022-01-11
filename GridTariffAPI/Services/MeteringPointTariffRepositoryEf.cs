@@ -19,7 +19,6 @@ namespace GridTariffApi.Services
 
         public async Task<IReadOnlyList<MeteringPointTariff>> GetMeteringPointTariffsAsync(List<string> meteringPointIds)
         {
-            var retVal = new List<MeteringPointTariff>();
             return await _tariffContext.MeteringPointProducts
                 .Where(x => meteringPointIds.Contains(x.MeteringpointId))
                 .Select(meteringPointProduct =>

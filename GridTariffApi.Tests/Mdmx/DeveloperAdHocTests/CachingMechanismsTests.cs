@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using GridTariffApi.Lib.Models.Internal;
 using Microsoft.Extensions.Caching.Memory;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace GridTariffApi.Tests.Mdmx.DeveloperAdHocTests
@@ -30,6 +30,8 @@ namespace GridTariffApi.Tests.Mdmx.DeveloperAdHocTests
                 dict[mpid] = new MeteringPointInformation(mpid, "", null, null);
             }
             _outputHelper.WriteLine($"Building dict with {dict.Count} elements: {stopwatch.ElapsedMilliseconds} ms");
+
+            Assert.Equal(mpids.Count, dict.Count); // Sonarcloud vil gjerne ha minst 1 Assert
 
             stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -61,6 +63,8 @@ namespace GridTariffApi.Tests.Mdmx.DeveloperAdHocTests
                 memCache.Set(mpid, new MeteringPointInformation(mpid, null, null, null), TimeSpan.FromHours(1));
             }
             _outputHelper.WriteLine($"Building MemoryCache with {mpids.Count} elements: {stopwatch.ElapsedMilliseconds} ms");
+
+            Assert.Equal(mpids.Count, memCache.Count); // Sonarcloud vil gjerne ha minst 1 Assert
 
             stopwatch = new Stopwatch();
             stopwatch.Start();
