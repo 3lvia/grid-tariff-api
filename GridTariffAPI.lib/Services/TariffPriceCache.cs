@@ -100,7 +100,14 @@ namespace GridTariffApi.Lib.Services
                 }
             }
 
-            return meteringPoints.Select(mpid => cachedMpTariffs[mpid]).ToList().AsReadOnly();
+            return meteringPoints
+                .Select(mpid =>
+                {
+                    cachedMpTariffs.TryGetValue(mpid, out var cachedMpTariff);
+                    return cachedMpTariff ?? new MeteringPointTariff(mpid, null);
+                })
+                .ToList()
+                .AsReadOnly();
         }
 
         public async Task<IReadOnlyList<MeteringPointMaxConsumption>> GetMeteringPointMaxConsumptionsAsync(List<String> meteringPoints)

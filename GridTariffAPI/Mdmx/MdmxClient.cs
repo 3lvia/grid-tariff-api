@@ -4,11 +4,13 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading.Tasks;
 using GridTariffApi.Elvid;
 using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Mdmx.Dtos;
 using IdentityModel.Client;
+using Newtonsoft.Json;
 
 namespace GridTariffApi.Mdmx
 {
@@ -33,24 +35,25 @@ namespace GridTariffApi.Mdmx
 
             var localNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _config.TimeZoneForMonthLimiting);
             var localMonthStart = new DateTime(localNow.Year, localNow.Month, 1, 0, 0, 0, localNow.Kind);
-            
-            queryString.Add("Register", "ActivePlus");
-            queryString.Add("MeasurementTimeGe", ((DateTimeOffset)localMonthStart).ToString());
-            queryString.Add("MeasurementTimeLe", ((DateTimeOffset)localNow).ToString());
 
-            foreach (var meteringPointId in meteringPointIds)
+            var request = new VolumeAggregationBatchQuery
             {
-                queryString.Add("mpid", meteringPointId);
-            }
-            
+                MeteringPointIds = meteringPointIds.ToArray(),
+                Register = "ActivePlus",
+                MeasurementTimeGe = localMonthStart,
+                MeasurementTimeLe = localNow
+            };
+           
             var uriBuilder = new UriBuilder(_config.HostAddress)
             {
                 Path = "api/volumeaggregation",
-                Query = queryString.ToString() ?? ""
             };
 
+            var requestJson = JsonConvert.SerializeObject(request);
+            var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
+
             var httpClient = await GetHttpClient();            
-            var res = await httpClient.GetAsync(uriBuilder.Uri);
+            var res = await httpClient.PostAsync(uriBuilder.Uri, content);
 
             if (!res.IsSuccessStatusCode)
             {
@@ -69,7 +72,7 @@ namespace GridTariffApi.Mdmx
                 {
                     MeteringPointId = agg.MeteringPointId,
                     MaxHourlyEnergyConsumption = agg.Max,
-                    LastVolumeEndTime = agg.LatestMeasurementTime
+                    LastVolumeEndTime = agg.LastVolumeEndTime
                 })
                 .ToList();
         }

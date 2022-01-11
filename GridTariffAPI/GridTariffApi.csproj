@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Mdmx\Models\" />
     <Folder Include="SQL\" />
   </ItemGroup>
 
