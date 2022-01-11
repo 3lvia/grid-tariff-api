@@ -10,6 +10,7 @@ using Elvia.Telemetry.Extensions;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.BigQuery.V2;
 using GridTariffApi.Auth;
+using GridTariffApi.Elvid;
 using GridTariffApi.Extensions;
 using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.EntityFramework;
@@ -18,6 +19,7 @@ using GridTariffApi.Lib.Interfaces.External;
 using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services;
 using GridTariffApi.Lib.Swagger;
+using GridTariffApi.Mdmx;
 using GridTariffApi.Metrics;
 using GridTariffApi.Middleware;
 using GridTariffApi.Services;
@@ -44,10 +46,10 @@ namespace GridTariffApi
     {
         public Startup(IConfiguration configuration)
         {
-            _configuration = configuration;
+            Configuration = configuration;
         }
 
-        public IConfiguration _configuration { get; }
+        public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -83,7 +85,8 @@ namespace GridTariffApi
             //v2
             services.AddSingleton<ITariffRepository, TariffRepositoryFile>();
             services.AddSingleton<IHolidayRepository, HolidayRepositoryFile>();
-            services.AddSingleton<IMeteringPointRepository, MeteringPointRepositoryEF>();
+            services.AddSingleton<IMeteringPointTariffRepository, MeteringPointTariffRepositoryEf>();
+            services.AddSingleton<IMeteringPointMaxConsumptionRepository, MeteringPointMaxConsumptionRepository>();
             services.AddSingleton<ITariffPriceCache, TariffPriceCache>();
             services.AddTransient<GridTariffApi.Lib.Services.IObjectConversionHelper, GridTariffApi.Lib.Services.ObjectConversionHelper>();
             services.AddTransient<GridTariffApi.Lib.Services.ITariffQueryService, GridTariffApi.Lib.Services.TariffQueryService>();
@@ -92,8 +95,25 @@ namespace GridTariffApi
             services.AddScoped<ILoggingDataCollector, LoggingDataCollector>();
             services.AddSingleton<IMetricsLogger, MetricsLogger>();
             
+            // Elvid
+            services.AddHttpClient();
+            services.AddMemoryCache();
+            services.AddSingleton(new ClientCredentialsConfiguration(
+                Configuration.EnsureHasValue("kunde:kv:elvid:kunde-grid-tariff-api:tokenendpoint"),
+                Configuration.EnsureHasValue("kunde:kv:elvid:kunde-grid-tariff-api:clientid"),
+                Configuration.EnsureHasValue("kunde:kv:elvid:kunde-grid-tariff-api:clientsecret")
+            ));
+            services.AddSingleton<IAccessTokenService, AccessTokenService>();
 
-            services.AddStandardElviaTelemetryLogging(_configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true); 
+            // Mdmx
+            services.AddSingleton(new MdmxConfig
+            {
+                HostAddress = Configuration.EnsureHasValue("mdmx:host-address"),
+                TimeZoneForMonthLimiting = gridTariffApiConfig.TimeZoneForQueries
+            });
+            services.AddScoped<IMdmxClient, MdmxClient>();
+
+            services.AddStandardElviaTelemetryLogging(Configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true); 
 
             services.AddCronJob<ScheduledGridTariffApiSynchronizer>(c =>
             {
@@ -101,7 +121,7 @@ namespace GridTariffApi
                 c.CronExpression = @"0 5 * * *";      //every day at 05:00
             });
 
-            var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
+            var swaggerSettings = Configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
             services.AddSwaggerConfiguration(swaggerSettings);
             services.ConfigureSwaggerGen(options =>
             {
@@ -127,11 +147,11 @@ namespace GridTariffApi
         {
             GridTariffApiConfig gridTariffApiConfig = new GridTariffApiConfig
             {
-                DBConnectionString = _configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string"),
-                InstrumentationKey = _configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"),
-                Username = _configuration.EnsureHasValue("kunde:kv:nett-tariff-api:username"),
-                Password = _configuration.EnsureHasValue("kunde:kv:nett-tariff-api:password"),
-                MinStartDateAllowedQuery = _configuration.GetValue<DateTime>("minStartDateAllowedQuery"),
+                DBConnectionString = Configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string"),
+                InstrumentationKey = Configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"),
+                Username = Configuration.EnsureHasValue("kunde:kv:nett-tariff-api:username"),
+                Password = Configuration.EnsureHasValue("kunde:kv:nett-tariff-api:password"),
+                MinStartDateAllowedQuery = Configuration.GetValue<DateTime>("minStartDateAllowedQuery"),
                 TimeZoneForQueries = NorwegianTimeZoneInfo()
             };
             return gridTariffApiConfig;
@@ -141,9 +161,9 @@ namespace GridTariffApi
         {
             var gridTariffApiSynchronizerConfig = new GridTariffApiSynchronizerConfig
             {
-                BigQueryProjectId = _configuration.EnsureHasValue("bad:kv:info:bigquery:bad:project-id"),
-                BigQueryAccountKey = _configuration.EnsureHasValue("bad:kv:bigquery:bad:service-account-key-sa-bigquery"),
-                InstrumentationKey = _configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key")
+                BigQueryProjectId = Configuration.EnsureHasValue("bad:kv:info:bigquery:bad:project-id"),
+                BigQueryAccountKey = Configuration.EnsureHasValue("bad:kv:bigquery:bad:service-account-key-sa-bigquery"),
+                InstrumentationKey = Configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key")
             };
             return gridTariffApiSynchronizerConfig;
         }
@@ -163,7 +183,7 @@ namespace GridTariffApi
             services.AddSingleton(config =>
                 new AuthenticationConfig(user, password));
 
-            var authority = _configuration.EnsureHasValue("kunde:kv:elvid:generic:authority");
+            var authority = Configuration.EnsureHasValue("kunde:kv:elvid:generic:authority");
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
               .AddJwtBearer(options =>
               {
@@ -215,10 +235,10 @@ namespace GridTariffApi
                 endpoints.MapControllers();
                 endpoints.MapMetrics(); // This adds the '/metrics' url for Prometheus scraping
             });
-            var swaggerSettings = _configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
+            var swaggerSettings = Configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
             app.UseSwaggerConfiguration(swaggerSettings);
         }
-        private static TimeZoneInfo NorwegianTimeZoneInfo()
+        public static TimeZoneInfo NorwegianTimeZoneInfo()
         {
             var timeZoneId = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
                 "W. Europe Standard Time" :

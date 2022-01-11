@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GridTariffApi.Synchronizer.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GridTariffApi.Synchronizer.Lib.Tests", "GridTariffApi.Synchronizer.Lib.Tests\GridTariffApi.Synchronizer.Lib.Tests.csproj", "{EC809BC4-9744-49DB-9ABE-47D9CC9895FB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GridTariffApi.Tests", "GridTariffApi.Tests\GridTariffApi.Tests.csproj", "{56C21BFB-07B6-423A-8C92-2258ED94EC1F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{EC809BC4-9744-49DB-9ABE-47D9CC9895FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC809BC4-9744-49DB-9ABE-47D9CC9895FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC809BC4-9744-49DB-9ABE-47D9CC9895FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56C21BFB-07B6-423A-8C92-2258ED94EC1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56C21BFB-07B6-423A-8C92-2258ED94EC1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56C21BFB-07B6-423A-8C92-2258ED94EC1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56C21BFB-07B6-423A-8C92-2258ED94EC1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
