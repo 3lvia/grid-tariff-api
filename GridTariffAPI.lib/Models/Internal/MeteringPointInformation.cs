@@ -4,7 +4,7 @@ namespace GridTariffApi.Lib.Models.Internal
 {
     public class MeteringPointInformation
     {
-        public MeteringPointInformation(string meteringPointId, string tariffKey, double? maxConsumption, DateTimeOffset maxConsumptionLastUpdated)
+        public MeteringPointInformation(string meteringPointId, string tariffKey, double? maxConsumption, DateTimeOffset? maxConsumptionLastUpdated)
         {
             MeteringPointId = meteringPointId;
             TariffKey = tariffKey;
@@ -14,6 +14,6 @@ namespace GridTariffApi.Lib.Models.Internal
         public String MeteringPointId { get;}
         public String TariffKey { get; set; }
         public double? MaxConsumption { get; set; }
-        public DateTimeOffset MaxConsumptionLastUpdated { get; set; }
+        public DateTimeOffset? MaxConsumptionLastUpdated { get; set; }
     }
 }

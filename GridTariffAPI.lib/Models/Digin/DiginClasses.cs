@@ -647,7 +647,7 @@ namespace GridTariffApi.Lib.Models.Digin
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Id { get; set; }
 
-        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.fixedPrices.priceLevel.id. Null: if FixedPriceConfiguration.basis = monthlymax|dailymax and no meter readings this month. Ex. edcf53ce-70d3-4fa0-8bfb-e79918335ab7</summary>
+        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.fixedPrices.priceLevel.id. Null: if FixedPriceConfiguration.basis = monthlymax|dailymax and no consumption calculation done so far this month. Ex. edcf53ce-70d3-4fa0-8bfb-e79918335ab7</summary>
         [Newtonsoft.Json.JsonProperty("levelId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string LevelId { get; set; }
 
@@ -671,11 +671,11 @@ namespace GridTariffApi.Lib.Models.Digin
 
         /// <summary>Value of the max hour setting the level of fixedprice. NOT IN USE YET AS IT REQUIRES A HIGHER LEVEL OF AUTHENTICATION AND AUTHORIZATION. Ex. 9.0000</summary>
         [Newtonsoft.Json.JsonProperty("levelValue", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double LevelValue { get; set; }
+        public double? LevelValue { get; set; }
 
-        /// <summary>The end time(hour) of the last real meter reading(not estimate) this month that has been computed into a volume. Null if FixedPriceConfiguration.basis = fixed or no meter readings this month. Ex. 2021-09-17T02:00:00+02:00</summary>
+        /// <summary>The end time(hour) of the last calculated hour consumption(based on meter reading or estimation) this month. Null if FixedPriceConfiguration.basis = fixed. Ex. 2021-09-17T02:00:00+02:00</summary>
         [Newtonsoft.Json.JsonProperty("lastUpdated", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset LastUpdated { get; set; }
+        public System.DateTimeOffset? LastUpdated { get; set; }
 
 
     }
