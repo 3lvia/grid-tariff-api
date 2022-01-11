@@ -31,8 +31,6 @@ namespace GridTariffApi.Mdmx
 
         public async Task<List<MeteringPointMaxConsumption>> GetVolumeAggregationsForThisMonthAsync(List<string> meteringPointIds)
         {
-            NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
-
             var localNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _config.TimeZoneForMonthLimiting);
             var localMonthStart = new DateTime(localNow.Year, localNow.Month, 1, 0, 0, 0, localNow.Kind);
 
