@@ -31,7 +31,7 @@ namespace GridTariffApi.Tests.Mdmx.UnitTests
                 .ReturnsAsync(new HttpResponseMessage()
                     {
                         StatusCode = HttpStatusCode.OK,
-                        Content = new StringContent("[{'meteringPointId':'707057599999990530','min':0,'max':56.52,'sum':142189.23919999308,'latestMeasurementTime':'2022-01-06T11:00:00+00:00'},{'meteringPointId':'707057599999990540','min':0,'max':0.0147,'sum':53.40549999999888}]", Encoding.UTF8, "application/json")
+                        Content = new StringContent("[{'meteringPointId':'707057599999990530','min':0,'max':56.52,'sum':142189.23919999308,'lastVolumeEndTime':'2022-01-06T11:00:00+00:00'},{'meteringPointId':'707057599999990540','min':0,'max':0.0147,'sum':53.40549999999888}]", Encoding.UTF8, "application/json")
                     })
                 .Verifiable();
  
