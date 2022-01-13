@@ -152,7 +152,8 @@ namespace GridTariffApi
                 Username = Configuration.EnsureHasValue("kunde:kv:nett-tariff-api:username"),
                 Password = Configuration.EnsureHasValue("kunde:kv:nett-tariff-api:password"),
                 MinStartDateAllowedQuery = Configuration.GetValue<DateTime>("minStartDateAllowedQuery"),
-                TimeZoneForQueries = NorwegianTimeZoneInfo()
+                TimeZoneForQueries = NorwegianTimeZoneInfo(),
+                MaxConsumptionCacheTimeout = TimeSpan.FromHours(1)
             };
             return gridTariffApiConfig;
         }
