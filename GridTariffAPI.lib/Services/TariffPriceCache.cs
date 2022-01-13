@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GridTariffApi.Lib.Config;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace GridTariffApi.Lib.Services
@@ -16,6 +17,7 @@ namespace GridTariffApi.Lib.Services
         private readonly IHolidayRepository _holidayRepository;
         private readonly IMeteringPointTariffRepository _meteringPointTariffRepository;
         private readonly IMeteringPointMaxConsumptionRepository _meteringPointMaxConsumptionRepository;
+        private readonly GridTariffApiConfig _config;
 
         private TariffPriceStructureRoot _tariffPriceStructureRoot;
         private IReadOnlyList<Holiday> _holidayRoot;
@@ -23,14 +25,17 @@ namespace GridTariffApi.Lib.Services
         private readonly IMemoryCache _meteringPointMaxConsumptionMemoryCache;
 
         private DateTimeOffset _tariffCacheValidUntil = DateTime.UtcNow;
-        public TariffPriceCache(ITariffRepository tariffRepository
-            , IHolidayRepository holidayRepository,
-            IMeteringPointTariffRepository meteringPointTariffRepository, IMeteringPointMaxConsumptionRepository meteringPointMaxConsumptionRepository)
+        public TariffPriceCache(ITariffRepository tariffRepository,
+            IHolidayRepository holidayRepository,
+            IMeteringPointTariffRepository meteringPointTariffRepository, 
+            IMeteringPointMaxConsumptionRepository meteringPointMaxConsumptionRepository, 
+            GridTariffApiConfig config)
         {
             _tariffRepository = tariffRepository;
             _holidayRepository = holidayRepository;
             _meteringPointTariffRepository = meteringPointTariffRepository;
             _meteringPointMaxConsumptionRepository = meteringPointMaxConsumptionRepository;
+            _config = config;
             _meteringPointMaxConsumptionMemoryCache = new MemoryCache(new MemoryCacheOptions());
             _meteringPointTariffIndex = new Dictionary<string, MeteringPointTariff>();
             RefreshCache();
@@ -64,7 +69,6 @@ namespace GridTariffApi.Lib.Services
 
         public async Task<IReadOnlyList<MeteringPointTariff>> GetMeteringPointTariffsAsync(List<String> meteringPoints)
         {
-            // TODO: oppdatering av MeteringPointTariffs-cache'n. Jobb på siden som oppdaterer hele cachen hver døgn?
             var cachedMpTariffs = new Dictionary<string, MeteringPointTariff>();
             var uncachedMpids = new List<string>();
 
@@ -123,7 +127,7 @@ namespace GridTariffApi.Lib.Services
                 {
                     foreach (var meteringPointMaxConsumption in uncachedMaxConsumptions)
                     {
-                        _meteringPointMaxConsumptionMemoryCache.Set(meteringPointMaxConsumption.MeteringPointId, meteringPointMaxConsumption, TimeSpan.FromHours(1)); // TODO: sette timeout (fra config utenfor Lib)
+                        _meteringPointMaxConsumptionMemoryCache.Set(meteringPointMaxConsumption.MeteringPointId, meteringPointMaxConsumption, _config.MaxConsumptionCacheTimeout);
                         cachedMaxConsumptions[meteringPointMaxConsumption.MeteringPointId] = meteringPointMaxConsumption;
                     }
                 }
