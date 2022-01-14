@@ -41,7 +41,7 @@ namespace GridTariffApi.Lib.Services
             RefreshCache();
         }
 
-        public  async Task<List<MeteringPointInformation>> GetMeteringPointInformationAsync(List<String> meteringPoints)
+        public  async Task<List<MeteringPointInformation>> GetMeteringPointInformationsAsync(List<String> meteringPoints)
         {
             // We combine MeteringPointTariffs and MeteringPointMaxConsumptions (separate caching and data sources) into one MeteringPointInformation per metering point.
 

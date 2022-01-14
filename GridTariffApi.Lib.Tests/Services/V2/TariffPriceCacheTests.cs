@@ -90,11 +90,11 @@ namespace GridTariffApi.Lib.Tests.Services
             _meteringPointTariffRepository.Verify(x => x.GetMeteringPointTariffsAsync(_meteringPointIds), Times.Never);
             _meteringPointMaxConsumptionRepository.Verify(x => x.GetMeteringPointMaxConsumptionsAsync(_meteringPointIds), Times.Never);
 
-            await tariffPriceCache.GetMeteringPointInformationAsync(_meteringPointIds);
+            await tariffPriceCache.GetMeteringPointInformationsAsync(_meteringPointIds);
             _meteringPointTariffRepository.Verify(x => x.GetMeteringPointTariffsAsync(_meteringPointIds), Times.Once);
             _meteringPointMaxConsumptionRepository.Verify(x => x.GetMeteringPointMaxConsumptionsAsync(_meteringPointIds), Times.Once);
 
-            await tariffPriceCache.GetMeteringPointInformationAsync(_meteringPointIds);
+            await tariffPriceCache.GetMeteringPointInformationsAsync(_meteringPointIds);
             _meteringPointTariffRepository.Verify(x => x.GetMeteringPointTariffsAsync(_meteringPointIds), Times.Once);
             _meteringPointMaxConsumptionRepository.Verify(x => x.GetMeteringPointMaxConsumptionsAsync(_meteringPointIds), Times.Once);
         }
@@ -107,7 +107,7 @@ namespace GridTariffApi.Lib.Tests.Services
             Setup(tariffKey, maxConsumption);
             TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffRepositoryMock.Object, _holidayRepositoryMock.Object, _meteringPointTariffRepository.Object, _meteringPointMaxConsumptionRepository.Object, new GridTariffApiConfig { MaxConsumptionCacheTimeout = TimeSpan.FromHours(1) });
 
-            var mpInformations = await tariffPriceCache.GetMeteringPointInformationAsync(_meteringPointIds);
+            var mpInformations = await tariffPriceCache.GetMeteringPointInformationsAsync(_meteringPointIds);
 
             Assert.NotNull(mpInformations);
             Assert.Equal(_meteringPointIds.Count, mpInformations.Count);

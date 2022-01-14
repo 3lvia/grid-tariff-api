@@ -11,7 +11,7 @@ namespace GridTariffApi.Lib.Services
     {
         public Company GetCompany();
         public IReadOnlyList<Holiday> GetHolidays(DateTimeOffset fromDate, DateTimeOffset toDate);
-        public Task<List<MeteringPointInformation>> GetMeteringPointInformationAsync(List<string> meteringPoints);
+        public Task<List<MeteringPointInformation>> GetMeteringPointInformationsAsync(List<string> meteringPoints);
         Models.PriceStructure.TariffType GetTariff(string tariffKey);
         public TariffPriceStructureRoot GetTariffRootElement();
         public IReadOnlyList<Models.PriceStructure.TariffType> GetTariffs();
