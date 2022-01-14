@@ -104,7 +104,7 @@ namespace GridTariffApi.Lib.Services
             //mp missing maxConsumption and exactly one pricelevel
             foreach (var fixedPriceLevel in fixedPrices.PriceLevel)
             {
-                var meteringPointAndPriceLevel = CheckPriceLevelForMeteringPoints(fixedPrices.Id, fixedPriceLevel,meteringPointInformations);
+                var meteringPointAndPriceLevel = MeteringPointsAndPriceLevelsMatchingConsumption(fixedPrices.Id, fixedPriceLevel,meteringPointInformations);
                 if (meteringPointAndPriceLevel != null)
                 {
                     retVal.Add(meteringPointAndPriceLevel);
@@ -123,7 +123,7 @@ namespace GridTariffApi.Lib.Services
             return retVal;
         }
 
-        public MeteringPointsAndPriceLevels CheckPriceLevelForMeteringPoints(string fixedPriceId, FixedPriceLevel fixedPriceLevel, List<MeteringPointInformation> meteringPointInformation)
+        public MeteringPointsAndPriceLevels MeteringPointsAndPriceLevelsMatchingConsumption(string fixedPriceId, FixedPriceLevel fixedPriceLevel, List<MeteringPointInformation> meteringPointInformation)
         {
             MeteringPointsAndPriceLevels retVal = null;
             var minVal = fixedPriceLevel.ValueMin ?? double.MinValue;

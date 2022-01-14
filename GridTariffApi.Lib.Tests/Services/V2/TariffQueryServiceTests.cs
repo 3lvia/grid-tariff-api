@@ -680,7 +680,7 @@ namespace GridTariffApi.Lib.Tests.Services
             fixedPrices.Id = System.Guid.NewGuid().ToString();
             var fixedPriceLevel = new Models.Digin.FixedPriceLevel() { Id = "pricelevelid" };
 
-            var retVal = _tariffQueryService.CheckPriceLevelForMeteringPoints(fixedPrices.Id, fixedPriceLevel, meteringPointInformations);
+            var retVal = _tariffQueryService.MeteringPointsAndPriceLevelsMatchingConsumption(fixedPrices.Id, fixedPriceLevel, meteringPointInformations);
             Assert.NotNull(retVal);
         }
 
@@ -699,7 +699,7 @@ namespace GridTariffApi.Lib.Tests.Services
             fixedPrices.Id = System.Guid.NewGuid().ToString();
             var fixedPriceLevel = new Models.Digin.FixedPriceLevel() { Id = "pricelevelid", ValueMin = 0, ValueMax = 13};
 
-            var retVal = _tariffQueryService.CheckPriceLevelForMeteringPoints(fixedPrices.Id, fixedPriceLevel, meteringPointInformations);
+            var retVal = _tariffQueryService.MeteringPointsAndPriceLevelsMatchingConsumption(fixedPrices.Id, fixedPriceLevel, meteringPointInformations);
             Assert.NotNull(retVal);
         }
 
@@ -859,7 +859,7 @@ namespace GridTariffApi.Lib.Tests.Services
                 new MeteringPointInformation("c", "", 15,DateTimeOffset.MaxValue),
                 new MeteringPointInformation("d", "", 100,DateTimeOffset.MaxValue)
             };
-            var retVal = _tariffQueryService.CheckPriceLevelForMeteringPoints(String.Empty,fixedPriceLevel,mpInformations);
+            var retVal = _tariffQueryService.MeteringPointsAndPriceLevelsMatchingConsumption(String.Empty,fixedPriceLevel,mpInformations);
             if (expectingRetValNull)
             {
                 Assert.Null(retVal);
