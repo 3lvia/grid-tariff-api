@@ -86,7 +86,12 @@ namespace GridTariffApi
             services.AddSingleton<ITariffRepository, TariffRepositoryFile>();
             services.AddSingleton<IHolidayRepository, HolidayRepositoryFile>();
             services.AddSingleton<IMeteringPointTariffRepository, MeteringPointTariffRepositoryEf>();
-            services.AddSingleton<IMeteringPointMaxConsumptionRepository, MeteringPointMaxConsumptionCachingRepository>();
+            services.AddSingleton(new MeteringPointMaxConsumptionRepositoryConfig
+            {
+                MaxConsumptionCacheTimeout = TimeSpan.FromHours(1),
+                TimeZoneForMonthLimiting = gridTariffApiConfig.TimeZoneForQueries
+            });
+            services.AddSingleton<IMeteringPointMaxConsumptionRepository, MeteringPointMaxConsumptionCachingMdmxRepository>();
             services.AddSingleton<ITariffPriceCache, TariffPriceCache>();
             services.AddTransient<GridTariffApi.Lib.Services.IObjectConversionHelper, GridTariffApi.Lib.Services.ObjectConversionHelper>();
             services.AddTransient<GridTariffApi.Lib.Services.ITariffQueryService, GridTariffApi.Lib.Services.TariffQueryService>();
@@ -153,7 +158,6 @@ namespace GridTariffApi
                 Password = Configuration.EnsureHasValue("kunde:kv:nett-tariff-api:password"),
                 MinStartDateAllowedQuery = Configuration.GetValue<DateTime>("minStartDateAllowedQuery"),
                 TimeZoneForQueries = NorwegianTimeZoneInfo(),
-                MaxConsumptionCacheTimeout = TimeSpan.FromHours(1)
             };
             return gridTariffApiConfig;
         }

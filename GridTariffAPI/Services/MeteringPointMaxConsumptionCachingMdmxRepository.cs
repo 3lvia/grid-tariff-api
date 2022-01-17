@@ -4,22 +4,21 @@ using GridTariffApi.Lib.Models.Internal;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GridTariffApi.Lib.Config;
 using GridTariffApi.Mdmx;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace GridTariffApi.Services
 {
-    public class MeteringPointMaxConsumptionCachingRepository : IMeteringPointMaxConsumptionRepository
+    public class MeteringPointMaxConsumptionCachingMdmxRepository : IMeteringPointMaxConsumptionRepository
     {
-        private readonly IMeteringPointMaxConsumptionRepository _uncachedRepository;
-        private readonly GridTariffApiConfig _config;
+        private readonly IMdmxClient _mdmxClient;
+        private readonly MeteringPointMaxConsumptionRepositoryConfig _config;
         private readonly IMemoryCache _memoryCache;
 
-        public MeteringPointMaxConsumptionCachingRepository(IMdmxClient mdmxClient, GridTariffApiConfig config)
+        public MeteringPointMaxConsumptionCachingMdmxRepository(IMdmxClient mdmxClient, MeteringPointMaxConsumptionRepositoryConfig config)
         {
+            _mdmxClient = mdmxClient;
             _config = config;
-            _uncachedRepository = new MeteringPointMaxConsumptionMdmxRepository(mdmxClient);
             _memoryCache = new MemoryCache(new MemoryCacheOptions());
         }
 
@@ -48,7 +47,7 @@ namespace GridTariffApi.Services
             if (uncachedMpids.Count > 0)
             {
                 // There is a possible race condition here, so we might consider doing another lookup after locking. But an additional cache miss on parallel calls for the same metering point(s) is not that important. And the last one will update the cache.
-                var uncachedMaxConsumptions = await _uncachedRepository.GetMeteringPointMaxConsumptionsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, uncachedMpids);
+                var uncachedMaxConsumptions = await _mdmxClient.GetVolumeAggregationsForThisMonthAsync(meteringPointIds);
 
                 lock (_memoryCache)
                 {
@@ -65,17 +64,20 @@ namespace GridTariffApi.Services
 
         public bool MaxConsumptionIsValidForPeriod(DateTimeOffset fromDateTime, DateTimeOffset toDateTime)
         {
-            // If any part of "today" is included in the period, we'll apply the maxConsumption if we have it. If not, we consider it not valid for the period.
-            var localNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _config.TimeZoneForQueries);
-            var localTodayStart = (DateTimeOffset)new DateTime(localNow.Date.Ticks);
-            var localTodayEnd = localTodayStart.AddDays(1);
+            // If any part of the current month is included in the period, we'll return the maxConsumption if we have it. If not, we consider it not valid for the period.
+            // Note: we use "today" when connecting metering points to fixed prices. So in practice, we don't need this "current month" check. But it is a logical part of the max consumption interface.
+            var localNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _config.TimeZoneForMonthLimiting);
+            var localMonthStart = new DateTime(localNow.Year, localNow.Month, 1, 0, 0, 0, localNow.Kind);
+            var localMiddleOfNextMonth = localMonthStart.AddDays(30 + 15);
+            var localMonthEnd = new DateTime(localMiddleOfNextMonth.Year, localMiddleOfNextMonth.Month, 1, 0, 0, 0, localNow.Kind);
+            // TODO: move month/period handling to helper methods
 
-            if (fromDateTime > localTodayEnd)
+            if (fromDateTime >= localMonthEnd)
             {
                 return false;
             }
 
-            if (toDateTime < localTodayStart)
+            if (toDateTime < localMonthStart)
             {
                 return false;
             }

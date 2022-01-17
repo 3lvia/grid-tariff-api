@@ -40,7 +40,7 @@ namespace GridTariffApi.Lib.Services
 
             var resDict = new Dictionary<string, MeteringPointInformation>();
 
-            var mpMaxConsumptionsTask = _meteringPointMaxConsumptionRepository.GetMeteringPointMaxConsumptionsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, meteringPoints);
+            var mpMaxConsumptionsTask = _meteringPointMaxConsumptionRepository.GetMeteringPointMaxConsumptionsAsync(fromDateTime, toDateTime, meteringPoints);
 
             var mpTariffs = await GetMeteringPointTariffsAsync(meteringPoints);
             foreach (var mpTariff in mpTariffs)

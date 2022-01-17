@@ -30,10 +30,10 @@ namespace GridTariffApi.Tests.Services
                 .Setup(x => x.GetVolumeAggregationsForThisMonthAsync(It.IsAny<List<String>>()))
                 .ReturnsAsync(meteringPointMaxConsumptions);
 
-            var cachingRepository = new MeteringPointMaxConsumptionCachingRepository(mdmxClientMock.Object, new GridTariffApiConfig
+            var cachingRepository = new MeteringPointMaxConsumptionCachingMdmxRepository(mdmxClientMock.Object, new MeteringPointMaxConsumptionRepositoryConfig
             {
                 MaxConsumptionCacheTimeout = TimeSpan.FromHours(1),
-                TimeZoneForQueries = Startup.NorwegianTimeZoneInfo()
+                TimeZoneForMonthLimiting = Startup.NorwegianTimeZoneInfo()
             });
 
             mdmxClientMock.Verify(x => x.GetVolumeAggregationsForThisMonthAsync(meteringPointIds), Times.Never);
@@ -53,9 +53,9 @@ namespace GridTariffApi.Tests.Services
         [Fact]
         public void TestMaxConsumptionIsValidForPeriodOnlyIfIncludingToday()
         {
-            var cachingRepository = new MeteringPointMaxConsumptionCachingRepository(new Mock<IMdmxClient>().Object, new GridTariffApiConfig
+            var cachingRepository = new MeteringPointMaxConsumptionCachingMdmxRepository(new Mock<IMdmxClient>().Object, new MeteringPointMaxConsumptionRepositoryConfig
             {
-                TimeZoneForQueries = Startup.NorwegianTimeZoneInfo()
+                TimeZoneForMonthLimiting= Startup.NorwegianTimeZoneInfo()
             });
 
             var localNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, Startup.NorwegianTimeZoneInfo());
@@ -64,21 +64,21 @@ namespace GridTariffApi.Tests.Services
             Assert.True(cachingRepository.MaxConsumptionIsValidForPeriod(localNow.Subtract(TimeSpan.FromDays(7)), localNow));
             Assert.True(cachingRepository.MaxConsumptionIsValidForPeriod(localNow.Subtract(TimeSpan.FromDays(3)), localNow.AddDays(17)));
 
-            Assert.False(cachingRepository.MaxConsumptionIsValidForPeriod(localNow.Subtract(TimeSpan.FromDays(3)), localNow.Date.Subtract(TimeSpan.FromSeconds(3))));
-            Assert.False(cachingRepository.MaxConsumptionIsValidForPeriod(localNow.Date.Add(TimeSpan.FromDays(1)).AddSeconds(2), localNow.AddDays(2)));
+            Assert.False(cachingRepository.MaxConsumptionIsValidForPeriod(localNow.Subtract(TimeSpan.FromDays(40)), localNow.Date.Subtract(TimeSpan.FromDays(35))));
+            Assert.False(cachingRepository.MaxConsumptionIsValidForPeriod(localNow.Date.Add(TimeSpan.FromDays(35)), localNow.AddDays(40)));
         }  
         
         [Fact]
         public async Task TestMeteringPointMaxConsumptionsNotAvailableForHistoricPeriod()
         {
-            var cachingRepository = new MeteringPointMaxConsumptionCachingRepository(new Mock<IMdmxClient>().Object, new GridTariffApiConfig
+            var cachingRepository = new MeteringPointMaxConsumptionCachingMdmxRepository(new Mock<IMdmxClient>().Object, new MeteringPointMaxConsumptionRepositoryConfig
             {
-                TimeZoneForQueries = Startup.NorwegianTimeZoneInfo()
+                TimeZoneForMonthLimiting = Startup.NorwegianTimeZoneInfo()
             });
 
             var localNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, Startup.NorwegianTimeZoneInfo());
 
-            var maxConsumptions = await cachingRepository.GetMeteringPointMaxConsumptionsAsync(localNow.Subtract(TimeSpan.FromDays(2)), localNow.Subtract(TimeSpan.FromDays(1)), new List<string>{"mp1", "mp2"});
+            var maxConsumptions = await cachingRepository.GetMeteringPointMaxConsumptionsAsync(localNow.Subtract(TimeSpan.FromDays(40)), localNow.Subtract(TimeSpan.FromDays(35)), new List<string>{"mp1", "mp2"});
     
             foreach (var meteringPointMaxConsumption in maxConsumptions)
             {
