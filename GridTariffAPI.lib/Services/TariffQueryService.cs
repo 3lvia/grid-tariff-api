@@ -57,12 +57,6 @@ namespace GridTariffApi.Lib.Services
             var gridTariff = await QueryTariffAsync(tariffKey, paramFromDate, paramToDate);
             gridTariff.MeteringPointsAndPriceLevels = new List<MeteringPointsAndPriceLevels>();
 
-            var mpPriceLevelsOutSideNow = MeteringPointsQueryOutsideUtcNow(paramFromDate, paramToDate, meteringPointInformation);
-            if (mpPriceLevelsOutSideNow.Count > 0)
-            {
-                gridTariff.MeteringPointsAndPriceLevels = mpPriceLevelsOutSideNow;
-                return gridTariff;
-            }
             var currentFixedPrices = gridTariff.GridTariff.TariffPrice.PriceInfo.FixedPrices.FirstOrDefault(x => x.StartDate <= DateTimeOffset.UtcNow && x.EndDate > DateTimeOffset.UtcNow);
             if (currentFixedPrices != null)
             {
@@ -75,49 +69,29 @@ namespace GridTariffApi.Lib.Services
             return gridTariff;
         }
 
-        public List<MeteringPointsAndPriceLevels> MeteringPointsQueryOutsideUtcNow(
-            DateTimeOffset paramFromDate,
-            DateTimeOffset paramToDate,
-            List<MeteringPointInformation> meteringPointInformations)
-        {
-            var retVal = new List<MeteringPointsAndPriceLevels>();
-            if (paramFromDate > DateTimeOffset.UtcNow.Date || paramToDate < DateTimeOffset.UtcNow.Date)
-            {
-                retVal = new List<MeteringPointsAndPriceLevels>();
-                var priceLevel = new MeteringPointsAndPriceLevels
-                {
-                    MeteringPoints = new MeteringPoints()
-                };
-                foreach (var mp in meteringPointInformations)
-                {
-                    priceLevel.MeteringPoints.Add(new MeteringPointDetails() { MeteringPointId = mp.MeteringPointId });
-                }
-                retVal.Add(priceLevel);
-            }
-            return retVal;
-        }
-
         public virtual List<MeteringPointsAndPriceLevels> AppendMeteringPointsToPriceLevels(List<MeteringPointInformation> meteringPointInformations, FixedPrices fixedPrices)
         {
             var retVal = new List<MeteringPointsAndPriceLevels>();
-            //mp not missing maxConsumption
-            //mp missing maxConsumption and exactly one pricelevel
-            foreach (var fixedPriceLevel in fixedPrices.PriceLevel)
-            {
-                var meteringPointAndPriceLevel = MeteringPointsAndPriceLevelsMatchingConsumption(fixedPrices.Id, fixedPriceLevel,meteringPointInformations);
-                if (meteringPointAndPriceLevel != null)
-                {
-                    retVal.Add(meteringPointAndPriceLevel);
-                }
-            }
 
             //mp missing maxConsumption and more than one pricelevel (do not set pricelevelid)
-            if (fixedPrices.PriceLevel.Count > 1)
+            var meteringPointsNoPriceLevel = meteringPointInformations.Where(x => !x.MaxConsumption.HasValue && fixedPrices.PriceLevel.Count != 1).ToDictionary(x => x.MeteringPointId,x => x);
+            if (meteringPointsNoPriceLevel.Count > 0)
             {
-                var meteringPointAndPriceLevel = meteringPointInformations.Where(x => !x.MaxConsumption.HasValue).ToList();
-                if (meteringPointAndPriceLevel.Count > 0)
+                retVal.Add(MeteringPointsToPriceLevel(fixedPrices.Id, null, meteringPointsNoPriceLevel.Values.ToList()));
+            }
+
+            //mp not missing maxConsumption (set pricelevelid)
+            //mp missing maxConsumption and exactly one pricelevel (set pricelevelid)
+            var meteringPointsPricelevel = meteringPointInformations.Where(x => !meteringPointsNoPriceLevel.ContainsKey(x.MeteringPointId)).ToList();
+            if (meteringPointsPricelevel.Count > 0)
+            {
+                foreach (var fixedPriceLevel in fixedPrices.PriceLevel)
                 {
-                    retVal.Add(MeteringPointsToPriceLevel(fixedPrices.Id, null, meteringPointAndPriceLevel));
+                    var meteringPointAndPriceLevel = MeteringPointsAndPriceLevelsMatchingConsumption(fixedPrices.Id, fixedPriceLevel, meteringPointsPricelevel);
+                    if (meteringPointAndPriceLevel != null)
+                    {
+                        retVal.Add(meteringPointAndPriceLevel);
+                    }
                 }
             }
             return retVal;
