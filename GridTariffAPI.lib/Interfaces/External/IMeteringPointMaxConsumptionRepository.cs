@@ -1,4 +1,5 @@
-﻿using GridTariffApi.Lib.Models.Internal;
+﻿using System;
+using GridTariffApi.Lib.Models.Internal;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,6 +7,6 @@ namespace GridTariffApi.Lib.Interfaces.External
 {
     public interface IMeteringPointMaxConsumptionRepository
     {
-        public Task<IReadOnlyList<MeteringPointMaxConsumption>> GetMeteringPointMaxConsumptionsAsync(List<string> meteringPointIds);
+        public Task<IReadOnlyList<MeteringPointMaxConsumption>> GetMeteringPointMaxConsumptionsAsync(DateTimeOffset fromDateTime, DateTimeOffset toDateTime, List<string> meteringPointIds);
     }
 }

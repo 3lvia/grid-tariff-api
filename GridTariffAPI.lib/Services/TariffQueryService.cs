@@ -33,7 +33,7 @@ namespace GridTariffApi.Lib.Services
             {
                 GridTariffCollections = new List<GridTariffCollection>()
             };
-            var meteringPointsInformations = await _tariffPriceCache.GetMeteringPointInformationsAsync(meteringPoints);
+            var meteringPointsInformations = await _tariffPriceCache.GetMeteringPointInformationsAsync(paramFromDate, paramToDate, meteringPoints);
             var tariffKeys = meteringPointsInformations.Select(x => x.TariffKey).Distinct();
             var tasks = new List<Task<GridTariffCollection>>();
             foreach (var tariffKey in tariffKeys)

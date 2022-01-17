@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GridTariffApi.Lib.Config;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace GridTariffApi.Lib.Services
 {
@@ -17,37 +15,32 @@ namespace GridTariffApi.Lib.Services
         private readonly IHolidayRepository _holidayRepository;
         private readonly IMeteringPointTariffRepository _meteringPointTariffRepository;
         private readonly IMeteringPointMaxConsumptionRepository _meteringPointMaxConsumptionRepository;
-        private readonly GridTariffApiConfig _config;
 
         private TariffPriceStructureRoot _tariffPriceStructureRoot;
         private IReadOnlyList<Holiday> _holidayRoot;
         private readonly Dictionary<string, MeteringPointTariff> _meteringPointTariffIndex;
-        private readonly IMemoryCache _meteringPointMaxConsumptionMemoryCache;
 
         private DateTimeOffset _tariffCacheValidUntil = DateTime.UtcNow;
         public TariffPriceCache(ITariffRepository tariffRepository,
             IHolidayRepository holidayRepository,
             IMeteringPointTariffRepository meteringPointTariffRepository, 
-            IMeteringPointMaxConsumptionRepository meteringPointMaxConsumptionRepository, 
-            GridTariffApiConfig config)
+            IMeteringPointMaxConsumptionRepository meteringPointMaxConsumptionRepository)
         {
             _tariffRepository = tariffRepository;
             _holidayRepository = holidayRepository;
             _meteringPointTariffRepository = meteringPointTariffRepository;
             _meteringPointMaxConsumptionRepository = meteringPointMaxConsumptionRepository;
-            _config = config;
-            _meteringPointMaxConsumptionMemoryCache = new MemoryCache(new MemoryCacheOptions());
             _meteringPointTariffIndex = new Dictionary<string, MeteringPointTariff>();
             RefreshCache();
         }
 
-        public  async Task<List<MeteringPointInformation>> GetMeteringPointInformationsAsync(List<String> meteringPoints)
+        public  async Task<List<MeteringPointInformation>> GetMeteringPointInformationsAsync(DateTimeOffset fromDateTime, DateTimeOffset toDateTime, List<string> meteringPoints)
         {
             // We combine MeteringPointTariffs and MeteringPointMaxConsumptions (separate caching and data sources) into one MeteringPointInformation per metering point.
 
             var resDict = new Dictionary<string, MeteringPointInformation>();
 
-            var mpMaxConsumptionsTask = GetMeteringPointMaxConsumptionsAsync(meteringPoints);
+            var mpMaxConsumptionsTask = _meteringPointMaxConsumptionRepository.GetMeteringPointMaxConsumptionsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, meteringPoints);
 
             var mpTariffs = await GetMeteringPointTariffsAsync(meteringPoints);
             foreach (var mpTariff in mpTariffs)
@@ -108,41 +101,6 @@ namespace GridTariffApi.Lib.Services
                 .AsReadOnly();
         }
 
-        public async Task<IReadOnlyList<MeteringPointMaxConsumption>> GetMeteringPointMaxConsumptionsAsync(List<String> meteringPoints)
-        {
-            var cachedMaxConsumptions = new Dictionary<string, MeteringPointMaxConsumption>();
-            var uncachedMpids = new List<string>();
-
-            foreach (var mpid in meteringPoints)
-            {
-                if (_meteringPointMaxConsumptionMemoryCache.TryGetValue(mpid, out MeteringPointMaxConsumption cachedMaxConsumption))
-                {
-                    cachedMaxConsumptions[mpid] = cachedMaxConsumption;
-                }
-                else
-                {
-                    uncachedMpids.Add(mpid);
-                }
-            }
-
-            if(uncachedMpids.Count > 0)
-            {
-                // There is a possible race condition here, so we might consider doing another lookup after locking. But an additional cache miss on parallel calls for the same metering point(s) is not that important. And the last one will update the cache.
-                var uncachedMaxConsumptions = await _meteringPointMaxConsumptionRepository.GetMeteringPointMaxConsumptionsAsync(uncachedMpids);
-
-                lock (_meteringPointMaxConsumptionMemoryCache)
-                {
-                    foreach (var meteringPointMaxConsumption in uncachedMaxConsumptions)
-                    {
-                        _meteringPointMaxConsumptionMemoryCache.Set(meteringPointMaxConsumption.MeteringPointId, meteringPointMaxConsumption, _config.MaxConsumptionCacheTimeout);
-                        cachedMaxConsumptions[meteringPointMaxConsumption.MeteringPointId] = meteringPointMaxConsumption;
-                    }
-                }
-            }
-
-            return meteringPoints.Select(mpid => cachedMaxConsumptions[mpid]).ToList().AsReadOnly();
-        }
-        
         public Models.PriceStructure.Company GetCompany()
         {
             return GetTariffRootElement().GridTariffPriceConfiguration.GridTariff.Company;
