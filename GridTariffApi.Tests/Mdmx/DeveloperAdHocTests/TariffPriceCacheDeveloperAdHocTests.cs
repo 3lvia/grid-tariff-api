@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using GridTariffApi.Lib.Services;
+using GridTariffApi.Metrics;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Xunit;
@@ -38,6 +39,9 @@ namespace GridTariffApi.Tests.Mdmx.DeveloperAdHocTests
             Assert.Equal(mpid, mpInformation.MeteringPointId);
             Assert.True(mpInformation.MaxConsumption > 0); // Usually true, might be false just after a new month has started or if something doesn't work.
             Assert.NotNull(mpInformation.MaxConsumption); // Usually true.
+
+            var loggingDataCollector = host.Services.GetRequiredService<IElviaLoggingDataCollector>();
+            _outputHelper.WriteLine($"Call to MDMx took {loggingDataCollector.MdmxElapsedSeconds:0.000} s");
         }
     }
 }

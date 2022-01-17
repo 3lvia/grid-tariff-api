@@ -92,7 +92,8 @@ namespace GridTariffApi
             services.AddTransient<GridTariffApi.Lib.Services.ITariffQueryService, GridTariffApi.Lib.Services.TariffQueryService>();
             services.AddTransient<GridTariffApi.Lib.Services.ITariffTypeService, GridTariffApi.Lib.Services.TariffTypeService>();
             services.AddTransient<IControllerValidationHelper, ControllerValidationHelper>();
-            services.AddScoped<ILoggingDataCollector, LoggingDataCollector>();
+            services.AddScoped<IElviaLoggingDataCollector, LoggingDataCollector>();
+            services.AddScoped<ILoggingDataCollector>(sp => sp.GetRequiredService<IElviaLoggingDataCollector>()); // Make sure it is the same data collector for both interfaces.
             services.AddSingleton<IMetricsLogger, MetricsLogger>();
             
             // Elvid

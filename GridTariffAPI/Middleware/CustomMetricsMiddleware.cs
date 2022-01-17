@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
-using GridTariffApi.Lib.Interfaces;
 using GridTariffApi.Metrics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -28,7 +27,7 @@ namespace GridTariffApi.Middleware
             string controller = "";
             string action = "";
             string method = "";
-            string responseCode = "";
+            int? responseCode = null;
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -39,24 +38,19 @@ namespace GridTariffApi.Middleware
                 action = context.GetRouteValue("action")?.ToString();
                 method = context.Request.Method; // POST/GET...
                 await _next(context);
-                responseCode = context.Response?.StatusCode.ToString();
+                responseCode = context.Response?.StatusCode;
             }
             catch
             {
-                responseCode = "500";
+                responseCode = 500;
                 throw;
             }
             finally
             {
                 stopwatch.Stop();
                 var elapsedTimeSpan = stopwatch.Elapsed;
-                var loggingDataCollector = context.RequestServices.GetRequiredService<ILoggingDataCollector>(); // Scoped instance used to collect details other places. The middleware is not scoped, so we need to aquire the scoped instance from the context services.
-                var tariffTimeSpan = loggingDataCollector?.TariffTimeSpan;
-                // We won't include request where the authentication or validation fails (400 bad request, 401 unauthorized etc), as the TariffTimeSpan won't be set. But that's included in the standard metrics.
-                if(tariffTimeSpan.HasValue)
-                {
-                    _logger.LogRequestMetrics(controller, action, method, responseCode, tariffTimeSpan.Value, elapsedTimeSpan);
-                }
+                var loggingDataCollector = context.RequestServices.GetRequiredService<IElviaLoggingDataCollector>(); // Scoped instance used to collect details other places. The middleware is not scoped, so we need to aquire the scoped instance from the context services.
+                _logger.LogRequestMetrics(controller, action, method, responseCode, elapsedTimeSpan, loggingDataCollector);
             }
         }
     }

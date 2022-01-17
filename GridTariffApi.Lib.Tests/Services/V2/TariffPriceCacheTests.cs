@@ -1,16 +1,15 @@
-﻿using GridTariffApi.Lib.Interfaces.External;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using GridTariffApi.Lib.Interfaces.External;
 using GridTariffApi.Lib.Models.Holidays;
 using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Lib.Models.PriceStructure;
 using GridTariffApi.Lib.Services;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace GridTariffApi.Lib.Tests.Services
+namespace GridTariffApi.Lib.Tests.Services.V2
 {
     public class TariffPriceCacheTests
     {

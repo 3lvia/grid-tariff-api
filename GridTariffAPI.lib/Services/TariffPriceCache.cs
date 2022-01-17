@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GridTariffApi.Lib.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace GridTariffApi.Lib.Services
@@ -16,6 +17,7 @@ namespace GridTariffApi.Lib.Services
         private readonly IHolidayRepository _holidayRepository;
         private readonly IMeteringPointTariffRepository _meteringPointTariffRepository;
         private readonly IMeteringPointMaxConsumptionRepository _meteringPointMaxConsumptionRepository;
+        private readonly ILoggingDataCollector _loggingDataCollector;
 
         private TariffPriceStructureRoot _tariffPriceStructureRoot;
         private IReadOnlyList<Holiday> _holidayRoot;
@@ -25,12 +27,13 @@ namespace GridTariffApi.Lib.Services
         private DateTime _tariffCacheValidUntil = DateTime.UtcNow;
         public TariffPriceCache(ITariffRepository tariffRepository
             , IHolidayRepository holidayRepository,
-            IMeteringPointTariffRepository meteringPointTariffRepository, IMeteringPointMaxConsumptionRepository meteringPointMaxConsumptionRepository)
+            IMeteringPointTariffRepository meteringPointTariffRepository, IMeteringPointMaxConsumptionRepository meteringPointMaxConsumptionRepository, ILoggingDataCollector loggingDataCollector = null)
         {
             _tariffRepository = tariffRepository;
             _holidayRepository = holidayRepository;
             _meteringPointTariffRepository = meteringPointTariffRepository;
             _meteringPointMaxConsumptionRepository = meteringPointMaxConsumptionRepository;
+            _loggingDataCollector = loggingDataCollector;
             _meteringPointMaxConsumptionMemoryCache = new MemoryCache(new MemoryCacheOptions());
             _meteringPointTariffIndex = new Dictionary<string, MeteringPointTariff>();
             RefreshCache();
@@ -126,6 +129,8 @@ namespace GridTariffApi.Lib.Services
                     uncachedMpids.Add(mpid);
                 }
             }
+
+            _loggingDataCollector?.RegisterMaxConsumptionCacheHitStatistics(cachedMaxConsumptions.Count, uncachedMpids.Count);
 
             if(uncachedMpids.Count > 0)
             {

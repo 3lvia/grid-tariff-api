@@ -1,21 +1,20 @@
-﻿using GridTariffApi.Lib.Config;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Runtime.InteropServices;
+using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.Interfaces.External;
 using GridTariffApi.Lib.Models.Digin;
 using GridTariffApi.Lib.Models.Holidays;
 using GridTariffApi.Lib.Models.PriceStructure;
-using GridTariffApi.Lib.Services.Helpers;
 using GridTariffApi.Lib.Services;
+using GridTariffApi.Lib.Services.Helpers;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Runtime.InteropServices;
-using System.Text;
 using Xunit;
 using GridTariff = GridTariffApi.Lib.Models.PriceStructure.GridTariff;
 using TariffType = GridTariffApi.Lib.Models.PriceStructure.TariffType;
 
-namespace GridTariffApi.Lib.Tests.Helpers
+namespace GridTariffApi.Lib.Tests.Services.Helpers
 {
     public class ControllerValidationHelperTests
     {
