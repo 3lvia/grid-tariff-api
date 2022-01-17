@@ -51,7 +51,7 @@ namespace GridTariffApi.Tests.Services
         }
 
         [Fact]
-        public void TestMaxConsumptionIsValidForPeriodOnlyIfIncludingToday()
+        public void TestMaxConsumptionIsValidForPeriodOnlyIfIncludingAnyPartOfCurrentMonth()
         {
             var cachingRepository = new MeteringPointMaxConsumptionCachingMdmxRepository(new Mock<IMdmxClient>().Object, new MeteringPointMaxConsumptionRepositoryConfig
             {
