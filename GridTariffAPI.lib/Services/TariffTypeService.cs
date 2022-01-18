@@ -3,12 +3,7 @@ using System.Threading.Tasks;
 
 namespace GridTariffApi.Lib.Services
 {
-    public interface ITariffTypeService
-    {
-        Task<Models.Digin.TariffTypeContainer> GetTariffTypes();
-    }
-
-    public class TariffTypeService : ITariffTypeService
+        public class TariffTypeService : ITariffTypeService
     {
         private readonly ITariffPriceCache _tariffPriceCache;
         private readonly IObjectConversionHelper _objectConversionHelper;

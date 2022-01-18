@@ -19,6 +19,8 @@ namespace GridTariffApi.Lib.Models.Digin
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
+
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
@@ -624,20 +626,20 @@ namespace GridTariffApi.Lib.Models.Digin
 
     }
 
-    /// <summary>The response object with the grid tariff object and the meteringpointid object</summary>
+    /// <summary>The response object with the currentFixedPriceLevel object and the meteringPoints object. currentFixedPriceLevel is omitted: if time of the api call is outside of the request timespan (timeNow &lt; StartTime or timeNow &gt; EndTime). This is due to the connection between meteringPoint and tariff is only instant.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class MeteringPointsAndPriceLevels
     {
         [Newtonsoft.Json.JsonProperty("currentFixedPriceLevel", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public CurrentFixedPriceLevel CurrentFixedPriceLevel { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("meteringPointIds", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public MeteringPointIds MeteringPointIds { get; set; }
+        [Newtonsoft.Json.JsonProperty("meteringPoints", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public MeteringPoints MeteringPoints { get; set; }
 
 
     }
 
-    /// <summary>The last known fixed price level the MPID is placed in based on fuse size or max hour measurement</summary>
+    /// <summary>The last known fixed price level the meteringPoint is placed in for FixedPriceConfiguration.basis = monthlymax/dailymax (based on max hours). For fusesize it is based on the fusesize. CurrentFixedPriceLevel is omitted: if time of the api call is outside of the request timespan (timeNow &lt; StartTime or timeNow &gt; EndTime). This is due to the connection between meteringPoint and tariff is only instant.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class CurrentFixedPriceLevel
     {
@@ -645,25 +647,36 @@ namespace GridTariffApi.Lib.Models.Digin
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Id { get; set; }
 
-        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.fixedPrices.priceLevel.id. Ex. edcf53ce-70d3-4fa0-8bfb-e79918335ab7</summary>
+        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.fixedPrices.priceLevel.id. Null: if FixedPriceConfiguration.basis = monthlymax|dailymax and no consumption calculation done so far this month. Ex. edcf53ce-70d3-4fa0-8bfb-e79918335ab7</summary>
         [Newtonsoft.Json.JsonProperty("levelId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string LevelId { get; set; }
+
+
+    }
+
+    /// <summary>List of meteringpoints connected to this grid tariff at the time of the api call.</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class MeteringPoints : System.Collections.ObjectModel.Collection<MeteringPointDetails>
+    {
+
+    }
+
+    /// <summary>Definition of meteringPointId and levelValue/lastUpdated for fixed price level</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class MeteringPointDetails
+    {
+        /// <summary>meteringPointId. Ex. 707057500000000001</summary>
+        [Newtonsoft.Json.JsonProperty("meteringPointId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string MeteringPointId { get; set; }
 
         /// <summary>Value of the max hour setting the level of fixedprice. NOT IN USE YET AS IT REQUIRES A HIGHER LEVEL OF AUTHENTICATION AND AUTHORIZATION. Ex. 9.0000</summary>
         [Newtonsoft.Json.JsonProperty("levelValue", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? LevelValue { get; set; }
 
-        /// <summary>Time of when the last metervalues were received from the meters to calculate basis for the fixed level. Ex. 2021-09-17T02:00:00+02:00</summary>
+        /// <summary>The end time(hour) of the last calculated hour consumption(based on meter reading or estimation) this month. Null if FixedPriceConfiguration.basis = fixed. Ex. 2021-09-17T02:00:00+02:00</summary>
         [Newtonsoft.Json.JsonProperty("lastUpdated", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset LastUpdated { get; set; }
+        public System.DateTimeOffset? LastUpdated { get; set; }
 
-
-    }
-
-    /// <summary>List of meteringpoint-ids that has this tariff type at the time of the api call. Ex. 707057500000000002</summary>
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class MeteringPointIds : System.Collections.ObjectModel.Collection<string>
-    {
 
     }
 
@@ -709,6 +722,8 @@ namespace GridTariffApi.Lib.Models.Digin
         /// <summary>Total price of energy component for this resolution period included all taxes except VAT. This is for easier access to the hourly energy price. Ex. 0.2280</summary>
         [Newtonsoft.Json.JsonProperty("totalExVat", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double TotalExVat { get; set; }
+
+
     }
 
     public class TariffQueryRequest : IValidatableObject
