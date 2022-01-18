@@ -82,11 +82,7 @@ namespace GridTariffApi.Lib.Services
 
         public virtual FixedPrices GetFixedPricesValidToday(List<FixedPrices> fixedPrices)
         {
-            if (fixedPrices != null)
-            {
-                return fixedPrices.FirstOrDefault(x => _serviceHelper.TimePeriodIsIncludingLocaleToday(x.StartDate, x.EndDate));
-            }
-            return null;
+            return fixedPrices?.FirstOrDefault(x => _serviceHelper.TimePeriodIsIncludingLocaleToday(x.StartDate, x.EndDate));
         }
 
         public virtual List<MeteringPointsAndPriceLevels> AppendMeteringPointsToPriceLevels(List<MeteringPointInformation> meteringPointInformations, FixedPrices fixedPrices)

@@ -77,7 +77,7 @@ namespace GridTariffApi.Services
                 return false;
             }
 
-            if (toDateTime < localMonthStart)
+            if (toDateTime <= localMonthStart)
             {
                 return false;
             }
