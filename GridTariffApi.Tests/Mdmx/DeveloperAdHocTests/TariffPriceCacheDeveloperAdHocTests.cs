@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GridTariffApi.Lib.Services;
@@ -28,7 +29,7 @@ namespace GridTariffApi.Tests.Mdmx.DeveloperAdHocTests
 
             var mpid = "707057599999990530";
 
-            var mpInformations = await tariffPriceCache.GetMeteringPointInformationsAsync(new List<string> { mpid });
+            var mpInformations = await tariffPriceCache.GetMeteringPointInformationsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, new List<string> { mpid });
 
             Assert.NotNull(mpInformations);
             var mpInformation = Assert.Single(mpInformations);
