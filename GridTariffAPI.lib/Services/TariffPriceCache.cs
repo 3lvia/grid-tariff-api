@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GridTariffApi.Lib.Interfaces;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace GridTariffApi.Lib.Services
 {
@@ -17,41 +15,32 @@ namespace GridTariffApi.Lib.Services
         private readonly IHolidayRepository _holidayRepository;
         private readonly IMeteringPointTariffRepository _meteringPointTariffRepository;
         private readonly IMeteringPointMaxConsumptionRepository _meteringPointMaxConsumptionRepository;
-        private readonly ILoggingDataCollector _loggingDataCollector;
 
         private TariffPriceStructureRoot _tariffPriceStructureRoot;
         private IReadOnlyList<Holiday> _holidayRoot;
         private readonly Dictionary<string, MeteringPointTariff> _meteringPointTariffIndex;
-        private readonly IMemoryCache _meteringPointMaxConsumptionMemoryCache;
 
-        private DateTime _tariffCacheValidUntil = DateTime.UtcNow;
-        public TariffPriceCache(ITariffRepository tariffRepository
-            , IHolidayRepository holidayRepository,
-            IMeteringPointTariffRepository meteringPointTariffRepository, IMeteringPointMaxConsumptionRepository meteringPointMaxConsumptionRepository, ILoggingDataCollector loggingDataCollector = null)
+        private DateTimeOffset _tariffCacheValidUntil = DateTime.UtcNow;
+        public TariffPriceCache(ITariffRepository tariffRepository,
+            IHolidayRepository holidayRepository,
+            IMeteringPointTariffRepository meteringPointTariffRepository, 
+            IMeteringPointMaxConsumptionRepository meteringPointMaxConsumptionRepository)
         {
             _tariffRepository = tariffRepository;
             _holidayRepository = holidayRepository;
             _meteringPointTariffRepository = meteringPointTariffRepository;
             _meteringPointMaxConsumptionRepository = meteringPointMaxConsumptionRepository;
-            _loggingDataCollector = loggingDataCollector;
-            _meteringPointMaxConsumptionMemoryCache = new MemoryCache(new MemoryCacheOptions());
             _meteringPointTariffIndex = new Dictionary<string, MeteringPointTariff>();
             RefreshCache();
         }
 
-        public List<MeteringPointInformation> GetMeteringPointInformation(List<String> meteringPoints)
-        {
-            // TODO: Gjøre denne metoden (public interface-metode) async. Midlertidig sync-to-async-hack:
-            return GetMeteringPointInformationAsync(meteringPoints).Result;
-        }
-
-        private async Task<List<MeteringPointInformation>> GetMeteringPointInformationAsync(List<String> meteringPoints)
+        public  async Task<List<MeteringPointInformation>> GetMeteringPointInformationsAsync(DateTimeOffset fromDateTime, DateTimeOffset toDateTime, List<string> meteringPoints)
         {
             // We combine MeteringPointTariffs and MeteringPointMaxConsumptions (separate caching and data sources) into one MeteringPointInformation per metering point.
 
             var resDict = new Dictionary<string, MeteringPointInformation>();
 
-            var mpMaxConsumptionsTask = GetMeteringPointMaxConsumptionsAsync(meteringPoints);
+            var mpMaxConsumptionsTask = _meteringPointMaxConsumptionRepository.GetMeteringPointMaxConsumptionsAsync(fromDateTime, toDateTime, meteringPoints);
 
             var mpTariffs = await GetMeteringPointTariffsAsync(meteringPoints);
             foreach (var mpTariff in mpTariffs)
@@ -73,7 +62,6 @@ namespace GridTariffApi.Lib.Services
 
         public async Task<IReadOnlyList<MeteringPointTariff>> GetMeteringPointTariffsAsync(List<String> meteringPoints)
         {
-            // TODO: oppdatering av MeteringPointTariffs-cache'n. Jobb på siden som oppdaterer hele cachen hver døgn?
             var cachedMpTariffs = new Dictionary<string, MeteringPointTariff>();
             var uncachedMpids = new List<string>();
 
@@ -113,43 +101,6 @@ namespace GridTariffApi.Lib.Services
                 .AsReadOnly();
         }
 
-        public async Task<IReadOnlyList<MeteringPointMaxConsumption>> GetMeteringPointMaxConsumptionsAsync(List<String> meteringPoints)
-        {
-            var cachedMaxConsumptions = new Dictionary<string, MeteringPointMaxConsumption>();
-            var uncachedMpids = new List<string>();
-
-            foreach (var mpid in meteringPoints)
-            {
-                if (_meteringPointMaxConsumptionMemoryCache.TryGetValue(mpid, out MeteringPointMaxConsumption cachedMaxConsumption))
-                {
-                    cachedMaxConsumptions[mpid] = cachedMaxConsumption;
-                }
-                else
-                {
-                    uncachedMpids.Add(mpid);
-                }
-            }
-
-            _loggingDataCollector?.RegisterMaxConsumptionCacheHitStatistics(cachedMaxConsumptions.Count, uncachedMpids.Count);
-
-            if(uncachedMpids.Count > 0)
-            {
-                // There is a possible race condition here, so we might consider doing another lookup after locking. But an additional cache miss on parallel calls for the same metering point(s) is not that important. And the last one will update the cache.
-                var uncachedMaxConsumptions = await _meteringPointMaxConsumptionRepository.GetMeteringPointMaxConsumptionsAsync(uncachedMpids);
-
-                lock (_meteringPointMaxConsumptionMemoryCache)
-                {
-                    foreach (var meteringPointMaxConsumption in uncachedMaxConsumptions)
-                    {
-                        _meteringPointMaxConsumptionMemoryCache.Set(meteringPointMaxConsumption.MeteringPointId, meteringPointMaxConsumption, TimeSpan.FromHours(1)); // TODO: sette timeout (fra config utenfor Lib)
-                        cachedMaxConsumptions[meteringPointMaxConsumption.MeteringPointId] = meteringPointMaxConsumption;
-                    }
-                }
-            }
-
-            return meteringPoints.Select(mpid => cachedMaxConsumptions[mpid]).ToList().AsReadOnly();
-        }
-        
         public Models.PriceStructure.Company GetCompany()
         {
             return GetTariffRootElement().GridTariffPriceConfiguration.GridTariff.Company;
@@ -183,7 +134,6 @@ namespace GridTariffApi.Lib.Services
                 {
                     RefreshCache();
                 }
-
             }
             return _tariffPriceStructureRoot;
         }
@@ -192,7 +142,7 @@ namespace GridTariffApi.Lib.Services
         {
             _tariffPriceStructureRoot = _tariffRepository.GetTariffPriceStructure();
             _holidayRoot = _holidayRepository.GetHolidays();
-            _tariffCacheValidUntil = DateTime.UtcNow.AddMinutes(Constants.CacheConsideredInvalidMinutes).Date; // TODO: endre logikk eller navngiving. Virker merkelig å angi cache-levetiden i minutter, sette den til 24*60 og så trunkere til midnatt. Og dette gjelder jo bare prislistedelen av cachen, ikke per-målepunkt-delen.
+            _tariffCacheValidUntil = DateTimeOffset.UtcNow.AddDays(1).Date;
         }
     }
 }

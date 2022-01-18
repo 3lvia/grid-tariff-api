@@ -83,5 +83,47 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
             Assert.Equal(testValue, startDate);
         }
 
+        [Fact]
+        public void TimePeriodIsIncludingTodayTests()
+        {
+            Setup();
+
+            //historic
+            var fromDate = DateTimeOffset.UtcNow.AddDays(-2);
+            var toDate = DateTimeOffset.UtcNow.AddDays(-1);
+            Assert.False(_serviceHelper.TimePeriodIsIncludingLocaleToday(fromDate,toDate));
+
+            //todate inside
+            fromDate = DateTimeOffset.UtcNow.AddDays(-2);
+            toDate = DateTimeOffset.UtcNow;
+            Assert.True(_serviceHelper.TimePeriodIsIncludingLocaleToday(fromDate, toDate));
+
+            //fromDate inside
+            fromDate = DateTimeOffset.UtcNow;
+            toDate = DateTimeOffset.UtcNow.AddDays(1);
+            Assert.True(_serviceHelper.TimePeriodIsIncludingLocaleToday(fromDate, toDate));
+
+            //future
+            fromDate = DateTimeOffset.UtcNow.AddDays(1);
+            toDate = DateTimeOffset.UtcNow.AddDays(2);
+            Assert.False(_serviceHelper.TimePeriodIsIncludingLocaleToday(fromDate, toDate));
+
+            //completely overlapping today
+            fromDate = DateTimeOffset.UtcNow.AddDays(-1);
+            toDate = DateTimeOffset.UtcNow.AddDays(2);
+            Assert.True(_serviceHelper.TimePeriodIsIncludingLocaleToday(fromDate, toDate));
+
+            //todate = start of today
+            fromDate = DateTimeOffset.UtcNow.AddDays(-1);
+            toDate = _serviceHelper.ToConfiguredTimeZone(DateTimeOffset.UtcNow);
+            toDate = new DateTimeOffset(toDate.Date, toDate.Offset);
+            Assert.False(_serviceHelper.TimePeriodIsIncludingLocaleToday(fromDate, toDate));
+
+            //fromdate = end of today
+            fromDate = _serviceHelper.ToConfiguredTimeZone(DateTimeOffset.UtcNow.AddDays(1));
+            fromDate = new DateTimeOffset(fromDate.Date, fromDate.Offset);
+            toDate = DateTimeOffset.UtcNow.AddDays(2);
+            Assert.False(_serviceHelper.TimePeriodIsIncludingLocaleToday(fromDate, toDate));
+        }
     }
 }

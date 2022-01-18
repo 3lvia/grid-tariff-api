@@ -55,7 +55,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
                 .Setup(x => x.GetHolidays())
                 .Returns(new List<Holiday>());
 
-            var tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object,null, null);
+            var tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object, null, null);
 
             _tariffQueryServiceMock = new Mock<ITariffQueryService>();
             _tariffQueryServiceMock

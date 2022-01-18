@@ -50,7 +50,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             }).ToList().AsReadOnly();
             _meteringPointMaxConsumptionRepository = new Mock<IMeteringPointMaxConsumptionRepository>();
             _meteringPointMaxConsumptionRepository
-                .Setup(x => x.GetMeteringPointMaxConsumptionsAsync(It.IsAny<List<String>>()))
+                .Setup(x => x.GetMeteringPointMaxConsumptionsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<String>>()))
                 .ReturnsAsync((IReadOnlyList<Models.Internal.MeteringPointMaxConsumption>)meteringPointMaxConsumptions);
         }
 
@@ -58,7 +58,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         public void TariffRepositoryCalledOnceTest()
         {
             Setup();
-            TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffRepositoryMock.Object, _holidayRepositoryMock.Object,null, null);
+            TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffRepositoryMock.Object, _holidayRepositoryMock.Object, null, null);
 
             for (int i = 0; i < 10; i++)
             {
@@ -71,41 +71,41 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         public void HolidayRepositoryCalledOnceTest()
         {
             Setup();
-            TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffRepositoryMock.Object, _holidayRepositoryMock.Object,null, null);
+            TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffRepositoryMock.Object, _holidayRepositoryMock.Object, null, null);
             for (int i = 0; i < 10; i++)
             {
-                tariffPriceCache.GetHolidays(DateTimeOffset.MinValue,DateTimeOffset.MaxValue);
+                tariffPriceCache.GetHolidays(DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
             }
             _holidayRepositoryMock.Verify(x => x.GetHolidays(), Times.Once);
         }
 
         [Fact]
-        public void MeteringPointCacheOnFirstUseTest()
+        public async Task MeteringPointMaxConsumptionOncePerInvocationAndTariffOnFirstUseTest()
         {
             Setup();
             TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffRepositoryMock.Object, _holidayRepositoryMock.Object, _meteringPointTariffRepository.Object, _meteringPointMaxConsumptionRepository.Object);
 
             _meteringPointTariffRepository.Verify(x => x.GetMeteringPointTariffsAsync(_meteringPointIds), Times.Never);
-            _meteringPointMaxConsumptionRepository.Verify(x => x.GetMeteringPointMaxConsumptionsAsync(_meteringPointIds), Times.Never);
+            _meteringPointMaxConsumptionRepository.Verify(x => x.GetMeteringPointMaxConsumptionsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, _meteringPointIds), Times.Never);
 
-            tariffPriceCache.GetMeteringPointInformation(_meteringPointIds);
+            await tariffPriceCache.GetMeteringPointInformationsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, _meteringPointIds);
             _meteringPointTariffRepository.Verify(x => x.GetMeteringPointTariffsAsync(_meteringPointIds), Times.Once);
-            _meteringPointMaxConsumptionRepository.Verify(x => x.GetMeteringPointMaxConsumptionsAsync(_meteringPointIds), Times.Once);
+            _meteringPointMaxConsumptionRepository.Verify(x => x.GetMeteringPointMaxConsumptionsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, _meteringPointIds), Times.Once);
 
-            tariffPriceCache.GetMeteringPointInformation(_meteringPointIds);
+            await tariffPriceCache.GetMeteringPointInformationsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, _meteringPointIds);
             _meteringPointTariffRepository.Verify(x => x.GetMeteringPointTariffsAsync(_meteringPointIds), Times.Once);
-            _meteringPointMaxConsumptionRepository.Verify(x => x.GetMeteringPointMaxConsumptionsAsync(_meteringPointIds), Times.Once);
+            _meteringPointMaxConsumptionRepository.Verify(x => x.GetMeteringPointMaxConsumptionsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, _meteringPointIds), Times.Exactly(2));
         }
 
         [Fact]
-        public void MeteringPointInformationMergedFromMpTariffRepositoryAndMpMaxConsumptionRepositoryTest()
+        public async Task MeteringPointInformationMergedFromMpTariffRepositoryAndMpMaxConsumptionRepositoryTest()
         {
             var tariffKey = "test-tariff";
             var maxConsumption = 33.33;
             Setup(tariffKey, maxConsumption);
             TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffRepositoryMock.Object, _holidayRepositoryMock.Object, _meteringPointTariffRepository.Object, _meteringPointMaxConsumptionRepository.Object);
 
-            var mpInformations = tariffPriceCache.GetMeteringPointInformation(_meteringPointIds);
+            var mpInformations = await tariffPriceCache.GetMeteringPointInformationsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, _meteringPointIds);
 
             Assert.NotNull(mpInformations);
             Assert.Equal(_meteringPointIds.Count, mpInformations.Count);
