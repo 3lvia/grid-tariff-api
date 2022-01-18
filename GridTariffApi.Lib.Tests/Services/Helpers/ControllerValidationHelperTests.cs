@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Text;
 using Xunit;
 using GridTariff = GridTariffApi.Lib.Models.PriceStructure.GridTariff;
 using TariffType = GridTariffApi.Lib.Models.PriceStructure.TariffType;
@@ -34,12 +33,12 @@ namespace GridTariffApi.Lib.Tests.Helpers
 
             var gridTariff = new GridTariff(null, tariffTypes);
             var gridTariffPriceConfiguration = new GridTariffPriceConfiguration(gridTariff);
-            var TariffPriceStructureRoot = new TariffPriceStructureRoot(gridTariffPriceConfiguration);
+            var tariffPriceStructureRoot = new TariffPriceStructureRoot(gridTariffPriceConfiguration);
 
             _tariffPeristenceMock = new Mock<ITariffRepository>();
             _tariffPeristenceMock
                 .Setup(x => x.GetTariffPriceStructure())
-                .Returns(TariffPriceStructureRoot);
+                .Returns(tariffPriceStructureRoot);
 
             _holidayPeristenceMock = new Mock<IHolidayRepository>();
             _holidayPeristenceMock
@@ -47,7 +46,7 @@ namespace GridTariffApi.Lib.Tests.Helpers
                 .Returns(new List<Holiday>());
 
             var serviceHelper = new ServiceHelper(gridTariffApiConfig);
-            var tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object, null, null);
+            var tariffPriceCache = new TariffPriceCache(new TariffPriceCacheDataStore(), _tariffPeristenceMock.Object, _holidayPeristenceMock.Object, null, null);
 
             _controllerValidationHelper = new ControllerValidationHelper(gridTariffApiConfig, tariffPriceCache, serviceHelper);
         }

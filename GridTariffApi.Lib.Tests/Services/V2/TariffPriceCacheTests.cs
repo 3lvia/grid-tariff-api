@@ -1,16 +1,16 @@
-﻿using GridTariffApi.Lib.Interfaces.External;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using GridTariffApi.Lib.Interfaces.External;
 using GridTariffApi.Lib.Models.Holidays;
 using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Lib.Models.PriceStructure;
 using GridTariffApi.Lib.Services;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace GridTariffApi.Lib.Tests.Services
+namespace GridTariffApi.Lib.Tests.Services.V2
 {
     public class TariffPriceCacheTests
     {
@@ -59,7 +59,7 @@ namespace GridTariffApi.Lib.Tests.Services
         public void TariffRepositoryCalledOnceTest()
         {
             Setup();
-            TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffRepositoryMock.Object, _holidayRepositoryMock.Object, null, null);
+            TariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPriceCacheDataStore(), _tariffRepositoryMock.Object, _holidayRepositoryMock.Object, null, null);
 
             for (int i = 0; i < 10; i++)
             {
@@ -72,7 +72,7 @@ namespace GridTariffApi.Lib.Tests.Services
         public void HolidayRepositoryCalledOnceTest()
         {
             Setup();
-            TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffRepositoryMock.Object, _holidayRepositoryMock.Object, null, null);
+            TariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPriceCacheDataStore(), _tariffRepositoryMock.Object, _holidayRepositoryMock.Object, null, null);
             for (int i = 0; i < 10; i++)
             {
                 tariffPriceCache.GetHolidays(DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
@@ -84,7 +84,7 @@ namespace GridTariffApi.Lib.Tests.Services
         public async Task MeteringPointMaxConsumptionOncePerInvocationAndTariffOnFirstUseTest()
         {
             Setup();
-            TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffRepositoryMock.Object, _holidayRepositoryMock.Object, _meteringPointTariffRepository.Object, _meteringPointMaxConsumptionRepository.Object);
+            TariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPriceCacheDataStore(), _tariffRepositoryMock.Object, _holidayRepositoryMock.Object, _meteringPointTariffRepository.Object, _meteringPointMaxConsumptionRepository.Object);
 
             _meteringPointTariffRepository.Verify(x => x.GetMeteringPointTariffsAsync(_meteringPointIds), Times.Never);
             _meteringPointMaxConsumptionRepository.Verify(x => x.GetMeteringPointMaxConsumptionsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, _meteringPointIds), Times.Never);
@@ -104,7 +104,7 @@ namespace GridTariffApi.Lib.Tests.Services
             var tariffKey = "test-tariff";
             var maxConsumption = 33.33;
             Setup(tariffKey, maxConsumption);
-            TariffPriceCache tariffPriceCache = new TariffPriceCache(_tariffRepositoryMock.Object, _holidayRepositoryMock.Object, _meteringPointTariffRepository.Object, _meteringPointMaxConsumptionRepository.Object);
+            TariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPriceCacheDataStore(), _tariffRepositoryMock.Object, _holidayRepositoryMock.Object, _meteringPointTariffRepository.Object, _meteringPointMaxConsumptionRepository.Object);
 
             var mpInformations = await tariffPriceCache.GetMeteringPointInformationsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, _meteringPointIds);
 

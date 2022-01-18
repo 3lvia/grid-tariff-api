@@ -9,9 +9,7 @@ using GridTariffApi.Lib.Services;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using GridTariff = GridTariffApi.Lib.Models.PriceStructure.GridTariff;
@@ -57,7 +55,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
                 .Setup(x => x.GetHolidays())
                 .Returns(new List<Holiday>());
 
-            var tariffPriceCache = new TariffPriceCache(_tariffPeristenceMock.Object, _holidayPeristenceMock.Object, null, null);
+            var tariffPriceCache = new TariffPriceCache(new TariffPriceCacheDataStore(), _tariffPeristenceMock.Object, _holidayPeristenceMock.Object, null, null);
 
             _tariffQueryServiceMock = new Mock<ITariffQueryService>();
             _tariffQueryServiceMock
