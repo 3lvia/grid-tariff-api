@@ -9,9 +9,6 @@ namespace GridTariffApi.Lib.Interfaces
     {
         public TimeSpan? TariffTimeSpan { get; }
         public int? NumMeteringPoints { get; }
-        public int? NumMaxConsumptionCacheHits { get; }
-        public int? NumMaxConsumptionCacheMisses { get; }
         public void RegisterTariffPeriodAndNumMeteringPoints(DateTimeOffset startDateTime, DateTimeOffset endDateTime, int? numMeteringPoints);
-        public void RegisterMaxConsumptionCacheHitStatistics(int numHits, int numMisses);
     }
 }

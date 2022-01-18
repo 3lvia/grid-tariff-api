@@ -46,10 +46,10 @@ namespace GridTariffApi.Metrics
 
                     _tariffLatencyHistogram.WithLabels(controller, "MeteringPointsTariffQuery", "POST", "200", tariffPeriodRange, numMeteringPointsRange);
                 }
-                _tariffLatencyHistogram.WithLabels(controller, "MeteringPointsTariffQuery", "POST", "200", numMeteringPointsRange);
+                _mdmxLatencyHistogram.WithLabels(controller, "MeteringPointsTariffQuery", "POST", "200", numMeteringPointsRange);
                 foreach (var hitOrMiss in new[]{"hit", "miss"})
                 {
-                    _tariffLatencyHistogram.WithLabels(controller, "MeteringPointsTariffQuery", "POST", "200", hitOrMiss, numMeteringPointsRange);
+                    _mdmxCacheHitCounter.WithLabels(controller, "MeteringPointsTariffQuery", "POST", "200", hitOrMiss, numMeteringPointsRange);
                 }
             }
         }

@@ -8,6 +8,10 @@ namespace GridTariffApi.Metrics
     {
         // Elvia specific logging fields
         public double? MdmxElapsedSeconds { get; }
+        public int? NumMaxConsumptionCacheHits { get; }
+        public int? NumMaxConsumptionCacheMisses { get; }
+
         public Task<T> MeasureMdmxElapsedTimeAsync<T>(Func<Task<T>> mdmxAction);
+        public void RegisterMaxConsumptionCacheHitStatistics(int numHits, int numMisses);
     }
 }
