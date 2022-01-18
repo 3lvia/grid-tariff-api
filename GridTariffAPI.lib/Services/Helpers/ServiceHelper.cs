@@ -103,5 +103,22 @@ namespace GridTariffApi.Lib.Services.Helpers
         {
             return new DateTimeOffset(dateTime, _gridTariffApiConfig.TimeZoneForQueries.GetUtcOffset(dateTime));
         }
+
+        public virtual bool TimePeriodIsIncludingLocaleToday(DateTimeOffset fromDateTime, DateTimeOffset toDateTime)
+        {
+            var localNow = ToConfiguredTimeZone(DateTimeOffset.UtcNow);
+            var localTodayStart = new DateTimeOffset(localNow.Date, localNow.Offset);
+            var localTodayEnd = localTodayStart.AddDays(1);
+
+            if (localTodayStart >= toDateTime)
+            {
+                return false;
+            }
+            if (localTodayEnd <= fromDateTime)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

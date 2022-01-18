@@ -57,16 +57,36 @@ namespace GridTariffApi.Lib.Services
             var gridTariff = await QueryTariffAsync(tariffKey, paramFromDate, paramToDate);
             gridTariff.MeteringPointsAndPriceLevels = new List<MeteringPointsAndPriceLevels>();
 
-            var currentFixedPrices = gridTariff.GridTariff.TariffPrice.PriceInfo.FixedPrices.FirstOrDefault(x => x.StartDate <= DateTimeOffset.UtcNow && x.EndDate > DateTimeOffset.UtcNow);
-            if (currentFixedPrices != null)
+            if (_serviceHelper.TimePeriodIsIncludingLocaleToday(paramFromDate, paramToDate))
             {
-                var priceLevels = AppendMeteringPointsToPriceLevels(meteringPointInformation, currentFixedPrices);
-                foreach (var priceLevel in priceLevels)
+                //query overlaps localed "today"
+                var currentFixedPrices = GetFixedPricesValidToday(gridTariff.GridTariff.TariffPrice.PriceInfo.FixedPrices);
+                if (currentFixedPrices != null)
                 {
-                    gridTariff.MeteringPointsAndPriceLevels.Add(priceLevel);
+                    var priceLevels = AppendMeteringPointsToPriceLevels(meteringPointInformation, currentFixedPrices);
+                    foreach (var priceLevel in priceLevels)
+                    {
+                        gridTariff.MeteringPointsAndPriceLevels.Add(priceLevel);
+                    }
                 }
             }
+            else
+            {
+                //query does not overlap localed "today".
+                //connect meteringpoints to tariff, but do not set fixedprice or pricelevelid
+                var priceLevel = MeteringPointsToPriceLevel(null, null, meteringPointInformation);
+                gridTariff.MeteringPointsAndPriceLevels.Add(priceLevel);
+            }
             return gridTariff;
+        }
+
+        public virtual FixedPrices GetFixedPricesValidToday(List<FixedPrices> fixedPrices)
+        {
+            if (fixedPrices != null)
+            {
+                return fixedPrices.FirstOrDefault(x => _serviceHelper.TimePeriodIsIncludingLocaleToday(x.StartDate, x.EndDate));
+            }
+            return null;
         }
 
         public virtual List<MeteringPointsAndPriceLevels> AppendMeteringPointsToPriceLevels(List<MeteringPointInformation> meteringPointInformations, FixedPrices fixedPrices)
