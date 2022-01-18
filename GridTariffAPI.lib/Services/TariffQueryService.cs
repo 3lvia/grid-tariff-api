@@ -94,7 +94,7 @@ namespace GridTariffApi.Lib.Services
             var retVal = new List<MeteringPointsAndPriceLevels>();
 
             //mp missing maxConsumption and more than one pricelevel (do not set pricelevelid)
-            var meteringPointsNoPriceLevel = meteringPointInformations.Where(x => !x.MaxConsumption.HasValue && fixedPrices.PriceLevel.Count != 1).ToDictionary(x => x.MeteringPointId,x => x);
+            var meteringPointsNoPriceLevel = meteringPointInformations.Where(x => !x.MaxConsumption.HasValue && fixedPrices.PriceLevels.Count != 1).ToDictionary(x => x.MeteringPointId,x => x);
             if (meteringPointsNoPriceLevel.Count > 0)
             {
                 retVal.Add(MeteringPointsToPriceLevel(fixedPrices.Id, null, meteringPointsNoPriceLevel.Values.ToList()));
@@ -105,7 +105,7 @@ namespace GridTariffApi.Lib.Services
             var meteringPointsPricelevel = meteringPointInformations.Where(x => !meteringPointsNoPriceLevel.ContainsKey(x.MeteringPointId)).ToList();
             if (meteringPointsPricelevel.Count > 0)
             {
-                foreach (var fixedPriceLevel in fixedPrices.PriceLevel)
+                foreach (var fixedPriceLevel in fixedPrices.PriceLevels)
                 {
                     var meteringPointAndPriceLevel = MeteringPointsAndPriceLevelsMatchingConsumption(fixedPrices.Id, fixedPriceLevel, meteringPointsPricelevel);
                     if (meteringPointAndPriceLevel != null)
@@ -270,7 +270,7 @@ namespace GridTariffApi.Lib.Services
                     Id = Guid.NewGuid().ToString(),
                     StartDate = _serviceHelper.ToConfiguredTimeZone(paramFromDate),
                     EndDate = _serviceHelper.ToConfiguredTimeZone(paramToDate),
-                    PriceLevel = new List<PowerPriceLevel>()
+                    PriceLevels = new List<PowerPriceLevel>()
                 };
                 dataAccumulator.TariffPrice.PriceInfo.PowerPrices.Add(powerPrice);
             }
@@ -302,7 +302,7 @@ namespace GridTariffApi.Lib.Services
                 Id = Guid.NewGuid().ToString(),
                 StartDate = _serviceHelper.ToConfiguredTimeZone(fromDateUtc),
                 EndDate = _serviceHelper.ToConfiguredTimeZone(toDateUtc),
-                PriceLevel = new List<FixedPriceLevel>()
+                PriceLevels = new List<FixedPriceLevel>()
             };
             List<int> daysInMonthToBeProcessed = GetDistinctFixedPriceMonths(fromDateUtc, toDateUtc);
 
@@ -322,11 +322,11 @@ namespace GridTariffApi.Lib.Services
             var daysInMonthHourIdentificator = Guid.NewGuid().ToString();
             foreach (var fixedPricesPrice in fixedPricesPrices.FixedPriceLevel)
             {
-                var fixedPriceLevel = fixedPrices.PriceLevel.FirstOrDefault(a => a.Id == fixedPricesPrice.Id);
+                var fixedPriceLevel = fixedPrices.PriceLevels.FirstOrDefault(a => a.Id == fixedPricesPrice.Id);
                 if (fixedPriceLevel == null)
                 {
                     fixedPriceLevel = PriceLevelPriceToFixedPriceLevel(fixedPricesPrice, fixedPriceTaxes);
-                    fixedPrices.PriceLevel.Add(fixedPriceLevel);
+                    fixedPrices.PriceLevels.Add(fixedPriceLevel);
                 }
                 if (!fixedPriceLevel.HourPrices.Any(x => x.NumberOfDaysInMonth == daysInMonth))
                 {
@@ -502,7 +502,7 @@ namespace GridTariffApi.Lib.Services
             var fixedPrice = fixedPricePriceInfo.FixedPrices.FirstOrDefault();
             if (fixedPrice != null)
             {
-                var monthPrice = fixedPrice.PriceLevel.FirstOrDefault().HourPrices.FirstOrDefault(a => a.NumberOfDaysInMonth == daysInMonth);
+                var monthPrice = fixedPrice.PriceLevels.FirstOrDefault().HourPrices.FirstOrDefault(a => a.NumberOfDaysInMonth == daysInMonth);
                 retVal.FixedPriceValue = new PriceElement
                 {
                     Id = fixedPrice.Id,
@@ -512,7 +512,7 @@ namespace GridTariffApi.Lib.Services
             var powerPrice = accumulatorPriceInfo.PowerPrices.FirstOrDefault();
             if (powerPrice != null)
             {
-                var monthPrice = powerPrice.PriceLevel.FirstOrDefault().HourPrices.FirstOrDefault(a => a.NumberOfDaysInMonth == daysInMonth);
+                var monthPrice = powerPrice.PriceLevels.FirstOrDefault().HourPrices.FirstOrDefault(a => a.NumberOfDaysInMonth == daysInMonth);
                 retVal.PowerPriceValue = new PriceElement()
                 {
                     Id = powerPrice.Id,
@@ -776,11 +776,11 @@ namespace GridTariffApi.Lib.Services
         {
             foreach (var powerPricePrice in powerPricePrices.PowerPriceLevel)
             {
-                var powerPriceLevel = powerPrices.PriceLevel.FirstOrDefault(a => a.Id == powerPricePrice.Id);
+                var powerPriceLevel = powerPrices.PriceLevels.FirstOrDefault(a => a.Id == powerPricePrice.Id);
                 if (powerPriceLevel == null)
                 {
                     powerPriceLevel = PriceLevelPowerPriceToPowerPriceLevel(powerPricePrice, powerPriceTaxes);
-                    powerPrices.PriceLevel.Add(powerPriceLevel);
+                    powerPrices.PriceLevels.Add(powerPriceLevel);
                 }
                 powerPriceLevel.HourPrices.Add(CalcMonthlyPowerPrices(powerPricePrice, powerPriceTaxes, daysInMonth));
             }

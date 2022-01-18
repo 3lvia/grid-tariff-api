@@ -43,7 +43,6 @@ namespace GridTariffApi.Lib.Models.Digin
         /// <summary>List of meteringpoint-ids you are the registered owner of as a private person or your company has e legal reason to request in a customer/provider relationship. Example 707057500000000001</summary>
         [Newtonsoft.Json.JsonProperty("meteringPointIds", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<string> MeteringPointIds { get; set; }
-
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             bool hasRange = !String.IsNullOrEmpty(Range);
@@ -77,6 +76,7 @@ namespace GridTariffApi.Lib.Models.Digin
                     yield return new ValidationResult(
                       $"Endtime Not specified",
                       new[] { nameof(EndTime) });
+
 
                 }
                 if (StartTime > EndTime)
@@ -341,8 +341,8 @@ namespace GridTariffApi.Lib.Models.Digin
         [Newtonsoft.Json.JsonProperty("endDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTimeOffset EndDate { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("priceLevel", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<FixedPriceLevel> PriceLevel { get; set; }
+        [Newtonsoft.Json.JsonProperty("priceLevels", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<FixedPriceLevel> PriceLevels { get; set; }
 
 
     }
@@ -453,8 +453,8 @@ namespace GridTariffApi.Lib.Models.Digin
         [Newtonsoft.Json.JsonProperty("endDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTimeOffset EndDate { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("priceLevel", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<PowerPriceLevel> PriceLevel { get; set; }
+        [Newtonsoft.Json.JsonProperty("priceLevels", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<PowerPriceLevel> PriceLevels { get; set; }
 
 
     }
@@ -647,7 +647,7 @@ namespace GridTariffApi.Lib.Models.Digin
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Id { get; set; }
 
-        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.fixedPrices.priceLevel.id. Null: if FixedPriceConfiguration.basis = monthlymax|dailymax and no consumption calculation done so far this month. Ex. edcf53ce-70d3-4fa0-8bfb-e79918335ab7</summary>
+        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.fixedPrices.priceLevels.id. Null: if FixedPriceConfiguration.basis = monthlymax|dailymax and no consumption calculation done so far this month. Ex. edcf53ce-70d3-4fa0-8bfb-e79918335ab7</summary>
         [Newtonsoft.Json.JsonProperty("levelId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string LevelId { get; set; }
 
@@ -687,7 +687,7 @@ namespace GridTariffApi.Lib.Models.Digin
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Id { get; set; }
 
-        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.fixedPrices.priceLevel.hourPrices.id Ex. a4afa37ae2ec41048e2b5153c35af1c5</summary>
+        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.fixedPrices.priceLevels.hourPrices.id Ex. a4afa37ae2ec41048e2b5153c35af1c5</summary>
         [Newtonsoft.Json.JsonProperty("hourId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string HourId { get; set; }
 
@@ -701,7 +701,7 @@ namespace GridTariffApi.Lib.Models.Digin
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Id { get; set; }
 
-        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.powerPrices.priceLevel.hourPrices.id Ex. 27134fc2-514d-479e-aedb-f13fc4f087d1</summary>
+        /// <summary>Unique id referencing gridTariffCollections.gridTariff.tariffPrice.priceInfo.powerPrices.priceLevels.hourPrices.id Ex. 27134fc2-514d-479e-aedb-f13fc4f087d1</summary>
         [Newtonsoft.Json.JsonProperty("hourId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string HourId { get; set; }
 
