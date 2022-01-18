@@ -33,7 +33,7 @@ namespace GridTariffApi.Lib.Services
             {
                 GridTariffCollections = new List<GridTariffCollection>()
             };
-            var meteringPointsInformations = _tariffPriceCache.GetMeteringPointInformation(meteringPoints);
+            var meteringPointsInformations = await _tariffPriceCache.GetMeteringPointInformationsAsync(paramFromDate, paramToDate, meteringPoints);
             var tariffKeys = meteringPointsInformations.Select(x => x.TariffKey).Distinct();
             var tasks = new List<Task<GridTariffCollection>>();
             foreach (var tariffKey in tariffKeys)
@@ -53,60 +53,83 @@ namespace GridTariffApi.Lib.Services
             DateTimeOffset paramToDate,
             List<MeteringPointInformation> meteringPointInformation)
         {
+
             var gridTariff = await QueryTariffAsync(tariffKey, paramFromDate, paramToDate);
             gridTariff.MeteringPointsAndPriceLevels = new List<MeteringPointsAndPriceLevels>();
-            await AppendMeteringPointsToPriceLevels(meteringPointInformation, gridTariff);
+
+            var currentFixedPrices = gridTariff.GridTariff.TariffPrice.PriceInfo.FixedPrices.FirstOrDefault(x => x.StartDate <= DateTimeOffset.UtcNow && x.EndDate > DateTimeOffset.UtcNow);
+            if (currentFixedPrices != null)
+            {
+                var priceLevels = AppendMeteringPointsToPriceLevels(meteringPointInformation, currentFixedPrices);
+                foreach (var priceLevel in priceLevels)
+                {
+                    gridTariff.MeteringPointsAndPriceLevels.Add(priceLevel);
+                }
+            }
             return gridTariff;
         }
 
-        public virtual async Task AppendMeteringPointsToPriceLevels(List<MeteringPointInformation> meteringPointInformation, GridTariffCollection gridTariff)
+        public virtual List<MeteringPointsAndPriceLevels> AppendMeteringPointsToPriceLevels(List<MeteringPointInformation> meteringPointInformations, FixedPrices fixedPrices)
         {
-            //todo should be some of filtering here (only current month?), thus no need for foreach fixedprices
-            foreach (var fixedPrice in gridTariff.GridTariff.TariffPrice.PriceInfo.FixedPrices)
+            var retVal = new List<MeteringPointsAndPriceLevels>();
+
+            //mp missing maxConsumption and more than one pricelevel (do not set pricelevelid)
+            var meteringPointsNoPriceLevel = meteringPointInformations.Where(x => !x.MaxConsumption.HasValue && fixedPrices.PriceLevel.Count != 1).ToDictionary(x => x.MeteringPointId,x => x);
+            if (meteringPointsNoPriceLevel.Count > 0)
             {
-                foreach (var fixedPriceLevel in fixedPrice.PriceLevel)
+                retVal.Add(MeteringPointsToPriceLevel(fixedPrices.Id, null, meteringPointsNoPriceLevel.Values.ToList()));
+            }
+
+            //mp not missing maxConsumption (set pricelevelid)
+            //mp missing maxConsumption and exactly one pricelevel (set pricelevelid)
+            var meteringPointsPricelevel = meteringPointInformations.Where(x => !meteringPointsNoPriceLevel.ContainsKey(x.MeteringPointId)).ToList();
+            if (meteringPointsPricelevel.Count > 0)
+            {
+                foreach (var fixedPriceLevel in fixedPrices.PriceLevel)
                 {
-                    var meteringPointAndPriceLevel = await CheckPriceLevelForMeteringPoints(meteringPointInformation, fixedPrice, fixedPriceLevel);
+                    var meteringPointAndPriceLevel = MeteringPointsAndPriceLevelsMatchingConsumption(fixedPrices.Id, fixedPriceLevel, meteringPointsPricelevel);
                     if (meteringPointAndPriceLevel != null)
                     {
-                        gridTariff.MeteringPointsAndPriceLevels.Add(meteringPointAndPriceLevel);
+                        retVal.Add(meteringPointAndPriceLevel);
                     }
                 }
             }
+            return retVal;
         }
 
-        public Task<MeteringPointsAndPriceLevels> CheckPriceLevelForMeteringPoints(List<MeteringPointInformation> meteringPointInformation, FixedPrices fixedPrice, FixedPriceLevel fixedPriceLevel)
+        public MeteringPointsAndPriceLevels MeteringPointsAndPriceLevelsMatchingConsumption(string fixedPriceId, FixedPriceLevel fixedPriceLevel, List<MeteringPointInformation> meteringPointInformation)
         {
             MeteringPointsAndPriceLevels retVal = null;
-
             var minVal = fixedPriceLevel.ValueMin ?? double.MinValue;
             var maxVal = fixedPriceLevel.ValueMax ?? double.MaxValue;
 
-            var mpInformations = meteringPointInformation.Where(x => minVal <= x.MaxConsumption && x.MaxConsumption < maxVal).ToList();
+            var mpInformations = meteringPointInformation.Where(x => (!fixedPriceLevel.ValueMin.HasValue && !fixedPriceLevel.ValueMax.HasValue)
+                || (x.MaxConsumption.HasValue && minVal <= x.MaxConsumption && x.MaxConsumption < maxVal)).ToList();
             if (mpInformations.Count > 0)
             {
-                retVal = MeteringPointsToPriceLevel(fixedPrice, fixedPriceLevel, mpInformations);
+                retVal = MeteringPointsToPriceLevel(fixedPriceId, fixedPriceLevel.Id, mpInformations);
             }
-            return Task.FromResult(retVal);
+            return retVal;
         }
 
-        public MeteringPointsAndPriceLevels MeteringPointsToPriceLevel(FixedPrices fixedPrice, FixedPriceLevel fixedPriceLevel, List<MeteringPointInformation> mpInformations)
+        public virtual MeteringPointsAndPriceLevels MeteringPointsToPriceLevel(string fixedPriceId, string fixedPriceLevelId, List<MeteringPointInformation> mpInformations)
         {
             var meteringPointAndPriceLevel = new MeteringPointsAndPriceLevels()
             {
                 CurrentFixedPriceLevel = new CurrentFixedPriceLevel(),
-                MeteringPointIds = new MeteringPointIds()
+                MeteringPoints = new MeteringPoints()
             };
 
             foreach (var mpInformation in mpInformations)
             {
-                meteringPointAndPriceLevel.MeteringPointIds.Add(mpInformation.MeteringPointId);
+                meteringPointAndPriceLevel.MeteringPoints.Add(new MeteringPointDetails()
+                {
+                    MeteringPointId = mpInformation.MeteringPointId,
+                    LastUpdated = mpInformation.MaxConsumptionLastUpdated
+                });
             }
-            meteringPointAndPriceLevel.CurrentFixedPriceLevel.Id = fixedPrice.Id;
-            meteringPointAndPriceLevel.CurrentFixedPriceLevel.LevelId = fixedPriceLevel.Id;
-            meteringPointAndPriceLevel.CurrentFixedPriceLevel.LevelValue = null;
-            //TODO LastUpdated should be set per meteringpoint. Change needed in DIGIN.
-            //            meteringPointAndPriceLevel.CurrentFixedPriceLevel.LastUpdated
+            meteringPointAndPriceLevel.CurrentFixedPriceLevel.Id = fixedPriceId;
+            meteringPointAndPriceLevel.CurrentFixedPriceLevel.LevelId = fixedPriceLevelId;
             return meteringPointAndPriceLevel;
         }
 

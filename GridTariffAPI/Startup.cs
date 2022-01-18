@@ -83,14 +83,19 @@ namespace GridTariffApi
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString));
 
             //v2
-            services.AddScoped<ITariffRepository, TariffRepositoryFile>();
-            services.AddScoped<IHolidayRepository, HolidayRepositoryFile>();
-            services.AddScoped<IMeteringPointTariffRepository, MeteringPointTariffRepositoryEf>();
-            services.AddScoped<IMeteringPointMaxConsumptionRepository, MeteringPointMaxConsumptionRepository>();
+            services.AddSingleton<ITariffRepository, TariffRepositoryFile>();
+            services.AddSingleton<IHolidayRepository, HolidayRepositoryFile>();
+            services.AddSingleton<IMeteringPointTariffRepository, MeteringPointTariffRepositoryEf>();
+            services.AddSingleton(new MeteringPointMaxConsumptionRepositoryConfig
+            {
+                MaxConsumptionCacheTimeout = TimeSpan.FromHours(1),
+                TimeZoneForMonthLimiting = gridTariffApiConfig.TimeZoneForQueries
+            });
+            services.AddSingleton<IMeteringPointMaxConsumptionRepository, MeteringPointMaxConsumptionCachingMdmxRepository>();
             services.AddSingleton<ITariffPriceCache, TariffPriceCache>();
-            services.AddTransient<IObjectConversionHelper, ObjectConversionHelper>();
-            services.AddTransient<ITariffQueryService, TariffQueryService>();
-            services.AddTransient<ITariffTypeService, TariffTypeService>();
+            services.AddTransient<GridTariffApi.Lib.Services.IObjectConversionHelper, GridTariffApi.Lib.Services.ObjectConversionHelper>();
+            services.AddTransient<GridTariffApi.Lib.Services.ITariffQueryService, GridTariffApi.Lib.Services.TariffQueryService>();
+            services.AddTransient<GridTariffApi.Lib.Services.ITariffTypeService, GridTariffApi.Lib.Services.TariffTypeService>();
             services.AddTransient<IControllerValidationHelper, ControllerValidationHelper>();
             services.AddScoped<ILoggingDataCollector, LoggingDataCollector>();
             services.AddSingleton<IMetricsLogger, MetricsLogger>();
@@ -152,7 +157,7 @@ namespace GridTariffApi
                 Username = Configuration.EnsureHasValue("kunde:kv:nett-tariff-api:username"),
                 Password = Configuration.EnsureHasValue("kunde:kv:nett-tariff-api:password"),
                 MinStartDateAllowedQuery = Configuration.GetValue<DateTime>("minStartDateAllowedQuery"),
-                TimeZoneForQueries = NorwegianTimeZoneInfo()
+                TimeZoneForQueries = NorwegianTimeZoneInfo(),
             };
             return gridTariffApiConfig;
         }
