@@ -83,14 +83,14 @@ namespace GridTariffApi
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString));
 
             //v2
-            services.AddSingleton<ITariffRepository, TariffRepositoryFile>();
-            services.AddSingleton<IHolidayRepository, HolidayRepositoryFile>();
-            services.AddSingleton<IMeteringPointTariffRepository, MeteringPointTariffRepositoryEf>();
-            services.AddSingleton<IMeteringPointMaxConsumptionRepository, MeteringPointMaxConsumptionRepository>();
+            services.AddScoped<ITariffRepository, TariffRepositoryFile>();
+            services.AddScoped<IHolidayRepository, HolidayRepositoryFile>();
+            services.AddScoped<IMeteringPointTariffRepository, MeteringPointTariffRepositoryEf>();
+            services.AddScoped<IMeteringPointMaxConsumptionRepository, MeteringPointMaxConsumptionRepository>();
             services.AddSingleton<ITariffPriceCache, TariffPriceCache>();
-            services.AddTransient<GridTariffApi.Lib.Services.IObjectConversionHelper, GridTariffApi.Lib.Services.ObjectConversionHelper>();
-            services.AddTransient<GridTariffApi.Lib.Services.ITariffQueryService, GridTariffApi.Lib.Services.TariffQueryService>();
-            services.AddTransient<GridTariffApi.Lib.Services.ITariffTypeService, GridTariffApi.Lib.Services.TariffTypeService>();
+            services.AddTransient<IObjectConversionHelper, ObjectConversionHelper>();
+            services.AddTransient<ITariffQueryService, TariffQueryService>();
+            services.AddTransient<ITariffTypeService, TariffTypeService>();
             services.AddTransient<IControllerValidationHelper, ControllerValidationHelper>();
             services.AddScoped<ILoggingDataCollector, LoggingDataCollector>();
             services.AddSingleton<IMetricsLogger, MetricsLogger>();
