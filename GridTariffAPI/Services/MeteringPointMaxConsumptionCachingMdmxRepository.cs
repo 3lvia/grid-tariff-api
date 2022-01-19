@@ -16,14 +16,13 @@ namespace GridTariffApi.Services
         private readonly MeteringPointMaxConsumptionRepositoryConfig _config;
         private readonly IElviaLoggingDataCollector _loggingDataCollector;
 
-        private readonly IMemoryCache _memoryCache;
+        private static readonly IMemoryCache MemoryCache = new MemoryCache(new MemoryCacheOptions());
 
         public MeteringPointMaxConsumptionCachingMdmxRepository(IMdmxClient mdmxClient, MeteringPointMaxConsumptionRepositoryConfig config, IElviaLoggingDataCollector loggingDataCollector = null)
         {
             _mdmxClient = mdmxClient;
             _config = config;
             _loggingDataCollector = loggingDataCollector;
-            _memoryCache = new MemoryCache(new MemoryCacheOptions());
         }
 
         public async Task<IReadOnlyList<MeteringPointMaxConsumption>> GetMeteringPointMaxConsumptionsAsync(DateTimeOffset fromDateTime, DateTimeOffset toDateTime, List<string> meteringPointIds)
@@ -38,7 +37,7 @@ namespace GridTariffApi.Services
 
             foreach (var mpid in meteringPointIds)
             {
-                if (_memoryCache.TryGetValue(mpid, out MeteringPointMaxConsumption cachedMaxConsumption))
+                if (MemoryCache.TryGetValue(mpid, out MeteringPointMaxConsumption cachedMaxConsumption))
                 {
                     cachedMaxConsumptions[mpid] = cachedMaxConsumption;
                 }
@@ -55,11 +54,11 @@ namespace GridTariffApi.Services
                 // There is a possible race condition here, so we might consider doing another lookup after locking. But an additional cache miss on parallel calls for the same metering point(s) is not that important. And the last one will update the cache.
                 var uncachedMaxConsumptions = await _mdmxClient.GetVolumeAggregationsForThisMonthAsync(meteringPointIds);
 
-                lock (_memoryCache)
+                lock (MemoryCache)
                 {
                     foreach (var meteringPointMaxConsumption in uncachedMaxConsumptions)
                     {
-                        _memoryCache.Set(meteringPointMaxConsumption.MeteringPointId, meteringPointMaxConsumption, _config.MaxConsumptionCacheTimeout);
+                        MemoryCache.Set(meteringPointMaxConsumption.MeteringPointId, meteringPointMaxConsumption, _config.MaxConsumptionCacheTimeout);
                         cachedMaxConsumptions[meteringPointMaxConsumption.MeteringPointId] = meteringPointMaxConsumption;
                     }
                 }
