@@ -55,7 +55,7 @@ namespace GridTariffApi.Lib.Controllers.v1
             }
             DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
             DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
-            _loggingDataCollector?.RecordTariffPeriod(startDateTime, endDateTime);
+            _loggingDataCollector?.RegisterTariffPeriodAndNumMeteringPoints(startDateTime, endDateTime, null);
             var tariffKey = _controllerValidationHelper.DecideTariffKeyFromInput(request);
             var result = await _tariffQueryService.QueryTariffAsync(tariffKey, startDateTime, endDateTime);
             return Ok(result);
@@ -80,7 +80,7 @@ namespace GridTariffApi.Lib.Controllers.v1
             }
             DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
             DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
-            _loggingDataCollector?.RecordTariffPeriod(startDateTime, endDateTime);
+            _loggingDataCollector?.RegisterTariffPeriodAndNumMeteringPoints(startDateTime, endDateTime, request.MeteringPointIds?.Count);
             var result = await _tariffQueryService.QueryMeteringPointsTariffsAsync(startDateTime, endDateTime,request.MeteringPointIds.Distinct().ToList());
             return Ok(result);
         }

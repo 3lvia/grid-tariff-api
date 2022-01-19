@@ -8,6 +8,7 @@ namespace GridTariffApi.Lib.Interfaces
     public interface ILoggingDataCollector
     {
         public TimeSpan? TariffTimeSpan { get; }
-        public void RecordTariffPeriod(DateTimeOffset startDateTime, DateTimeOffset endDateTime);
+        public int? NumMeteringPoints { get; }
+        public void RegisterTariffPeriodAndNumMeteringPoints(DateTimeOffset startDateTime, DateTimeOffset endDateTime, int? numMeteringPoints);
     }
 }

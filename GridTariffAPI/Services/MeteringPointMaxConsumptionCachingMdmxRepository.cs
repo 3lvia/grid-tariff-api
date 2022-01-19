@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GridTariffApi.Mdmx;
+using GridTariffApi.Metrics;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace GridTariffApi.Services
@@ -13,12 +14,15 @@ namespace GridTariffApi.Services
     {
         private readonly IMdmxClient _mdmxClient;
         private readonly MeteringPointMaxConsumptionRepositoryConfig _config;
+        private readonly IElviaLoggingDataCollector _loggingDataCollector;
+
         private readonly IMemoryCache _memoryCache;
 
-        public MeteringPointMaxConsumptionCachingMdmxRepository(IMdmxClient mdmxClient, MeteringPointMaxConsumptionRepositoryConfig config)
+        public MeteringPointMaxConsumptionCachingMdmxRepository(IMdmxClient mdmxClient, MeteringPointMaxConsumptionRepositoryConfig config, IElviaLoggingDataCollector loggingDataCollector = null)
         {
             _mdmxClient = mdmxClient;
             _config = config;
+            _loggingDataCollector = loggingDataCollector;
             _memoryCache = new MemoryCache(new MemoryCacheOptions());
         }
 
@@ -43,6 +47,8 @@ namespace GridTariffApi.Services
                     uncachedMpids.Add(mpid);
                 }
             }
+
+            _loggingDataCollector?.RegisterMaxConsumptionCacheHitStatistics(cachedMaxConsumptions.Count, uncachedMpids.Count);
 
             if (uncachedMpids.Count > 0)
             {

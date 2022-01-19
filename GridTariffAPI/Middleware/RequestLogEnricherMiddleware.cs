@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Elvia.Telemetry;
+using GridTariffApi.Metrics;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
@@ -73,6 +74,13 @@ namespace GridTariffApi.Middleware
                             requestTelemetry.Properties["AuthenticationFailedDetails"] = enricher.AuthenticationFailedDetails;
                             requestTelemetry.Properties["AuthorizationFailedDetails"] = enricher.AuthorizationFailedDetails;
                             requestTelemetry.Properties["ApiVersion"] = GetApiVersion(context);
+
+                            var loggingDataCollector = context.RequestServices.GetRequiredService<IElviaLoggingDataCollector>(); // The logging data collector is primarily for metrics, but it collects information that is interesting to attach to the telemetry too.
+                            requestTelemetry.Properties["MdmxElapsedSeconds"] = loggingDataCollector.MdmxElapsedSeconds?.ToString("0.000");
+                            requestTelemetry.Properties["TariffTimeSpan"] = loggingDataCollector.TariffTimeSpan?.ToString();
+                            requestTelemetry.Properties["NumMeteringPoints"] = loggingDataCollector.NumMeteringPoints?.ToString() ?? "None";
+                            requestTelemetry.Properties["NumMaxConsumptionCacheHits"] = loggingDataCollector.NumMaxConsumptionCacheHits?.ToString();
+                            requestTelemetry.Properties["NumMaxConsumptionCacheMisses"] = loggingDataCollector.NumMaxConsumptionCacheMisses?.ToString();
                         }
                     }
                 }

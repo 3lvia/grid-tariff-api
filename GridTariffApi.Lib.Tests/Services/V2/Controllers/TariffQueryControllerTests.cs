@@ -43,12 +43,12 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
 
             var gridTariff = new GridTariff(null, tariffTypes);
             var gridTariffPriceConfiguration = new GridTariffPriceConfiguration(gridTariff);
-            var TariffPriceStructureRoot = new TariffPriceStructureRoot(gridTariffPriceConfiguration);
+            var tariffPriceStructureRoot = new TariffPriceStructureRoot(gridTariffPriceConfiguration);
 
             _tariffPeristenceMock = new Mock<ITariffRepository>();
             _tariffPeristenceMock
                 .Setup(x => x.GetTariffPriceStructure())
-                .Returns(TariffPriceStructureRoot);
+                .Returns(tariffPriceStructureRoot);
 
             _holidayPeristenceMock = new Mock<IHolidayRepository>();
             _holidayPeristenceMock
