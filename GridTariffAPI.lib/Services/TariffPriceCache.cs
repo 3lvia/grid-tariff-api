@@ -11,27 +11,25 @@ namespace GridTariffApi.Lib.Services
 {
     public class TariffPriceCache : ITariffPriceCache
     {
+        private readonly ITariffPriceCacheDataStore _cacheDataStore;
         private readonly ITariffRepository _tariffRepository;
         private readonly IHolidayRepository _holidayRepository;
         private readonly IMeteringPointTariffRepository _meteringPointTariffRepository;
         private readonly IMeteringPointMaxConsumptionRepository _meteringPointMaxConsumptionRepository;
 
-        private TariffPriceStructureRoot _tariffPriceStructureRoot;
-        private IReadOnlyList<Holiday> _holidayRoot;
-        private readonly Dictionary<string, MeteringPointTariff> _meteringPointTariffIndex;
-
-        private DateTimeOffset _tariffCacheValidUntil = DateTime.UtcNow;
-        public TariffPriceCache(ITariffRepository tariffRepository,
+        public TariffPriceCache(ITariffPriceCacheDataStore cacheDataStore,
+            ITariffRepository tariffRepository,
             IHolidayRepository holidayRepository,
             IMeteringPointTariffRepository meteringPointTariffRepository, 
             IMeteringPointMaxConsumptionRepository meteringPointMaxConsumptionRepository)
         {
+            _cacheDataStore = cacheDataStore;
             _tariffRepository = tariffRepository;
             _holidayRepository = holidayRepository;
             _meteringPointTariffRepository = meteringPointTariffRepository;
             _meteringPointMaxConsumptionRepository = meteringPointMaxConsumptionRepository;
-            _meteringPointTariffIndex = new Dictionary<string, MeteringPointTariff>();
-            RefreshCache();
+            // The cache data store is a singleton, to be able to cache between calls. It cannot consume scoped services. So the TariffPriceCache calls ResetCacheIfNecessary to keep the cache fresh.
+            _cacheDataStore.ResetCacheIfNecessary(_tariffRepository, _holidayRepository);
         }
 
         public  async Task<List<MeteringPointInformation>> GetMeteringPointInformationsAsync(DateTimeOffset fromDateTime, DateTimeOffset toDateTime, List<string> meteringPoints)
@@ -62,43 +60,9 @@ namespace GridTariffApi.Lib.Services
 
         public async Task<IReadOnlyList<MeteringPointTariff>> GetMeteringPointTariffsAsync(List<String> meteringPoints)
         {
-            var cachedMpTariffs = new Dictionary<string, MeteringPointTariff>();
-            var uncachedMpids = new List<string>();
+            _cacheDataStore.ResetCacheIfNecessary(_tariffRepository, _holidayRepository);
 
-            foreach (var mpid in meteringPoints)
-            {
-
-                if (_meteringPointTariffIndex.TryGetValue(mpid, out MeteringPointTariff cachedMpTariff))
-                {
-                    cachedMpTariffs[mpid] = cachedMpTariff;
-                }
-                else
-                {
-                    uncachedMpids.Add(mpid);
-                }
-            }
-
-            if (uncachedMpids.Count > 0)
-            {
-                var meteringPointTariffs = await _meteringPointTariffRepository.GetMeteringPointTariffsAsync(uncachedMpids);
-                lock (_meteringPointTariffIndex)
-                {
-                    foreach (var meteringPointTariff in meteringPointTariffs)
-                    {
-                        _meteringPointTariffIndex[meteringPointTariff.MeteringPointId] = meteringPointTariff;
-                        cachedMpTariffs[meteringPointTariff.MeteringPointId] = meteringPointTariff;
-                    }
-                }
-            }
-
-            return meteringPoints
-                .Select(mpid =>
-                {
-                    cachedMpTariffs.TryGetValue(mpid, out var cachedMpTariff);
-                    return cachedMpTariff ?? new MeteringPointTariff(mpid, null);
-                })
-                .ToList()
-                .AsReadOnly();
+            return await _cacheDataStore.GetMeteringPointTariffsAsync(meteringPoints, uncachedMpids => _meteringPointTariffRepository.GetMeteringPointTariffsAsync(uncachedMpids));
         }
 
         public Models.PriceStructure.Company GetCompany()
@@ -108,41 +72,28 @@ namespace GridTariffApi.Lib.Services
 
         public IReadOnlyList<Models.PriceStructure.TariffType> GetTariffs()
         {
-            var tariffPriceStructureRoot = GetTariffRootElement();
-            return tariffPriceStructureRoot.GridTariffPriceConfiguration.GridTariff.TariffTypes;
+            return GetTariffRootElement().GridTariffPriceConfiguration.GridTariff.TariffTypes;
         }
 
 
         public Models.PriceStructure.TariffType GetTariff(String tariffKey)
         {
-            var tariffPriceStructureRoot = GetTariffRootElement();
-            var retVal = tariffPriceStructureRoot.GridTariffPriceConfiguration.GridTariff.TariffTypes.FirstOrDefault(a => a.TariffKey == tariffKey);
+            var retVal = GetTariffRootElement().GridTariffPriceConfiguration.GridTariff.TariffTypes.FirstOrDefault(a => a.TariffKey == tariffKey);
             return retVal;
         }
 
         public IReadOnlyList<Holiday> GetHolidays(DateTimeOffset fromDate, DateTimeOffset toDate)
         {
-            GetTariffRootElement(); //refresh cache
-            return _holidayRoot.Where(a => a.Date >= fromDate && a.Date <= toDate).ToList();
+            _cacheDataStore.ResetCacheIfNecessary(_tariffRepository, _holidayRepository);
+            
+            return _cacheDataStore.GetHolidayRoot().Where(a => a.Date >= fromDate && a.Date <= toDate).ToList();
         }
-
+        
         public TariffPriceStructureRoot GetTariffRootElement()
         {
-            lock(_tariffPriceStructureRoot)
-            {
-                if (_tariffCacheValidUntil.Ticks < DateTime.UtcNow.Ticks)
-                {
-                    RefreshCache();
-                }
-            }
-            return _tariffPriceStructureRoot;
-        }
-
-        private void RefreshCache()
-        {
-            _tariffPriceStructureRoot = _tariffRepository.GetTariffPriceStructure();
-            _holidayRoot = _holidayRepository.GetHolidays();
-            _tariffCacheValidUntil = DateTimeOffset.UtcNow.AddDays(1).Date;
+            _cacheDataStore.ResetCacheIfNecessary(_tariffRepository, _holidayRepository);
+            
+            return _cacheDataStore.GetTariffRootElement();
         }
     }
 }

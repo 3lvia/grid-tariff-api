@@ -15,6 +15,7 @@ namespace GridTariffApi.Tests.Mdmx.DeveloperAdHocTests
             // The MDMx API has a limit of 10000 mpids. But is it possible to send that many ids as query parameters?
             // No, with 10.000 mpids, we get an url larger than 24k characters. Which is too big for UriBuilder, which we use internally. "UriFormatException, Invalid URI: The Uri string is too long."
             // And even with 1000 mpids, the call fails, but then outside our service. "HTTP 414 Request URI Too Long". 325 is OK, 340 fails (= 8333 characters). Seems like there is a limit of about 8000 characters.
+            // That's history. Now we're using a POST operation, which handles 10.000 mpids in the request body.
 
             var host = Program.CreateHostBuilder(new string[] { }).Build();
 

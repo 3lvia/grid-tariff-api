@@ -83,21 +83,23 @@ namespace GridTariffApi
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString));
 
             //v2
-            services.AddSingleton<ITariffRepository, TariffRepositoryFile>();
-            services.AddSingleton<IHolidayRepository, HolidayRepositoryFile>();
-            services.AddSingleton<IMeteringPointTariffRepository, MeteringPointTariffRepositoryEf>();
+            services.AddScoped<ITariffRepository, TariffRepositoryFile>();
+            services.AddScoped<IHolidayRepository, HolidayRepositoryFile>();
+            services.AddScoped<IMeteringPointTariffRepository, MeteringPointTariffRepositoryEf>();
             services.AddSingleton(new MeteringPointMaxConsumptionRepositoryConfig
             {
                 MaxConsumptionCacheTimeout = TimeSpan.FromHours(1),
                 TimeZoneForMonthLimiting = gridTariffApiConfig.TimeZoneForQueries
             });
-            services.AddSingleton<IMeteringPointMaxConsumptionRepository, MeteringPointMaxConsumptionCachingMdmxRepository>();
-            services.AddSingleton<ITariffPriceCache, TariffPriceCache>();
-            services.AddTransient<GridTariffApi.Lib.Services.IObjectConversionHelper, GridTariffApi.Lib.Services.ObjectConversionHelper>();
-            services.AddTransient<GridTariffApi.Lib.Services.ITariffQueryService, GridTariffApi.Lib.Services.TariffQueryService>();
-            services.AddTransient<GridTariffApi.Lib.Services.ITariffTypeService, GridTariffApi.Lib.Services.TariffTypeService>();
+            services.AddScoped<IMeteringPointMaxConsumptionRepository, MeteringPointMaxConsumptionCachingMdmxRepository>();
+            services.AddSingleton<ITariffPriceCacheDataStore, TariffPriceCacheDataStore>();
+            services.AddScoped<ITariffPriceCache, TariffPriceCache>();
+            services.AddTransient<IObjectConversionHelper, ObjectConversionHelper>();
+            services.AddTransient<ITariffQueryService, TariffQueryService>();
+            services.AddTransient<ITariffTypeService, TariffTypeService>();
             services.AddTransient<IControllerValidationHelper, ControllerValidationHelper>();
-            services.AddScoped<ILoggingDataCollector, LoggingDataCollector>();
+            services.AddScoped<IElviaLoggingDataCollector, LoggingDataCollector>();
+            services.AddScoped<ILoggingDataCollector>(sp => sp.GetRequiredService<IElviaLoggingDataCollector>()); // Make sure it is the same data collector for both interfaces.
             services.AddSingleton<IMetricsLogger, MetricsLogger>();
             
             // Elvid
