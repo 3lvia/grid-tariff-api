@@ -2,15 +2,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GridTariffApi.Mdmx;
+using GridTariffApi.Metrics;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace GridTariffApi.Tests.Mdmx.DeveloperAdHocTests
 {
     public class MdmxClientDeveloperAdHocTests
     {
+        private readonly ITestOutputHelper _outputHelper;
+
+        public MdmxClientDeveloperAdHocTests(ITestOutputHelper outputHelper)
+        {
+            _outputHelper = outputHelper;
+        }
+
         [DeveloperAdHocFactSkippedUnlessDebugging]
-        public async Task TestGetVolumeAggregationsFromMdmxWithManyMpidsInQueryString()
+        public async Task TestGetVolumeAggregationsFromMdmxWithManyMpids()
         {
             // The MDMx API has a limit of 10000 mpids. But is it possible to send that many ids as query parameters?
             // No, with 10.000 mpids, we get an url larger than 24k characters. Which is too big for UriBuilder, which we use internally. "UriFormatException, Invalid URI: The Uri string is too long."
@@ -21,11 +30,15 @@ namespace GridTariffApi.Tests.Mdmx.DeveloperAdHocTests
 
             var mdmxClient = host.Services.GetRequiredService<IMdmxClient>();
 
-            var numMpids = 1; // 10000;
+            var numMpids = 10000;
 
             var mpids = Enumerable.Range(1, numMpids).Select(_ => "707057599999990530").ToList();
 
             var maxConsumptions = await mdmxClient.GetVolumeAggregationsForThisMonthAsync(mpids);
+
+            var loggingDataCollector = host.Services.GetRequiredService<IElviaLoggingDataCollector>();
+
+            _outputHelper.WriteLine($"Call to MDMx aggregation API took {loggingDataCollector.MdmxElapsedSeconds:0.000} seconds for {numMpids} identical mpids.");
 
             Assert.NotNull(maxConsumptions);
             Assert.Equal(numMpids, maxConsumptions.Count);

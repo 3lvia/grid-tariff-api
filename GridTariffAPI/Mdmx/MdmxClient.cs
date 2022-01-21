@@ -82,6 +82,7 @@ namespace GridTariffApi.Mdmx
             var accessToken = await _accessTokenService.GetAccessToken();
             var httpClient = _httpClientFactory.CreateClient("mdmx");
             httpClient.SetBearerToken(accessToken);
+            httpClient.Timeout = TimeSpan.FromMinutes(10);
             return httpClient;
         }
     }
