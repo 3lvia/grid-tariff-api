@@ -41,7 +41,7 @@ namespace GridTariffApi.Tests.Mdmx.UnitTests
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             httpClientFactoryMock.Setup(factory => factory.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-            var accessTokenServiceMock = new Mock<IAccessTokenService>();
+            var accessTokenServiceMock = new Mock<IMdmxAccessTokenService>();
             accessTokenServiceMock.Setup(service => service.GetAccessToken()).ReturnsAsync("the not so secret token");
 
             var mdmxClient = new MdmxClient(httpClientFactoryMock.Object, accessTokenServiceMock.Object, new MdmxConfig

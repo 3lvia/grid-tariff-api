@@ -17,12 +17,12 @@ namespace GridTariffApi.Mdmx
     public class MdmxClient : IMdmxClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IAccessTokenService _accessTokenService;
+        private readonly IMdmxAccessTokenService _accessTokenService; // Calling MDMx test from prod
         private readonly MdmxConfig _config;
         private readonly IElviaLoggingDataCollector _loggingDataCollector;
 
 
-        public MdmxClient(IHttpClientFactory httpClientFactory, IAccessTokenService accessTokenService, MdmxConfig config, IElviaLoggingDataCollector loggingDataCollector)
+        public MdmxClient(IHttpClientFactory httpClientFactory, IMdmxAccessTokenService accessTokenService, MdmxConfig config, IElviaLoggingDataCollector loggingDataCollector)
         {
             _httpClientFactory = httpClientFactory;
             _accessTokenService = accessTokenService;

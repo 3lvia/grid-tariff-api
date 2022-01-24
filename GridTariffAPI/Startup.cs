@@ -111,6 +111,14 @@ namespace GridTariffApi
                 Configuration.EnsureHasValue("kunde:kv:elvid:kunde-grid-tariff-api:clientsecret")
             ));
             services.AddSingleton<IAccessTokenService, AccessTokenService>();
+            // Special elvid client credentials / token service for the MDMx api (grid-tariff-api prod calls MDMx api in test)
+            var mdmxAccessTokenServiceConfigVaultPath = Configuration.EnsureHasValue("mdmx:access-token-service-config-vault-path");
+            services.AddSingleton(new MdmxClientCredentialsConfiguration(
+                Configuration.EnsureHasValue($"{mdmxAccessTokenServiceConfigVaultPath}:tokenendpoint"),
+                Configuration.EnsureHasValue($"{mdmxAccessTokenServiceConfigVaultPath}:clientid"),
+                Configuration.EnsureHasValue($"{mdmxAccessTokenServiceConfigVaultPath}:clientsecret")
+            ));
+            services.AddSingleton<IMdmxAccessTokenService, MdmxAccessTokenService>();
 
             // Mdmx
             services.AddSingleton(new MdmxConfig

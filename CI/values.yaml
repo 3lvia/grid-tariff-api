@@ -25,6 +25,11 @@ env:
      configMapKeyRef:
        name: grid-tariff-api
        key: mdmx.host-address
+ - name: mdmx__access-token-service-config-vault-path
+   valueFrom:
+     configMapKeyRef:
+       name: grid-tariff-api
+       key: mdmx.access-token-service-config-vault-path
 
 service:
   port: 80
@@ -37,13 +42,10 @@ ingress:
 configmap:
   dev:
     mdmx.host-address: https://mdmx.dev-elvia.io/
-#    bigtable.project: "hafslund-mdm-dev"
-#    bigtable.instanceid: "mdm-meterreadings-dev"
+    mdmx.access-token-service-config-vault-path: kunde:kv:elvid:kunde-grid-tariff-api
   test:
     mdmx.host-address: https://mdmx.test-elvia.io/
-#    bigtable.project: "hafslund-mdm-test"
-#    bigtable.instanceid: "mdm-meterreadings-test"
+    mdmx.access-token-service-config-vault-path: kunde:kv:elvid:kunde-grid-tariff-api
   prod:
-    mdmx.host-address: https://mdmx.elvia.io/
-#    bigtable.project: "hafslund-mdm"
-#    bigtable.instanceid: "mdm-meterreadings"
+    mdmx.host-address: https://mdmx.test-elvia.io/
+    mdmx.access-token-service-config-vault-path: kunde:kv:manual:kunde-grid-tariff-api-test
