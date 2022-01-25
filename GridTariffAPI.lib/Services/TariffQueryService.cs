@@ -155,6 +155,10 @@ namespace GridTariffApi.Lib.Services
             DateTimeOffset paramToDate)
         {
             var tariff = _tariffPriceCache.GetTariff(tariffKey);
+            if (tariff == null)
+            {
+                return new GridTariffCollection();
+            }
             var tariffPrices = tariff.TariffPrices.ToList();
             tariffPrices.RemoveAll(x => x.EndDate <= paramFromDate || x.StartDate > paramToDate);
             var company = _tariffPriceCache.GetCompany();
