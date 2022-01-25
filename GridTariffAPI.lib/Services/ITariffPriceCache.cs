@@ -9,11 +9,11 @@ namespace GridTariffApi.Lib.Services
 {
     public interface ITariffPriceCache
     {
-        public Company GetCompany();
-        public IReadOnlyList<Holiday> GetHolidays(DateTimeOffset fromDate, DateTimeOffset toDate);
+        public Task<Company> GetCompanyAsync();
+        public Task<IReadOnlyList<Holiday>> GetHolidaysAsync(DateTimeOffset fromDate, DateTimeOffset toDate);
         public Task<List<MeteringPointInformation>> GetMeteringPointInformationsAsync(DateTimeOffset fromDateTime, DateTimeOffset toDateTime, List<string> meteringPoints);
-        Models.PriceStructure.TariffType GetTariff(string tariffKey);
-        public TariffPriceStructureRoot GetTariffRootElement();
-        public IReadOnlyList<Models.PriceStructure.TariffType> GetTariffs();
+        public Task<TariffType> GetTariffAsync(string tariffKey);
+        public Task<TariffPriceStructureRoot> GetTariffRootElementAsync();
+        public Task<IReadOnlyList<TariffType>> GetTariffsAsync();
     }
 }

@@ -14,11 +14,11 @@ using Xunit.Abstractions;
 
 namespace GridTariffApi.Tests.Mdmx.DeveloperAdHocTests
 {
-    public class TariffQueryDeveloperAdHocTests
+    public class TariffQueryControllerDeveloperAdHocTests
     {
         private readonly ITestOutputHelper _outputHelper;
 
-        public TariffQueryDeveloperAdHocTests(ITestOutputHelper outputHelper)
+        public TariffQueryControllerDeveloperAdHocTests(ITestOutputHelper outputHelper)
         {
             _outputHelper = outputHelper;
         }
@@ -49,7 +49,7 @@ namespace GridTariffApi.Tests.Mdmx.DeveloperAdHocTests
             Assert.Equal(200, okResult?.StatusCode);
             var result = okResult?.Value as TariffQueryRequestMeteringPointsResult;
             Assert.NotNull(result);
-            Assert.NotEmpty(result.GridTariffCollections);
+            Assert.NotEmpty(result?.GridTariffCollections ?? new List<GridTariffCollection>());
 
             var loggingDataCollector = host.Services.GetRequiredService<IElviaLoggingDataCollector>();
             _outputHelper.WriteLine($"POST MeteringPointsTariffQuery took {loggingDataCollector.MdmxElapsedSeconds:0.000} s");

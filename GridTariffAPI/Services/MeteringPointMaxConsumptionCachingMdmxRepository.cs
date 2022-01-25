@@ -25,11 +25,11 @@ namespace GridTariffApi.Services
             _loggingDataCollector = loggingDataCollector;
         }
 
-        public async Task<IReadOnlyList<MeteringPointMaxConsumption>> GetMeteringPointMaxConsumptionsAsync(DateTimeOffset fromDateTime, DateTimeOffset toDateTime, List<string> meteringPointIds)
+        public async Task<List<MeteringPointMaxConsumption>> GetMeteringPointMaxConsumptionsAsync(DateTimeOffset fromDateTime, DateTimeOffset toDateTime, List<string> meteringPointIds)
         {
             if (!MaxConsumptionIsValidForPeriod(fromDateTime, toDateTime))
             {
-                return meteringPointIds.Select(mpid => new MeteringPointMaxConsumption { MeteringPointId = mpid }).ToList().AsReadOnly();
+                return meteringPointIds.Select(mpid => new MeteringPointMaxConsumption { MeteringPointId = mpid }).ToList();
             }
 
             var cachedMaxConsumptions = new Dictionary<string, MeteringPointMaxConsumption>();
@@ -64,7 +64,7 @@ namespace GridTariffApi.Services
                 }
             }
 
-            return meteringPointIds.Select(mpid => cachedMaxConsumptions[mpid]).ToList().AsReadOnly();
+            return meteringPointIds.Select(mpid => cachedMaxConsumptions[mpid]).ToList();
         }
 
         public bool MaxConsumptionIsValidForPeriod(DateTimeOffset fromDateTime, DateTimeOffset toDateTime)

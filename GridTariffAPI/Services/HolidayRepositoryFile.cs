@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GridTariffApi.Services
 {
@@ -19,12 +20,12 @@ namespace GridTariffApi.Services
             _telemetryLogger = telemetryLogger;
         }
 
-        public IReadOnlyList<Holiday> GetHolidays()
+        public async Task<IReadOnlyList<Holiday>> GetHolidaysAsync()
         {
             IReadOnlyList<Holiday> retVal = null;
             try
             {
-                string jsonString = File.ReadAllText(_holidayFileName);
+                string jsonString = await File.ReadAllTextAsync(_holidayFileName);
                 var earth = JsonConvert.DeserializeObject<Earth>(jsonString);
                 retVal =  earth.Countries.FirstOrDefault(a => a.Code == 47).Holidays;
             }

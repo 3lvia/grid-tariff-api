@@ -47,13 +47,13 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
 
             _tariffPeristenceMock = new Mock<ITariffRepository>();
             _tariffPeristenceMock
-                .Setup(x => x.GetTariffPriceStructure())
-                .Returns(tariffPriceStructureRoot);
+                .Setup(x => x.GetTariffPriceStructureAsync())
+                .ReturnsAsync(tariffPriceStructureRoot);
 
             _holidayPeristenceMock = new Mock<IHolidayRepository>();
             _holidayPeristenceMock
-                .Setup(x => x.GetHolidays())
-                .Returns(new List<Holiday>());
+                .Setup(x => x.GetHolidaysAsync())
+                .ReturnsAsync(new List<Holiday>());
 
             var tariffPriceCache = new TariffPriceCache(new TariffPriceCacheDataStore(), _tariffPeristenceMock.Object, _holidayPeristenceMock.Object, null, null);
 

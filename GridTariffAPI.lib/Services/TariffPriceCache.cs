@@ -29,7 +29,7 @@ namespace GridTariffApi.Lib.Services
             _meteringPointTariffRepository = meteringPointTariffRepository;
             _meteringPointMaxConsumptionRepository = meteringPointMaxConsumptionRepository;
             // The cache data store is a singleton, to be able to cache between calls. It cannot consume scoped services. So the TariffPriceCache calls ResetCacheIfNecessary to keep the cache fresh.
-            _cacheDataStore.ResetCacheIfNecessary(_tariffRepository, _holidayRepository);
+            _cacheDataStore.ResetCacheIfNecessaryAsync(_tariffRepository, _holidayRepository).Wait(); // Cannot call async operations in constructor, so run it synchrously
         }
 
         public  async Task<List<MeteringPointInformation>> GetMeteringPointInformationsAsync(DateTimeOffset fromDateTime, DateTimeOffset toDateTime, List<string> meteringPoints)
@@ -60,38 +60,38 @@ namespace GridTariffApi.Lib.Services
 
         public async Task<IReadOnlyList<MeteringPointTariff>> GetMeteringPointTariffsAsync(List<String> meteringPoints)
         {
-            _cacheDataStore.ResetCacheIfNecessary(_tariffRepository, _holidayRepository);
+            await _cacheDataStore.ResetCacheIfNecessaryAsync(_tariffRepository, _holidayRepository);
 
             return await _cacheDataStore.GetMeteringPointTariffsAsync(meteringPoints, uncachedMpids => _meteringPointTariffRepository.GetMeteringPointTariffsAsync(uncachedMpids));
         }
 
-        public Models.PriceStructure.Company GetCompany()
+        public async Task<Company> GetCompanyAsync()
         {
-            return GetTariffRootElement().GridTariffPriceConfiguration.GridTariff.Company;
+            return (await GetTariffRootElementAsync()).GridTariffPriceConfiguration.GridTariff.Company;
         }
 
-        public IReadOnlyList<Models.PriceStructure.TariffType> GetTariffs()
+        public async Task<IReadOnlyList<TariffType>> GetTariffsAsync()
         {
-            return GetTariffRootElement().GridTariffPriceConfiguration.GridTariff.TariffTypes;
+            return (await GetTariffRootElementAsync()).GridTariffPriceConfiguration.GridTariff.TariffTypes;
         }
 
 
-        public Models.PriceStructure.TariffType GetTariff(String tariffKey)
+        public async Task<TariffType> GetTariffAsync(string tariffKey)
         {
-            var retVal = GetTariffRootElement().GridTariffPriceConfiguration.GridTariff.TariffTypes.FirstOrDefault(a => a.TariffKey == tariffKey);
+            var retVal = (await GetTariffRootElementAsync()).GridTariffPriceConfiguration.GridTariff.TariffTypes.FirstOrDefault(a => a.TariffKey == tariffKey);
             return retVal;
         }
 
-        public IReadOnlyList<Holiday> GetHolidays(DateTimeOffset fromDate, DateTimeOffset toDate)
+        public async Task<IReadOnlyList<Holiday>> GetHolidaysAsync(DateTimeOffset fromDate, DateTimeOffset toDate)
         {
-            _cacheDataStore.ResetCacheIfNecessary(_tariffRepository, _holidayRepository);
+            await _cacheDataStore.ResetCacheIfNecessaryAsync(_tariffRepository, _holidayRepository);
             
             return _cacheDataStore.GetHolidayRoot().Where(a => a.Date >= fromDate && a.Date <= toDate).ToList();
         }
         
-        public TariffPriceStructureRoot GetTariffRootElement()
+        public async Task<TariffPriceStructureRoot> GetTariffRootElementAsync()
         {
-            _cacheDataStore.ResetCacheIfNecessary(_tariffRepository, _holidayRepository);
+            await _cacheDataStore.ResetCacheIfNecessaryAsync(_tariffRepository, _holidayRepository);
             
             return _cacheDataStore.GetTariffRootElement();
         }

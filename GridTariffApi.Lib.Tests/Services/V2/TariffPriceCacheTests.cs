@@ -23,13 +23,13 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         {
             _tariffRepositoryMock = new Mock<ITariffRepository>();
             _tariffRepositoryMock
-                .Setup(x => x.GetTariffPriceStructure())
-                .Returns(new TariffPriceStructureRoot(null));
+                .Setup(x => x.GetTariffPriceStructureAsync())
+                .ReturnsAsync(new TariffPriceStructureRoot(null));
 
             _holidayRepositoryMock = new Mock<IHolidayRepository>();
             _holidayRepositoryMock
-                .Setup(x => x.GetHolidays())
-                .Returns(new List<Holiday>());
+                .Setup(x => x.GetHolidaysAsync())
+                .ReturnsAsync(new List<Holiday>());
 
 
             var meteringPointTariffs = new List<MeteringPointTariff>();
@@ -48,36 +48,36 @@ namespace GridTariffApi.Lib.Tests.Services.V2
                 MeteringPointId = mpid,
                 MaxHourlyEnergyConsumption = maxHourlyEnergyConsumption,
                 LastVolumeEndTime = DateTimeOffset.UtcNow
-            }).ToList().AsReadOnly();
+            }).ToList();
             _meteringPointMaxConsumptionRepository = new Mock<IMeteringPointMaxConsumptionRepository>();
             _meteringPointMaxConsumptionRepository
                 .Setup(x => x.GetMeteringPointMaxConsumptionsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<String>>()))
-                .ReturnsAsync((IReadOnlyList<Models.Internal.MeteringPointMaxConsumption>)meteringPointMaxConsumptions);
+                .ReturnsAsync((List<Models.Internal.MeteringPointMaxConsumption>)meteringPointMaxConsumptions);
         }
 
         [Fact]
-        public void TariffRepositoryCalledOnceTest()
+        public async Task TariffRepositoryCalledOnceTest()
         {
             Setup();
             TariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPriceCacheDataStore(), _tariffRepositoryMock.Object, _holidayRepositoryMock.Object, null, null);
 
             for (int i = 0; i < 10; i++)
             {
-                tariffPriceCache.GetTariffRootElement();
+                await tariffPriceCache.GetTariffRootElementAsync();
             }
-            _tariffRepositoryMock.Verify(x => x.GetTariffPriceStructure(), Times.Once);
+            _tariffRepositoryMock.Verify(x => x.GetTariffPriceStructureAsync(), Times.Once);
         }
 
         [Fact]
-        public void HolidayRepositoryCalledOnceTest()
+        public async Task HolidayRepositoryCalledOnceTest()
         {
             Setup();
             TariffPriceCache tariffPriceCache = new TariffPriceCache(new TariffPriceCacheDataStore(), _tariffRepositoryMock.Object, _holidayRepositoryMock.Object, null, null);
             for (int i = 0; i < 10; i++)
             {
-                tariffPriceCache.GetHolidays(DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
+                await tariffPriceCache.GetHolidaysAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
             }
-            _holidayRepositoryMock.Verify(x => x.GetHolidays(), Times.Once);
+            _holidayRepositoryMock.Verify(x => x.GetHolidaysAsync(), Times.Once);
         }
 
         [Fact]
