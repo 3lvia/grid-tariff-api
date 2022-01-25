@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.Serialization;
@@ -9,6 +8,7 @@ using System.Threading.Tasks;
 using GridTariffApi.Elvid;
 using GridTariffApi.Lib.Models.Internal;
 using GridTariffApi.Mdmx.Dtos;
+using GridTariffApi.Metrics;
 using IdentityModel.Client;
 using Newtonsoft.Json;
 
@@ -17,15 +17,17 @@ namespace GridTariffApi.Mdmx
     public class MdmxClient : IMdmxClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IAccessTokenService _accessTokenService;
+        private readonly IMdmxAccessTokenService _accessTokenService; // Calling MDMx test from prod
         private readonly MdmxConfig _config;
+        private readonly IElviaLoggingDataCollector _loggingDataCollector;
 
 
-        public MdmxClient(IHttpClientFactory httpClientFactory, IAccessTokenService accessTokenService, MdmxConfig config)
+        public MdmxClient(IHttpClientFactory httpClientFactory, IMdmxAccessTokenService accessTokenService, MdmxConfig config, IElviaLoggingDataCollector loggingDataCollector)
         {
             _httpClientFactory = httpClientFactory;
             _accessTokenService = accessTokenService;
             _config = config;
+            _loggingDataCollector = loggingDataCollector;
         }
 
 
@@ -41,7 +43,7 @@ namespace GridTariffApi.Mdmx
                 MeasurementTimeGe = localMonthStart,
                 MeasurementTimeLe = localNow
             };
-           
+
             var uriBuilder = new UriBuilder(_config.HostAddress)
             {
                 Path = "api/volumeaggregation",
@@ -50,8 +52,8 @@ namespace GridTariffApi.Mdmx
             var requestJson = JsonConvert.SerializeObject(request);
             var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
 
-            var httpClient = await GetHttpClient();            
-            var res = await httpClient.PostAsync(uriBuilder.Uri, content);
+            var httpClient = await GetHttpClient();
+            var res = await _loggingDataCollector.MeasureMdmxElapsedTimeAsync(async () => await httpClient.PostAsync(uriBuilder.Uri, content));
 
             if (!res.IsSuccessStatusCode)
             {
@@ -80,6 +82,7 @@ namespace GridTariffApi.Mdmx
             var accessToken = await _accessTokenService.GetAccessToken();
             var httpClient = _httpClientFactory.CreateClient("mdmx");
             httpClient.SetBearerToken(accessToken);
+            httpClient.Timeout = TimeSpan.FromMinutes(10);
             return httpClient;
         }
     }
@@ -88,7 +91,7 @@ namespace GridTariffApi.Mdmx
     public class MdmxClientException : Exception
     {
         public int HttpStatusCode { get; set; }
-        
+
         public MdmxClientException()
         {
         }

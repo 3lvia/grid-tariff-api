@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GridTariffApi.Mdmx;
+using GridTariffApi.Metrics;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace GridTariffApi.Services
@@ -13,13 +14,15 @@ namespace GridTariffApi.Services
     {
         private readonly IMdmxClient _mdmxClient;
         private readonly MeteringPointMaxConsumptionRepositoryConfig _config;
-        private readonly IMemoryCache _memoryCache;
+        private readonly IElviaLoggingDataCollector _loggingDataCollector;
 
-        public MeteringPointMaxConsumptionCachingMdmxRepository(IMdmxClient mdmxClient, MeteringPointMaxConsumptionRepositoryConfig config)
+        private static readonly IMemoryCache MemoryCache = new MemoryCache(new MemoryCacheOptions());
+
+        public MeteringPointMaxConsumptionCachingMdmxRepository(IMdmxClient mdmxClient, MeteringPointMaxConsumptionRepositoryConfig config, IElviaLoggingDataCollector loggingDataCollector = null)
         {
             _mdmxClient = mdmxClient;
             _config = config;
-            _memoryCache = new MemoryCache(new MemoryCacheOptions());
+            _loggingDataCollector = loggingDataCollector;
         }
 
         public async Task<IReadOnlyList<MeteringPointMaxConsumption>> GetMeteringPointMaxConsumptionsAsync(DateTimeOffset fromDateTime, DateTimeOffset toDateTime, List<string> meteringPointIds)
@@ -34,7 +37,7 @@ namespace GridTariffApi.Services
 
             foreach (var mpid in meteringPointIds)
             {
-                if (_memoryCache.TryGetValue(mpid, out MeteringPointMaxConsumption cachedMaxConsumption))
+                if (MemoryCache.TryGetValue(mpid, out MeteringPointMaxConsumption cachedMaxConsumption))
                 {
                     cachedMaxConsumptions[mpid] = cachedMaxConsumption;
                 }
@@ -44,16 +47,18 @@ namespace GridTariffApi.Services
                 }
             }
 
+            _loggingDataCollector?.RegisterMaxConsumptionCacheHitStatistics(cachedMaxConsumptions.Count, uncachedMpids.Count);
+
             if (uncachedMpids.Count > 0)
             {
                 // There is a possible race condition here, so we might consider doing another lookup after locking. But an additional cache miss on parallel calls for the same metering point(s) is not that important. And the last one will update the cache.
                 var uncachedMaxConsumptions = await _mdmxClient.GetVolumeAggregationsForThisMonthAsync(meteringPointIds);
 
-                lock (_memoryCache)
+                lock (MemoryCache)
                 {
                     foreach (var meteringPointMaxConsumption in uncachedMaxConsumptions)
                     {
-                        _memoryCache.Set(meteringPointMaxConsumption.MeteringPointId, meteringPointMaxConsumption, _config.MaxConsumptionCacheTimeout);
+                        MemoryCache.Set(meteringPointMaxConsumption.MeteringPointId, meteringPointMaxConsumption, _config.MaxConsumptionCacheTimeout);
                         cachedMaxConsumptions[meteringPointMaxConsumption.MeteringPointId] = meteringPointMaxConsumption;
                     }
                 }
@@ -77,7 +82,7 @@ namespace GridTariffApi.Services
                 return false;
             }
 
-            if (toDateTime < localMonthStart)
+            if (toDateTime <= localMonthStart)
             {
                 return false;
             }

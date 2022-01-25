@@ -13,7 +13,7 @@ namespace GridTariffApi.Elvid
         private readonly IMemoryCache _memoryCache;
         private readonly IHttpClientFactory _httpClientFactory;
 
-        private const string AccessTokenMemoryCacheKey = "AccessTokenMemoryCacheKey";
+        protected virtual string AccessTokenMemoryCacheKey => "AccessTokenMemoryCacheKey";
 
         public AccessTokenService(ClientCredentialsConfiguration config, IHttpClientFactory httpClientFactory, IMemoryCache memoryCache)
         {

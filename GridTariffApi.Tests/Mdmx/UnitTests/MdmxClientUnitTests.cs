@@ -1,3 +1,7 @@
+using GridTariffApi.Elvid;
+using GridTariffApi.Mdmx;
+using Moq;
+using Moq.Protected;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,10 +10,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using GridTariffApi.Elvid;
-using GridTariffApi.Mdmx;
-using Moq;
-using Moq.Protected;
+using GridTariffApi.Metrics;
 using Xunit;
 
 namespace GridTariffApi.Tests.Mdmx.UnitTests
@@ -29,25 +30,26 @@ namespace GridTariffApi.Tests.Mdmx.UnitTests
                     ItExpr.IsAny<CancellationToken>()
                 )
                 .ReturnsAsync(new HttpResponseMessage()
-                    {
-                        StatusCode = HttpStatusCode.OK,
-                        Content = new StringContent("[{'meteringPointId':'707057599999990530','min':0,'max':56.52,'sum':142189.23919999308,'lastVolumeEndTime':'2022-01-06T11:00:00+00:00'},{'meteringPointId':'707057599999990540','min':0,'max':0.0147,'sum':53.40549999999888}]", Encoding.UTF8, "application/json")
-                    })
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent("[{'meteringPointId':'707057599999990530','min':0,'max':56.52,'sum':142189.23919999308,'lastVolumeEndTime':'2022-01-06T11:00:00+00:00'},{'meteringPointId':'707057599999990540','min':0,'max':0.0147,'sum':53.40549999999888}]", Encoding.UTF8, "application/json")
+                })
                 .Verifiable();
- 
+
             var httpClient = new HttpClient(httpMessageHandlerMock.Object);
 
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             httpClientFactoryMock.Setup(factory => factory.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-            var accessTokenServiceMock = new Mock<IAccessTokenService>();
+            var accessTokenServiceMock = new Mock<IMdmxAccessTokenService>();
             accessTokenServiceMock.Setup(service => service.GetAccessToken()).ReturnsAsync("the not so secret token");
 
             var mdmxClient = new MdmxClient(httpClientFactoryMock.Object, accessTokenServiceMock.Object, new MdmxConfig
-            {
-                HostAddress = "https://mdmx.mocked-elvia.no/",
-                TimeZoneForMonthLimiting = Startup.NorwegianTimeZoneInfo()
-            });
+                {
+                    HostAddress = "https://mdmx.mocked-elvia.no/",
+                    TimeZoneForMonthLimiting = Startup.NorwegianTimeZoneInfo()
+                },
+                new LoggingDataCollector());
 
             var mpids = new List<string> { "707057599999990530", "707057599999990540" };
             var maxConsumptions = await mdmxClient.GetVolumeAggregationsForThisMonthAsync(mpids);
