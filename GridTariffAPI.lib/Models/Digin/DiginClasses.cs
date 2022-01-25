@@ -52,7 +52,7 @@ namespace GridTariffApi.Lib.Models.Digin
             if (!hasRange && !(hasStart || hasEnd))
             {
                 yield return new ValidationResult(
-                              $"Neither range nor StartTime/Endtime specified",
+                              "Neither range nor StartTime/EndTime specified",
                               new[] { nameof(Range), nameof(StartTime), nameof(EndTime) });
             }
             if (hasRange)
@@ -60,7 +60,7 @@ namespace GridTariffApi.Lib.Models.Digin
                 if (hasStart || hasEnd)
                 {
                     yield return new ValidationResult(
-                      $"Both range and StartTime/Endtime specified",
+                      "Both range and StartTime/EndTime specified",
                       new[] { nameof(Range), nameof(StartTime), nameof(EndTime) });
                 }
             }
@@ -69,27 +69,36 @@ namespace GridTariffApi.Lib.Models.Digin
                 if (!hasStart)
                 {
                     yield return new ValidationResult(
-                      $"StartTime Not specified",
+                      "StartTime not specified",
                       new[] { nameof(StartTime) });
                 }
                 if (!hasEnd)
                 {
                     yield return new ValidationResult(
-                      $"Endtime Not specified",
+                      "EndTime not specified",
                       new[] { nameof(EndTime) });
 
                 }
                 if (StartTime > EndTime)
                 {
                     yield return new ValidationResult(
-                      $"StartTime greather than EndTime",
+                      "StartTime greather than EndTime",
                       new[] { nameof(StartTime), nameof(EndTime) });
                 }
             }
-            if (MeteringPointIds == null)
+            
+            if (MeteringPointIds == null || MeteringPointIds.Count == 0)
             {
                 yield return new ValidationResult(
-                  $"No meteringpoints in request");
+                    "No meteringpoints in request",
+                    new [] { nameof(MeteringPointIds)});
+            }
+            var maxNumMeteringPointIds = 10_000;
+            if (MeteringPointIds?.Count > maxNumMeteringPointIds)
+            {
+                yield return new ValidationResult(
+                    $"{MeteringPointIds.Count} metering point ids exceeds the maximum limit of {maxNumMeteringPointIds} mpids",
+                    new [] { nameof(MeteringPointIds)});
             }
         }
     }
@@ -775,7 +784,7 @@ namespace GridTariffApi.Lib.Models.Digin
             if (!hasRange && !(hasStart || hasEnd))
             {
                 yield return new ValidationResult(
-                              $"Neither range nor StartTime/Endtime specified",
+                              "Neither range nor StartTime/EndTime specified",
                               new[] { nameof(Range), nameof(StartTime), nameof(EndTime) });
             }
             if (hasRange)
@@ -783,7 +792,7 @@ namespace GridTariffApi.Lib.Models.Digin
                 if (hasStart || hasEnd)
                 {
                     yield return new ValidationResult(
-                      $"Both range and StartTime/Endtime specified",
+                      "Both range and StartTime/EndTime specified",
                       new[] { nameof(Range), nameof(StartTime), nameof(EndTime) });
                 }
             }
@@ -792,20 +801,20 @@ namespace GridTariffApi.Lib.Models.Digin
                 if (!hasStart)
                 {
                     yield return new ValidationResult(
-                      $"StartTime Not specified",
+                      "StartTime not specified",
                       new[] { nameof(StartTime) });
                 }
                 if (!hasEnd)
                 {
                     yield return new ValidationResult(
-                      $"Endtime Not specified",
+                      "EndTime not specified",
                       new[] { nameof(EndTime) });
 
                 }
                 if (StartTime > EndTime)
                 {
                     yield return new ValidationResult(
-                      $"StartTime greather than EndTime",
+                      "StartTime greater than EndTime",
                       new[] { nameof(StartTime), nameof(EndTime) });
                 }
             }
