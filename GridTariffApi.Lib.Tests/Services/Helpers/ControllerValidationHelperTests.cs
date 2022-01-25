@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.InteropServices;
 using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.Interfaces.External;
@@ -97,14 +99,45 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
         }
 
         [Fact]
-        public void ValidatTariffQueryRequestMeteringPointInputNull()
+        public void ValidateTariffQueryRequestMeteringPointInputNull()
         {
             Setup();
             var result = _controllerValidationHelper.ValidateRequestInput((TariffQueryRequestMeteringPoints)null);
             Assert.Contains("Missing model", result);
         }
 
+        [Fact]
+        public void ValidateTariffQueryRequestMeteringPointBeforeMinStartAllowed()
+        {
+            Setup();
+            var result = _controllerValidationHelper.ValidateRequestInput(new TariffQueryRequestMeteringPoints
+            {
+                Range = null,
+                StartTime = DateTimeOffset.UtcNow.Subtract(TimeSpan.FromDays(10000)),
+                EndTime = DateTimeOffset.UtcNow,
+                MeteringPointIds = new List<string> { "mpid1" }
+            });
+            Assert.Contains("before", result.ToLower());
+        }
 
+        [Fact]
+        public void ValidateTariffQueryRequestMeteringPointIdsNone()
+        {
+            var request = new TariffQueryRequestMeteringPoints { MeteringPointIds = new List<string> { }, Range = "today"};
+            var result = request.Validate(new ValidationContext(request)).ToList();
+            Assert.Single(result);
+            Assert.Contains(result, e => (e.ErrorMessage ?? "").ToLower().Contains("no"));        }
+
+        [Fact]
+        public void ValidateTariffQueryRequestMeteringPointIdsAboveLimit()
+        {
+            var mpids = Enumerable.Range(1, 10_001).Select(i => $"mpid{i}").ToList();
+            var request = new TariffQueryRequestMeteringPoints{MeteringPointIds = mpids, Range = "today"};
+            var result = request.Validate(new ValidationContext(request)).ToList();
+            Assert.Single(result);
+            Assert.Contains(result, e => (e.ErrorMessage ?? "").ToLower().Contains("limit"));
+        }
+        
         [Theory]
         [InlineData("", "", "")]
         [InlineData("tariffKey", "", "tariffKey")]

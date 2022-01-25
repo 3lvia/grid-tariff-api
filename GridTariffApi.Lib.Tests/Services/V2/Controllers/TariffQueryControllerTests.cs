@@ -95,7 +95,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
             {
                 StartTime = DateTimeOffset.MaxValue,
                 EndTime = DateTimeOffset.MaxValue,
-                MeteringPointIds = new List<String>()
+                MeteringPointIds = new List<String> { "mpid1" }
             };
 
             await _tariffQueryController.MeteringPointsTariffQuery(request);

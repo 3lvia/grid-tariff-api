@@ -25,15 +25,26 @@ namespace GridTariffApi.Lib.Services.Helpers
 
         public string ValidateRequestInput(TariffQueryRequestMeteringPoints request)
         {
+            // Denne valideringen er i tillegg til Validate()-metoden på request-objektet, som kalles automatisk av ASP.NET.
+
             if (request == null)
             {
                 return "Missing model";
             }
+
+            var minStartValidationResult = ValidateMinStartAllowedQuery(request.Range, request.StartTime);
+            if (!String.IsNullOrEmpty(minStartValidationResult))
+            {
+                return minStartValidationResult;
+            }
+
             return String.Empty;
         }
         
         public string ValidateRequestInput(TariffQueryRequest request)
         {
+            // Denne valideringen er i tillegg til Validate()-metoden på request-objektet, som kalles automatisk av ASP.NET.
+
             if (request == null)
             {
                 return "Missing model";
@@ -43,11 +54,11 @@ namespace GridTariffApi.Lib.Services.Helpers
             bool tariffKeyAndProductBothPresent = !String.IsNullOrEmpty(request.TariffKey) && !String.IsNullOrEmpty(request.Product);
             if (tariffKeyAndProductMissing)
             {
-                return $"Neither TariffKey nor Product present in request";
+                return "Neither TariffKey nor Product present in request";
             }
             if (tariffKeyAndProductBothPresent)
             {
-                return $"Both TariffKey and Product present in request. These are mutually exclusive";
+                return "Both TariffKey and Product present in request. These are mutually exclusive";
             }
 
             var tariffKey = request.TariffKey;
@@ -68,11 +79,22 @@ namespace GridTariffApi.Lib.Services.Helpers
                 return $"TariffType {tariffKey} not found";
             }
 
-            var startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
+            var minStartValidationResult = ValidateMinStartAllowedQuery(request.Range, request.StartTime);
+            if (!String.IsNullOrEmpty(minStartValidationResult))
+            {
+                return minStartValidationResult;
+            }
+            return String.Empty;
+        }
+
+        private string ValidateMinStartAllowedQuery(string range,  DateTimeOffset? startTime)
+        {
+            var startDateTime = _serviceHelper.GetStartDateTimeOffset(range, startTime);
             if (startDateTime.DateTime < _gridTariffApiConfig.MinStartDateAllowedQuery)
             {
                 return $"Query before {_gridTariffApiConfig.MinStartDateAllowedQuery} not supported";
             }
+
             return String.Empty;
         }
 
