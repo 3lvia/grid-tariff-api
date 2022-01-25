@@ -1,0 +1,1034 @@
+{
+	"info": {
+		"_postman_id": "811207c5-2630-43d3-8d4b-2af016ecfdb3",
+		"name": "Digin Grid Tariff API",
+		"description": "Provides grid tariffs. For external and internal use. https://github.com/digin-energi/API-nettleie-for-styring\n\nContact Support:\n Name: Digin Grid Tariff API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "api/1.0",
+			"item": [
+				{
+					"name": "tariffquery",
+					"item": [
+						{
+							"name": "Returns tariff data for a given tariff for a given timeperiod",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/:v/tariffquery?TariffKey=standard_for_tariffkalkulator&StartTime=2021-12-31T23:00:00Z&EndTime=2022-12-31T23:00:00Z",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										":v",
+										"tariffquery"
+									],
+									"query": [
+										{
+											"key": "TariffKey",
+											"value": "standard_for_tariffkalkulator",
+											"description": "TariffKey dictates which tariff will be queried. Exclusive OR with Product."
+										},
+										{
+											"key": "Product",
+											"value": "standard_for_tariffkalkulator",
+											"description": "Internal product code or name to be used internally at the grid company. Exclusive OR with TariffKey.",
+											"disabled": true
+										},
+										{
+											"key": "Range",
+											"value": "today",
+											"description": "Range dictates which day to query, valid values is yesterday,today,tomorrow. Exclusive OR with startTime/endTime. Yesterday = hour 0 through hour 23 yesterday etc.",
+											"disabled": true
+										},
+										{
+											"key": "StartTime",
+											"value": "2021-12-31T23:00:00Z",
+											"description": "Start DateTime/End DateTime dictates which timeperiod to query. Exclusive OR with range. Example 2021-09-17T00:00:00+02:00"
+										},
+										{
+											"key": "EndTime",
+											"value": "2022-12-31T23:00:00Z",
+											"description": "Start DateTime/End DateTime dictates which timeperiod to query. Exclusive OR with range. Example 2021-09-18T00:00:00+02:00"
+										}
+									],
+									"variable": [
+										{
+											"key": "v",
+											"value": "1.0",
+											"description": "(Required) The API specification version to be used."
+										}
+									]
+								},
+								"description": "Range and StartTime/Endtime is mutual exclusive, meaning either one must be present, but not bot. Date time formats using Edielstandard, see README file"
+							},
+							"response": [
+								{
+									"name": "Ok",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/:v/tariffquery?TariffKey=<string>&Product=<string>&Range=<string>&StartTime=<dateTime>&EndTime=<dateTime>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												":v",
+												"tariffquery"
+											],
+											"query": [
+												{
+													"key": "TariffKey",
+													"value": "<string>"
+												},
+												{
+													"key": "Product",
+													"value": "<string>"
+												},
+												{
+													"key": "Range",
+													"value": "<string>"
+												},
+												{
+													"key": "StartTime",
+													"value": "<dateTime>"
+												},
+												{
+													"key": "EndTime",
+													"value": "<dateTime>"
+												}
+											],
+											"variable": [
+												{
+													"key": "v"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"gridTariff\": {\n  \"value\": \"reference gridtariffapi.v1_0.common.schema.json#/GridTariff not found in the OpenAPI spec\"\n }\n}"
+								},
+								{
+									"name": "Internal Server Error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/:v/tariffquery?TariffKey=<string>&Product=<string>&Range=<string>&StartTime=<dateTime>&EndTime=<dateTime>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												":v",
+												"tariffquery"
+											],
+											"query": [
+												{
+													"key": "TariffKey",
+													"value": "<string>"
+												},
+												{
+													"key": "Product",
+													"value": "<string>"
+												},
+												{
+													"key": "Range",
+													"value": "<string>"
+												},
+												{
+													"key": "StartTime",
+													"value": "<dateTime>"
+												},
+												{
+													"key": "EndTime",
+													"value": "<dateTime>"
+												}
+											],
+											"variable": [
+												{
+													"key": "v"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/:v/tariffquery?TariffKey=<string>&Product=<string>&Range=<string>&StartTime=<dateTime>&EndTime=<dateTime>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												":v",
+												"tariffquery"
+											],
+											"query": [
+												{
+													"key": "TariffKey",
+													"value": "<string>"
+												},
+												{
+													"key": "Product",
+													"value": "<string>"
+												},
+												{
+													"key": "Range",
+													"value": "<string>"
+												},
+												{
+													"key": "StartTime",
+													"value": "<dateTime>"
+												},
+												{
+													"key": "EndTime",
+													"value": "<dateTime>"
+												}
+											],
+											"variable": [
+												{
+													"key": "v"
+												}
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Bad request",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/:v/tariffquery?TariffKey=<string>&Product=<string>&Range=<string>&StartTime=<dateTime>&EndTime=<dateTime>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												":v",
+												"tariffquery"
+											],
+											"query": [
+												{
+													"key": "TariffKey",
+													"value": "<string>"
+												},
+												{
+													"key": "Product",
+													"value": "<string>"
+												},
+												{
+													"key": "Range",
+													"value": "<string>"
+												},
+												{
+													"key": "StartTime",
+													"value": "<dateTime>"
+												},
+												{
+													"key": "EndTime",
+													"value": "<dateTime>"
+												}
+											],
+											"variable": [
+												{
+													"key": "v"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "No data for given request",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/:v/tariffquery?TariffKey=<string>&Product=<string>&Range=<string>&StartTime=<dateTime>&EndTime=<dateTime>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												":v",
+												"tariffquery"
+											],
+											"query": [
+												{
+													"key": "TariffKey",
+													"value": "<string>"
+												},
+												{
+													"key": "Product",
+													"value": "<string>"
+												},
+												{
+													"key": "Range",
+													"value": "<string>"
+												},
+												{
+													"key": "StartTime",
+													"value": "<dateTime>"
+												},
+												{
+													"key": "EndTime",
+													"value": "<dateTime>"
+												}
+											],
+											"variable": [
+												{
+													"key": "v"
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Not modified",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/:v/tariffquery?TariffKey=<string>&Product=<string>&Range=<string>&StartTime=<dateTime>&EndTime=<dateTime>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												":v",
+												"tariffquery"
+											],
+											"query": [
+												{
+													"key": "TariffKey",
+													"value": "<string>"
+												},
+												{
+													"key": "Product",
+													"value": "<string>"
+												},
+												{
+													"key": "Range",
+													"value": "<string>"
+												},
+												{
+													"key": "StartTime",
+													"value": "<dateTime>"
+												},
+												{
+													"key": "EndTime",
+													"value": "<dateTime>"
+												}
+											],
+											"variable": [
+												{
+													"key": "v"
+												}
+											]
+										}
+									},
+									"status": "Not Modified",
+									"code": 304,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/:v/tariffquery?TariffKey=<string>&Product=<string>&Range=<string>&StartTime=<dateTime>&EndTime=<dateTime>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												":v",
+												"tariffquery"
+											],
+											"query": [
+												{
+													"key": "TariffKey",
+													"value": "<string>"
+												},
+												{
+													"key": "Product",
+													"value": "<string>"
+												},
+												{
+													"key": "Range",
+													"value": "<string>"
+												},
+												{
+													"key": "StartTime",
+													"value": "<dateTime>"
+												},
+												{
+													"key": "EndTime",
+													"value": "<dateTime>"
+												}
+											],
+											"variable": [
+												{
+													"key": "v"
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "Returns tariff data for a given set of meteringpoints for a given timeperiod.",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"range\": \"today\",\r\n  \"meteringPointIds\": [\r\n    \"707057599999990530\",\"707057599999990540\"\r\n  ]\r\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/:v/tariffquery/meteringpointsgridtariffs",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										":v",
+										"tariffquery",
+										"meteringpointsgridtariffs"
+									],
+									"variable": [
+										{
+											"key": "v",
+											"value": "1.0",
+											"description": "(Required) The API specification version to be used."
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "No data for given request",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\"schema type not provided\""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/:v/tariffquery/meteringpointsgridtariffs",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												":v",
+												"tariffquery",
+												"meteringpointsgridtariffs"
+											],
+											"variable": [
+												{
+													"key": "v"
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\"schema type not provided\""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/:v/tariffquery/meteringpointsgridtariffs",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												":v",
+												"tariffquery",
+												"meteringpointsgridtariffs"
+											],
+											"variable": [
+												{
+													"key": "v"
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Bad request",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\"schema type not provided\""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/:v/tariffquery/meteringpointsgridtariffs",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												":v",
+												"tariffquery",
+												"meteringpointsgridtariffs"
+											],
+											"variable": [
+												{
+													"key": "v"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\"schema type not provided\""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/:v/tariffquery/meteringpointsgridtariffs",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												":v",
+												"tariffquery",
+												"meteringpointsgridtariffs"
+											],
+											"variable": [
+												{
+													"key": "v"
+												}
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Internal Server Error",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\"schema type not provided\""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/:v/tariffquery/meteringpointsgridtariffs",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												":v",
+												"tariffquery",
+												"meteringpointsgridtariffs"
+											],
+											"variable": [
+												{
+													"key": "v"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "TariffData matching query parameters, also including meteringpoints associated with each tariff. Date time formats using Edielstandard, see README file",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\"schema type not provided\""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/:v/tariffquery/meteringpointsgridtariffs",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												":v",
+												"tariffquery",
+												"meteringpointsgridtariffs"
+											],
+											"variable": [
+												{
+													"key": "v"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"gridTariffCollections\": [\n  {\n   \"value\": \"reference gridtariffapi.v1_0.common.schema.json#/GridTariffCollection not found in the OpenAPI spec\"\n  },\n  {\n   \"value\": \"reference gridtariffapi.v1_0.common.schema.json#/GridTariffCollection not found in the OpenAPI spec\"\n  }\n ]\n}"
+								},
+								{
+									"name": "Not modified",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\"schema type not provided\""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/:v/tariffquery/meteringpointsgridtariffs",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												":v",
+												"tariffquery",
+												"meteringpointsgridtariffs"
+											],
+											"variable": [
+												{
+													"key": "v"
+												}
+											]
+										}
+									},
+									"status": "Not Modified",
+									"code": 304,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Service returns all available private tariffs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/:v/tarifftype",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								":v",
+								"tarifftype"
+							],
+							"variable": [
+								{
+									"key": "v",
+									"value": "1.0",
+									"description": "(Required) The API specification version to be used."
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Forbidden",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/:v/tarifftype",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										":v",
+										"tarifftype"
+									],
+									"variable": [
+										{
+											"key": "v"
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "All tariffs. Date time formats using Edielstandard, see README file",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/:v/tarifftype",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										":v",
+										"tarifftype"
+									],
+									"variable": [
+										{
+											"key": "v"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"tariffTypes\": [\n  {\n   \"value\": \"reference gridtariffapi.v1_0.common.schema.json#/TariffType not found in the OpenAPI spec\"\n  },\n  {\n   \"value\": \"reference gridtariffapi.v1_0.common.schema.json#/TariffType not found in the OpenAPI spec\"\n  }\n ]\n}"
+						},
+						{
+							"name": "Bad request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/:v/tarifftype",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										":v",
+										"tarifftype"
+									],
+									"variable": [
+										{
+											"key": "v"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/:v/tarifftype",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										":v",
+										"tarifftype"
+									],
+									"variable": [
+										{
+											"key": "v"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Internal Server Error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/:v/tarifftype",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										":v",
+										"tarifftype"
+									],
+									"variable": [
+										{
+											"key": "v"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d71b54fb-bd3c-488a-9cc7-7ae5bd7460fe",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a129f0fa-ae70-4f41-b12c-dd789022f41a",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "84a0a8f4-745a-4750-ba10-278a91f78d90",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "ebd8945e-47dc-475d-903b-6516a9491edb",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
