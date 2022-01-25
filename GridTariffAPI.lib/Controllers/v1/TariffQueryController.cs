@@ -16,7 +16,7 @@ namespace GridTariffApi.Lib.Controllers.v1
     [ApiController]
     [Authorize]
     [ApiVersion("1.0")]
-    [Route("api/{v:apiVersion}/powerbased")]
+    [Route("digin/api/{v:apiVersion}")]
     public class TariffQueryController : ControllerBase
     {
         private readonly ITariffQueryService _tariffQueryService;
@@ -66,7 +66,7 @@ namespace GridTariffApi.Lib.Controllers.v1
         /// </summary>
         /// Range and StartTime/Endtime is mutual exclusive, meaning either one must be present, but not bot. Date time formats using Edielstandard, see README file
         [HttpPost]
-        [Route("meteringpointstariffquery")]
+        [Route("tariffquery/meteringpointsgridtariffs")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
