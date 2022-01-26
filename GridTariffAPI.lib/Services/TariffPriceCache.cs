@@ -29,7 +29,7 @@ namespace GridTariffApi.Lib.Services
             _meteringPointTariffRepository = meteringPointTariffRepository;
             _meteringPointMaxConsumptionRepository = meteringPointMaxConsumptionRepository;
             // The cache data store is a singleton, to be able to cache between calls. It cannot consume scoped services. So the TariffPriceCache calls ResetCacheIfNecessary to keep the cache fresh.
-            _cacheDataStore.ResetCacheIfNecessaryAsync(_tariffRepository, _holidayRepository).Wait(); // Cannot call async operations in constructor, so run it synchrously
+            _cacheDataStore.ResetCacheIfNecessaryAsync(_tariffRepository, _holidayRepository).Wait(); // Cannot call async operations in constructor, so run it synchronously
         }
 
         public  async Task<List<MeteringPointInformation>> GetMeteringPointInformationsAsync(DateTimeOffset fromDateTime, DateTimeOffset toDateTime, List<string> meteringPoints)
