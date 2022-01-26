@@ -11,7 +11,7 @@ namespace GridTariffApi.Lib.Controllers.v1
     [ApiController]
     [Authorize]
     [ApiVersion("1.0")]
-    [Route("api/{v:apiVersion}/powerbased")]
+    [Route("digin/api/{v:apiVersion}")]
 
     public class TariffTypeController : ControllerBase
     {
