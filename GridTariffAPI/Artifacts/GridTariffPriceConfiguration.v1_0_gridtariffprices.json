@@ -3140,7 +3140,7 @@
           "tariffKey": "standard_for_tariffkalkulator",
           "product": "standard_for_tariffkalkulator",
           "title": "Standard - FOR TARIFFKALKULATOR",
-          "description": "OBS! TIL BRUK FOR TARIFFSAMMENLIGNING. INNEHOLDER FIKTIVE PRISER: Tariff opprinnelig planlagt innført 01.01.2022 for kunder med forbruk < 100.000 kWh/år. Tariffen inneholder priser for 2021-2022. Opprinnelig kunngjorte 2022-priser for denne tariffen er nedjustert med 11% for å fjerne en innberegnet planlagt prisøkning som foreløpig ikke er gjennomført. Prisene for 2021 og 2022 er like, for å gjenspeile at eksisterende tariffer heller ikke er øket pr januar 2022. Prisene må ansees som omtrentlige og kan gi en indikasjon på hvordan en privatkunde ville komme ut med ny vs eksisterende tariff. Det er lagt til grunn korrekte avgifter i hvert enkelt år.",
+          "description": "OBS! TIL BRUK FOR TARIFFSAMMENLIGNING. INNEHOLDER FIKTIVE PRISER: Tariff opprinnelig planlagt innfÃ¸rt 01.01.2022 for kunder med forbruk < 100.000 kWh/Ã¥r. Tariffen inneholder priser for 2021-2022. Opprinnelig kunngjorte 2022-priser for denne tariffen er nedjustert med 11% for Ã¥ fjerne en innberegnet planlagt prisÃ¸kning som forelÃ¸pig ikke er gjennomfÃ¸rt. Prisene for 2021 og 2022 er like, for Ã¥ gjenspeile at eksisterende tariffer heller ikke er Ã¸ket pr januar 2022. Prisene mÃ¥ ansees som omtrentlige og kan gi en indikasjon pÃ¥ hvordan en privatkunde ville komme ut med ny vs eksisterende tariff. Det er lagt til grunn korrekte avgifter i hvert enkelt Ã¥r.",
           "usePublicHolidayOverride": "CHEAP",
           "useWeekendPriceOverride": "CHEAP",
           "consumptionFlag": true,
