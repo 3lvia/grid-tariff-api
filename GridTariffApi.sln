@@ -27,6 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GridTariffApi.Synchronizer.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GridTariffApi.Tests", "GridTariffApi.Tests\GridTariffApi.Tests.csproj", "{56C21BFB-07B6-423A-8C92-2258ED94EC1F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Postman", "Postman", "{239E232B-90C5-4416-B84B-385C67B36488}"
+	ProjectSection(SolutionItems) = preProject
+		Postman\Digin Grid Tariff API.postman_collection.json = Postman\Digin Grid Tariff API.postman_collection.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
