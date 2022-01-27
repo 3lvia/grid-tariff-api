@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.Interfaces.External;
 using GridTariffApi.Lib.Models.Digin;
@@ -39,13 +40,13 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
 
             _tariffPeristenceMock = new Mock<ITariffRepository>();
             _tariffPeristenceMock
-                .Setup(x => x.GetTariffPriceStructure())
-                .Returns(tariffPriceStructureRoot);
+                .Setup(x => x.GetTariffPriceStructureAsync())
+                .ReturnsAsync(tariffPriceStructureRoot);
 
             _holidayPeristenceMock = new Mock<IHolidayRepository>();
             _holidayPeristenceMock
-                .Setup(x => x.GetHolidays())
-                .Returns(new List<Holiday>());
+                .Setup(x => x.GetHolidaysAsync())
+                .ReturnsAsync(new List<Holiday>());
 
             var serviceHelper = new ServiceHelper(gridTariffApiConfig);
             var tariffPriceCache = new TariffPriceCache(new TariffPriceCacheDataStore(), _tariffPeristenceMock.Object, _holidayPeristenceMock.Object, null, null);
@@ -72,7 +73,7 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
         [InlineData("tariffKey", "", "", "31/12/2021 23:15")]
         [InlineData("", "product", "", "31/12/2021 23:15")]
 
-        public void ValidateRequestInput(string tariffKey, string productKey, string expectedError, string queryStartDateUtc)
+        public async Task ValidateRequestInput(string tariffKey, string productKey, string expectedError, string queryStartDateUtc)
         {
             Setup();
 
@@ -86,15 +87,15 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
                 request.StartTime = DateTime.SpecifyKind(DateTime.ParseExact(queryStartDateUtc, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture), DateTimeKind.Utc);
             }
 
-            var result = _controllerValidationHelper.ValidateRequestInput(request);
+            var result = await _controllerValidationHelper.ValidateRequestInputAsync(request);
             Assert.Contains(expectedError, result);
         }
 
         [Fact]
-        public void ValidateTariffQueryRequestInputNull()
+        public async Task ValidateTariffQueryRequestInputNull()
         {
             Setup();
-            var result = _controllerValidationHelper.ValidateRequestInput((TariffQueryRequest)null);
+            var result = await _controllerValidationHelper.ValidateRequestInputAsync((TariffQueryRequest)null);
             Assert.Contains("Missing model", result);
         }
 
@@ -145,7 +146,7 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
         [InlineData("tariffKey", "product", "tariffKey")]
         [InlineData("", "notfound", "")]
 
-        public void DecideTariffKeyFromInputTest(string tariffKey, string productKey, string expected)
+        public async Task DecideTariffKeyFromInputTest(string tariffKey, string productKey, string expected)
         {
             Setup();
             var request = new TariffQueryRequest()
@@ -154,7 +155,7 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
                 Product = productKey
             };
 
-            var actual = _controllerValidationHelper.DecideTariffKeyFromInput(request);
+            var actual = await _controllerValidationHelper.DecideTariffKeyFromInputAsync(request);
             Assert.Equal(expected, actual);
         }
     }

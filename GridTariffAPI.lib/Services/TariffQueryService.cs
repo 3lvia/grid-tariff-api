@@ -159,14 +159,14 @@ namespace GridTariffApi.Lib.Services
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate)
         {
-            var tariff = _tariffPriceCache.GetTariff(tariffKey);
+            var tariff = await _tariffPriceCache.GetTariffAsync(tariffKey);
             if (tariff == null)
             {
                 return new GridTariffCollection();
             }
             var tariffPrices = tariff.TariffPrices.ToList();
             tariffPrices.RemoveAll(x => x.EndDate <= paramFromDate || x.StartDate > paramToDate);
-            var company = _tariffPriceCache.GetCompany();
+            var company = await _tariffPriceCache.GetCompanyAsync();
 
             var gridTariffCollection = new GridTariffCollection
             {
@@ -193,7 +193,7 @@ namespace GridTariffApi.Lib.Services
             tariffPrice.PriceInfo.EnergyPrices = new List<Models.Digin.EnergyPrices>();
             tariffPrice.Hours = new List<Models.Digin.Hours>();
 
-            var holidays = _tariffPriceCache.GetHolidays(paramFromDate, paramToDate);
+            var holidays = await _tariffPriceCache.GetHolidaysAsync(paramFromDate, paramToDate);
             foreach (var tariffPricePrice in tariffPrices)
             {
                 await ProcessTariffPriceAsync(paramFromDate,

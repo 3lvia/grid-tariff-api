@@ -17,9 +17,9 @@ namespace GridTariffApi.Lib.Services
         public async Task<Models.Digin.TariffTypeContainer> GetTariffTypes()
         {
             var retVal = new Models.Digin.TariffTypeContainer();
-            var company = _tariffPriceCache.GetCompany();
+            var company = await _tariffPriceCache.GetCompanyAsync();
             retVal.TariffTypes = new List<Models.Digin.TariffType>();
-            var tariffTypes = _tariffPriceCache.GetTariffs();
+            var tariffTypes = await _tariffPriceCache.GetTariffsAsync();
             foreach (var tariffType in tariffTypes)
             {
                 retVal.TariffTypes.Add(_objectConversionHelper.ToTariffType(company,tariffType));
