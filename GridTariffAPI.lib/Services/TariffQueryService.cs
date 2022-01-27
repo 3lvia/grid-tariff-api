@@ -60,7 +60,7 @@ namespace GridTariffApi.Lib.Services
             if (_serviceHelper.TimePeriodIsIncludingLocaleToday(paramFromDate, paramToDate))
             {
                 //query overlaps localed "today"
-                var currentFixedPrices = GetFixedPricesValidToday(gridTariff.GridTariff.TariffPrice.PriceInfo.FixedPrices);
+                var currentFixedPrices = GetFixedPricesValidToday(gridTariff.GridTariff?.TariffPrice?.PriceInfo?.FixedPrices);
                 if (currentFixedPrices != null)
                 {
                     var priceLevels = AppendMeteringPointsToPriceLevels(meteringPointInformation, currentFixedPrices);
@@ -68,6 +68,11 @@ namespace GridTariffApi.Lib.Services
                     {
                         gridTariff.MeteringPointsAndPriceLevels.Add(priceLevel);
                     }
+                }
+                else
+                {
+                    var priceLevel = MeteringPointsToPriceLevel(null, null, meteringPointInformation);
+                    gridTariff.MeteringPointsAndPriceLevels.Add(priceLevel);
                 }
             }
             else
