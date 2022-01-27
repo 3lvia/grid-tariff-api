@@ -948,7 +948,46 @@ namespace GridTariffApi.Lib.Tests.Services
             Assert.NotNull(retVal.GridTariffCollections);
             Assert.Equal(2, retVal.GridTariffCollections.Count);
         }
+        [Fact]
+        public async Task QueryMeteringPointsTariffsAsyncTodayMissingTariffTests()
+        {
+            Setup();
+            var meteringPointId = "mp_a";
 
+            var meteringPointInformations = new List<MeteringPointInformation>();
+            meteringPointInformations.Add(new MeteringPointInformation("mp_a",null,null,null));
+            var mockRetVal = new List<MeteringPointInformation>();
+            mockRetVal.Add(new MeteringPointInformation(meteringPointId, null, 0, DateTimeOffset.MaxValue));
+
+            var tariffPriceCache = new Mock<ITariffPriceCache>();
+            tariffPriceCache
+                .Setup(x => x.GetMeteringPointInformationsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<String>>()))
+                .Returns(Task.FromResult(mockRetVal));
+
+            var gridTariffCollectionStandard = new Models.Digin.GridTariffCollection() { GridTariff = new Models.Digin.GridTariff()};
+            var tariffQueryServiceMock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, _serviceHelper);
+            tariffQueryServiceMock.CallBase = true;
+            tariffQueryServiceMock.Setup(x => x.QueryTariffAsync(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(gridTariffCollectionStandard));
+
+            string tariffKey = null;
+            var fromDate = DateTimeOffset.UtcNow.Date.AddHours(3);
+            var toDate = DateTimeOffset.UtcNow.Date.AddHours(4);
+
+            var retVal = await tariffQueryServiceMock.Object.GenerateTariffAndAppendMeteringPointsAsync(tariffKey, fromDate, toDate, meteringPointInformations);
+            Assert.NotNull(retVal);
+            Assert.Single(retVal.MeteringPointsAndPriceLevels);
+            var meteringPointsAndPriceLevel = retVal.MeteringPointsAndPriceLevels.First();
+            Assert.NotNull(meteringPointsAndPriceLevel.CurrentFixedPriceLevel);
+
+            var currentFixedPriceLevel = meteringPointsAndPriceLevel.CurrentFixedPriceLevel;
+            Assert.True(String.IsNullOrEmpty(currentFixedPriceLevel.Id));
+            Assert.True(String.IsNullOrEmpty(currentFixedPriceLevel.LevelId));
+
+            Assert.NotNull(meteringPointsAndPriceLevel.MeteringPoints);
+            var meteringPoints = meteringPointsAndPriceLevel.MeteringPoints;
+            Assert.Single(meteringPoints);
+            Assert.Equal(1,meteringPoints.Count(x => x.MeteringPointId == meteringPointId));
+        }
         [Fact]
         public async Task GenerateTariffAndAppendMeteringPointsIncludingLocaleTodayTests()
         {
