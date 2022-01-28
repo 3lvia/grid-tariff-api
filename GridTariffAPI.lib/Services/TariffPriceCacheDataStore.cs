@@ -19,7 +19,7 @@ namespace GridTariffApi.Lib.Services
 
         private DateTimeOffset _tariffCacheValidUntil = DateTime.UtcNow;
 
-        public async Task<IReadOnlyList<MeteringPointTariff>> GetMeteringPointTariffsAsync(List<String> meteringPoints, Func<List<string>, Task<IReadOnlyList<MeteringPointTariff>>> retrieveUncachedMeteringPointTariffsFunc)
+        public async Task<List<MeteringPointTariff>> GetMeteringPointTariffsAsync(List<string> meteringPoints, Func<List<string>, Task<IReadOnlyList<MeteringPointTariff>>> retrieveUncachedMeteringPointTariffsFunc)
         {
             var cachedMpTariffs = new Dictionary<string, MeteringPointTariff>();
             var uncachedMpids = new List<string>();
@@ -56,8 +56,7 @@ namespace GridTariffApi.Lib.Services
                     cachedMpTariffs.TryGetValue(mpid, out var cachedMpTariff);
                     return cachedMpTariff ?? new MeteringPointTariff(mpid, null);
                 })
-                .ToList()
-                .AsReadOnly();
+                .ToList();
         }
 
         public IReadOnlyList<Holiday> GetHolidayRoot()
@@ -80,15 +79,25 @@ namespace GridTariffApi.Lib.Services
             return _tariffPriceStructureRoot;
         }
 
-        public void ResetCacheIfNecessary(ITariffRepository tariffRepository, IHolidayRepository holidayRepository)
+        public async Task ResetCacheIfNecessaryAsync(ITariffRepository tariffRepository, IHolidayRepository holidayRepository)
         {
+            if (_tariffCacheValidUntil.Ticks > DateTime.UtcNow.Ticks)
+            {
+                return;
+            }
+
+            // Fetch data if the cache is no longer valid. Avoid doing async operations within lock statement.
+            var tariffPriceStructureRoot = await tariffRepository.GetTariffPriceStructureAsync();
+            var holidayRoot = await holidayRepository.GetHolidaysAsync();
+
+            // Update the cache unless someone else has done it while we were fetching data.
             lock(_resetLockObject)
             {
                 if (_tariffCacheValidUntil.Ticks < DateTime.UtcNow.Ticks)
                 {
                     _meteringPointTariffIndex = new Dictionary<string, MeteringPointTariff>(); // Reset caching of tariff per metering point. It is populated on demand.
-                    _tariffPriceStructureRoot = tariffRepository.GetTariffPriceStructure();
-                    _holidayRoot = holidayRepository.GetHolidays();
+                    _tariffPriceStructureRoot = tariffPriceStructureRoot;
+                    _holidayRoot = holidayRoot;
                     _tariffCacheValidUntil = DateTimeOffset.UtcNow.AddDays(1).Date;
                 }
             }

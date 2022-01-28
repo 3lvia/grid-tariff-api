@@ -16,7 +16,7 @@ namespace GridTariffApi.Lib.Controllers.v1
     [ApiController]
     [Authorize]
     [ApiVersion("1.0")]
-    [Route("api/{v:apiVersion}/powerbased")]
+    [Route("digin/api/{v:apiVersion}")]
     public class TariffQueryController : ControllerBase
     {
         private readonly ITariffQueryService _tariffQueryService;
@@ -48,7 +48,7 @@ namespace GridTariffApi.Lib.Controllers.v1
 
         public async Task<ActionResult<Models.Digin.TariffQueryResult>> TariffQuery([FromQuery] TariffQueryRequest request)  
         {
-            string validationErrorMsg = _controllerValidationHelper.ValidateRequestInput(request);
+            string validationErrorMsg = await _controllerValidationHelper.ValidateRequestInputAsync(request);
             if (!String.IsNullOrEmpty(validationErrorMsg))
             {
                 return BadRequest(validationErrorMsg);
@@ -56,7 +56,7 @@ namespace GridTariffApi.Lib.Controllers.v1
             DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
             DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
             _loggingDataCollector?.RegisterTariffPeriodAndNumMeteringPoints(startDateTime, endDateTime, null);
-            var tariffKey = _controllerValidationHelper.DecideTariffKeyFromInput(request);
+            var tariffKey = await _controllerValidationHelper.DecideTariffKeyFromInputAsync(request);
             var result = await _tariffQueryService.QueryTariffAsync(tariffKey, startDateTime, endDateTime);
             return Ok(result);
         }
@@ -66,7 +66,7 @@ namespace GridTariffApi.Lib.Controllers.v1
         /// </summary>
         /// Range and StartTime/Endtime is mutual exclusive, meaning either one must be present, but not bot. Date time formats using Edielstandard, see README file
         [HttpPost]
-        [Route("meteringpointstariffquery")]
+        [Route("tariffquery/meteringpointsgridtariffs")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]

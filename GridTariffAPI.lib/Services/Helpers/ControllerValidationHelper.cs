@@ -2,6 +2,7 @@
 using GridTariffApi.Lib.Models.Digin;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GridTariffApi.Lib.Services.Helpers
 {
@@ -41,7 +42,7 @@ namespace GridTariffApi.Lib.Services.Helpers
             return String.Empty;
         }
         
-        public string ValidateRequestInput(TariffQueryRequest request)
+        public async Task<string> ValidateRequestInputAsync(TariffQueryRequest request)
         {
             // Denne valideringen er i tillegg til Validate()-metoden på request-objektet, som kalles automatisk av ASP.NET.
 
@@ -62,7 +63,7 @@ namespace GridTariffApi.Lib.Services.Helpers
             }
 
             var tariffKey = request.TariffKey;
-            var tariffs = _tariffPriceCache.GetTariffs();
+            var tariffs = await _tariffPriceCache.GetTariffsAsync();
 
             if (!String.IsNullOrEmpty(request.Product))
             {
@@ -98,13 +99,13 @@ namespace GridTariffApi.Lib.Services.Helpers
             return String.Empty;
         }
 
-        public string DecideTariffKeyFromInput(TariffQueryRequest request)
+        public async Task<string> DecideTariffKeyFromInputAsync(TariffQueryRequest request)
         {
             if (!String.IsNullOrEmpty(request.TariffKey))
             {
                 return request.TariffKey;
             }
-            var tariff = _tariffPriceCache.GetTariffs().FirstOrDefault(x => x.Product == request.Product);
+            var tariff = (await _tariffPriceCache.GetTariffsAsync()).FirstOrDefault(x => x.Product == request.Product);
             if (tariff != null)
             {
                 return tariff.TariffKey;

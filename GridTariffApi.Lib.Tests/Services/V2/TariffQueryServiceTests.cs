@@ -624,8 +624,8 @@ namespace GridTariffApi.Lib.Tests.Services
             Assert.True(fixedPrice.Id.Length > 0);
             Assert.Equal(dateYearStart, fixedPrice.StartDate);
             Assert.Equal(dateYearEnd, fixedPrice.EndDate);
-            Assert.True(fixedPrice.PriceLevel != null);
-            Assert.Empty(fixedPrice.PriceLevel);
+            Assert.True(fixedPrice.PriceLevels != null);
+            Assert.Empty(fixedPrice.PriceLevels);
         }
 
         [Fact]
@@ -650,10 +650,10 @@ namespace GridTariffApi.Lib.Tests.Services
 
             var fixedPrice = _tariffQueryService.GenerateFixedPrices(dateYearStart, dateYearEnd, fixedPrices, fixedPriceTaxes);
             Assert.True(fixedPrice != null);
-            Assert.True(fixedPrice.PriceLevel != null);
-            Assert.Equal(3, fixedPrice.PriceLevel.Count);
+            Assert.True(fixedPrice.PriceLevels != null);
+            Assert.Equal(3, fixedPrice.PriceLevels.Count);
 
-            foreach (var fixedPriceLevel in fixedPrice.PriceLevel)
+            foreach (var fixedPriceLevel in fixedPrice.PriceLevels)
             {
                 Assert.True(fixedPriceLevel.HourPrices != null);
                 Assert.Equal(3, fixedPriceLevel.HourPrices.Count);
@@ -710,7 +710,7 @@ namespace GridTariffApi.Lib.Tests.Services
             Setup();
 
             var fixedPrices = new Models.Digin.FixedPrices();
-            fixedPrices.PriceLevel = new List<Models.Digin.FixedPriceLevel>();
+            fixedPrices.PriceLevels = new List<Models.Digin.FixedPriceLevel>();
 
             var fixedPriceLevel1 = new FixedPriceLevel("fixedPriceLevel1", 0, 0, String.Empty, String.Empty, String.Empty, 0, String.Empty, String.Empty, String.Empty, String.Empty);
             var fixedPriceLevel2 = new FixedPriceLevel("fixedPriceLevel2", 0, 0, String.Empty, String.Empty, String.Empty, 0, String.Empty, String.Empty, String.Empty, String.Empty);
@@ -726,9 +726,9 @@ namespace GridTariffApi.Lib.Tests.Services
 
             //initialize pricelevel and add one monthday
             _tariffQueryService.AppendFixedPriceLevels(fixedPrices, fixedPricePrices, fixedPriceTaxes, 31);
-            Assert.True(fixedPrices.PriceLevel != null);
-            Assert.Equal(3, fixedPrices.PriceLevel.Count);
-            foreach (var fixedPriceLevel in fixedPrices.PriceLevel)
+            Assert.True(fixedPrices.PriceLevels != null);
+            Assert.Equal(3, fixedPrices.PriceLevels.Count);
+            foreach (var fixedPriceLevel in fixedPrices.PriceLevels)
             {
                 Assert.True(fixedPriceLevel.HourPrices != null);
                 Assert.Equal(1, fixedPriceLevel.HourPrices.Count);
@@ -737,9 +737,9 @@ namespace GridTariffApi.Lib.Tests.Services
 
             //no duplicate monthday when adding monthday already existing
             _tariffQueryService.AppendFixedPriceLevels(fixedPrices, fixedPricePrices, fixedPriceTaxes, 31);
-            Assert.True(fixedPrices.PriceLevel != null);
-            Assert.Equal(3, fixedPrices.PriceLevel.Count);
-            foreach (var fixedPriceLevel in fixedPrices.PriceLevel)
+            Assert.True(fixedPrices.PriceLevels != null);
+            Assert.Equal(3, fixedPrices.PriceLevels.Count);
+            foreach (var fixedPriceLevel in fixedPrices.PriceLevels)
             {
                 Assert.True(fixedPriceLevel.HourPrices != null);
                 Assert.Equal(1, fixedPriceLevel.HourPrices.Count);
@@ -748,9 +748,9 @@ namespace GridTariffApi.Lib.Tests.Services
 
             //add new monthday
             _tariffQueryService.AppendFixedPriceLevels(fixedPrices, fixedPricePrices, fixedPriceTaxes, 30);
-            Assert.True(fixedPrices.PriceLevel != null);
-            Assert.Equal(3, fixedPrices.PriceLevel.Count);
-            foreach (var fixedPriceLevel in fixedPrices.PriceLevel)
+            Assert.True(fixedPrices.PriceLevels != null);
+            Assert.Equal(3, fixedPrices.PriceLevels.Count);
+            foreach (var fixedPriceLevel in fixedPrices.PriceLevels)
             {
                 Assert.True(fixedPriceLevel.HourPrices != null);
                 Assert.Equal(2, fixedPriceLevel.HourPrices.Count);
@@ -832,14 +832,14 @@ namespace GridTariffApi.Lib.Tests.Services
 
             var fixedPrices = new Models.Digin.FixedPrices();
             fixedPrices.Id = System.Guid.NewGuid().ToString();
-            fixedPrices.PriceLevel = new List<Models.Digin.FixedPriceLevel>();
-            fixedPrices.PriceLevel.Add(new Models.Digin.FixedPriceLevel()
+            fixedPrices.PriceLevels = new List<Models.Digin.FixedPriceLevel>();
+            fixedPrices.PriceLevels.Add(new Models.Digin.FixedPriceLevel()
             {
                 Id = System.Guid.NewGuid().ToString(),
                 ValueMin = null,
                 ValueMax = 20
             });
-            fixedPrices.PriceLevel.Add(new Models.Digin.FixedPriceLevel()
+            fixedPrices.PriceLevels.Add(new Models.Digin.FixedPriceLevel()
             {
                 Id = System.Guid.NewGuid().ToString(),
                 ValueMin = null,
@@ -878,14 +878,14 @@ namespace GridTariffApi.Lib.Tests.Services
 
             var fixedPrices = new Models.Digin.FixedPrices();
             fixedPrices.Id = System.Guid.NewGuid().ToString();
-            fixedPrices.PriceLevel = new List<Models.Digin.FixedPriceLevel>();
-            fixedPrices.PriceLevel.Add(new Models.Digin.FixedPriceLevel()
+            fixedPrices.PriceLevels = new List<Models.Digin.FixedPriceLevel>();
+            fixedPrices.PriceLevels.Add(new Models.Digin.FixedPriceLevel()
             {
                 Id = System.Guid.NewGuid().ToString(),
                 ValueMin = null,
                 ValueMax = 20
             });
-            fixedPrices.PriceLevel.Add(new Models.Digin.FixedPriceLevel()
+            fixedPrices.PriceLevels.Add(new Models.Digin.FixedPriceLevel()
             {
                 Id = System.Guid.NewGuid().ToString(),
                 ValueMin = 30,
@@ -948,7 +948,46 @@ namespace GridTariffApi.Lib.Tests.Services
             Assert.NotNull(retVal.GridTariffCollections);
             Assert.Equal(2, retVal.GridTariffCollections.Count);
         }
+        [Fact]
+        public async Task QueryMeteringPointsTariffsAsyncTodayMissingTariffTests()
+        {
+            Setup();
+            var meteringPointId = "mp_a";
 
+            var meteringPointInformations = new List<MeteringPointInformation>();
+            meteringPointInformations.Add(new MeteringPointInformation("mp_a",null,null,null));
+            var mockRetVal = new List<MeteringPointInformation>();
+            mockRetVal.Add(new MeteringPointInformation(meteringPointId, null, 0, DateTimeOffset.MaxValue));
+
+            var tariffPriceCache = new Mock<ITariffPriceCache>();
+            tariffPriceCache
+                .Setup(x => x.GetMeteringPointInformationsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<String>>()))
+                .Returns(Task.FromResult(mockRetVal));
+
+            var gridTariffCollectionStandard = new Models.Digin.GridTariffCollection() { GridTariff = new Models.Digin.GridTariff()};
+            var tariffQueryServiceMock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, _serviceHelper);
+            tariffQueryServiceMock.CallBase = true;
+            tariffQueryServiceMock.Setup(x => x.QueryTariffAsync(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(gridTariffCollectionStandard));
+
+            string tariffKey = null;
+            var fromDate = DateTimeOffset.UtcNow.Date.AddHours(3);
+            var toDate = DateTimeOffset.UtcNow.Date.AddHours(4);
+
+            var retVal = await tariffQueryServiceMock.Object.GenerateTariffAndAppendMeteringPointsAsync(tariffKey, fromDate, toDate, meteringPointInformations);
+            Assert.NotNull(retVal);
+            Assert.Single(retVal.MeteringPointsAndPriceLevels);
+            var meteringPointsAndPriceLevel = retVal.MeteringPointsAndPriceLevels.First();
+            Assert.NotNull(meteringPointsAndPriceLevel.CurrentFixedPriceLevel);
+
+            var currentFixedPriceLevel = meteringPointsAndPriceLevel.CurrentFixedPriceLevel;
+            Assert.True(String.IsNullOrEmpty(currentFixedPriceLevel.Id));
+            Assert.True(String.IsNullOrEmpty(currentFixedPriceLevel.LevelId));
+
+            Assert.NotNull(meteringPointsAndPriceLevel.MeteringPoints);
+            var meteringPoints = meteringPointsAndPriceLevel.MeteringPoints;
+            Assert.Single(meteringPoints);
+            Assert.Equal(1,meteringPoints.Count(x => x.MeteringPointId == meteringPointId));
+        }
         [Fact]
         public async Task GenerateTariffAndAppendMeteringPointsIncludingLocaleTodayTests()
         {
@@ -963,7 +1002,7 @@ namespace GridTariffApi.Lib.Tests.Services
             {
                 StartDate = DateTimeOffset.UtcNow.AddMonths(-1),
                 EndDate = DateTimeOffset.UtcNow.AddMonths(1),
-                PriceLevel = new List<Models.Digin.FixedPriceLevel>() { new Models.Digin.FixedPriceLevel() }
+                PriceLevels = new List<Models.Digin.FixedPriceLevel>() { new Models.Digin.FixedPriceLevel() }
             };
             gridTariffCollectionStandard.GridTariff.TariffPrice.PriceInfo.FixedPrices.Add(fixedPrices);
 
@@ -1012,7 +1051,7 @@ namespace GridTariffApi.Lib.Tests.Services
             {
                 StartDate = DateTimeOffset.UtcNow.AddMonths(-1),
                 EndDate = DateTimeOffset.UtcNow.AddMonths(1),
-                PriceLevel = new List<Models.Digin.FixedPriceLevel>() { new Models.Digin.FixedPriceLevel() }
+                PriceLevels = new List<Models.Digin.FixedPriceLevel>() { new Models.Digin.FixedPriceLevel() }
             };
             gridTariffCollectionStandard.GridTariff.TariffPrice.PriceInfo.FixedPrices.Add(fixedPrices);
 

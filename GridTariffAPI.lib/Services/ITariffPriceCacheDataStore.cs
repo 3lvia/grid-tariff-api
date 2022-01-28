@@ -13,9 +13,9 @@ namespace GridTariffApi.Lib.Services
     /// </summary>
     public interface ITariffPriceCacheDataStore
     {
-        Task<IReadOnlyList<MeteringPointTariff>> GetMeteringPointTariffsAsync(List<String> meteringPoints, Func<List<string>, Task<IReadOnlyList<MeteringPointTariff>>> retrieveUncachedMeteringPointTariffsFunc);
+        Task<List<MeteringPointTariff>> GetMeteringPointTariffsAsync(List<string> meteringPoints, Func<List<string>, Task<IReadOnlyList<MeteringPointTariff>>> retrieveUncachedMeteringPointTariffsFunc);
         IReadOnlyList<Holiday> GetHolidayRoot();
         TariffPriceStructureRoot GetTariffRootElement();
-        void ResetCacheIfNecessary(ITariffRepository tariffRepository, IHolidayRepository holidayRepository);
+        Task ResetCacheIfNecessaryAsync(ITariffRepository tariffRepository, IHolidayRepository holidayRepository);
     }
 }

@@ -1,10 +1,11 @@
 ﻿using GridTariffApi.Lib.Models.Holidays;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GridTariffApi.Lib.Interfaces.External
 {
     public interface IHolidayRepository
     {
-        public IReadOnlyList<Holiday> GetHolidays();
+        public Task<IReadOnlyList<Holiday>> GetHolidaysAsync();
     }
 }

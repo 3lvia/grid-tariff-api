@@ -7,6 +7,6 @@ namespace GridTariffApi.Lib.Interfaces.External
 {
     public interface IMeteringPointMaxConsumptionRepository
     {
-        public Task<IReadOnlyList<MeteringPointMaxConsumption>> GetMeteringPointMaxConsumptionsAsync(DateTimeOffset fromDateTime, DateTimeOffset toDateTime, List<string> meteringPointIds);
+        public Task<List<MeteringPointMaxConsumption>> GetMeteringPointMaxConsumptionsAsync(DateTimeOffset fromDateTime, DateTimeOffset toDateTime, List<string> meteringPointIds);
     }
 }
