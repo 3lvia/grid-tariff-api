@@ -24,7 +24,7 @@ namespace GridTariffApi.Lib.Models.Digin
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.22.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class TariffQueryRequestMeteringPoints
+    public partial class TariffQueryRequestMeteringPoints : IValidatableObject
     {
         /// <summary>A keyword for the from-to time range. Exclusive OR with startTime/endTime. Yesterday = hour 0 through hour 23 yesterday etc.</summary>
         [Newtonsoft.Json.JsonProperty("range", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
