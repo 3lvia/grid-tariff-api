@@ -284,7 +284,7 @@ namespace GridTariffApi.Lib.Services
             while (fromDate < paramToDate)
             {
                 var currMonthEndToDate = GetNextMonthEndDate(fromDate, paramToDate);
-                var fromDateLocaled = _serviceHelper.GetTimeZonedDateTime(fromDate.UtcDateTime);
+                var fromDateLocaled = _serviceHelper.ToConfiguredTimeZone(fromDate);
                 if (season.Months.Contains(fromDateLocaled.Month))
                 {
                     var daysInMonth = DateTime.DaysInMonth(fromDateLocaled.Year, fromDateLocaled.Month);
