@@ -69,6 +69,7 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
             var testValue = new DateTimeOffset(localTimeNow.Year, localTimeNow.Month, localTimeNow.Day, 0, 0, 0, localTimeNow.Offset);
             testValue = testValue.AddDays(daysToAdd);
             Assert.Equal(testValue, startDate);
+            Assert.Equal(testValue.Offset, startDate.Offset);
         }
 
         [Theory]
@@ -84,6 +85,7 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
             var testValue = new DateTimeOffset(localTimeNow.Year, localTimeNow.Month, localTimeNow.Day, 0, 0, 0, localTimeNow.Offset);
             testValue = testValue.AddDays(daysToAdd).AddSeconds(-1);
             Assert.Equal(testValue, startDate);
+            Assert.Equal(testValue.Offset, startDate.Offset);
         }
 
         [Fact]
