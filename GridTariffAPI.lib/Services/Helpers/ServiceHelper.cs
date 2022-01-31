@@ -39,8 +39,9 @@ namespace GridTariffApi.Lib.Services.Helpers
             {
                 return startDateTime.Value;
             }
-            DateTimeOffset timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
-            return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime).ToUniversalTime();
+            var localTimeNow = ToConfiguredTimeZone(DateTime.UtcNow);
+            var localTimeToday = new DateTimeOffset(localTimeNow.Year, localTimeNow.Month, localTimeNow.Day, 0, 0, 0, localTimeNow.Offset);
+            return AddDaysUsingQueryRangeParameter(range, localTimeToday);
         }
 
         public DateTimeOffset GetEndDateTimeOffset(string? range, DateTimeOffset? endDateTime)
@@ -49,10 +50,10 @@ namespace GridTariffApi.Lib.Services.Helpers
             {
                 return endDateTime.Value;
             }
-            DateTimeOffset timeZonedDateTime = GetTimeZonedDateTime(DateTime.UtcNow).Date;
-            return AddDaysUsingQueryRangeParameter(range, timeZonedDateTime.AddDays(1).AddSeconds(-1)).ToUniversalTime();
+            var localTimeNow = ToConfiguredTimeZone(DateTime.UtcNow);
+            var localTimeToday = new DateTimeOffset(localTimeNow.Year, localTimeNow.Month, localTimeNow.Day, 0, 0, 0, localTimeNow.Offset);
+            return AddDaysUsingQueryRangeParameter(range, localTimeToday.AddDays(1).AddSeconds(-1));
         }
-
 
         private DateTimeOffset AddDaysUsingQueryRangeParameter(string? range, DateTimeOffset dateTimeOffset)
         {

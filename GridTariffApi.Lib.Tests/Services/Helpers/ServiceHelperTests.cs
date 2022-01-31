@@ -65,10 +65,12 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
         {
             Setup();
             var startDate = _serviceHelper.GetStartDateTimeOffset(range, null);
-            var testValue = _serviceHelper.GetTimeZonedDateTime(DateTime.UtcNow).Date.AddDays(daysToAdd).ToUniversalTime();
+            var localTimeNow = _serviceHelper.ToConfiguredTimeZone(DateTime.UtcNow);
+            var testValue = new DateTimeOffset(localTimeNow.Year, localTimeNow.Month, localTimeNow.Day, 0, 0, 0, localTimeNow.Offset);
+            testValue = testValue.AddDays(daysToAdd);
             Assert.Equal(testValue, startDate);
+            Assert.Equal(testValue.Offset, startDate.Offset);
         }
-
 
         [Theory]
         [InlineData("yesterday", 0)]
@@ -79,8 +81,11 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
         {
             Setup();
             var startDate = _serviceHelper.GetEndDateTimeOffset(range, null);
-            var testValue = _serviceHelper.GetTimeZonedDateTime(DateTime.UtcNow).Date.AddDays(daysToAdd).AddSeconds(-1).ToUniversalTime();
+            var localTimeNow = _serviceHelper.ToConfiguredTimeZone(DateTime.UtcNow);
+            var testValue = new DateTimeOffset(localTimeNow.Year, localTimeNow.Month, localTimeNow.Day, 0, 0, 0, localTimeNow.Offset);
+            testValue = testValue.AddDays(daysToAdd).AddSeconds(-1);
             Assert.Equal(testValue, startDate);
+            Assert.Equal(testValue.Offset, startDate.Offset);
         }
 
         [Fact]
