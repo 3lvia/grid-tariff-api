@@ -52,7 +52,7 @@ namespace GridTariffApi.Lib.Services.Helpers
             }
             var localTimeNow = ToConfiguredTimeZone(DateTime.UtcNow);
             var localTimeToday = new DateTimeOffset(localTimeNow.Year, localTimeNow.Month, localTimeNow.Day, 0, 0, 0, localTimeNow.Offset);
-            return AddDaysUsingQueryRangeParameter(range, localTimeToday.AddDays(1).AddSeconds(-1));
+            return AddDaysUsingQueryRangeParameter(range, localTimeToday.AddDays(1));
         }
 
         private DateTimeOffset AddDaysUsingQueryRangeParameter(string? range, DateTimeOffset dateTimeOffset)
