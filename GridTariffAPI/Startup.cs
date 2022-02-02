@@ -80,7 +80,7 @@ namespace GridTariffApi
             services.AddTransient<GridTariffApi.Lib.Services.Pilot.ITariffTypeService, GridTariffApi.Lib.Services.Pilot.TariffTypeService>();
             services.AddTransient<GridTariffApi.Lib.Services.Pilot.ITariffQueryService, GridTariffApi.Lib.Services.Pilot.TariffQueryService>();
             services.AddTransient<IServiceHelper, ServiceHelper>();
-            services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString));
+            services.AddDbContext<TariffContext>(options => options.UseSqlServer(Configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string")));
 
             //v2
             services.AddScoped<ITariffRepository, TariffRepositoryFile>();
@@ -143,7 +143,7 @@ namespace GridTariffApi
                 options.CustomSchemaIds(x => x.FullName);
             });
 
-            ConfigureAuth(services, gridTariffApiConfig.Username, gridTariffApiConfig.Password);
+            ConfigureAuth(services, Configuration.EnsureHasValue("kunde:kv:nett-tariff-api:username"), Configuration.EnsureHasValue("kunde:kv:nett-tariff-api:password"));
         }
 
         private static void AddAuthorizations(IServiceCollection services)
@@ -162,10 +162,6 @@ namespace GridTariffApi
         {
             GridTariffApiConfig gridTariffApiConfig = new GridTariffApiConfig
             {
-                DBConnectionString = Configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string"),
-                InstrumentationKey = Configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"),
-                Username = Configuration.EnsureHasValue("kunde:kv:nett-tariff-api:username"),
-                Password = Configuration.EnsureHasValue("kunde:kv:nett-tariff-api:password"),
                 MinStartDateAllowedQuery = Configuration.GetValue<DateTime>("minStartDateAllowedQuery"),
                 TimeZoneForQueries = NorwegianTimeZoneInfo(),
             };
