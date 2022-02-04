@@ -4739,7 +4739,7 @@
                         "nextIdUp": null,
                         "valueUnitOfMeasure": null,
                         "monthlyActivePowerExTaxes": 23.0000,
-                        "monthlyReactivePowerExTaxes": 45.0000,
+                        "monthlyReactivePowerExTaxes": 0.0000,
                         "monthlyUnitOfMeasure": "kr/kW/month",
                         "levelInfo": "Power price component for PL - Effekttariff bedrift",
                         "currency": "NOK",
@@ -4752,7 +4752,7 @@
                       {
                         "id": "c3c82c63-53ec-432f-9e0d-24c36f671230",
                         "level": "NORMAL",
-                        "energyExTaxes": 0.2453,
+                        "energyExTaxes": 0.0390,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
                       }
                     ],
@@ -4773,7 +4773,7 @@
                         "nextIdUp": null,
                         "valueUnitOfMeasure": null,
                         "monthlyActivePowerExTaxes": 80.0000,
-                        "monthlyReactivePowerExTaxes": 0.0000,
+                        "monthlyReactivePowerExTaxes": 45.0000,
                         "monthlyUnitOfMeasure": "kr/kW/month",
                         "levelInfo": "Power price component for PL - Effekttariff bedrift",
                         "currency": "NOK",
@@ -4786,7 +4786,7 @@
                       {
                         "id": "10d55347-3ef5-459a-a73a-2064a60199b1",
                         "level": "NORMAL",
-                        "energyExTaxes": 0.2453,
+                        "energyExTaxes": 0.0700,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
                       }
                     ],
@@ -4820,7 +4820,7 @@
                       {
                         "id": "501f0387-30b0-4301-bf21-a2660f42fc47",
                         "level": "NORMAL",
-                        "energyExTaxes": 0.2453,
+                        "energyExTaxes": 0.0700,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
                       }
                     ],
@@ -4895,7 +4895,7 @@
                         "nextIdUp": null,
                         "valueUnitOfMeasure": null,
                         "monthlyActivePowerExTaxes": 22.0000,
-                        "monthlyReactivePowerExTaxes": 45.0000,
+                        "monthlyReactivePowerExTaxes": 0.0000,
                         "monthlyUnitOfMeasure": "kr/kW/month",
                         "levelInfo": "Power price component for PL - Effekttariff bedrift",
                         "currency": "NOK",
@@ -4908,7 +4908,7 @@
                       {
                         "id": "88049cc8-aaeb-47e3-b2c5-97d0830fbdcc",
                         "level": "NORMAL",
-                        "energyExTaxes": 0.1815,
+                        "energyExTaxes": 0.0390,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
                       }
                     ],
@@ -4929,7 +4929,7 @@
                         "nextIdUp": null,
                         "valueUnitOfMeasure": null,
                         "monthlyActivePowerExTaxes": 67.0000,
-                        "monthlyReactivePowerExTaxes": 0.0000,
+                        "monthlyReactivePowerExTaxes": 45.0000,
                         "monthlyUnitOfMeasure": "kr/kW/month",
                         "levelInfo": "Power price component for PL - Effekttariff bedrift",
                         "currency": "NOK",
@@ -4942,7 +4942,7 @@
                       {
                         "id": "f097def7-57f5-4405-8d4f-1dcff3fa1c3d",
                         "level": "NORMAL",
-                        "energyExTaxes": 0.1815,
+                        "energyExTaxes": 0.0700,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
                       }
                     ],
@@ -4976,7 +4976,7 @@
                       {
                         "id": "03415d47-4226-41e9-a9fc-7a830c8a02c0",
                         "level": "NORMAL",
-                        "energyExTaxes": 0.1815,
+                        "energyExTaxes": 0.0700,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
                       }
                     ],
