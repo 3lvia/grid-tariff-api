@@ -934,8 +934,8 @@ namespace GridTariffApi.Lib.Tests.Services
             var gridTariffCollectionFobar = new Models.Digin.GridTariffCollection() { GridTariff = new Models.Digin.GridTariff() { TariffType = new Models.Digin.TariffType() { TariffKey = "fobar" } } };
 
             var mock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, _serviceHelper);
-            mock.Setup(x => x.QueryTariffAsync("standard", DateTimeOffset.MinValue, DateTimeOffset.MaxValue)).Returns(Task.FromResult(gridTariffCollectionStandard));
-            mock.Setup(x => x.QueryTariffAsync("fobar", DateTimeOffset.MinValue, DateTimeOffset.MaxValue)).Returns(Task.FromResult(gridTariffCollectionFobar));
+            mock.Setup(x => x.QueryTariffAsyncUsingProductKey("standard", DateTimeOffset.MinValue, DateTimeOffset.MaxValue)).Returns(Task.FromResult(gridTariffCollectionStandard));
+            mock.Setup(x => x.QueryTariffAsyncUsingProductKey("fobar", DateTimeOffset.MinValue, DateTimeOffset.MaxValue)).Returns(Task.FromResult(gridTariffCollectionFobar));
             mock.Setup(x => x.GenerateTariffAndAppendMeteringPointsAsync(It.IsAny<String>(), DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<MeteringPointInformation>>()))
                 .Returns(Task.FromResult(new Models.Digin.GridTariffCollection()));
 
@@ -967,7 +967,7 @@ namespace GridTariffApi.Lib.Tests.Services
             var gridTariffCollectionStandard = new Models.Digin.GridTariffCollection() { GridTariff = new Models.Digin.GridTariff()};
             var tariffQueryServiceMock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, _serviceHelper);
             tariffQueryServiceMock.CallBase = true;
-            tariffQueryServiceMock.Setup(x => x.QueryTariffAsync(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(gridTariffCollectionStandard));
+            tariffQueryServiceMock.Setup(x => x.QueryTariffAsyncUsingProductKey(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(gridTariffCollectionStandard));
 
             string tariffKey = null;
             var fromDate = DateTimeOffset.UtcNow.Date.AddHours(3);
@@ -986,7 +986,7 @@ namespace GridTariffApi.Lib.Tests.Services
             Assert.NotNull(meteringPointsAndPriceLevel.MeteringPoints);
             var meteringPoints = meteringPointsAndPriceLevel.MeteringPoints;
             Assert.Single(meteringPoints);
-            Assert.Equal(1,meteringPoints.Count(x => x.MeteringPointId == meteringPointId));
+            Assert.Equal(1, meteringPoints.Count(x => x.MeteringPointId == meteringPointId));
         }
         [Fact]
         public async Task GenerateTariffAndAppendMeteringPointsIncludingLocaleTodayTests()
@@ -1020,12 +1020,12 @@ namespace GridTariffApi.Lib.Tests.Services
 
             var tariffQueryServiceMock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, serviceHelperMock.Object);
             tariffQueryServiceMock.CallBase = true;
-            tariffQueryServiceMock.Setup(x => x.QueryTariffAsync(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(gridTariffCollectionStandard));
+            tariffQueryServiceMock.Setup(x => x.QueryTariffAsyncUsingProductKey(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(gridTariffCollectionStandard));
             tariffQueryServiceMock.Setup(x => x.AppendMeteringPointsToPriceLevels(It.IsAny<List<MeteringPointInformation>>(), It.IsAny<Models.Digin.FixedPrices>()));
             tariffQueryServiceMock.Setup(x => x.GetFixedPricesValidToday(It.IsAny < List <Models.Digin.FixedPrices>>()));
-            
+
             var retVal = await tariffQueryServiceMock.Object.GenerateTariffAndAppendMeteringPointsAsync(String.Empty, DateTimeOffset.UtcNow.AddDays(-2), DateTimeOffset.UtcNow.AddDays(1), meteringPointInformations);
-            tariffQueryServiceMock.Verify(x => x.QueryTariffAsync(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()), Times.Once);
+            tariffQueryServiceMock.Verify(x => x.QueryTariffAsyncUsingProductKey(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()), Times.Once);
             serviceHelperMock.Verify(x => x.TimePeriodIsIncludingLocaleToday(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()), Times.Exactly(2));
             tariffQueryServiceMock.Verify(x => x.GetFixedPricesValidToday(It.IsAny<List<Models.Digin.FixedPrices>>()), Times.Once);
             tariffQueryServiceMock.Verify(x => x.AppendMeteringPointsToPriceLevels(It.IsAny<List<MeteringPointInformation>>(), It.IsAny<Models.Digin.FixedPrices>()), Times.Once);
@@ -1058,10 +1058,10 @@ namespace GridTariffApi.Lib.Tests.Services
 
             var meteringPointInformations = new List<MeteringPointInformation>
             {
-                new MeteringPointInformation("a", "",null, DateTimeOffset.MaxValue),
-                new MeteringPointInformation("b", "",0, DateTimeOffset.MaxValue),
-                new MeteringPointInformation("c", "",12, DateTimeOffset.MaxValue),
-                new MeteringPointInformation("d", "",0, null)
+                new MeteringPointInformation(String.Empty, "a",null, DateTimeOffset.MaxValue),
+                new MeteringPointInformation(String.Empty, "b",0, DateTimeOffset.MaxValue),
+                new MeteringPointInformation(String.Empty, "c",12, DateTimeOffset.MaxValue),
+                new MeteringPointInformation(String.Empty, "d",0, null)
             };
 
             var serviceHelperMock = new Mock<ServiceHelper>(new GridTariffApiConfig());
@@ -1069,13 +1069,13 @@ namespace GridTariffApi.Lib.Tests.Services
 
             var tariffQueryServiceMock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, serviceHelperMock.Object);
             tariffQueryServiceMock.CallBase = true;
-            tariffQueryServiceMock.Setup(x => x.QueryTariffAsync(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(gridTariffCollectionStandard));
+            tariffQueryServiceMock.Setup(x => x.QueryTariffAsyncUsingProductKey(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(gridTariffCollectionStandard));
             tariffQueryServiceMock.Setup(x => x.AppendMeteringPointsToPriceLevels(It.IsAny<List<MeteringPointInformation>>(), It.IsAny<Models.Digin.FixedPrices>()));
             tariffQueryServiceMock.Setup(x => x.GetFixedPricesValidToday(It.IsAny<List<Models.Digin.FixedPrices>>()));
             tariffQueryServiceMock.Setup(x => x.MeteringPointsToPriceLevel(It.IsAny<String>(), It.IsAny<String>(), It.IsAny<List<MeteringPointInformation>>()));
 
             var retVal = await tariffQueryServiceMock.Object.GenerateTariffAndAppendMeteringPointsAsync(String.Empty, DateTimeOffset.UtcNow.AddDays(-2), DateTimeOffset.UtcNow.AddDays(1), meteringPointInformations);
-            tariffQueryServiceMock.Verify(x => x.QueryTariffAsync(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()), Times.Once);
+            tariffQueryServiceMock.Verify(x => x.QueryTariffAsyncUsingProductKey(It.IsAny<String>(), It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()), Times.Once);
             serviceHelperMock.Verify(x => x.TimePeriodIsIncludingLocaleToday(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>()), Times.Once);
             tariffQueryServiceMock.Verify(x => x.GetFixedPricesValidToday(It.IsAny<List<Models.Digin.FixedPrices>>()), Times.Never);
             tariffQueryServiceMock.Verify(x => x.AppendMeteringPointsToPriceLevels(It.IsAny<List<MeteringPointInformation>>(), It.IsAny<Models.Digin.FixedPrices>()), Times.Never);
@@ -1127,6 +1127,49 @@ namespace GridTariffApi.Lib.Tests.Services
             var retval2 = _tariffQueryService.GetFixedPricesValidToday(fixedPrices);
             Assert.NotNull(retval2);
             Assert.Equal(endDateWithinToday, retval2.EndDate);
+        }
+
+        [Fact]
+        public async Task QueryTariffAsyncUsingTariffKeyMissTests()
+        {
+            Setup();
+
+            var utcNow = DateTimeOffset.UtcNow;
+            var tariffKey = String.Empty;
+
+            var tariffPriceCache = new Mock<ITariffPriceCache>();
+            tariffPriceCache.Setup(x => x.GetTariffsAsync()).Returns(Task.FromResult((IReadOnlyList<TariffType>)null));
+
+            var tariffQueryServiceMock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, (ServiceHelper)null);
+            tariffQueryServiceMock.CallBase = true;
+
+            var retVal = await tariffQueryServiceMock.Object.QueryTariffAsyncUsingTariffKey(tariffKey, utcNow, utcNow);
+            tariffQueryServiceMock.Verify(x => x.QueryTariffAsyncUsingProductKey(tariffKey, utcNow, utcNow), Times.Once);
+            Assert.NotNull(retVal);
+        }
+
+        [Fact]
+        public async Task QueryTariffAsyncUsingTariffKeyHitTests()
+        {
+            Setup();
+
+            var utcNow = DateTimeOffset.UtcNow;
+            var tariffKey = "TariffKey";
+            var productKey = "ProductKey";
+
+            var tariffs = new List<TariffType>();
+            tariffs.Add(new TariffType("TariffKey", "ProductKey", String.Empty, String.Empty, String.Empty, String.Empty, false, DateTimeOffset.UtcNow, false, null, 0, null, null));
+
+            var tariffPriceCache = new Mock<ITariffPriceCache>();
+            tariffPriceCache.Setup(x => x.GetTariffsAsync()).Returns(Task.FromResult((IReadOnlyList < TariffType > )tariffs.AsReadOnly()));
+
+            var tariffQueryServiceMock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, (ServiceHelper)null);
+            tariffQueryServiceMock.Setup(x => x.QueryTariffAsyncUsingProductKey(productKey, utcNow, utcNow)).Returns(Task.FromResult(new Models.Digin.GridTariffCollection()));
+            tariffQueryServiceMock.CallBase = true;
+
+            var retVal = await tariffQueryServiceMock.Object.QueryTariffAsyncUsingTariffKey(tariffKey, utcNow, utcNow);
+            tariffQueryServiceMock.Verify(x => x.QueryTariffAsyncUsingProductKey(productKey, utcNow, utcNow), Times.Once);
+            Assert.NotNull(retVal);
         }
     }
 }

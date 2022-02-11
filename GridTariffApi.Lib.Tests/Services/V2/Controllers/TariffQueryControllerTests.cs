@@ -59,7 +59,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
 
             _tariffQueryServiceMock = new Mock<ITariffQueryService>();
             _tariffQueryServiceMock
-                .Setup(x => x.QueryTariffAsync("tariffKey", DateTimeOffset.MaxValue, DateTimeOffset.MaxValue))
+                .Setup(x => x.QueryTariffAsyncUsingTariffKey("tariffKey", DateTimeOffset.MaxValue, DateTimeOffset.MaxValue))
                 .Returns(Task.FromResult(new GridTariffCollection()));
 
             _tariffQueryServiceMock
@@ -84,7 +84,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
             };
 
             await _tariffQueryController.TariffQuery(request);
-            _tariffQueryServiceMock.Verify(x => x.QueryTariffAsync(request.TariffKey, DateTimeOffset.MaxValue, DateTimeOffset.MaxValue), Times.Once);
+            _tariffQueryServiceMock.Verify(x => x.QueryTariffAsyncUsingTariffKey(request.TariffKey, DateTimeOffset.MaxValue, DateTimeOffset.MaxValue), Times.Once);
         }
 
         [Fact]

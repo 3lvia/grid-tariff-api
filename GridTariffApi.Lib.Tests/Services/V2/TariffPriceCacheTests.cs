@@ -114,7 +114,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             {
                 var mpInfo = mpInformations[i];
                 Assert.Equal(_meteringPointIds[i], mpInfo.MeteringPointId);
-                Assert.Equal(tariffKey, mpInfo.TariffKey);
+                Assert.Equal(tariffKey, mpInfo.ProductKey);
                 Assert.Equal(maxConsumption, mpInfo.MaxConsumption);
             }
         }
