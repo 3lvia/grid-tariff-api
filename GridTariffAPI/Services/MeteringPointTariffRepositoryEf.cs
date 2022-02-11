@@ -1,5 +1,4 @@
-﻿using GridTariffApi.Lib.EntityFramework;
-using GridTariffApi.Lib.Interfaces.External;
+﻿using GridTariffApi.Lib.Interfaces.External;
 using GridTariffApi.Lib.Models.Internal;
 using System.Collections.Generic;
 using System.Linq;

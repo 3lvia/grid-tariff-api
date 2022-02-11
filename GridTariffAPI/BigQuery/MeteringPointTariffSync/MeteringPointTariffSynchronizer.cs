@@ -56,7 +56,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
 
         private async Task<Company> GetElviaCompany(ElviaDbContext elviaDbContext)
         {
-            var elviaCompany = elviaDbContext.Company.FirstOrDefault(x => x.OrgNumber == _elviaCompanyOrgNumber); //todo ikke hardkodet
+            var elviaCompany = elviaDbContext.Company.FirstOrDefault(x => x.OrgNumber == _elviaCompanyOrgNumber);
             if (elviaCompany == null)
             {
                 elviaCompany = new Company()
@@ -160,7 +160,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
                     ProductKey = meteringPointProductBigQuery.Product,
                     LastUpdated = timeStamp,
                     Company = elviaCompany
-                });;
+                });
             }
             else
             {

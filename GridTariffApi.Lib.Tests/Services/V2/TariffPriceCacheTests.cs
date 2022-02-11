@@ -32,10 +32,12 @@ namespace GridTariffApi.Lib.Tests.Services.V2
                 .ReturnsAsync(new List<Holiday>());
 
 
-            var meteringPointTariffs = new List<MeteringPointTariff>();
-            meteringPointTariffs.Add(new MeteringPointTariff("mp1", tariffKey));
-            meteringPointTariffs.Add(new MeteringPointTariff("mp2", tariffKey));
-            meteringPointTariffs.Add(new MeteringPointTariff("mp3", tariffKey));
+            var meteringPointTariffs = new List<MeteringPointTariff>
+            {
+                new MeteringPointTariff("mp1", tariffKey),
+                new MeteringPointTariff("mp2", tariffKey),
+                new MeteringPointTariff("mp3", tariffKey)
+            };
             _meteringPointIds = meteringPointTariffs.Select(mpTariff => mpTariff.MeteringPointId).ToList();
 
             _meteringPointTariffRepository = new Mock<IMeteringPointTariffRepository>();
@@ -52,7 +54,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             _meteringPointMaxConsumptionRepository = new Mock<IMeteringPointMaxConsumptionRepository>();
             _meteringPointMaxConsumptionRepository
                 .Setup(x => x.GetMeteringPointMaxConsumptionsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, It.IsAny<List<String>>()))
-                .ReturnsAsync((List<Models.Internal.MeteringPointMaxConsumption>)meteringPointMaxConsumptions);
+                .ReturnsAsync(meteringPointMaxConsumptions);
         }
 
         [Fact]

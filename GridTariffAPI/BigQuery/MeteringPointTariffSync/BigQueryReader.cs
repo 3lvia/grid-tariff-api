@@ -1,7 +1,5 @@
-﻿using Elvia.Telemetry;
-using Google.Cloud.BigQuery.V2;
+﻿using Google.Cloud.BigQuery.V2;
 using GridTariffApi.BigQuery.MeteringPointTariffSync.Model;
-//using GridTariffApi.Synchronizer.Lib.Model.BigQueryMeteringPoint;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
