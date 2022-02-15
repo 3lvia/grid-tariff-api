@@ -85,8 +85,7 @@ namespace GridTariffApi
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(Configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string")));
 
             //Digin 
-            //services.AddDbContext<ElviaDbContext>(options => options.UseSqlServer(Configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:GridTariffApi:connection-string")));
-            services.AddDbContext<ElviaDbContext>(options => options.UseSqlServer("Server=EEENSQL2016;Initial Catalog=GridTariffApi-Dev;Trusted_Connection=True;Connection Timeout=30;TrustServerCertificate=Yes;"));
+            services.AddDbContext<ElviaDbContext>(options => options.UseSqlServer(Configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:GridTariffApi:connection-string")));
             services.AddScoped<ITariffRepository, TariffRepositoryFile>();
             services.AddScoped<IHolidayRepository, HolidayRepositoryFile>();
             services.AddScoped<IMeteringPointTariffRepository, MeteringPointTariffRepositoryEf>();
