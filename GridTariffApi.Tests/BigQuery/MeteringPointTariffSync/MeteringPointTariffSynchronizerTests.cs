@@ -18,7 +18,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
     public class MeteringPointTariffSynchronizerTests
     {
         private IServiceProvider? _serviceProvider;
-        private ScheduleConfig<MeteringPointTariffSynchronizer> _scheduleConfig;
+        private ScheduleConfig<MeteringPointTariffSynchronizer>? _scheduleConfig;
 
         private void Setup()
         {
@@ -42,7 +42,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             string _elviaCompanyOrgNumber = "980489698";
 
 
-            var elviaDbContext = _serviceProvider.GetRequiredService<ElviaDbContext>();
+            var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
             Assert.Null(await elviaDbContext.Company.FirstOrDefaultAsync());
 
             var meteringPointTariffSynchronizer = new MeteringPointTariffSynchronizer(null, _scheduleConfig, _serviceProvider, null);
@@ -63,7 +63,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
         public async Task InsertMeteringPointsAsyncTest()
         {
             Setup();
-            var elviaDbContext = _serviceProvider.GetRequiredService<ElviaDbContext>();
+            var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
             Assert.Null(await elviaDbContext.MeteringPointTariff.FirstOrDefaultAsync());
 
             var meteringPointTariffSynchronizer = new MeteringPointTariffSynchronizer(null, _scheduleConfig, _serviceProvider, null);
@@ -86,7 +86,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
         public async Task UpsertMeteringPointAsyncTest()
         {
             Setup();
-            var elviaDbContext = _serviceProvider.GetRequiredService<ElviaDbContext>();
+            var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
             Assert.Null(await elviaDbContext.MeteringPointTariff.FirstOrDefaultAsync());
 
             var utcNowInsert1 = DateTimeOffset.UtcNow;
@@ -133,7 +133,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
         {
             var numElementsToStore = 1234;
             Setup();
-            var elviaDbContext = _serviceProvider.GetRequiredService<ElviaDbContext>();
+            var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
             Assert.Null(await elviaDbContext.MeteringPointTariff.FirstOrDefaultAsync());
 
             var meteringPoints = new List<MeteringPointProductBigQuery>();
@@ -155,7 +155,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
         {
             Setup();
 
-            var elviaDbContext = _serviceProvider.GetRequiredService<ElviaDbContext>();
+            var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
             Assert.Empty(elviaDbContext.IntegrationConfig);
 
             var mockBigQueryReader = new Mock<GridTariffApi.BigQuery.MeteringPointTariffSync.IBigQueryReader>();
@@ -181,7 +181,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             mockService.Setup(x => x.InsertMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<List<MeteringPointProductBigQuery>>(), It.IsAny<DateTimeOffset>(), It.IsAny<Model.Company>())).Returns(Task.CompletedTask);
             mockService.CallBase = true;
 
-            var elviaDbContext = _serviceProvider.GetRequiredService<ElviaDbContext>();
+            var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
             Assert.Empty(elviaDbContext.IntegrationConfig);
 
             var elviaCompany = await mockService.Object.GetElviaCompany(elviaDbContext);
@@ -196,7 +196,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
         {
             Setup();
 
-            var elviaDbContext = _serviceProvider.GetRequiredService<ElviaDbContext>();
+            var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
             var mockService = new Mock<MeteringPointTariffSynchronizer>(null, _scheduleConfig, _serviceProvider, null);
             var elviaCompany = await mockService.Object.GetElviaCompany(elviaDbContext);
             var utcNow = DateTime.UtcNow;
@@ -219,7 +219,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
         {
             Setup();
 
-            var elviaDbContext = _serviceProvider.GetRequiredService<ElviaDbContext>();
+            var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
 
             Assert.Empty(elviaDbContext.IntegrationConfig);
 
