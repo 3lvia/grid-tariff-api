@@ -54,7 +54,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             }
         }
 
-        private async Task<Company> GetElviaCompany(ElviaDbContext elviaDbContext)
+        public async Task<Company> GetElviaCompany(ElviaDbContext elviaDbContext)
         {
             var elviaCompany = elviaDbContext.Company.FirstOrDefault(x => x.OrgNumber == _elviaCompanyOrgNumber);
             if (elviaCompany == null)
@@ -74,7 +74,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             var meteringPointTariffLastSynced = elviaDbContext.IntegrationConfig.FirstOrDefault(x => x.Table == _tableName);
             if (meteringPointTariffLastSynced == null)
             {
-                await MeteringPointTariffFullsync(elviaDbContext,timeStamp, elviaCompany);
+                await MeteringPointTariffFullSync(elviaDbContext,timeStamp, elviaCompany);
                 meteringPointTariffLastSynced = new IntegrationConfig()
                 {
                     Table = _tableName,
@@ -90,7 +90,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             await elviaDbContext.SaveChangesAsync();
         }
 
-        private async Task MeteringPointTariffFullsync(ElviaDbContext elviaDbContext, DateTimeOffset timeStamp, Company elviaCompany)
+        public virtual async Task MeteringPointTariffFullSync(ElviaDbContext elviaDbContext, DateTimeOffset timeStamp, Company elviaCompany)
         {
             var result = await _bigQueryReader.GetAllMeteringPointProductAsync();
             try
@@ -109,7 +109,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             }
         }
 
-        private async Task InsertMeteringPointsAsync(ElviaDbContext elviaDbContext, List<MeteringPointProductBigQuery> meteringPoints,DateTimeOffset timeStamp, Company elviaCompany)
+        public virtual async Task InsertMeteringPointsAsync(ElviaDbContext elviaDbContext, List<MeteringPointProductBigQuery> meteringPoints,DateTimeOffset timeStamp, Company elviaCompany)
         {
             int ctr = 0;
             foreach (var element in meteringPoints)
@@ -129,13 +129,13 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             await elviaDbContext.SaveChangesAsync();
         }
 
-        private async Task SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(ElviaDbContext elviaDbContext,DateTimeOffset lastUpdated,DateTimeOffset timeStamp,Company elviaCompany)
+        public virtual async Task SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(ElviaDbContext elviaDbContext,DateTimeOffset lastUpdated,DateTimeOffset timeStamp,Company elviaCompany)
         {
-            var result = _bigQueryReader.GetMeteringPointsByFromDateAsync(lastUpdated).Result;
+            var result = await _bigQueryReader.GetMeteringPointsByFromDateAsync(lastUpdated);
             await UpsertMeteringPointsAsync(elviaDbContext,result, timeStamp, elviaCompany);
         }
 
-        private async Task UpsertMeteringPointsAsync(ElviaDbContext elviaDbContext,List<MeteringPointProductBigQuery> meteringPoints,DateTimeOffset timeStamp, Company elviaCompany)
+        public virtual async Task UpsertMeteringPointsAsync(ElviaDbContext elviaDbContext,List<MeteringPointProductBigQuery> meteringPoints,DateTimeOffset timeStamp, Company elviaCompany)
         {
             int ctr = 0;
             foreach (var element in meteringPoints)
@@ -149,7 +149,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             await elviaDbContext.SaveChangesAsync();
         }
 
-        private void UpsertMeteringPointAsync(ElviaDbContext elviaDbContext, MeteringPointProductBigQuery meteringPointProductBigQuery, DateTimeOffset timeStamp, Company elviaCompany)
+        public void UpsertMeteringPointAsync(ElviaDbContext elviaDbContext, MeteringPointProductBigQuery meteringPointProductBigQuery, DateTimeOffset timeStamp, Company elviaCompany)
         {
             var entity = elviaDbContext.MeteringPointTariff.FirstOrDefault(x => x.MeteringPointId == meteringPointProductBigQuery.MeteringPointId);
             if (entity == null)

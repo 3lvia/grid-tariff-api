@@ -19,16 +19,12 @@ namespace GridTariffApi.Synchronizer.Lib.Tests.Services
         private Mock<IBigQueryReader> _mockBigQueryReader;
         private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
         private IServiceProvider _serviceProvider;
-        private GridTariffApiSynchronizerConfig _confiGridTariffApiSynchronizerConfig;
         private Mock<ITelemetryInsightsLogger> _mocklogger;
-
-        private IScheduleConfig<GridTariffApiSynchronizer> scheduleConfig;
 
 
         private readonly string _fullSyncedMeteringPointProduct = "MeteringPointProductSync";
         private void Init()
         {
-            _confiGridTariffApiSynchronizerConfig = new GridTariffApiSynchronizerConfig();
             _mockBigQueryReader = new Mock<IBigQueryReader>();
             _mockBigQueryReader
                 .Setup(w => w.GetAllMeteringPointProductAsync())
@@ -51,7 +47,6 @@ namespace GridTariffApi.Synchronizer.Lib.Tests.Services
                 .Returns(serviceScope.Object);
 
             _mocklogger = new Mock<ITelemetryInsightsLogger>();
-            scheduleConfig = new ScheduleConfig<GridTariffApiSynchronizer>();
 
             GenerateProductMapping(_serviceProvider);
         }
