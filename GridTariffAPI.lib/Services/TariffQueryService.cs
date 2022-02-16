@@ -54,7 +54,7 @@ namespace GridTariffApi.Lib.Services
             List<MeteringPointInformation> meteringPointInformation)
         {
 
-            var gridTariff = await QueryTariffAsyncUsingProductKey(productKey, paramFromDate, paramToDate);
+            var gridTariff = await QueryTariffUsingProductKeyAsync(productKey, paramFromDate, paramToDate);
             gridTariff.MeteringPointsAndPriceLevels = new List<MeteringPointsAndPriceLevels>();
 
             if (_serviceHelper.TimePeriodIsIncludingLocaleToday(paramFromDate, paramToDate))
@@ -154,7 +154,7 @@ namespace GridTariffApi.Lib.Services
             return meteringPointAndPriceLevel;
         }
 
-        public virtual async Task<GridTariffCollection> QueryTariffAsyncUsingTariffKey(
+        public virtual async Task<GridTariffCollection> QueryTariffUsingTariffKeyAsync(
             string tariffKey,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate)
@@ -163,13 +163,13 @@ namespace GridTariffApi.Lib.Services
             var tariff = tariffs?.FirstOrDefault(x => x.TariffKey == tariffKey);
             if (tariff != null)
             {
-                return await QueryTariffAsyncUsingProductKey(tariff.Product, paramFromDate, paramToDate);
+                return await QueryTariffUsingProductKeyAsync(tariff.Product, paramFromDate, paramToDate);
             }
-            return await QueryTariffAsyncUsingProductKey(String.Empty, paramFromDate, paramToDate);
+            return await QueryTariffUsingProductKeyAsync(String.Empty, paramFromDate, paramToDate);
         }
 
 
-        public virtual async Task<GridTariffCollection> QueryTariffAsyncUsingProductKey(
+        public virtual async Task<GridTariffCollection> QueryTariffUsingProductKeyAsync(
             string productKey,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate)

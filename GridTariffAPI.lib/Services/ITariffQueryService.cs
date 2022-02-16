@@ -7,12 +7,12 @@ namespace GridTariffApi.Lib.Services
 {
     public interface ITariffQueryService
     {
-        Task<GridTariffCollection> QueryTariffAsyncUsingTariffKey(
+        Task<GridTariffCollection> QueryTariffUsingTariffKeyAsync(
             string tariffKey,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate);
 
-        Task<GridTariffCollection> QueryTariffAsyncUsingProductKey(
+        Task<GridTariffCollection> QueryTariffUsingProductKeyAsync(
             string productKey,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate);
