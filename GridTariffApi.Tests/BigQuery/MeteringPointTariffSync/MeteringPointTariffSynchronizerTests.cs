@@ -50,9 +50,11 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
 
             var elviaCompany = await elviaDbContext.Company.FirstOrDefaultAsync();
 
-            var input = new List<MeteringPointProductBigQuery>();
-            input.Add(new MeteringPointProductBigQuery() { MeteringPointId = "a", Product = "x" });
-            input.Add(new MeteringPointProductBigQuery() { MeteringPointId = "b", Product = "y" });
+            var input = new List<MeteringPointProductBigQuery>
+            {
+                new MeteringPointProductBigQuery() { MeteringPointId = "a", Product = "x" },
+                new MeteringPointProductBigQuery() { MeteringPointId = "b", Product = "y" }
+            };
 
             var utcNow = DateTimeOffset.UtcNow;
 
@@ -139,7 +141,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             Assert.Empty(elviaDbContext.IntegrationConfig);
 
             var mockBigQueryReader = new Mock<GridTariffApi.BigQuery.MeteringPointTariffSync.IBigQueryReader>();
-            mockBigQueryReader.Setup(x => x.GetMeteringPointsByFromDateAsync(It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(new List<MeteringPointProductBigQuery>()));
+            mockBigQueryReader.Setup(x => x.GetMeteringPointsByFromDateAsync(It.IsAny<DateTimeOffset>())).ReturnsAsync(new List<MeteringPointProductBigQuery>());
 
             var mockService = new Mock<MeteringPointTariffSynchronizer>(null, _scheduleConfig, _serviceProvider, mockBigQueryReader.Object);
             mockService.Setup(x => x.UpsertMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<List<MeteringPointProductBigQuery>>(), It.IsAny<DateTimeOffset>(), It.IsAny<Model.Company>())).Returns(Task.CompletedTask);
@@ -155,7 +157,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
         {
             await Setup();
             var mockBigQueryReader = new Mock<GridTariffApi.BigQuery.MeteringPointTariffSync.IBigQueryReader>();
-            mockBigQueryReader.Setup(x => x.GetAllMeteringPointProductAsync()).Returns(Task.FromResult(new List<MeteringPointProductBigQuery>()));
+            mockBigQueryReader.Setup(x => x.GetAllMeteringPointProductAsync()).ReturnsAsync(new List<MeteringPointProductBigQuery>());
 
             var mockService = new Mock<MeteringPointTariffSynchronizer>(null, _scheduleConfig, _serviceProvider, mockBigQueryReader.Object);
             mockService.Setup(x => x.InsertMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<List<MeteringPointProductBigQuery>>(), It.IsAny<DateTimeOffset>(), It.IsAny<Model.Company>())).Returns(Task.CompletedTask);
