@@ -16,7 +16,6 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
     {
         private readonly string _tableName = "MeteringPointTariff";
         private readonly int _elviaDbSyncChangesThreshold = 1000;
-        private readonly string _elviaCompanyName = "Elvia AS";
         private readonly string _elviaCompanyOrgNumber = "980489698";
 
         private readonly ITelemetryInsightsLogger _logger;
@@ -42,7 +41,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
                 _logger.TrackTrace("Starting synchronizing of meteringpoints with netproducts from Google BigQuery");
                 using var scope = _serviceProvider.CreateScope();
                 ElviaDbContext elviaDbContext = scope.ServiceProvider.GetRequiredService<ElviaDbContext>();
-                var elviaCompany = await GetElviaCompany(elviaDbContext);
+                var elviaCompany = elviaDbContext.Company.FirstOrDefault(x => x.OrgNumber == _elviaCompanyOrgNumber);
                 var currentTimestamp = DateTimeOffset.UtcNow;
                 await SynchronizeMeteringPointsAsync(elviaDbContext,elviaCompany, currentTimestamp);
                 _logger.TrackTrace("Done synchronizing of Meteringpoints with netproducts from Google BigQuery");
@@ -54,21 +53,6 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             }
         }
 
-        public async Task<Company> GetElviaCompany(ElviaDbContext elviaDbContext)
-        {
-            var elviaCompany = elviaDbContext.Company.FirstOrDefault(x => x.OrgNumber == _elviaCompanyOrgNumber);
-            if (elviaCompany == null)
-            {
-                elviaCompany = new Company()
-                {
-                    OrgNumber = _elviaCompanyOrgNumber,
-                    Name = _elviaCompanyName
-                };
-                elviaDbContext.Company.Add(elviaCompany);
-                await elviaDbContext.SaveChangesAsync();
-            }
-            return elviaCompany;
-        }
         public async Task SynchronizeMeteringPointsAsync(ElviaDbContext elviaDbContext, Company elviaCompany, DateTimeOffset timeStamp)
         {
             var meteringPointTariffLastSynced = elviaDbContext.IntegrationConfig.FirstOrDefault(x => x.Table == _tableName);

@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -14,14 +12,14 @@ namespace GridTariffApi.Tests.StartupTasks
     public class UpdatePricesStartupTaskTests
     {
         private IServiceProvider? _serviceProvider;
-        private UpdatePricesStartupTask? _updatePricesStartupTask;
+        private PrepareDatabaseStartupTask? _updatePricesStartupTask;
 
         private void Setup()
         {
             var services = new ServiceCollection();
             services.AddDbContext<ElviaDbContext>(u => u.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()));
             _serviceProvider = services.BuildServiceProvider();
-            _updatePricesStartupTask = new UpdatePricesStartupTask(_serviceProvider);
+            _updatePricesStartupTask = new PrepareDatabaseStartupTask(_serviceProvider);
         }
 
         [Fact]
@@ -34,7 +32,7 @@ namespace GridTariffApi.Tests.StartupTasks
             services.AddDbContext<ElviaDbContext>(u => u.UseInMemoryDatabase(databaseName: "ExecuteTest"));
             var serviceProvider = services.BuildServiceProvider();
 
-            var mockUpdatePricesStartupTask = new Mock<UpdatePricesStartupTask>(serviceProvider);
+            var mockUpdatePricesStartupTask = new Mock<PrepareDatabaseStartupTask>(serviceProvider);
             mockUpdatePricesStartupTask.Setup(x => x.GetPricesPayload()).Returns(Task.FromResult(jsonPayload));
             mockUpdatePricesStartupTask.CallBase = true;
 

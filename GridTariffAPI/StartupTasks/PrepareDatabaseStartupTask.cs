@@ -2,14 +2,13 @@
 using GridTariffApi.Model;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace GridTariffApi.StartupTasks
 {
-    public class UpdatePricesStartupTask : IStartupTask
+    public class PrepareDatabaseStartupTask : IStartupTask
     {
         private readonly IServiceProvider _serviceProvider;
         private static readonly string _tariffPriceFileName = Path.Join("Artifacts", "GridTariffPriceConfiguration.v1_0_gridtariffprices.json");
@@ -17,7 +16,7 @@ namespace GridTariffApi.StartupTasks
         private readonly string _elviaCompanyName = "Elvia AS";
         private readonly string _elviaCompanyOrgNumber = "980489698";
 
-        public UpdatePricesStartupTask(IServiceProvider serviceProvider)
+        public PrepareDatabaseStartupTask(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
@@ -71,5 +70,9 @@ namespace GridTariffApi.StartupTasks
             return elviaCompany;
         }
 
+        public int GetExecutionPriority()
+        {
+            return 1;
+        }
     }
 }
