@@ -40,6 +40,6 @@ namespace GridTariffApi.Model
         /// <summary>
         /// Last updated
         /// </summary>
-        public DateTimeOffset LastUpdated { get; set; }
+        public DateTimeOffset LastUpdatedUtc { get; set; }
     }
 }

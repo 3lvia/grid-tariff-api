@@ -11,7 +11,7 @@ namespace GridTariffApi.Database
         public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<MeteringPointTariff> MeteringPointTariff { get; set; }
         public virtual DbSet<PriceStructure> PriceStructure { get; set; }
-        public virtual DbSet<IntegrationConfig> IntegrationConfig { get; set; }
+        public virtual DbSet<SyncStatus> IntegrationConfig { get; set; }
 
     }
 }

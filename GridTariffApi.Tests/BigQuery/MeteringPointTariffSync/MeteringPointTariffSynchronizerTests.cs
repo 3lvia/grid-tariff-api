@@ -70,16 +70,16 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
 
             var elviaCompany = await meteringPointTariffSynchronizer.GetElviaCompany(elviaDbContext);
 
-            var input = new List<MeteringPointProductBigQuery>();
-            input.Add(new MeteringPointProductBigQuery() { MeteringPointId = "a", Product = "x" });
-            input.Add(new MeteringPointProductBigQuery() { MeteringPointId = "b", Product = "y" });
+            var input = new List<BigQueryMeteringPointProduct>();
+            input.Add(new BigQueryMeteringPointProduct() { MeteringPointId = "a", Product = "x" });
+            input.Add(new BigQueryMeteringPointProduct() { MeteringPointId = "b", Product = "y" });
 
             var utcNow = DateTimeOffset.UtcNow;
 
             await meteringPointTariffSynchronizer.InsertMeteringPointsAsync(elviaDbContext,input,utcNow,elviaCompany);
             Assert.Equal(2, await elviaDbContext.MeteringPointTariff.CountAsync());
-            Assert.Equal(1, await elviaDbContext.MeteringPointTariff.CountAsync(x => x.MeteringPointId == "a" && x.ProductKey == "x" && x.LastUpdated == utcNow && x.Company == elviaCompany));
-            Assert.Equal(1, await elviaDbContext.MeteringPointTariff.CountAsync(x => x.MeteringPointId == "b" && x.ProductKey == "y" && x.LastUpdated == utcNow && x.Company == elviaCompany));
+            Assert.Equal(1, await elviaDbContext.MeteringPointTariff.CountAsync(x => x.MeteringPointId == "a" && x.ProductKey == "x" && x.LastUpdatedUtc == utcNow && x.Company == elviaCompany));
+            Assert.Equal(1, await elviaDbContext.MeteringPointTariff.CountAsync(x => x.MeteringPointId == "b" && x.ProductKey == "y" && x.LastUpdatedUtc == utcNow && x.Company == elviaCompany));
 
         }
         [Fact]
@@ -94,9 +94,9 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             var utcNowUpdate1 = DateTimeOffset.UtcNow;
             Thread.Sleep(1);
             var utcNowInsert2 = DateTimeOffset.UtcNow;
-            var mpInsert1 = new MeteringPointProductBigQuery() { MeteringPointId = "mpA", Product = "prA" };
-            var mpUpdate1 = new MeteringPointProductBigQuery() { MeteringPointId = "mpA", Product = "prB" };
-            var mpInsert2 = new MeteringPointProductBigQuery() { MeteringPointId = "mpB", Product = "prC" };
+            var mpInsert1 = new BigQueryMeteringPointProduct() { MeteringPointId = "mpA", Product = "prA" };
+            var mpUpdate1 = new BigQueryMeteringPointProduct() { MeteringPointId = "mpA", Product = "prB" };
+            var mpInsert2 = new BigQueryMeteringPointProduct() { MeteringPointId = "mpB", Product = "prC" };
 
 //insert
             var meteringPointTariffSynchronizer = new MeteringPointTariffSynchronizer(null, _scheduleConfig, _serviceProvider, null);
@@ -106,7 +106,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             Assert.Single(elviaDbContext.MeteringPointTariff);
             Assert.Equal(1, await elviaDbContext.MeteringPointTariff.CountAsync
                 (x => x.MeteringPointId == mpInsert1.MeteringPointId 
-                && x.ProductKey == mpInsert1.Product && x.LastUpdated == utcNowInsert1 && x.Company == elviaCompany));
+                && x.ProductKey == mpInsert1.Product && x.LastUpdatedUtc == utcNowInsert1 && x.Company == elviaCompany));
 
 //update
             meteringPointTariffSynchronizer.UpsertMeteringPointAsync(elviaDbContext, mpUpdate1, utcNowUpdate1, elviaCompany);
@@ -114,7 +114,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             Assert.Single(elviaDbContext.MeteringPointTariff);
             Assert.Equal(1, await elviaDbContext.MeteringPointTariff.CountAsync
                 (x => x.MeteringPointId == mpUpdate1.MeteringPointId 
-                && x.ProductKey == mpUpdate1.Product && x.LastUpdated == utcNowUpdate1 && x.Company == elviaCompany));
+                && x.ProductKey == mpUpdate1.Product && x.LastUpdatedUtc == utcNowUpdate1 && x.Company == elviaCompany));
 
 //insert not touching existing data
             meteringPointTariffSynchronizer.UpsertMeteringPointAsync(elviaDbContext, mpInsert2, utcNowInsert2, elviaCompany);
@@ -122,10 +122,10 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             Assert.Equal(2, await elviaDbContext.MeteringPointTariff.CountAsync());
             Assert.Equal(1, await elviaDbContext.MeteringPointTariff.CountAsync
                 (x => x.MeteringPointId == mpUpdate1.MeteringPointId
-                && x.ProductKey == mpUpdate1.Product && x.LastUpdated == utcNowUpdate1 && x.Company == elviaCompany));
+                && x.ProductKey == mpUpdate1.Product && x.LastUpdatedUtc == utcNowUpdate1 && x.Company == elviaCompany));
             Assert.Equal(1, await elviaDbContext.MeteringPointTariff.CountAsync
                 (x => x.MeteringPointId == mpInsert2.MeteringPointId
-                && x.ProductKey == mpInsert2.Product && x.LastUpdated == utcNowInsert2 && x.Company == elviaCompany));
+                && x.ProductKey == mpInsert2.Product && x.LastUpdatedUtc == utcNowInsert2 && x.Company == elviaCompany));
         }
 
         [Fact]
@@ -136,11 +136,11 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
             Assert.Null(await elviaDbContext.MeteringPointTariff.FirstOrDefaultAsync());
 
-            var meteringPoints = new List<MeteringPointProductBigQuery>();
+            var meteringPoints = new List<BigQueryMeteringPointProduct>();
 
             while (meteringPoints.Count < numElementsToStore)
             {
-                meteringPoints.Add(new MeteringPointProductBigQuery() { MeteringPointId = System.Guid.NewGuid().ToString(), Product = System.Guid.NewGuid().ToString() });
+                meteringPoints.Add(new BigQueryMeteringPointProduct() { MeteringPointId = System.Guid.NewGuid().ToString(), Product = System.Guid.NewGuid().ToString() });
             }
 
             var meteringPointTariffSynchronizer = new MeteringPointTariffSynchronizer(null, _scheduleConfig, _serviceProvider, null);
@@ -159,15 +159,15 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             Assert.Empty(elviaDbContext.IntegrationConfig);
 
             var mockBigQueryReader = new Mock<GridTariffApi.BigQuery.MeteringPointTariffSync.IBigQueryReader>();
-            mockBigQueryReader.Setup(x => x.GetMeteringPointsByFromDateAsync(It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(new List<MeteringPointProductBigQuery>()));
+            mockBigQueryReader.Setup(x => x.GetMeteringPointsByFromDateAsync(It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(new List<BigQueryMeteringPointProduct>()));
 
             var mockService = new Mock<MeteringPointTariffSynchronizer>(null, _scheduleConfig, _serviceProvider, mockBigQueryReader.Object);
-            mockService.Setup(x => x.UpsertMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<List<MeteringPointProductBigQuery>>(), It.IsAny<DateTimeOffset>(), It.IsAny<Model.Company>())).Returns(Task.CompletedTask);
+            mockService.Setup(x => x.UpsertMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<List<BigQueryMeteringPointProduct>>(), It.IsAny<DateTimeOffset>(), It.IsAny<Model.Company>())).Returns(Task.CompletedTask);
             mockService.CallBase = true;
             await mockService.Object.SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(null, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, null);
 
             mockBigQueryReader.Verify(x => x.GetMeteringPointsByFromDateAsync(It.IsAny<DateTimeOffset>()), Times.Once);
-            mockService.Verify(x => x.UpsertMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<List<MeteringPointProductBigQuery>>(), It.IsAny<DateTimeOffset>(), It.IsAny<Model.Company>()), Times.Once);
+            mockService.Verify(x => x.UpsertMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<List<BigQueryMeteringPointProduct>>(), It.IsAny<DateTimeOffset>(), It.IsAny<Model.Company>()), Times.Once);
         }
 
         [Fact]
@@ -175,10 +175,10 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
         {
             Setup();
             var mockBigQueryReader = new Mock<GridTariffApi.BigQuery.MeteringPointTariffSync.IBigQueryReader>();
-            mockBigQueryReader.Setup(x => x.GetAllMeteringPointProductAsync()).Returns(Task.FromResult(new List<MeteringPointProductBigQuery>()));
+            mockBigQueryReader.Setup(x => x.GetAllMeteringPointProductAsync()).Returns(Task.FromResult(new List<BigQueryMeteringPointProduct>()));
 
             var mockService = new Mock<MeteringPointTariffSynchronizer>(null, _scheduleConfig, _serviceProvider, mockBigQueryReader.Object);
-            mockService.Setup(x => x.InsertMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<List<MeteringPointProductBigQuery>>(), It.IsAny<DateTimeOffset>(), It.IsAny<Model.Company>())).Returns(Task.CompletedTask);
+            mockService.Setup(x => x.InsertMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<List<BigQueryMeteringPointProduct>>(), It.IsAny<DateTimeOffset>(), It.IsAny<Model.Company>())).Returns(Task.CompletedTask);
             mockService.CallBase = true;
 
             var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
@@ -188,7 +188,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             await mockService.Object.MeteringPointTariffFullSync(elviaDbContext, DateTimeOffset.UtcNow, elviaCompany);
 
             mockBigQueryReader.Verify(x => x.GetAllMeteringPointProductAsync(), Times.Once);
-            mockService.Verify(x => x.InsertMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<List<MeteringPointProductBigQuery>>(), It.IsAny<DateTimeOffset>(), It.IsAny<Model.Company>()), Times.Once);
+            mockService.Verify(x => x.InsertMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<List<BigQueryMeteringPointProduct>>(), It.IsAny<DateTimeOffset>(), It.IsAny<Model.Company>()), Times.Once);
         }
 
         [Fact]
@@ -223,7 +223,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
 
             Assert.Empty(elviaDbContext.IntegrationConfig);
 
-            elviaDbContext.IntegrationConfig.Add(new Model.IntegrationConfig() { Table = "MeteringPointTariff", LastUpdated = DateTimeOffset.UtcNow });
+            elviaDbContext.IntegrationConfig.Add(new Model.SyncStatus() { Table = "MeteringPointTariff", LastUpdated = DateTimeOffset.UtcNow });
             await elviaDbContext.SaveChangesAsync();
 
             Assert.Equal(1,elviaDbContext.IntegrationConfig.Count());

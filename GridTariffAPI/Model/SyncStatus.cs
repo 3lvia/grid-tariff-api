@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GridTariffApi.Model
 {
-    public partial class IntegrationConfig
+    public partial class SyncStatus
     {
         /// <summary>
         /// For internal use

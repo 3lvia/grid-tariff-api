@@ -75,7 +75,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             if (meteringPointTariffLastSynced == null)
             {
                 await MeteringPointTariffFullSync(elviaDbContext,timeStamp, elviaCompany);
-                meteringPointTariffLastSynced = new IntegrationConfig()
+                meteringPointTariffLastSynced = new SyncStatus()
                 {
                     Table = _tableName,
                     LastUpdated = timeStamp,
@@ -109,7 +109,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             }
         }
 
-        public virtual async Task InsertMeteringPointsAsync(ElviaDbContext elviaDbContext, List<MeteringPointProductBigQuery> meteringPoints,DateTimeOffset timeStamp, Company elviaCompany)
+        public virtual async Task InsertMeteringPointsAsync(ElviaDbContext elviaDbContext, List<BigQueryMeteringPointProduct> meteringPoints,DateTimeOffset timeStamp, Company elviaCompany)
         {
             int ctr = 0;
             foreach (var element in meteringPoints)
@@ -118,7 +118,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
                 {
                     MeteringPointId = element.MeteringPointId,
                     ProductKey = element.Product,
-                    LastUpdated = timeStamp,
+                    LastUpdatedUtc = timeStamp,
                     Company = elviaCompany
                 });
                 if (ctr++ % _elviaDbSyncChangesThreshold == 0)
@@ -135,7 +135,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             await UpsertMeteringPointsAsync(elviaDbContext,result, timeStamp, elviaCompany);
         }
 
-        public virtual async Task UpsertMeteringPointsAsync(ElviaDbContext elviaDbContext,List<MeteringPointProductBigQuery> meteringPoints,DateTimeOffset timeStamp, Company elviaCompany)
+        public virtual async Task UpsertMeteringPointsAsync(ElviaDbContext elviaDbContext,List<BigQueryMeteringPointProduct> meteringPoints,DateTimeOffset timeStamp, Company elviaCompany)
         {
             int ctr = 0;
             foreach (var element in meteringPoints)
@@ -149,7 +149,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             await elviaDbContext.SaveChangesAsync();
         }
 
-        public void UpsertMeteringPointAsync(ElviaDbContext elviaDbContext, MeteringPointProductBigQuery meteringPointProductBigQuery, DateTimeOffset timeStamp, Company elviaCompany)
+        public void UpsertMeteringPointAsync(ElviaDbContext elviaDbContext, BigQueryMeteringPointProduct meteringPointProductBigQuery, DateTimeOffset timeStamp, Company elviaCompany)
         {
             var entity = elviaDbContext.MeteringPointTariff.FirstOrDefault(x => x.MeteringPointId == meteringPointProductBigQuery.MeteringPointId);
             if (entity == null)
@@ -158,7 +158,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
                 {
                     MeteringPointId = meteringPointProductBigQuery.MeteringPointId,
                     ProductKey = meteringPointProductBigQuery.Product,
-                    LastUpdated = timeStamp,
+                    LastUpdatedUtc = timeStamp,
                     Company = elviaCompany
                 });
             }
@@ -167,7 +167,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
                 if (entity.ProductKey != meteringPointProductBigQuery.Product)
                 {
                     entity.ProductKey = meteringPointProductBigQuery.Product;
-                    entity.LastUpdated = timeStamp;
+                    entity.LastUpdatedUtc = timeStamp;
                 }
             }
         }

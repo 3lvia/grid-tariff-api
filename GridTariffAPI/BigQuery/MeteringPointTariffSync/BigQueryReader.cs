@@ -18,21 +18,21 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             _bigQueryClient = bigQueryClient;
         }
 
-        public async Task<List<MeteringPointProductBigQuery>> GetAllMeteringPointProductAsync()
+        public async Task<List<BigQueryMeteringPointProduct>> GetAllMeteringPointProductAsync()
         {
             var result = await _bigQueryClient.ExecuteQueryAsync(_meteringPointProductQueryAll, parameters: null);
             return ConvertBigQueryResult(result);
         }
-        public async Task<List<MeteringPointProductBigQuery>> GetMeteringPointsByFromDateAsync(DateTimeOffset fromDate)
+        public async Task<List<BigQueryMeteringPointProduct>> GetMeteringPointsByFromDateAsync(DateTimeOffset fromDate)
         {
             var parameters = GetIncrementalParameters(fromDate);
             var result = await _bigQueryClient.ExecuteQueryAsync(_meteringPointProductQueryIncremental, parameters);
             return ConvertBigQueryResult(result);
         }
 
-        private List<MeteringPointProductBigQuery> ConvertBigQueryResult(BigQueryResults result)
+        private List<BigQueryMeteringPointProduct> ConvertBigQueryResult(BigQueryResults result)
         {
-            var meteringPointProducts = new List<MeteringPointProductBigQuery>();
+            var meteringPointProducts = new List<BigQueryMeteringPointProduct>();
             foreach (var row in result)
             {
                 meteringPointProducts.Add(BigQueryRowToBqMeteringPointProduct(row));
@@ -40,9 +40,9 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             return meteringPointProducts;
         }
 
-        private MeteringPointProductBigQuery BigQueryRowToBqMeteringPointProduct(BigQueryRow row)
+        private BigQueryMeteringPointProduct BigQueryRowToBqMeteringPointProduct(BigQueryRow row)
         {
-            var result = new MeteringPointProductBigQuery() { MeteringPointId = String.Empty, Product = String.Empty/*, Area = -1*/ } ;
+            var result = new BigQueryMeteringPointProduct() { MeteringPointId = String.Empty, Product = String.Empty/*, Area = -1*/ } ;
             if (row["meteringpointid"] != null)
             {
                 result.MeteringPointId = row["meteringpointid"].ToString();
