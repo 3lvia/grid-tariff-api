@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GridTariffApi.BigQuery.MeteringPointTariffSync
 {
-    public class MeteringPointTariffSynchronizer : CronJobService
+    public class MeteringPointTariffSynchronizer : CronJobService, IMeteringPointTariffSynchronizer
     {
         private readonly string _tableName = "MeteringPointTariff";
         private readonly int _elviaDbSyncChangesThreshold = 1000;
@@ -43,7 +43,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
                 ElviaDbContext elviaDbContext = scope.ServiceProvider.GetRequiredService<ElviaDbContext>();
                 var elviaCompany = elviaDbContext.Company.FirstOrDefault(x => x.OrgNumber == _elviaCompanyOrgNumber);
                 var currentTimestamp = DateTimeOffset.UtcNow;
-                await SynchronizeMeteringPointsAsync(elviaDbContext,elviaCompany, currentTimestamp);
+                await SynchronizeMeteringPointsAsync(elviaDbContext, elviaCompany, currentTimestamp);
                 _logger.TrackTrace("Done synchronizing of Meteringpoints with netproducts from Google BigQuery");
             }
             catch (Exception e)
@@ -53,12 +53,12 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             }
         }
 
-        public async Task SynchronizeMeteringPointsAsync(ElviaDbContext elviaDbContext, Company elviaCompany, DateTimeOffset timeStamp)
+        public virtual async Task SynchronizeMeteringPointsAsync(ElviaDbContext elviaDbContext, Company elviaCompany, DateTimeOffset timeStamp)
         {
             var meteringPointTariffLastSynced = elviaDbContext.IntegrationConfig.FirstOrDefault(x => x.Table == _tableName);
             if (meteringPointTariffLastSynced == null)
             {
-                await MeteringPointTariffFullSync(elviaDbContext,timeStamp, elviaCompany);
+                await MeteringPointTariffFullSync(elviaDbContext, timeStamp, elviaCompany);
                 meteringPointTariffLastSynced = new IntegrationConfig()
                 {
                     Table = _tableName,
@@ -68,7 +68,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             }
             else
             {
-                await SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(elviaDbContext,meteringPointTariffLastSynced.LastUpdated,timeStamp,elviaCompany);
+                await SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(elviaDbContext, meteringPointTariffLastSynced.LastUpdated, timeStamp, elviaCompany);
                 meteringPointTariffLastSynced.LastUpdated = timeStamp;
             }
             await elviaDbContext.SaveChangesAsync();
@@ -80,7 +80,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             try
             {
                 elviaDbContext.ChangeTracker.AutoDetectChangesEnabled = false;
-                await InsertMeteringPointsAsync(elviaDbContext,result, timeStamp, elviaCompany);
+                await InsertMeteringPointsAsync(elviaDbContext, result, timeStamp, elviaCompany);
             }
             catch (Exception exception)
             {
@@ -93,7 +93,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             }
         }
 
-        public virtual async Task InsertMeteringPointsAsync(ElviaDbContext elviaDbContext, List<MeteringPointProductBigQuery> meteringPoints,DateTimeOffset timeStamp, Company elviaCompany)
+        public virtual async Task InsertMeteringPointsAsync(ElviaDbContext elviaDbContext, List<MeteringPointProductBigQuery> meteringPoints, DateTimeOffset timeStamp, Company elviaCompany)
         {
             int ctr = 0;
             foreach (var element in meteringPoints)
@@ -113,18 +113,18 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             await elviaDbContext.SaveChangesAsync();
         }
 
-        public virtual async Task SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(ElviaDbContext elviaDbContext,DateTimeOffset lastUpdated,DateTimeOffset timeStamp,Company elviaCompany)
+        public virtual async Task SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(ElviaDbContext elviaDbContext, DateTimeOffset lastUpdated, DateTimeOffset timeStamp, Company elviaCompany)
         {
             var result = await _bigQueryReader.GetMeteringPointsByFromDateAsync(lastUpdated);
-            await UpsertMeteringPointsAsync(elviaDbContext,result, timeStamp, elviaCompany);
+            await UpsertMeteringPointsAsync(elviaDbContext, result, timeStamp, elviaCompany);
         }
 
-        public virtual async Task UpsertMeteringPointsAsync(ElviaDbContext elviaDbContext,List<MeteringPointProductBigQuery> meteringPoints,DateTimeOffset timeStamp, Company elviaCompany)
+        public virtual async Task UpsertMeteringPointsAsync(ElviaDbContext elviaDbContext, List<MeteringPointProductBigQuery> meteringPoints, DateTimeOffset timeStamp, Company elviaCompany)
         {
             int ctr = 0;
             foreach (var element in meteringPoints)
             {
-                UpsertMeteringPointAsync(elviaDbContext,element, timeStamp, elviaCompany);
+                UpsertMeteringPointAsync(elviaDbContext, element, timeStamp, elviaCompany);
                 if (ctr++ % _elviaDbSyncChangesThreshold == 0)
                 {
                     await elviaDbContext.SaveChangesAsync();

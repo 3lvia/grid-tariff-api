@@ -21,6 +21,11 @@ namespace GridTariffApi.StartupTasks
             _serviceProvider = serviceProvider;
         }
 
+        public int GetExecutionOrder()
+        {
+            return 1;
+        }
+
         public async Task Execute()
         {
             using var scope = _serviceProvider.CreateScope();
@@ -68,11 +73,6 @@ namespace GridTariffApi.StartupTasks
                 await elviaDbContext.SaveChangesAsync();
             }
             return elviaCompany;
-        }
-
-        public int GetExecutionPriority()
-        {
-            return 1;
         }
     }
 }

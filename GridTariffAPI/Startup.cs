@@ -86,10 +86,8 @@ namespace GridTariffApi
             services.AddDbContext<TariffContext>(options => options.UseSqlServer(Configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string")));
 
             //Digin 
-//            services.AddDbContext<ElviaDbContext>(options => options.UseSqlServer(Configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:GridTariffApi:connection-string")));
-            services.AddDbContext<ElviaDbContext>(options => options.UseSqlServer("data source=eeensql2016.eidsivaenergi.no;database=GridTariffApi-Dev;Integrated Security=SSPI;persist security info=True;TrustServerCertificate=True"));
+            services.AddDbContext<ElviaDbContext>(options => options.UseSqlServer(Configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:GridTariffApi:connection-string")));
 
-            
             services.AddScoped<ITariffRepository, TariffRepositoryEf>();
             services.AddScoped<IHolidayRepository, HolidayRepositoryFile>();
             services.AddScoped<IMeteringPointTariffRepository, MeteringPointTariffRepositoryEf>();
@@ -139,10 +137,12 @@ namespace GridTariffApi
 
             //bigquery (meteringpointtariff)
             services.AddTransient<GridTariffApi.BigQuery.MeteringPointTariffSync.IBigQueryReader, GridTariffApi.BigQuery.MeteringPointTariffSync.BigQueryReader>();
+            services.AddTransient<IMeteringPointTariffSynchronizer, MeteringPointTariffSynchronizer>();
 
             //startup tasks
             services.AddTransient<IStartupTask, PrepareDatabaseStartupTask>();
-
+            services.AddTransient<IStartupTask, SyncMeteringPointTariffStartupTask>();
+            
             services.AddCronJob<MeteringPointTariffSynchronizer>(c =>
             {
                 c.TimeZoneInfo = TimeZoneInfo.Local;

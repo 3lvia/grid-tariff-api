@@ -184,6 +184,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             Assert.Empty(elviaDbContext.IntegrationConfig);
 
             mockService.Setup(x => x.MeteringPointTariffFullSync(It.IsAny<ElviaDbContext>(), utcNow, elviaCompany)).Returns(Task.CompletedTask);
+            mockService.CallBase = true;
             await mockService.Object.SynchronizeMeteringPointsAsync(elviaDbContext, elviaCompany, utcNow);
 
             mockService.Verify(x => x.MeteringPointTariffFullSync(It.IsAny<ElviaDbContext>(), utcNow, elviaCompany), Times.Once);
@@ -212,6 +213,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             var elviaCompany = await elviaDbContext.Company.FirstOrDefaultAsync();
             var utcNow = DateTimeOffset.UtcNow;
             mockService.Setup(x => x.SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(elviaDbContext, It.IsAny<DateTimeOffset>(), utcNow, elviaCompany)).Returns(Task.CompletedTask);
+            mockService.CallBase = true;
 
             await mockService.Object.SynchronizeMeteringPointsAsync(elviaDbContext, elviaCompany, utcNow);
             mockService.Verify(x => x.SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(elviaDbContext, It.IsAny<DateTimeOffset>(), utcNow, elviaCompany), Times.Once);

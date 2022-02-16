@@ -9,17 +9,17 @@ using Xunit;
 
 namespace GridTariffApi.Tests.StartupTasks
 {
-    public class UpdatePricesStartupTaskTests
+    public class PrepareDatabaseStartupTaskTests
     {
         private IServiceProvider? _serviceProvider;
-        private PrepareDatabaseStartupTask? _updatePricesStartupTask;
+        private PrepareDatabaseStartupTask? _prepareDatabaseStartupTask;
 
         private void Setup()
         {
             var services = new ServiceCollection();
             services.AddDbContext<ElviaDbContext>(u => u.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()));
             _serviceProvider = services.BuildServiceProvider();
-            _updatePricesStartupTask = new PrepareDatabaseStartupTask(_serviceProvider);
+            _prepareDatabaseStartupTask = new PrepareDatabaseStartupTask(_serviceProvider);
         }
 
         [Fact]
@@ -32,11 +32,11 @@ namespace GridTariffApi.Tests.StartupTasks
             services.AddDbContext<ElviaDbContext>(u => u.UseInMemoryDatabase(databaseName: "ExecuteTest"));
             var serviceProvider = services.BuildServiceProvider();
 
-            var mockUpdatePricesStartupTask = new Mock<PrepareDatabaseStartupTask>(serviceProvider);
-            mockUpdatePricesStartupTask.Setup(x => x.GetPricesPayload()).Returns(Task.FromResult(jsonPayload));
-            mockUpdatePricesStartupTask.CallBase = true;
+            var mockPrepareDatabaseStartupTask = new Mock<PrepareDatabaseStartupTask>(serviceProvider);
+            mockPrepareDatabaseStartupTask.Setup(x => x.GetPricesPayload()).Returns(Task.FromResult(jsonPayload));
+            mockPrepareDatabaseStartupTask.CallBase = true;
 
-            await mockUpdatePricesStartupTask.Object.Execute();
+            await mockPrepareDatabaseStartupTask.Object.Execute();
             var elviaDbContext = serviceProvider!.GetRequiredService<ElviaDbContext>();
 
             var elviaPrices = await elviaDbContext.PriceStructure.Include(x => x.Company).FirstOrDefaultAsync();
@@ -48,7 +48,7 @@ namespace GridTariffApi.Tests.StartupTasks
             Assert.NotNull(elviaPrices.Company);
             Assert.Equal(1, await elviaDbContext.Company.CountAsync());
 
-            await mockUpdatePricesStartupTask.Object.Execute();
+            await mockPrepareDatabaseStartupTask.Object.Execute();
             Assert.Equal(1, await elviaDbContext.PriceStructure.CountAsync());
             Assert.Equal(1, await elviaDbContext.Company.CountAsync());
         }
@@ -63,11 +63,11 @@ namespace GridTariffApi.Tests.StartupTasks
             Assert.Null(await elviaDbContext.Company.FirstOrDefaultAsync());
             Assert.Null(await elviaDbContext.PriceStructure.FirstOrDefaultAsync());
 
-            var elviaCompany = await _updatePricesStartupTask!.GetElviaCompany(elviaDbContext);
-            var priceStructure = await _updatePricesStartupTask.GetElviaPrices(elviaDbContext, elviaCompany);
+            var elviaCompany = await _prepareDatabaseStartupTask!.GetElviaCompany(elviaDbContext);
+            var priceStructure = await _prepareDatabaseStartupTask.GetElviaPrices(elviaDbContext, elviaCompany);
             Assert.Equal(elviaCompany.OrgNumber, priceStructure.Company.OrgNumber);
             Assert.Equal(1, await elviaDbContext.PriceStructure.CountAsync());
-            await _updatePricesStartupTask.GetElviaPrices(elviaDbContext, elviaCompany);
+            await _prepareDatabaseStartupTask.GetElviaPrices(elviaDbContext, elviaCompany);
             Assert.Equal(elviaCompany.OrgNumber, priceStructure.Company.OrgNumber);
             Assert.Equal(1, await elviaDbContext.PriceStructure.CountAsync());
         }
@@ -82,8 +82,8 @@ namespace GridTariffApi.Tests.StartupTasks
             Assert.Null(await elviaDbContext.Company.FirstOrDefaultAsync());
             Assert.Null(await elviaDbContext.PriceStructure.FirstOrDefaultAsync());
 
-            var elviaCompany = await _updatePricesStartupTask!.GetElviaCompany(elviaDbContext);
-            var priceStructure = await _updatePricesStartupTask.GetElviaPrices(elviaDbContext, elviaCompany);
+            var elviaCompany = await _prepareDatabaseStartupTask!.GetElviaCompany(elviaDbContext);
+            var priceStructure = await _prepareDatabaseStartupTask.GetElviaPrices(elviaDbContext, elviaCompany);
             Assert.Equal(elviaCompany.OrgNumber, priceStructure.Company.OrgNumber);
             Assert.Equal(1, await elviaDbContext.PriceStructure.CountAsync());
         }
@@ -98,13 +98,13 @@ namespace GridTariffApi.Tests.StartupTasks
             var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
             Assert.Null(await elviaDbContext.Company.FirstOrDefaultAsync());
 
-            var elviaCompany = await _updatePricesStartupTask!.GetElviaCompany(elviaDbContext);
+            var elviaCompany = await _prepareDatabaseStartupTask!.GetElviaCompany(elviaDbContext);
             Assert.NotNull(elviaCompany);
             Assert.Equal(elviaCompanyName, elviaCompany.Name);
             Assert.Equal(_elviaCompanyOrgNumber, elviaCompany.OrgNumber);
             Assert.Equal(1, await elviaDbContext.Company.CountAsync());
 
-            var elviaCompany2 = await _updatePricesStartupTask.GetElviaCompany(elviaDbContext);
+            var elviaCompany2 = await _prepareDatabaseStartupTask.GetElviaCompany(elviaDbContext);
             Assert.NotNull(elviaCompany2);
             Assert.Equal(elviaCompanyName, elviaCompany2.Name);
             Assert.Equal(_elviaCompanyOrgNumber, elviaCompany2.OrgNumber);

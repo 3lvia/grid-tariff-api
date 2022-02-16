@@ -16,7 +16,7 @@ namespace GridTariffApi
         {
             var host = CreateHostBuilder(args).Build().MigrateDatabase<ElviaDbContext>();
 
-            var startupTasks = host.Services.GetServices<IStartupTask>().OrderBy(x => x.GetExecutionPriority());
+            var startupTasks = host.Services.GetServices<IStartupTask>().OrderBy(x => x.GetExecutionOrder());
             foreach (var startupTask in startupTasks)
             {
                 await startupTask.Execute();

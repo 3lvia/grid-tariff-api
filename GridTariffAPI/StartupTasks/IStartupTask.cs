@@ -4,8 +4,17 @@ namespace GridTariffApi.StartupTasks
 {
     public interface IStartupTask
     {
-        Task Execute();
+        /// <summary>
+        /// Indicates order of execution relattive to other IStartupTask.
+        /// Lower value = higher priority
+        /// </summary>
+        /// <returns></returns>
+        int GetExecutionOrder();
 
-        int GetExecutionPriority();
+        /// <summary>
+        ///Executes StartupTask
+        /// </summary>
+        /// <returns></returns>
+        Task Execute();
     }
 }
