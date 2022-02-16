@@ -12,7 +12,7 @@ namespace GridTariffApi.StartupTasks
     public class UpdatePricesStartupTask : IStartupTask
     {
         private readonly IServiceProvider _serviceProvider;
-        private static readonly string TariffPriceFileName = Path.Join("Artifacts", "GridTariffPriceConfiguration.v1_0_gridtariffprices.json");
+        private static readonly string _tariffPriceFileName = Path.Join("Artifacts", "GridTariffPriceConfiguration.v1_0_gridtariffprices.json");
 
         private readonly string _elviaCompanyName = "Elvia AS";
         private readonly string _elviaCompanyOrgNumber = "980489698";
@@ -29,11 +29,17 @@ namespace GridTariffApi.StartupTasks
             var elviaCompany = await GetElviaCompany(elviaDbContext);
             var elviaPrices = await GetElviaPrices(elviaDbContext,elviaCompany);
 
-            elviaPrices.JsonPayload = await File.ReadAllTextAsync(TariffPriceFileName);
+            elviaPrices.Company = elviaCompany;
+            elviaPrices.JsonPayload = await GetPricesPayload();
             elviaPrices.JsonVersion = "1.0";
             elviaPrices.LastUpdatedUtc = DateTimeOffset.UtcNow;
 
             await elviaDbContext.SaveChangesAsync();
+        }
+
+        public virtual async Task<string> GetPricesPayload()
+        {
+            return await File.ReadAllTextAsync(_tariffPriceFileName);
         }
 
         public async Task<PriceStructure> GetElviaPrices(ElviaDbContext elviaDbContext, Company elviaCompany)
@@ -42,7 +48,8 @@ namespace GridTariffApi.StartupTasks
             if (elviaPriceStructure == null)
             {
                 elviaPriceStructure = new PriceStructure() { Company = elviaCompany };
-                await elviaDbContext.AddAsync(elviaPriceStructure);
+                await elviaDbContext.PriceStructure.AddAsync(elviaPriceStructure);
+                await elviaDbContext.SaveChangesAsync();
             }
             return elviaPriceStructure;
         }
