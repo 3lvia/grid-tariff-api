@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace GridTariffApi.Migrations.ElviaDbMigrations
+namespace GridTariffApi.Migrations.ElviaDbContext_Migrations
 {
-    public partial class Baseline : Migration
+    public partial class BaseLine : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,7 @@ namespace GridTariffApi.Migrations.ElviaDbMigrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrgNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OrgNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -22,17 +22,17 @@ namespace GridTariffApi.Migrations.ElviaDbMigrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "IntegrationConfig",
+                name: "SyncStatus",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Table = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastUpdated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                    Table = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    LastUpdatedUtc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IntegrationConfig", x => x.Id);
+                    table.PrimaryKey("PK_SyncStatus", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -42,10 +42,10 @@ namespace GridTariffApi.Migrations.ElviaDbMigrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CompanyId = table.Column<int>(type: "int", nullable: true),
-                    MeteringPointId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MeteringPointId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ProductKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TariffKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastUpdated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                    LastUpdatedUtc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -81,26 +81,47 @@ namespace GridTariffApi.Migrations.ElviaDbMigrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Company_OrgNumber",
+                table: "Company",
+                column: "OrgNumber",
+                unique: true,
+                filter: "[OrgNumber] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MeteringPointTariff_CompanyId",
                 table: "MeteringPointTariff",
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MeteringPointTariff_MeteringPointId",
+                table: "MeteringPointTariff",
+                column: "MeteringPointId",
+                unique: true,
+                filter: "[MeteringPointId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PriceStructure_CompanyId",
                 table: "PriceStructure",
                 column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SyncStatus_Table",
+                table: "SyncStatus",
+                column: "Table",
+                unique: true,
+                filter: "[Table] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "IntegrationConfig");
-
-            migrationBuilder.DropTable(
                 name: "MeteringPointTariff");
 
             migrationBuilder.DropTable(
                 name: "PriceStructure");
+
+            migrationBuilder.DropTable(
+                name: "SyncStatus");
 
             migrationBuilder.DropTable(
                 name: "Company");

@@ -13,7 +13,6 @@ namespace GridTariffApi.Model
         /// <summary>
         /// For internal use
         /// </summary>
-        [Key]
         public int Id { get; set; }
 
         public Company Company { get; set; }

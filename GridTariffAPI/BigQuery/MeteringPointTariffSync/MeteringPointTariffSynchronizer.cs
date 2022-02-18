@@ -71,21 +71,21 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
         }
         public async Task SynchronizeMeteringPointsAsync(ElviaDbContext elviaDbContext, Company elviaCompany, DateTimeOffset timeStamp)
         {
-            var meteringPointTariffLastSynced = elviaDbContext.IntegrationConfig.FirstOrDefault(x => x.Table == _tableName);
+            var meteringPointTariffLastSynced = elviaDbContext.SyncStatus.FirstOrDefault(x => x.Table == _tableName);
             if (meteringPointTariffLastSynced == null)
             {
                 await MeteringPointTariffFullSync(elviaDbContext,timeStamp, elviaCompany);
                 meteringPointTariffLastSynced = new SyncStatus()
                 {
                     Table = _tableName,
-                    LastUpdated = timeStamp,
+                    LastUpdatedUtc = timeStamp,
                 };
-                elviaDbContext.IntegrationConfig.Add(meteringPointTariffLastSynced);
+                elviaDbContext.SyncStatus.Add(meteringPointTariffLastSynced);
             }
             else
             {
-                await SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(elviaDbContext,meteringPointTariffLastSynced.LastUpdated,timeStamp,elviaCompany);
-                meteringPointTariffLastSynced.LastUpdated = timeStamp;
+                await SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(elviaDbContext,meteringPointTariffLastSynced.LastUpdatedUtc,timeStamp,elviaCompany);
+                meteringPointTariffLastSynced.LastUpdatedUtc = timeStamp;
             }
             await elviaDbContext.SaveChangesAsync();
         }

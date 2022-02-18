@@ -11,7 +11,6 @@ namespace GridTariffApi.Model
         /// <summary>
         /// For internal use
         /// </summary>
-        [Key]
         public int Id { get; set; }
         /// <summary>
         /// Table of interest
@@ -21,6 +20,6 @@ namespace GridTariffApi.Model
         /// <summary>
         /// TimeStamp of last update.
         /// </summary>
-        public DateTimeOffset LastUpdated { get; set; }
+        public DateTimeOffset LastUpdatedUtc { get; set; }
     }
 }

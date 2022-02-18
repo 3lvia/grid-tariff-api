@@ -14,7 +14,6 @@ namespace GridTariffApi.Model
         /// <summary>
         /// for internal use
         /// </summary>
-        [Key]
         public int Id { get; set; }
 
         /// <summary>

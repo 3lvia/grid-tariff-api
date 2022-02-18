@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace GridTariffApi.Migrations.ElviaDbMigrations
+namespace GridTariffApi.Migrations.ElviaDbContext_Migrations
 {
     [DbContext(typeof(ElviaDbContext))]
     partial class ElviaDbContextModelSnapshot : ModelSnapshot
@@ -30,29 +30,16 @@ namespace GridTariffApi.Migrations.ElviaDbMigrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrgNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrgNumber")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Company_OrgNumber")
+                        .HasFilter("[OrgNumber] IS NOT NULL");
 
                     b.ToTable("Company");
-                });
-
-            modelBuilder.Entity("GridTariffApi.Model.IntegrationConfig", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("LastUpdated")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Table")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IntegrationConfig");
                 });
 
             modelBuilder.Entity("GridTariffApi.Model.MeteringPointTariff", b =>
@@ -65,11 +52,11 @@ namespace GridTariffApi.Migrations.ElviaDbMigrations
                     b.Property<int?>("CompanyId")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("LastUpdated")
+                    b.Property<DateTimeOffset>("LastUpdatedUtc")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("MeteringPointId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProductKey")
                         .HasColumnType("nvarchar(max)");
@@ -80,6 +67,11 @@ namespace GridTariffApi.Migrations.ElviaDbMigrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
+
+                    b.HasIndex("MeteringPointId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_MeteringPointTariff_MeteringPointId")
+                        .HasFilter("[MeteringPointId] IS NOT NULL");
 
                     b.ToTable("MeteringPointTariff");
                 });
@@ -108,6 +100,29 @@ namespace GridTariffApi.Migrations.ElviaDbMigrations
                     b.HasIndex("CompanyId");
 
                     b.ToTable("PriceStructure");
+                });
+
+            modelBuilder.Entity("GridTariffApi.Model.SyncStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("LastUpdatedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Table")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Table")
+                        .IsUnique()
+                        .HasDatabaseName("IX_SyncStatus_Table")
+                        .HasFilter("[Table] IS NOT NULL");
+
+                    b.ToTable("SyncStatus");
                 });
 
             modelBuilder.Entity("GridTariffApi.Model.MeteringPointTariff", b =>

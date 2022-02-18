@@ -156,7 +156,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             Setup();
 
             var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
-            Assert.Empty(elviaDbContext.IntegrationConfig);
+            Assert.Empty(elviaDbContext.SyncStatus);
 
             var mockBigQueryReader = new Mock<GridTariffApi.BigQuery.MeteringPointTariffSync.IBigQueryReader>();
             mockBigQueryReader.Setup(x => x.GetMeteringPointsByFromDateAsync(It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(new List<BigQueryMeteringPointProduct>()));
@@ -182,7 +182,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             mockService.CallBase = true;
 
             var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
-            Assert.Empty(elviaDbContext.IntegrationConfig);
+            Assert.Empty(elviaDbContext.SyncStatus);
 
             var elviaCompany = await mockService.Object.GetElviaCompany(elviaDbContext);
             await mockService.Object.MeteringPointTariffFullSync(elviaDbContext, DateTimeOffset.UtcNow, elviaCompany);
@@ -201,16 +201,16 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             var elviaCompany = await mockService.Object.GetElviaCompany(elviaDbContext);
             var utcNow = DateTime.UtcNow;
 
-            Assert.Empty(elviaDbContext.IntegrationConfig);
+            Assert.Empty(elviaDbContext.SyncStatus);
 
             mockService.Setup(x => x.MeteringPointTariffFullSync(It.IsAny<ElviaDbContext>(), utcNow, elviaCompany)).Returns(Task.CompletedTask);
             await mockService.Object.SynchronizeMeteringPointsAsync(elviaDbContext, elviaCompany, utcNow);
 
             mockService.Verify(x => x.MeteringPointTariffFullSync(It.IsAny<ElviaDbContext>(), utcNow, elviaCompany), Times.Once);
-            Assert.Equal(1, elviaDbContext.IntegrationConfig.Count());
-            var integrationConfig = elviaDbContext.IntegrationConfig.First();
+            Assert.Equal(1, elviaDbContext.SyncStatus.Count());
+            var integrationConfig = elviaDbContext.SyncStatus.First();
             Assert.Equal("MeteringPointTariff", integrationConfig.Table);
-            Assert.Equal(utcNow, integrationConfig.LastUpdated);
+            Assert.Equal(utcNow, integrationConfig.LastUpdatedUtc);
 
         }
 
@@ -221,12 +221,12 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
 
             var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
 
-            Assert.Empty(elviaDbContext.IntegrationConfig);
+            Assert.Empty(elviaDbContext.SyncStatus);
 
-            elviaDbContext.IntegrationConfig.Add(new Model.SyncStatus() { Table = "MeteringPointTariff", LastUpdated = DateTimeOffset.UtcNow });
+            elviaDbContext.SyncStatus.Add(new Model.SyncStatus() { Table = "MeteringPointTariff", LastUpdatedUtc = DateTimeOffset.UtcNow });
             await elviaDbContext.SaveChangesAsync();
 
-            Assert.Equal(1,elviaDbContext.IntegrationConfig.Count());
+            Assert.Equal(1,elviaDbContext.SyncStatus.Count());
 
             var mockService = new Mock<MeteringPointTariffSynchronizer>(null, _scheduleConfig, _serviceProvider, null);
             var elviaCompany = await mockService.Object.GetElviaCompany(elviaDbContext);
@@ -235,10 +235,10 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
 
             await mockService.Object.SynchronizeMeteringPointsAsync(elviaDbContext, elviaCompany, utcNow);
             mockService.Verify(x => x.SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(elviaDbContext, It.IsAny<DateTimeOffset>(), utcNow, elviaCompany), Times.Once);
-            Assert.Equal(1, elviaDbContext.IntegrationConfig.Count());
-            var integrationConfig = elviaDbContext.IntegrationConfig.First();
+            Assert.Equal(1, elviaDbContext.SyncStatus.Count());
+            var integrationConfig = elviaDbContext.SyncStatus.First();
             Assert.Equal("MeteringPointTariff", integrationConfig.Table);
-            Assert.Equal(utcNow, integrationConfig.LastUpdated);
+            Assert.Equal(utcNow, integrationConfig.LastUpdatedUtc);
         }
     }
 }
