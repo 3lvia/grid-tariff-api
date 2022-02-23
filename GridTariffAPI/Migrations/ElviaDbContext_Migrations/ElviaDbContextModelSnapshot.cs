@@ -36,7 +36,6 @@ namespace GridTariffApi.Migrations.ElviaDbContext_Migrations
 
                     b.HasIndex("OrgNumber")
                         .IsUnique()
-                        .HasDatabaseName("IX_Company_OrgNumber")
                         .HasFilter("[OrgNumber] IS NOT NULL");
 
                     b.ToTable("Company");
@@ -70,7 +69,6 @@ namespace GridTariffApi.Migrations.ElviaDbContext_Migrations
 
                     b.HasIndex("MeteringPointId")
                         .IsUnique()
-                        .HasDatabaseName("IX_MeteringPointTariff_MeteringPointId")
                         .HasFilter("[MeteringPointId] IS NOT NULL");
 
                     b.ToTable("MeteringPointTariff");
@@ -119,7 +117,6 @@ namespace GridTariffApi.Migrations.ElviaDbContext_Migrations
 
                     b.HasIndex("Table")
                         .IsUnique()
-                        .HasDatabaseName("IX_SyncStatus_Table")
                         .HasFilter("[Table] IS NOT NULL");
 
                     b.ToTable("SyncStatus");

@@ -18,18 +18,15 @@ namespace GridTariffApi.Database
         {
             modelBuilder.Entity<Company>().HasKey(e => e.Id);
             modelBuilder.Entity<Company>().HasIndex(e => e.OrgNumber)
-                .IsUnique()
-                .HasDatabaseName("IX_Company_OrgNumber");
+                .IsUnique();
 
             modelBuilder.Entity<SyncStatus>().HasKey(e => e.Id);
             modelBuilder.Entity<SyncStatus>().HasIndex(e => e.Table)
-                .IsUnique()
-                .HasDatabaseName("IX_SyncStatus_Table");
+                .IsUnique();
 
             modelBuilder.Entity<MeteringPointTariff>().HasKey(e => e.Id);
             modelBuilder.Entity<MeteringPointTariff>().HasIndex(e => e.MeteringPointId)
-                .IsUnique()
-                .HasDatabaseName("IX_MeteringPointTariff_MeteringPointId");
+                .IsUnique();
 
             modelBuilder.Entity<PriceStructure>().HasKey(e => e.Id);
         }
