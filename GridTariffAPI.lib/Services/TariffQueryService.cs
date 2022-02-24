@@ -34,12 +34,12 @@ namespace GridTariffApi.Lib.Services
                 GridTariffCollections = new List<GridTariffCollection>()
             };
             var meteringPointsInformations = await _tariffPriceCache.GetMeteringPointInformationsAsync(paramFromDate, paramToDate, meteringPoints);
-            var tariffKeys = meteringPointsInformations.Select(x => x.TariffKey).Distinct();
+            var ProductKeys = meteringPointsInformations.Select(x => x.ProductKey).Distinct();
             var tasks = new List<Task<GridTariffCollection>>();
-            foreach (var tariffKey in tariffKeys)
+            foreach (var productKey in ProductKeys)
             {
-                var gridTariffMeteringPoints = meteringPointsInformations.Where(x => x.TariffKey == tariffKey).ToList();
-                tasks.Add(GenerateTariffAndAppendMeteringPointsAsync(tariffKey, paramFromDate, paramToDate, gridTariffMeteringPoints));
+                var gridTariffMeteringPoints = meteringPointsInformations.Where(x => x.ProductKey == productKey).ToList();
+                tasks.Add(GenerateTariffAndAppendMeteringPointsAsync(productKey, paramFromDate, paramToDate, gridTariffMeteringPoints));
             }
             foreach (var task in tasks)
             {
@@ -48,13 +48,13 @@ namespace GridTariffApi.Lib.Services
             return retVal;
         }
 
-        public virtual async Task<GridTariffCollection> GenerateTariffAndAppendMeteringPointsAsync(string tariffKey,
+        public virtual async Task<GridTariffCollection> GenerateTariffAndAppendMeteringPointsAsync(string productKey,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate,
             List<MeteringPointInformation> meteringPointInformation)
         {
 
-            var gridTariff = await QueryTariffAsync(tariffKey, paramFromDate, paramToDate);
+            var gridTariff = await QueryTariffUsingProductKeyAsync(productKey, paramFromDate, paramToDate);
             gridTariff.MeteringPointsAndPriceLevels = new List<MeteringPointsAndPriceLevels>();
 
             if (_serviceHelper.TimePeriodIsIncludingLocaleToday(paramFromDate, paramToDate))
@@ -154,12 +154,28 @@ namespace GridTariffApi.Lib.Services
             return meteringPointAndPriceLevel;
         }
 
-        public virtual async Task<GridTariffCollection> QueryTariffAsync(
+        public virtual async Task<GridTariffCollection> QueryTariffUsingTariffKeyAsync(
             string tariffKey,
             DateTimeOffset paramFromDate,
             DateTimeOffset paramToDate)
         {
-            var tariff = await _tariffPriceCache.GetTariffAsync(tariffKey);
+            var tariffs = await _tariffPriceCache.GetTariffsAsync();
+            var tariff = tariffs?.FirstOrDefault(x => x.TariffKey == tariffKey);
+            if (tariff != null)
+            {
+                return await QueryTariffUsingProductKeyAsync(tariff.Product, paramFromDate, paramToDate);
+            }
+            return await QueryTariffUsingProductKeyAsync(String.Empty, paramFromDate, paramToDate);
+        }
+
+
+        public virtual async Task<GridTariffCollection> QueryTariffUsingProductKeyAsync(
+            string productKey,
+            DateTimeOffset paramFromDate,
+            DateTimeOffset paramToDate)
+        {
+            var tariffs = await _tariffPriceCache.GetTariffsAsync();
+            var tariff = tariffs?.FirstOrDefault(x => x.Product == productKey);
             if (tariff == null)
             {
                 return new GridTariffCollection();

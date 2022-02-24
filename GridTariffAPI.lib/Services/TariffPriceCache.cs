@@ -43,7 +43,7 @@ namespace GridTariffApi.Lib.Services
             var mpTariffs = await GetMeteringPointTariffsAsync(meteringPoints);
             foreach (var mpTariff in mpTariffs)
             {
-                resDict[mpTariff.MeteringPointId] = new MeteringPointInformation(mpTariff.MeteringPointId, mpTariff.TariffKey, null, null);
+                resDict[mpTariff.MeteringPointId] = new MeteringPointInformation(mpTariff.MeteringPointId, mpTariff.ProductKey, null, null);
             }
 
             var mpMaxConsumptions = await mpMaxConsumptionsTask;

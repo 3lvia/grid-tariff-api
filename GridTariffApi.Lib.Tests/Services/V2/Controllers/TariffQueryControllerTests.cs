@@ -31,15 +31,19 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
                 "Europe/Oslo";
             var norwegianTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
 
-            var gridTariffApiConfig = new GridTariffApiConfig();
-            gridTariffApiConfig.MinStartDateAllowedQuery = new DateTime(2020, 01, 01);
-            gridTariffApiConfig.TimeZoneForQueries = norwegianTimeZone;
+            var gridTariffApiConfig = new GridTariffApiConfig
+            {
+                MinStartDateAllowedQuery = new DateTime(2020, 01, 01),
+                TimeZoneForQueries = norwegianTimeZone
+            };
 
             var serviceHelper = new ServiceHelper(gridTariffApiConfig);
 
             var tariffType = new TariffType("tariffKey", "product", "", "", "", "", false, DateTimeOffset.MinValue, false, null, 0, null, null);
-            var tariffTypes = new List<TariffType>();
-            tariffTypes.Add(tariffType);
+            var tariffTypes = new List<TariffType>
+            {
+                tariffType
+            };
 
             var gridTariff = new GridTariff(null, tariffTypes);
             var gridTariffPriceConfiguration = new GridTariffPriceConfiguration(gridTariff);
@@ -59,7 +63,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
 
             _tariffQueryServiceMock = new Mock<ITariffQueryService>();
             _tariffQueryServiceMock
-                .Setup(x => x.QueryTariffAsync("tariffKey", DateTimeOffset.MaxValue, DateTimeOffset.MaxValue))
+                .Setup(x => x.QueryTariffUsingTariffKeyAsync("tariffKey", DateTimeOffset.MaxValue, DateTimeOffset.MaxValue))
                 .Returns(Task.FromResult(new GridTariffCollection()));
 
             _tariffQueryServiceMock
@@ -84,7 +88,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2.Controllers
             };
 
             await _tariffQueryController.TariffQuery(request);
-            _tariffQueryServiceMock.Verify(x => x.QueryTariffAsync(request.TariffKey, DateTimeOffset.MaxValue, DateTimeOffset.MaxValue), Times.Once);
+            _tariffQueryServiceMock.Verify(x => x.QueryTariffUsingTariffKeyAsync(request.TariffKey, DateTimeOffset.MaxValue, DateTimeOffset.MaxValue), Times.Once);
         }
 
         [Fact]

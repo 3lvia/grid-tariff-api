@@ -7,9 +7,9 @@ namespace GridTariffApi.Lib.Models.Internal
         public MeteringPointTariff(string meteringPointId, string tariffKey)
         {
             MeteringPointId = meteringPointId;
-            TariffKey = tariffKey;
+            ProductKey = tariffKey;
         }
         public String MeteringPointId { get;}
-        public String TariffKey { get; set; }
+        public String ProductKey { get; set; }
     }
 }

@@ -1,28 +1,28 @@
-﻿using GridTariffApi.Lib.EntityFramework;
-using GridTariffApi.Lib.Interfaces.External;
+﻿using GridTariffApi.Lib.Interfaces.External;
 using GridTariffApi.Lib.Models.Internal;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using GridTariffApi.Database;
 
 namespace GridTariffApi.Services
 {
     public class MeteringPointTariffRepositoryEf : IMeteringPointTariffRepository
     {
-        private readonly TariffContext _tariffContext;
+        private readonly ElviaDbContext _elviaDbContext;
 
-        public MeteringPointTariffRepositoryEf(TariffContext tariffContext)
+        public MeteringPointTariffRepositoryEf(ElviaDbContext elviaDbContext)
         {
-            _tariffContext = tariffContext;
+            _elviaDbContext = elviaDbContext;
         }
 
         public async Task<IReadOnlyList<MeteringPointTariff>> GetMeteringPointTariffsAsync(List<string> meteringPointIds)
         {
-            return await _tariffContext.MeteringPointProducts
-                .Where(x => meteringPointIds.Contains(x.MeteringpointId))
+            return await _elviaDbContext.MeteringPointTariff
+                .Where(x => meteringPointIds.Contains(x.MeteringPointId))
                 .Select(meteringPointProduct =>
-                    new MeteringPointTariff(meteringPointProduct.MeteringpointId, meteringPointProduct.TariffKey))
+                    new MeteringPointTariff(meteringPointProduct.MeteringPointId, meteringPointProduct.ProductKey))
                 .ToListAsync();
         }
     }

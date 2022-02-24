@@ -39,6 +39,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IO;
 using Prometheus;
+using GridTariffApi.Database;
+using GridTariffApi.BigQuery.MeteringPointTariffSync;
 
 namespace GridTariffApi
 {
@@ -75,14 +77,15 @@ namespace GridTariffApi
 
             var bigQueryClient = CreateBigQueryClient(gridTariffApiSynchronizerConfig);
             services.AddTransient(u => bigQueryClient);
-            services.AddTransient<IBigQueryReader, BigQueryReader>();
+            services.AddTransient<Synchronizer.Lib.Services.IBigQueryReader, Synchronizer.Lib.Services.BigQueryReader>();
             services.AddTransient<IGridTariffApiSynchronizer, GridTariffApiSynchronizer>();
             services.AddTransient<GridTariffApi.Lib.Services.Pilot.ITariffTypeService, GridTariffApi.Lib.Services.Pilot.TariffTypeService>();
             services.AddTransient<GridTariffApi.Lib.Services.Pilot.ITariffQueryService, GridTariffApi.Lib.Services.Pilot.TariffQueryService>();
             services.AddTransient<IServiceHelper, ServiceHelper>();
-            services.AddDbContext<TariffContext>(options => options.UseSqlServer(gridTariffApiConfig.DBConnectionString));
+            services.AddDbContext<TariffContext>(options => options.UseSqlServer(Configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string")));
 
-            //v2
+            //Digin 
+            services.AddDbContext<ElviaDbContext>(options => options.UseSqlServer(Configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:GridTariffApi:connection-string")));
             services.AddScoped<ITariffRepository, TariffRepositoryFile>();
             services.AddScoped<IHolidayRepository, HolidayRepositoryFile>();
             services.AddScoped<IMeteringPointTariffRepository, MeteringPointTariffRepositoryEf>();
@@ -128,7 +131,18 @@ namespace GridTariffApi
             });
             services.AddScoped<IMdmxClient, MdmxClient>();
 
-            services.AddStandardElviaTelemetryLogging(Configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true); 
+            services.AddStandardElviaTelemetryLogging(Configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true);
+
+            //bigquery (meteringpointtariff)
+            services.AddTransient<GridTariffApi.BigQuery.MeteringPointTariffSync.IBigQueryReader, GridTariffApi.BigQuery.MeteringPointTariffSync.BigQueryReader>();
+
+
+            services.AddCronJob<MeteringPointTariffSynchronizer>(c =>
+            {
+                c.TimeZoneInfo = TimeZoneInfo.Local;
+                c.CronExpression = @"0 6 * * *";      //every day at
+            });
+
 
             services.AddCronJob<ScheduledGridTariffApiSynchronizer>(c =>
             {
@@ -143,7 +157,7 @@ namespace GridTariffApi
                 options.CustomSchemaIds(x => x.FullName);
             });
 
-            ConfigureAuth(services, gridTariffApiConfig.Username, gridTariffApiConfig.Password);
+            ConfigureAuth(services, Configuration.EnsureHasValue("kunde:kv:nett-tariff-api:username"), Configuration.EnsureHasValue("kunde:kv:nett-tariff-api:password"));
         }
 
         private static void AddAuthorizations(IServiceCollection services)
@@ -162,10 +176,6 @@ namespace GridTariffApi
         {
             GridTariffApiConfig gridTariffApiConfig = new GridTariffApiConfig
             {
-                DBConnectionString = Configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:NettTariff:connection-string"),
-                InstrumentationKey = Configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"),
-                Username = Configuration.EnsureHasValue("kunde:kv:nett-tariff-api:username"),
-                Password = Configuration.EnsureHasValue("kunde:kv:nett-tariff-api:password"),
                 MinStartDateAllowedQuery = Configuration.GetValue<DateTime>("minStartDateAllowedQuery"),
                 TimeZoneForQueries = NorwegianTimeZoneInfo(),
             };
