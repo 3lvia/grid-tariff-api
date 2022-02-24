@@ -57,7 +57,7 @@ namespace GridTariffApi.Lib.Controllers.v1
             DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
             _loggingDataCollector?.RegisterTariffPeriodAndNumMeteringPoints(startDateTime, endDateTime, null);
             var tariffKey = await _controllerValidationHelper.DecideTariffKeyFromInputAsync(request);
-            var result = await _tariffQueryService.QueryTariffAsyncUsingTariffKey(tariffKey, startDateTime, endDateTime);
+            var result = await _tariffQueryService.QueryTariffUsingTariffKeyAsync(tariffKey, startDateTime, endDateTime);
             return Ok(result);
         }
 

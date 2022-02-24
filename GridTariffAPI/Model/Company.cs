@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace GridTariffApi.Model
+﻿namespace GridTariffApi.Model
 {
     /// <summary>
     /// Defines a Company
@@ -10,7 +8,6 @@ namespace GridTariffApi.Model
         /// <summary>
         /// For internal use
         /// </summary>
-        [Key]
         public int Id { get; set; }
 
         /// <summary>

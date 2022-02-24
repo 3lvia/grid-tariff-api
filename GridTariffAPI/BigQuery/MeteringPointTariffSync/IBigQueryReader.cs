@@ -7,7 +7,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
 {
     public interface IBigQueryReader
     {
-        Task<List<MeteringPointProductBigQuery>> GetAllMeteringPointProductAsync();
-        Task<List<MeteringPointProductBigQuery>> GetMeteringPointsByFromDateAsync(DateTimeOffset fromDate);
+        Task<List<BigQueryMeteringPointProduct>> GetAllMeteringPointProductAsync();
+        Task<List<BigQueryMeteringPointProduct>> GetMeteringPointsByFromDateAsync(DateTimeOffset fromDate);
     }
 }
