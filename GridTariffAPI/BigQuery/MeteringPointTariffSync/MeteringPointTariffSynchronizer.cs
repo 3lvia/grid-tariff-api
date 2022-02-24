@@ -1,6 +1,7 @@
 ﻿using Elvia.Telemetry;
 using GridTariffApi.BigQuery.MeteringPointTariffSync.Model;
 using GridTariffApi.Database;
+using GridTariffApi.Exceptions;
 using GridTariffApi.Model;
 using GridTariffApi.Synchronizer.Lib.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -84,7 +85,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             }
             catch (Exception exception)
             {
-                _logger.TrackException(exception);
+                _logger.TrackException(new GridTariffApiException("MeteringPointTariffFullSync failed", exception));
             }
             finally
             {
