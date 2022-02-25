@@ -67,13 +67,11 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
         [Theory]
         [InlineData("", "", "Neither TariffKey nor Product present in request", "")]
         [InlineData("a", "b", "Both TariffKey and Product present in request. These are mutually exclusive", "")]
-        [InlineData("", "b", "Tariff with productcode b not found", "")]
-        [InlineData("a", "", "TariffType a not found", "")]
         [InlineData("tariffKey", "", "Query before", "31/12/2019 23:15")]
         [InlineData("tariffKey", "", "", "31/12/2021 23:15")]
         [InlineData("", "product", "", "31/12/2021 23:15")]
 
-        public async Task ValidateRequestInput(string tariffKey, string productKey, string expectedError, string queryStartDateUtc)
+        public void ValidateRequestInput(string tariffKey, string productKey, string expectedError, string queryStartDateUtc)
         {
             Setup();
 
@@ -87,15 +85,48 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
                 request.StartTime = DateTime.SpecifyKind(DateTime.ParseExact(queryStartDateUtc, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture), DateTimeKind.Utc);
             }
 
-            var result = await _controllerValidationHelper.ValidateRequestInputAsync(request);
+            var result =  _controllerValidationHelper.ValidateRequestInput(request);
             Assert.Contains(expectedError, result);
         }
 
+        [Theory]
+        [InlineData("", "", false)]
+        [InlineData("", "productkey", true)]
+        [InlineData("tariffkey", "", true)]
+        [InlineData("tariffkey", "productkey", true)]
+        [InlineData("tariffkey", "bogusvalue", true)]
+        [InlineData("bogusvalue", "productkey", true)]
+        [InlineData("bogusvalue", "bogusvalue", false)]
+
+
+        public async Task ValidateTariffExistsTests(string tariffKey, string productKey, bool expectedResult)
+        {
+            var tariffTypes = new List<TariffType>();
+            tariffTypes.Add(new TariffType("tariffkey","productkey",String.Empty, String.Empty, String.Empty, String.Empty,false,DateTimeOffset.UtcNow,false,null,1,null,null));
+            var tariffPriceCacheMock = new Mock<ITariffPriceCache>();
+            tariffPriceCacheMock.Setup(x => x.GetTariffsAsync()).ReturnsAsync(tariffTypes);
+
+            var controllerValidationHelper = new ControllerValidationHelper(null, tariffPriceCacheMock.Object, null);
+            bool retVal = await controllerValidationHelper.ValidateTariffExistsAsync(tariffKey, productKey);
+            Assert.Equal(expectedResult, retVal);
+        }
+
         [Fact]
-        public async Task ValidateTariffQueryRequestInputNull()
+        public async Task ValidateTariffExistsRequestTests()
+        {
+            var test = new Mock<ControllerValidationHelper>();
+            test.Setup(x => x.ValidateTariffExistsAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+            test.CallBase = true;
+
+            await test.Object.ValidateTariffExistsAsync(new TariffQueryRequest());
+            test.Verify(x => x.ValidateTariffExistsAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+        }
+
+        [Fact]
+        public void  ValidateTariffQueryRequestInputNull()
         {
             Setup();
-            var result = await _controllerValidationHelper.ValidateRequestInputAsync((TariffQueryRequest)null);
+            var result = _controllerValidationHelper.ValidateRequestInput((TariffQueryRequest)null);
             Assert.Contains("Missing model", result);
         }
 

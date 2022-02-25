@@ -49,11 +49,18 @@ namespace GridTariffApi.Lib.Controllers.v1
 
         public async Task<ActionResult<Models.Digin.TariffQueryResult>> TariffQuery([FromQuery] TariffQueryRequest request)  
         {
-            string validationErrorMsg = await _controllerValidationHelper.ValidateRequestInputAsync(request);
+            string validationErrorMsg =  _controllerValidationHelper.ValidateRequestInput(request);
             if (!String.IsNullOrEmpty(validationErrorMsg))
             {
                 return BadRequest(validationErrorMsg);
             }
+
+            bool test = await _controllerValidationHelper.ValidateTariffExistsAsync(request);
+            if (!test)
+            {
+                return NotFound();
+            }
+
             DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
             DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
             _loggingDataCollector?.RegisterTariffPeriodAndNumMeteringPoints(startDateTime, endDateTime, null);

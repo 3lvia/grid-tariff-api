@@ -23,6 +23,10 @@ namespace GridTariffApi.Lib.Services.Helpers
             _serviceHelper = serviceHelper;
 
         }
+        public ControllerValidationHelper()
+        {
+
+        }
 
         public string ValidateRequestInput(TariffQueryRequestMeteringPoints request)
         {
@@ -41,8 +45,21 @@ namespace GridTariffApi.Lib.Services.Helpers
 
             return String.Empty;
         }
-        
-        public async Task<string> ValidateRequestInputAsync(TariffQueryRequest request)
+
+        public async Task<bool> ValidateTariffExistsAsync(TariffQueryRequest request)
+        {
+            return await ValidateTariffExistsAsync(request.TariffKey, request.Product);
+        }
+
+        public virtual async Task<bool> ValidateTariffExistsAsync(string tariffKey, string productKey)
+        {
+            var tariffs = await _tariffPriceCache.GetTariffsAsync();
+            var foundTariffKey = 0 < tariffs.Count(x => x.TariffKey == tariffKey);
+            var foundProductKey = 0 < tariffs.Count(x => x.Product == productKey);
+            return foundTariffKey || foundProductKey;
+        }
+
+        public string ValidateRequestInput(TariffQueryRequest request)
         {
             // Denne valideringen er i tillegg til Validate()-metoden på request-objektet, som kalles automatisk av ASP.NET.
 
@@ -63,22 +80,6 @@ namespace GridTariffApi.Lib.Services.Helpers
             }
 
             var tariffKey = request.TariffKey;
-            var tariffs = await _tariffPriceCache.GetTariffsAsync();
-
-            if (!String.IsNullOrEmpty(request.Product))
-            {
-                var tariff = tariffs.FirstOrDefault(x => x.Product == request.Product);
-                if (tariff == null)
-                {
-                    return $"Tariff with productcode {request.Product} not found";
-                }
-                tariffKey = tariff.TariffKey;
-            }
-
-            if (!tariffs.Any(x => x.TariffKey == tariffKey))
-            {
-                return $"TariffType {tariffKey} not found";
-            }
 
             var minStartValidationResult = ValidateMinStartAllowedQuery(request.Range, request.StartTime);
             if (!String.IsNullOrEmpty(minStartValidationResult))
