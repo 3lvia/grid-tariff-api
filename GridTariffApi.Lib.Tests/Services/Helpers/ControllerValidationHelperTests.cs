@@ -31,8 +31,10 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
             gridTariffApiConfig.TimeZoneForQueries = NorwegianTimeZoneInfo();
 
             var tariffType = new TariffType("tariffKey", "product", "", "", "", "", false, DateTimeOffset.MinValue, false, null, 0, null, null);
-            var tariffTypes = new List<TariffType>();
-            tariffTypes.Add(tariffType);
+            var tariffTypes = new List<TariffType>
+            {
+                tariffType
+            };
 
             var gridTariff = new GridTariff(null, tariffTypes);
             var gridTariffPriceConfiguration = new GridTariffPriceConfiguration(gridTariff);
@@ -101,8 +103,10 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
 
         public async Task ValidateTariffExistsTests(string tariffKey, string productKey, bool expectedResult)
         {
-            var tariffTypes = new List<TariffType>();
-            tariffTypes.Add(new TariffType("tariffkey","productkey",String.Empty, String.Empty, String.Empty, String.Empty,false,DateTimeOffset.UtcNow,false,null,1,null,null));
+            var tariffTypes = new List<TariffType>
+            {
+                new TariffType("tariffkey", "productkey", String.Empty, String.Empty, String.Empty, String.Empty, false, DateTimeOffset.UtcNow, false, null, 1, null, null)
+            };
             var tariffPriceCacheMock = new Mock<ITariffPriceCache>();
             tariffPriceCacheMock.Setup(x => x.GetTariffsAsync()).ReturnsAsync(tariffTypes);
 

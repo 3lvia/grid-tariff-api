@@ -79,8 +79,6 @@ namespace GridTariffApi.Lib.Services.Helpers
                 return "Both TariffKey and Product present in request. These are mutually exclusive";
             }
 
-            var tariffKey = request.TariffKey;
-
             var minStartValidationResult = ValidateMinStartAllowedQuery(request.Range, request.StartTime);
             if (!String.IsNullOrEmpty(minStartValidationResult))
             {
