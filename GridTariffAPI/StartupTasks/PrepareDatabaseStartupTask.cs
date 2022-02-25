@@ -53,7 +53,6 @@ namespace GridTariffApi.StartupTasks
             {
                 elviaPriceStructure = new PriceStructure() { Company = elviaCompany };
                 await elviaDbContext.PriceStructure.AddAsync(elviaPriceStructure);
-                await elviaDbContext.SaveChangesAsync();
             }
             return elviaPriceStructure;
         }
