@@ -143,11 +143,13 @@ namespace GridTariffApi.Lib.Services
 
             foreach (var mpInformation in mpInformations)
             {
-                meteringPointAndPriceLevel.MeteringPoints.Add(new MeteringPointDetails()
+                var mpDetails = new MeteringPointDetails() { MeteringPointId = mpInformation.MeteringPointId };
+                if (mpInformation.MaxConsumptionLastUpdated.HasValue)
                 {
-                    MeteringPointId = mpInformation.MeteringPointId,
-                    LastUpdated = mpInformation.MaxConsumptionLastUpdated
-                });
+                    mpDetails.LastUpdated = _serviceHelper.ToConfiguredTimeZone(mpInformation.MaxConsumptionLastUpdated.Value);
+                }
+
+                meteringPointAndPriceLevel.MeteringPoints.Add(mpDetails);
             }
             meteringPointAndPriceLevel.CurrentFixedPriceLevel.Id = fixedPriceId;
             meteringPointAndPriceLevel.CurrentFixedPriceLevel.LevelId = fixedPriceLevelId;
