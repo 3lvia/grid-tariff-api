@@ -792,10 +792,11 @@ namespace GridTariffApi.Lib.Tests.Services
         {
             const string fixedPriceId = "fixedPriceId";
             const string fixedPriceLevelId = "fixedPriceLevelId";
+            var dateTimeNow = DateTimeOffset.UtcNow;
             Setup();
             var mpInformations = new List<MeteringPointInformation>
             {
-                new MeteringPointInformation("a", "",0, DateTimeOffset.MaxValue),
+                new MeteringPointInformation("a", "",0, dateTimeNow),
                 new MeteringPointInformation("b", "",0, DateTimeOffset.MaxValue),
                 new MeteringPointInformation("c", "",0, DateTimeOffset.MaxValue),
                 new MeteringPointInformation("d", "",0, null)
@@ -816,6 +817,19 @@ namespace GridTariffApi.Lib.Tests.Services
 
             Assert.Equal(fixedPriceId, meteringPointsAndPriceLevels.CurrentFixedPriceLevel.Id);
             Assert.Equal(fixedPriceLevelId, meteringPointsAndPriceLevels.CurrentFixedPriceLevel.LevelId);
+
+            var mpA = meteringPointsAndPriceLevels.MeteringPoints.FirstOrDefault(x => x.MeteringPointId == "a");
+            Assert.NotNull(mpA);
+            Assert.True(mpA.LastUpdated.HasValue);
+            Assert.Equal(dateTimeNow, mpA.LastUpdated);
+            Assert.Equal(_serviceHelper.ToConfiguredTimeZone(dateTimeNow).Offset, mpA.LastUpdated.Value.Offset);
+
+            var mpB= meteringPointsAndPriceLevels.MeteringPoints.FirstOrDefault(x => x.MeteringPointId == "b");
+            Assert.NotNull(mpB);
+            Assert.True(mpB.LastUpdated.HasValue);
+            Assert.Equal(DateTimeOffset.MaxValue, mpB.LastUpdated);
+
+
         }
 
         [Theory]
@@ -1063,6 +1077,7 @@ namespace GridTariffApi.Lib.Tests.Services
 
             var serviceHelperMock = new Mock<ServiceHelper>(new GridTariffApiConfig());
             serviceHelperMock.Setup(x => x.TimePeriodIsIncludingLocaleToday(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>())).Returns(true);
+            serviceHelperMock.Setup(x => x.ToConfiguredTimeZone(It.IsAny<DateTimeOffset>())).Returns(DateTimeOffset.UtcNow);                
 
             var tariffQueryServiceMock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, serviceHelperMock.Object)
             {
@@ -1116,6 +1131,7 @@ namespace GridTariffApi.Lib.Tests.Services
 
             var serviceHelperMock = new Mock<ServiceHelper>(new GridTariffApiConfig());
             serviceHelperMock.Setup(x => x.TimePeriodIsIncludingLocaleToday(It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset>())).Returns(false);
+            serviceHelperMock.Setup(x => x.ToConfiguredTimeZone(It.IsAny<DateTimeOffset>())).Returns(DateTimeOffset.UtcNow);
 
             var tariffQueryServiceMock = new Mock<TariffQueryService>(tariffPriceCache.Object, (IObjectConversionHelper)null, serviceHelperMock.Object)
             {
