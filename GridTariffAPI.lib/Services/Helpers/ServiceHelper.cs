@@ -93,7 +93,7 @@ namespace GridTariffApi.Lib.Services.Helpers
             return timeZonedDateTime;
         }
 
-        public DateTimeOffset ToConfiguredTimeZone(DateTimeOffset dateTimeOffset)
+        public virtual DateTimeOffset ToConfiguredTimeZone(DateTimeOffset dateTimeOffset)
         {
             var retVal = TimeZoneInfo.ConvertTime(dateTimeOffset, _gridTariffApiConfig.TimeZoneForQueries);
             return retVal;
