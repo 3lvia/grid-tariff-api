@@ -1,19 +1,28 @@
 using Elvia.Configuration;
 using GridTariffApi.Database;
+using GridTariffApi.StartupTasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GridTariffApi
 {
     public static class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build()
-                .MigrateDatabase<ElviaDbContext>()
-                .Run();
+            var host = CreateHostBuilder(args).Build().MigrateDatabase<ElviaDbContext>();
+
+            var startupTasks = host.Services.GetServices<IStartupTask>().OrderBy(x => x.GetExecutionOrder());
+            foreach (var startupTask in startupTasks)
+            {
+                await startupTask.Execute();
+            }
+
+            await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

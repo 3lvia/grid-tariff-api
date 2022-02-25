@@ -1,6 +1,7 @@
 ﻿using GridTariffApi.BigQuery.MeteringPointTariffSync;
 using GridTariffApi.BigQuery.MeteringPointTariffSync.Model;
 using GridTariffApi.Database;
+using GridTariffApi.StartupTasks;
 using GridTariffApi.Synchronizer.Lib.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +9,6 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -20,7 +20,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
         private IServiceProvider? _serviceProvider;
         private ScheduleConfig<MeteringPointTariffSynchronizer>? _scheduleConfig;
 
-        private void Setup()
+        private async Task  Setup()
         {
             var services = new ServiceCollection();
             services.AddDbContext<ElviaDbContext>(u => u.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()));
@@ -33,46 +33,28 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
 
             _serviceProvider = services.BuildServiceProvider();
             _scheduleConfig = new ScheduleConfig<MeteringPointTariffSynchronizer>() { CronExpression = @"0 6 * * *" };
-        }
-        [Fact]
-        public async Task GetElviaCompanyTest()
-        {
-            Setup();
-            string elviaCompanyName = "Elvia AS";
-            string _elviaCompanyOrgNumber = "980489698";
 
+            var prepDatabase = new PrepareDatabaseStartupTask(_serviceProvider);
+            await prepDatabase.Execute();
 
-            var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
-            Assert.Null(await elviaDbContext.Company.FirstOrDefaultAsync());
-
-            var meteringPointTariffSynchronizer = new MeteringPointTariffSynchronizer(null, _scheduleConfig, _serviceProvider, null);
-            var elviaCompany = await meteringPointTariffSynchronizer.GetElviaCompany(elviaDbContext);
-            Assert.NotNull(elviaCompany);
-            Assert.Equal(elviaCompanyName, elviaCompany.Name);
-            Assert.Equal(_elviaCompanyOrgNumber, elviaCompany.OrgNumber);
-            Assert.Equal(1, await elviaDbContext.Company.CountAsync());
-
-            var elviaCompany2 = await meteringPointTariffSynchronizer.GetElviaCompany(elviaDbContext);
-            Assert.NotNull(elviaCompany2);
-            Assert.Equal(elviaCompanyName, elviaCompany2.Name);
-            Assert.Equal(_elviaCompanyOrgNumber, elviaCompany2.OrgNumber);
-            Assert.Equal(1, await elviaDbContext.Company.CountAsync());
         }
 
         [Fact]
         public async Task InsertMeteringPointsAsyncTest()
         {
-            Setup();
+            await Setup();
             var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
             Assert.Null(await elviaDbContext.MeteringPointTariff.FirstOrDefaultAsync());
 
             var meteringPointTariffSynchronizer = new MeteringPointTariffSynchronizer(null, _scheduleConfig, _serviceProvider, null);
 
-            var elviaCompany = await meteringPointTariffSynchronizer.GetElviaCompany(elviaDbContext);
+            var elviaCompany = await elviaDbContext.Company.FirstOrDefaultAsync();
 
-            var input = new List<BigQueryMeteringPointProduct>();
-            input.Add(new BigQueryMeteringPointProduct() { MeteringPointId = "a", Product = "x" });
-            input.Add(new BigQueryMeteringPointProduct() { MeteringPointId = "b", Product = "y" });
+            var input = new List<BigQueryMeteringPointProduct>
+            {
+                new BigQueryMeteringPointProduct() { MeteringPointId = "a", Product = "x" },
+                new BigQueryMeteringPointProduct() { MeteringPointId = "b", Product = "y" }
+            };
 
             var utcNow = DateTimeOffset.UtcNow;
 
@@ -85,7 +67,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
         [Fact]
         public async Task UpsertMeteringPointAsyncTest()
         {
-            Setup();
+            await Setup();
             var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
             Assert.Null(await elviaDbContext.MeteringPointTariff.FirstOrDefaultAsync());
 
@@ -100,7 +82,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
 
 //insert
             var meteringPointTariffSynchronizer = new MeteringPointTariffSynchronizer(null, _scheduleConfig, _serviceProvider, null);
-            var elviaCompany = await meteringPointTariffSynchronizer.GetElviaCompany(elviaDbContext);
+            var elviaCompany = await elviaDbContext.Company.FirstOrDefaultAsync();
             meteringPointTariffSynchronizer.UpsertMeteringPointAsync(elviaDbContext, mpInsert1, utcNowInsert1, elviaCompany);
             await elviaDbContext.SaveChangesAsync();
             Assert.Single(elviaDbContext.MeteringPointTariff);
@@ -132,7 +114,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
         public async Task UpsertMeteringPointsAsyncTest()
         {
             var numElementsToStore = 1234;
-            Setup();
+            await Setup ();
             var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
             Assert.Null(await elviaDbContext.MeteringPointTariff.FirstOrDefaultAsync());
 
@@ -144,7 +126,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             }
 
             var meteringPointTariffSynchronizer = new MeteringPointTariffSynchronizer(null, _scheduleConfig, _serviceProvider, null);
-            var elviaCompany = await meteringPointTariffSynchronizer.GetElviaCompany(elviaDbContext);
+            var elviaCompany = await elviaDbContext.Company.FirstOrDefaultAsync();
 
             await meteringPointTariffSynchronizer.UpsertMeteringPointsAsync(elviaDbContext, meteringPoints, DateTimeOffset.UtcNow,elviaCompany);
             Assert.Equal(numElementsToStore, await elviaDbContext.MeteringPointTariff.CountAsync());
@@ -153,13 +135,13 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
         [Fact]
         public async Task SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsyncTest()
         {
-            Setup();
+            await Setup ();
 
             var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
             Assert.Empty(elviaDbContext.SyncStatus);
 
             var mockBigQueryReader = new Mock<GridTariffApi.BigQuery.MeteringPointTariffSync.IBigQueryReader>();
-            mockBigQueryReader.Setup(x => x.GetMeteringPointsByFromDateAsync(It.IsAny<DateTimeOffset>())).Returns(Task.FromResult(new List<BigQueryMeteringPointProduct>()));
+            mockBigQueryReader.Setup(x => x.GetMeteringPointsByFromDateAsync(It.IsAny<DateTimeOffset>())).ReturnsAsync(new List<BigQueryMeteringPointProduct>());
 
             var mockService = new Mock<MeteringPointTariffSynchronizer>(null, _scheduleConfig, _serviceProvider, mockBigQueryReader.Object);
             mockService.Setup(x => x.UpsertMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<List<BigQueryMeteringPointProduct>>(), It.IsAny<DateTimeOffset>(), It.IsAny<Model.Company>())).Returns(Task.CompletedTask);
@@ -173,9 +155,9 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
         [Fact]
         public async Task MeteringPointTariffFullsyncTests()
         {
-            Setup();
+            await Setup();
             var mockBigQueryReader = new Mock<GridTariffApi.BigQuery.MeteringPointTariffSync.IBigQueryReader>();
-            mockBigQueryReader.Setup(x => x.GetAllMeteringPointProductAsync()).Returns(Task.FromResult(new List<BigQueryMeteringPointProduct>()));
+            mockBigQueryReader.Setup(x => x.GetAllMeteringPointProductAsync()).ReturnsAsync(new List<BigQueryMeteringPointProduct>());
 
             var mockService = new Mock<MeteringPointTariffSynchronizer>(null, _scheduleConfig, _serviceProvider, mockBigQueryReader.Object);
             mockService.Setup(x => x.InsertMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<List<BigQueryMeteringPointProduct>>(), It.IsAny<DateTimeOffset>(), It.IsAny<Model.Company>())).Returns(Task.CompletedTask);
@@ -184,7 +166,7 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
             Assert.Empty(elviaDbContext.SyncStatus);
 
-            var elviaCompany = await mockService.Object.GetElviaCompany(elviaDbContext);
+            var elviaCompany = await elviaDbContext.Company.FirstOrDefaultAsync();
             await mockService.Object.MeteringPointTariffFullSync(elviaDbContext, DateTimeOffset.UtcNow, elviaCompany);
 
             mockBigQueryReader.Verify(x => x.GetAllMeteringPointProductAsync(), Times.Once);
@@ -194,30 +176,31 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
         [Fact]
         public async Task SynchronizeMeteringPointsAsyncInitialFullSyncTest()
         {
-            Setup();
+            await Setup();
 
             var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
             var mockService = new Mock<MeteringPointTariffSynchronizer>(null, _scheduleConfig, _serviceProvider, null);
-            var elviaCompany = await mockService.Object.GetElviaCompany(elviaDbContext);
+            var elviaCompany = await elviaDbContext.Company.FirstOrDefaultAsync();
             var utcNow = DateTime.UtcNow;
 
             Assert.Empty(elviaDbContext.SyncStatus);
 
             mockService.Setup(x => x.MeteringPointTariffFullSync(It.IsAny<ElviaDbContext>(), utcNow, elviaCompany)).Returns(Task.CompletedTask);
+            mockService.CallBase = true;
             await mockService.Object.SynchronizeMeteringPointsAsync(elviaDbContext, elviaCompany, utcNow);
 
             mockService.Verify(x => x.MeteringPointTariffFullSync(It.IsAny<ElviaDbContext>(), utcNow, elviaCompany), Times.Once);
             Assert.Equal(1, elviaDbContext.SyncStatus.Count());
-            var integrationConfig = elviaDbContext.SyncStatus.First();
-            Assert.Equal("MeteringPointTariff", integrationConfig.Table);
-            Assert.Equal(utcNow, integrationConfig.LastUpdatedUtc);
+            var syncStatus = elviaDbContext.SyncStatus.First();
+            Assert.Equal("MeteringPointTariff", syncStatus.Table);
+            Assert.Equal(utcNow, syncStatus.LastUpdatedUtc);
 
         }
 
         [Fact]
         public async Task SynchronizeMeteringPointsAsyncIncrementalSyncTest()
         {
-            Setup();
+            await Setup();
 
             var elviaDbContext = _serviceProvider!.GetRequiredService<ElviaDbContext>();
 
@@ -229,16 +212,17 @@ namespace GridTariffApi.Tests.BigQuery.MeteringPointTariffSync
             Assert.Equal(1,elviaDbContext.SyncStatus.Count());
 
             var mockService = new Mock<MeteringPointTariffSynchronizer>(null, _scheduleConfig, _serviceProvider, null);
-            var elviaCompany = await mockService.Object.GetElviaCompany(elviaDbContext);
+            var elviaCompany = await elviaDbContext.Company.FirstOrDefaultAsync();
             var utcNow = DateTimeOffset.UtcNow;
             mockService.Setup(x => x.SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(elviaDbContext, It.IsAny<DateTimeOffset>(), utcNow, elviaCompany)).Returns(Task.CompletedTask);
+            mockService.CallBase = true;
 
             await mockService.Object.SynchronizeMeteringPointsAsync(elviaDbContext, elviaCompany, utcNow);
             mockService.Verify(x => x.SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(elviaDbContext, It.IsAny<DateTimeOffset>(), utcNow, elviaCompany), Times.Once);
             Assert.Equal(1, elviaDbContext.SyncStatus.Count());
-            var integrationConfig = elviaDbContext.SyncStatus.First();
-            Assert.Equal("MeteringPointTariff", integrationConfig.Table);
-            Assert.Equal(utcNow, integrationConfig.LastUpdatedUtc);
+            var syncStatus = elviaDbContext.SyncStatus.First();
+            Assert.Equal("MeteringPointTariff", syncStatus.Table);
+            Assert.Equal(utcNow, syncStatus.LastUpdatedUtc);
         }
     }
 }

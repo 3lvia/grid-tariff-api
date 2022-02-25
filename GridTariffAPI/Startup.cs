@@ -41,6 +41,7 @@ using Microsoft.IO;
 using Prometheus;
 using GridTariffApi.Database;
 using GridTariffApi.BigQuery.MeteringPointTariffSync;
+using GridTariffApi.StartupTasks;
 
 namespace GridTariffApi
 {
@@ -86,7 +87,8 @@ namespace GridTariffApi
 
             //Digin 
             services.AddDbContext<ElviaDbContext>(options => options.UseSqlServer(Configuration.EnsureHasValue("kunde:kv:sql:kunde-sqlserver:GridTariffApi:connection-string")));
-            services.AddScoped<ITariffRepository, TariffRepositoryFile>();
+
+            services.AddScoped<ITariffRepository, TariffRepositoryEf>();
             services.AddScoped<IHolidayRepository, HolidayRepositoryFile>();
             services.AddScoped<IMeteringPointTariffRepository, MeteringPointTariffRepositoryEf>();
             services.AddSingleton(new MeteringPointMaxConsumptionRepositoryConfig
@@ -135,8 +137,12 @@ namespace GridTariffApi
 
             //bigquery (meteringpointtariff)
             services.AddTransient<GridTariffApi.BigQuery.MeteringPointTariffSync.IBigQueryReader, GridTariffApi.BigQuery.MeteringPointTariffSync.BigQueryReader>();
+            services.AddTransient<IMeteringPointTariffSynchronizer, MeteringPointTariffSynchronizer>();
 
-
+            //startup tasks
+            services.AddTransient<IStartupTask, PrepareDatabaseStartupTask>();
+            services.AddTransient<IStartupTask, SyncMeteringPointTariffStartupTask>();
+            
             services.AddCronJob<MeteringPointTariffSynchronizer>(c =>
             {
                 c.TimeZoneInfo = TimeZoneInfo.Local;
