@@ -55,8 +55,9 @@ namespace GridTariffApi.Lib.Controllers.v1
                 return BadRequest(validationErrorMsg);
             }
 
-            bool test = await _controllerValidationHelper.ValidateTariffExistsAsync(request);
-            if (!test)
+            var tariffKey = await _controllerValidationHelper.DecideTariffKeyFromInputAsync(request);
+
+            if (!await _controllerValidationHelper.ValidateTariffExistsAsync(tariffKey, String.Empty))
             {
                 return NotFound();
             }
@@ -64,7 +65,6 @@ namespace GridTariffApi.Lib.Controllers.v1
             DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
             DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
             _loggingDataCollector?.RegisterTariffPeriodAndNumMeteringPoints(startDateTime, endDateTime, null);
-            var tariffKey = await _controllerValidationHelper.DecideTariffKeyFromInputAsync(request);
             var result = await _tariffQueryService.QueryTariffUsingTariffKeyAsync(tariffKey, startDateTime, endDateTime);
             return Ok(result);
         }

@@ -28,6 +28,20 @@ namespace GridTariffApi.Lib.Services.Helpers
 
         }
 
+
+        public async Task<bool> ValidateTariffExistsAsync(TariffQueryRequest request)
+        {
+            return await ValidateTariffExistsAsync(request.TariffKey, request.Product);
+        }
+
+        public virtual async Task<bool> ValidateTariffExistsAsync(string tariffKey, string productKey)
+        {
+            var tariffs = await _tariffPriceCache.GetTariffsAsync();
+            var foundTariffKey = tariffs.Any(x => x.TariffKey == tariffKey);
+            var foundProductKey = tariffs.Any(x => x.Product == productKey);
+            return foundTariffKey || foundProductKey;
+        }
+
         public string ValidateRequestInput(TariffQueryRequestMeteringPoints request)
         {
             // Denne valideringen er i tillegg til Validate()-metoden på request-objektet, som kalles automatisk av ASP.NET.
@@ -44,19 +58,6 @@ namespace GridTariffApi.Lib.Services.Helpers
             }
 
             return String.Empty;
-        }
-
-        public async Task<bool> ValidateTariffExistsAsync(TariffQueryRequest request)
-        {
-            return await ValidateTariffExistsAsync(request.TariffKey, request.Product);
-        }
-
-        public virtual async Task<bool> ValidateTariffExistsAsync(string tariffKey, string productKey)
-        {
-            var tariffs = await _tariffPriceCache.GetTariffsAsync();
-            var foundTariffKey = 0 < tariffs.Count(x => x.TariffKey == tariffKey);
-            var foundProductKey = 0 < tariffs.Count(x => x.Product == productKey);
-            return foundTariffKey || foundProductKey;
         }
 
         public string ValidateRequestInput(TariffQueryRequest request)
