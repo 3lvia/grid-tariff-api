@@ -44,19 +44,26 @@ namespace GridTariffApi.Lib.Controllers.v1
         [Route("tariffquery")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
 
         public async Task<ActionResult<Models.Digin.TariffQueryResult>> TariffQuery([FromQuery] TariffQueryRequest request)  
         {
-            string validationErrorMsg = await _controllerValidationHelper.ValidateRequestInputAsync(request);
+            string validationErrorMsg =  _controllerValidationHelper.ValidateRequestInput(request);
             if (!String.IsNullOrEmpty(validationErrorMsg))
             {
                 return BadRequest(validationErrorMsg);
             }
+
+            var tariffKey = await _controllerValidationHelper.DecideTariffKeyFromInputAsync(request);
+            if (!await _controllerValidationHelper.ValidateTariffExistsAsync(tariffKey))
+            {
+                return NotFound();
+            }
+
             DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
             DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
             _loggingDataCollector?.RegisterTariffPeriodAndNumMeteringPoints(startDateTime, endDateTime, null);
-            var tariffKey = await _controllerValidationHelper.DecideTariffKeyFromInputAsync(request);
             var result = await _tariffQueryService.QueryTariffUsingTariffKeyAsync(tariffKey, startDateTime, endDateTime);
             return Ok(result);
         }

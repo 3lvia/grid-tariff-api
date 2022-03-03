@@ -5,8 +5,10 @@ namespace GridTariffApi.Lib.Services.Helpers
 {
     public interface IControllerValidationHelper
     {
-        Task<string> DecideTariffKeyFromInputAsync(TariffQueryRequest request);
-        Task<string> ValidateRequestInputAsync(TariffQueryRequest request);
+        public Task<string> DecideTariffKeyFromInputAsync(TariffQueryRequest request);
         public string ValidateRequestInput(TariffQueryRequestMeteringPoints request);
+        public string ValidateRequestInput(TariffQueryRequest request);
+        public Task<bool> ValidateTariffExistsAsync(string tariffKey);
+
     }
 }

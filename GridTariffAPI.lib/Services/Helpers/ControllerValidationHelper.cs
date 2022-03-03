@@ -23,6 +23,17 @@ namespace GridTariffApi.Lib.Services.Helpers
             _serviceHelper = serviceHelper;
 
         }
+        public ControllerValidationHelper()
+        {
+
+        }
+
+
+        public virtual async Task<bool> ValidateTariffExistsAsync(string tariffKey)
+        {
+            var tariffs = await _tariffPriceCache.GetTariffsAsync();
+            return  tariffs.Any(x => x.TariffKey == tariffKey);
+        }
 
         public string ValidateRequestInput(TariffQueryRequestMeteringPoints request)
         {
@@ -41,8 +52,8 @@ namespace GridTariffApi.Lib.Services.Helpers
 
             return String.Empty;
         }
-        
-        public async Task<string> ValidateRequestInputAsync(TariffQueryRequest request)
+
+        public string ValidateRequestInput(TariffQueryRequest request)
         {
             // Denne valideringen er i tillegg til Validate()-metoden på request-objektet, som kalles automatisk av ASP.NET.
 
@@ -60,24 +71,6 @@ namespace GridTariffApi.Lib.Services.Helpers
             if (tariffKeyAndProductBothPresent)
             {
                 return "Both TariffKey and Product present in request. These are mutually exclusive";
-            }
-
-            var tariffKey = request.TariffKey;
-            var tariffs = await _tariffPriceCache.GetTariffsAsync();
-
-            if (!String.IsNullOrEmpty(request.Product))
-            {
-                var tariff = tariffs.FirstOrDefault(x => x.Product == request.Product);
-                if (tariff == null)
-                {
-                    return $"Tariff with productcode {request.Product} not found";
-                }
-                tariffKey = tariff.TariffKey;
-            }
-
-            if (!tariffs.Any(x => x.TariffKey == tariffKey))
-            {
-                return $"TariffType {tariffKey} not found";
             }
 
             var minStartValidationResult = ValidateMinStartAllowedQuery(request.Range, request.StartTime);
