@@ -116,17 +116,6 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
         }
 
         [Fact]
-        public async Task ValidateTariffExistsRequestTests()
-        {
-            var test = new Mock<ControllerValidationHelper>();
-            test.Setup(x => x.ValidateTariffExistsAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
-            test.CallBase = true;
-
-            await test.Object.ValidateTariffExistsAsync(new TariffQueryRequest());
-            test.Verify(x => x.ValidateTariffExistsAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-        }
-
-        [Fact]
         public void  ValidateTariffQueryRequestInputNull()
         {
             Setup();

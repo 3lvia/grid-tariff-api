@@ -29,11 +29,6 @@ namespace GridTariffApi.Lib.Services.Helpers
         }
 
 
-        public async Task<bool> ValidateTariffExistsAsync(TariffQueryRequest request)
-        {
-            return await ValidateTariffExistsAsync(request.TariffKey, request.Product);
-        }
-
         public virtual async Task<bool> ValidateTariffExistsAsync(string tariffKey, string productKey)
         {
             var tariffs = await _tariffPriceCache.GetTariffsAsync();
