@@ -29,12 +29,10 @@ namespace GridTariffApi.Lib.Services.Helpers
         }
 
 
-        public virtual async Task<bool> ValidateTariffExistsAsync(string tariffKey, string productKey)
+        public virtual async Task<bool> ValidateTariffExistsAsync(string tariffKey)
         {
             var tariffs = await _tariffPriceCache.GetTariffsAsync();
-            var foundTariffKey = tariffs.Any(x => x.TariffKey == tariffKey);
-            var foundProductKey = tariffs.Any(x => x.Product == productKey);
-            return foundTariffKey || foundProductKey;
+            return  tariffs.Any(x => x.TariffKey == tariffKey);
         }
 
         public string ValidateRequestInput(TariffQueryRequestMeteringPoints request)

@@ -56,8 +56,7 @@ namespace GridTariffApi.Lib.Controllers.v1
             }
 
             var tariffKey = await _controllerValidationHelper.DecideTariffKeyFromInputAsync(request);
-
-            if (!await _controllerValidationHelper.ValidateTariffExistsAsync(tariffKey, String.Empty))
+            if (!await _controllerValidationHelper.ValidateTariffExistsAsync(tariffKey))
             {
                 return NotFound();
             }

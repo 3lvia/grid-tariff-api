@@ -92,16 +92,14 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
         }
 
         [Theory]
-        [InlineData("", "", false)]
-        [InlineData("", "productkey", true)]
-        [InlineData("tariffkey", "", true)]
-        [InlineData("tariffkey", "productkey", true)]
-        [InlineData("tariffkey", "bogusvalue", true)]
-        [InlineData("bogusvalue", "productkey", true)]
-        [InlineData("bogusvalue", "bogusvalue", false)]
+        [InlineData("", false)]
+        [InlineData("tariffkey", true)]
+        [InlineData("tariffkey2", false)]
+        [InlineData("2tariffkey", false)]
+        [InlineData("bogusvalue", false)]
 
 
-        public async Task ValidateTariffExistsTests(string tariffKey, string productKey, bool expectedResult)
+        public async Task ValidateTariffExistsTests(string tariffKey, bool expectedResult)
         {
             var tariffTypes = new List<TariffType>
             {
@@ -111,7 +109,7 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
             tariffPriceCacheMock.Setup(x => x.GetTariffsAsync()).ReturnsAsync(tariffTypes);
 
             var controllerValidationHelper = new ControllerValidationHelper(null, tariffPriceCacheMock.Object, null);
-            bool retVal = await controllerValidationHelper.ValidateTariffExistsAsync(tariffKey, productKey);
+            bool retVal = await controllerValidationHelper.ValidateTariffExistsAsync(tariffKey);
             Assert.Equal(expectedResult, retVal);
         }
 
