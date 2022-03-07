@@ -33,8 +33,7 @@ stages:
           dockerfile: Dockerfile
 
   - stage: DeployDev
-#    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/trunk'), true)
-    condition: and(succeeded(), true)
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/trunk'), true)
     dependsOn: Build
     jobs:
       - template: deploy.yaml@templates
@@ -43,8 +42,7 @@ stages:
           helmValuesFile: values.yaml
 
   - stage: DeployTest
-#    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/trunk'), true)
-    condition: and(succeeded(), true)
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/trunk'), true)
     dependsOn: DeployDev
     jobs:
       - template: deploy.yaml@templates
@@ -182,7 +180,7 @@ stages:
   #           <policies>
   #               <inbound>
   #                   <base />
-  #                   <authentication-basic username="$(grid-tariff-api-username-prod)" password="$(grid-tariff-api-password-prod)" />
+  #                   <authentication-basic username="$(grid-tariff-api-username-test)" password="$(grid-tariff-api-password-test)" />
   #                   <rate-limit-by-key calls="33" renewal-period="300"
   #                   increment-condition="@((context.Response.StatusCode &gt;= 200))"
   #                   counter-key="@(context.Subscription.Key)" />					  
@@ -195,6 +193,33 @@ stages:
   #               </outbound>
   #               <on-error>
   #                   <base />
+  #                  <choose>
+  #                      <when condition='@(context.Response.StatusCode == 401)'>
+  #                          <choose>
+  #                                  <when condition='@(!context.Request.Headers.ContainsKey("X-API-Key"))'>
+  #                                     <choose>
+  #                                          <when condition='@(context.Request.Headers.ContainsKey("OCP-APIM-Subscription-Key"))'>
+  #                                              <send-request mode="copy" response-variable-name="response">
+  #                                                  <set-url>@{
+  #                                                      var urlParts = context.Request.OriginalUrl.ToString().Split('/');
+  #                                                      urlParts[2] = "127.0.0.1";
+  #                                                      return string.Join("/", urlParts);
+  #                                                  }</set-url>
+  #                                                  <set-header name="Host">
+  #                                                      <value>@(context.Request.OriginalUrl.Host)</value>
+  #                                                  </set-header>
+  #                                                  <set-header name="X-API-Key">
+  #                                                      <value>@(context.Request.Headers.GetValueOrDefault("OCP-APIM-Subscription-Key"))</value>
+  #                                                  </set-header>
+  #                                              </send-request>
+  #                                              <return-response response-variable-name="response" />
+  #                                              </when>
+  #                                      </choose>
+
+  #                                  </when>
+  #                          </choose>
+  #                      </when>
+  #                  </choose>
   #               </on-error>
   #           </policies>
   #          MicrosoftApiManagementAPIVersion: '2018-01-01'
