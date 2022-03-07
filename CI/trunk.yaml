@@ -102,17 +102,44 @@ stages:
                  </outbound>
                  <on-error>
                      <base />
+                    <choose>
+                        <when condition='@(context.Response.StatusCode == 401)'>
+                            <choose>
+                                    <when condition='@(!context.Request.Headers.ContainsKey("X-API-Key"))'>
+                                       <choose>
+                                            <when condition='@(context.Request.Headers.ContainsKey("OCP-APIM-Subscription-Key"))'>
+                                                <send-request mode="copy" response-variable-name="response">
+                                                    <set-url>@{
+                                                        var urlParts = context.Request.OriginalUrl.ToString().Split('/');
+                                                        urlParts[2] = "127.0.0.1";
+                                                        return string.Join("/", urlParts);
+                                                    }</set-url>
+                                                    <set-header name="Host">
+                                                        <value>@(context.Request.OriginalUrl.Host)</value>
+                                                    </set-header>
+                                                    <set-header name="X-API-Key">
+                                                        <value>@(context.Request.Headers.GetValueOrDefault("OCP-APIM-Subscription-Key"))</value>
+                                                    </set-header>
+                                                </send-request>
+                                                <return-response response-variable-name="response" />
+                                                </when>
+                                        </choose>
+
+                                    </when>
+                            </choose>
+                        </when>
+                    </choose>
                  </on-error>
              </policies>
             MicrosoftApiManagementAPIVersion: '2018-01-01'
 
-  - stage: DeployProd
-    dependsOn: RegisterAzureApiManagementTest
-    jobs:
-    - template: deploy.yaml@templates
-      parameters:
-        environment: prod
-        helmValuesFile: values.yaml
+  #- stage: DeployProd
+  #  dependsOn: RegisterAzureApiManagementTest
+  #  jobs:
+  #  - template: deploy.yaml@templates
+  #    parameters:
+  #      environment: prod
+  #      helmValuesFile: values.yaml
 
   #- stage: RegisterAzureApiManagementProd
   #  dependsOn: DeployProd
@@ -166,6 +193,33 @@ stages:
   #               </outbound>
   #               <on-error>
   #                   <base />
+  #                  <choose>
+  #                      <when condition='@(context.Response.StatusCode == 401)'>
+  #                          <choose>
+  #                                  <when condition='@(!context.Request.Headers.ContainsKey("X-API-Key"))'>
+  #                                     <choose>
+  #                                          <when condition='@(context.Request.Headers.ContainsKey("OCP-APIM-Subscription-Key"))'>
+  #                                              <send-request mode="copy" response-variable-name="response">
+  #                                                  <set-url>@{
+  #                                                      var urlParts = context.Request.OriginalUrl.ToString().Split('/');
+  #                                                      urlParts[2] = "127.0.0.1";
+  #                                                      return string.Join("/", urlParts);
+  #                                                  }</set-url>
+  #                                                  <set-header name="Host">
+  #                                                      <value>@(context.Request.OriginalUrl.Host)</value>
+  #                                                  </set-header>
+  #                                                  <set-header name="X-API-Key">
+  #                                                      <value>@(context.Request.Headers.GetValueOrDefault("OCP-APIM-Subscription-Key"))</value>
+  #                                                  </set-header>
+  #                                              </send-request>
+  #                                              <return-response response-variable-name="response" />
+  #                                              </when>
+  #                                      </choose>
+
+  #                                  </when>
+  #                          </choose>
+  #                      </when>
+  #                  </choose>
   #               </on-error>
   #           </policies>
   #          MicrosoftApiManagementAPIVersion: '2018-01-01'
