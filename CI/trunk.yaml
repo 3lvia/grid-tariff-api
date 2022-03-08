@@ -120,11 +120,16 @@ stages:
                                                     <set-header name="X-API-Key">
                                                         <value>@(context.Request.Headers.GetValueOrDefault("OCP-APIM-Subscription-Key"))</value>
                                                     </set-header>
+                                                    <set-header name="Accept">
+                                                        <value>@(context.Request.Headers.GetValueOrDefault("Accept"))</value>
+                                                    </set-header>
+                                                    <set-header name="Content-Type">
+                                                        <value>@(context.Request.Headers.GetValueOrDefault("Content-Type"))</value>
+                                                    </set-header>
                                                 </send-request>
                                                 <return-response response-variable-name="response" />
                                                 </when>
                                         </choose>
-
                                     </when>
                             </choose>
                         </when>
@@ -211,6 +216,12 @@ stages:
   #                                                  <set-header name="X-API-Key">
   #                                                      <value>@(context.Request.Headers.GetValueOrDefault("OCP-APIM-Subscription-Key"))</value>
   #                                                  </set-header>
+                                                    #  <set-header name="Accept">
+                                                    #    <value>@(context.Request.Headers.GetValueOrDefault("Accept"))</value>
+                                                    #</set-header>
+                                                    #<set-header name="Content-Type">
+                                                    #    <value>@(context.Request.Headers.GetValueOrDefault("Content-Type"))</value>
+                                                    #</set-header>
   #                                              </send-request>
   #                                              <return-response response-variable-name="response" />
   #                                              </when>
