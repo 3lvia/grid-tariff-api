@@ -138,99 +138,99 @@ stages:
              </policies>
             MicrosoftApiManagementAPIVersion: '2018-01-01'
 
-  #- stage: DeployProd
-  #  dependsOn: RegisterAzureApiManagementTest
-  #  jobs:
-  #  - template: deploy.yaml@templates
-  #    parameters:
-  #      environment: prod
-  #      helmValuesFile: values.yaml
+  - stage: DeployProd
+    dependsOn: RegisterAzureApiManagementTest
+    jobs:
+    - template: deploy.yaml@templates
+      parameters:
+        environment: prod
+        helmValuesFile: values.yaml
 
-  #- stage: RegisterAzureApiManagementProd
-  #  dependsOn: DeployProd
-  #  jobs:
-  #  - job: RegisterAzureApiManagementProd
-  #    pool:
-  #      vmImage: "windows-latest"
-  #    steps:
-  #      - task: stephane-eyskens.apim.apimcreateorupdateproduct.apimcreateorupdateproduct@3
-  #        displayName: 'API Management - Create/Update Product '
-  #        inputs:
-  #          ConnectedServiceNameARM: ApiManagementRGProd
-  #          ResourceGroupName: 'API-RGprod'
-  #          ApiPortalName: elvia
-  #          product: 'grid-tariff'
-  #          DisplayName: 'Grid Tariff'
-  #          subscriptionRequired: true
-  #          approvalRequired: true
-  #          state: true
-  #          groups: |
-  #              Administrators
-  #              Developers
-  #              Guests
-  #      - task: stephane-eyskens.apim.apim.apim@3
-  #        displayName: 'API Management - Create/Update API '
-  #        inputs:
-  #          ConnectedServiceNameARM: ApiManagementRGProd
-  #          ResourceGroupName: 'API-RGprod'
-  #          ApiPortalName: elvia
-  #          UseProductCreatedByPreviousTask: true
-  #          OpenAPISpec: v3
-  #          swaggerlocation: 'https://grid-tariff-api.elvia.io/swagger/v1/swagger.json'
-  #          targetapi: gridtariffapi
-  #          DisplayName: GridTariffApi
-  #          pathapi: 'grid-tariff'
-  #          TemplateSelector: Custom
-  #          Custom: |
-  #           <policies>
-  #               <inbound>
-  #                   <base />
-  #                   <authentication-basic username="$(grid-tariff-api-username-prod)" password="$(grid-tariff-api-password-prod)" />
-  #                   <rate-limit-by-key calls="33" renewal-period="300"
-  #                   increment-condition="@((context.Response.StatusCode &gt;= 200))"
-  #                   counter-key="@(context.Subscription.Key)" />					  
-  #               </inbound>
-  #               <backend>
-  #                   <base />
-  #               </backend>
-  #               <outbound>
-  #                   <base />
-  #               </outbound>
-  #               <on-error>
-  #                   <base />
-  #                  <choose>
-  #                      <when condition='@(context.Response.StatusCode == 401)'>
-  #                          <choose>
-  #                                  <when condition='@(!context.Request.Headers.ContainsKey("X-API-Key"))'>
-  #                                     <choose>
-  #                                          <when condition='@(context.Request.Headers.ContainsKey("OCP-APIM-Subscription-Key"))'>
-  #                                              <send-request mode="copy" response-variable-name="response">
-  #                                                  <set-url>@{
-  #                                                      var urlParts = context.Request.OriginalUrl.ToString().Split('/');
-  #                                                      urlParts[2] = "127.0.0.1";
-  #                                                      return string.Join("/", urlParts);
-  #                                                  }</set-url>
-  #                                                  <set-header name="Host">
-  #                                                      <value>@(context.Request.OriginalUrl.Host)</value>
-  #                                                  </set-header>
-  #                                                  <set-header name="X-API-Key">
-  #                                                      <value>@(context.Request.Headers.GetValueOrDefault("OCP-APIM-Subscription-Key"))</value>
-  #                                                  </set-header>
-                                                    #  <set-header name="Accept">
-                                                    #    <value>@(context.Request.Headers.GetValueOrDefault("Accept"))</value>
-                                                    #</set-header>
-                                                    #<set-header name="Content-Type">
-                                                    #    <value>@(context.Request.Headers.GetValueOrDefault("Content-Type"))</value>
-                                                    #</set-header>
-  #                                              </send-request>
-  #                                              <return-response response-variable-name="response" />
-  #                                              </when>
-  #                                      </choose>
+  - stage: RegisterAzureApiManagementProd
+    dependsOn: DeployProd
+    jobs:
+    - job: RegisterAzureApiManagementProd
+      pool:
+        vmImage: "windows-latest"
+      steps:
+        - task: stephane-eyskens.apim.apimcreateorupdateproduct.apimcreateorupdateproduct@3
+          displayName: 'API Management - Create/Update Product '
+          inputs:
+            ConnectedServiceNameARM: ApiManagementRGProd
+            ResourceGroupName: 'API-RGprod'
+            ApiPortalName: elvia
+            product: 'grid-tariff'
+            DisplayName: 'Grid Tariff'
+            subscriptionRequired: true
+            approvalRequired: true
+            state: true
+            groups: |
+                Administrators
+                Developers
+                Guests
+        - task: stephane-eyskens.apim.apim.apim@3
+          displayName: 'API Management - Create/Update API '
+          inputs:
+            ConnectedServiceNameARM: ApiManagementRGProd
+            ResourceGroupName: 'API-RGprod'
+            ApiPortalName: elvia
+            UseProductCreatedByPreviousTask: true
+            OpenAPISpec: v3
+            swaggerlocation: 'https://grid-tariff-api.elvia.io/swagger/v1/swagger.json'
+            targetapi: gridtariffapi
+            DisplayName: GridTariffApi
+            pathapi: 'grid-tariff'
+            TemplateSelector: Custom
+            Custom: |
+             <policies>
+                 <inbound>
+                     <base />
+                     <authentication-basic username="$(grid-tariff-api-username-prod)" password="$(grid-tariff-api-password-prod)" />
+                     <rate-limit-by-key calls="33" renewal-period="300"
+                     increment-condition="@((context.Response.StatusCode &gt;= 200))"
+                     counter-key="@(context.Subscription.Key)" />					  
+                 </inbound>
+                 <backend>
+                     <base />
+                 </backend>
+                 <outbound>
+                     <base />
+                 </outbound>
+                 <on-error>
+                     <base />
+                    <choose>
+                        <when condition='@(context.Response.StatusCode == 401)'>
+                            <choose>
+                                    <when condition='@(!context.Request.Headers.ContainsKey("X-API-Key"))'>
+                                       <choose>
+                                            <when condition='@(context.Request.Headers.ContainsKey("OCP-APIM-Subscription-Key"))'>
+                                                <send-request mode="copy" response-variable-name="response">
+                                                    <set-url>@{
+                                                        var urlParts = context.Request.OriginalUrl.ToString().Split('/');
+                                                        urlParts[2] = "127.0.0.1";
+                                                        return string.Join("/", urlParts);
+                                                    }</set-url>
+                                                    <set-header name="Host">
+                                                        <value>@(context.Request.OriginalUrl.Host)</value>
+                                                    </set-header>
+                                                    <set-header name="X-API-Key">
+                                                        <value>@(context.Request.Headers.GetValueOrDefault("OCP-APIM-Subscription-Key"))</value>
+                                                    </set-header>
+                                                      <set-header name="Accept">
+                                                        <value>@(context.Request.Headers.GetValueOrDefault("Accept"))</value>
+                                                    </set-header>
+                                                    <set-header name="Content-Type">
+                                                        <value>@(context.Request.Headers.GetValueOrDefault("Content-Type"))</value>
+                                                    </set-header>
+                                                </send-request>
+                                                <return-response response-variable-name="response" />
+                                                </when>
+                                        </choose>
 
-  #                                  </when>
-  #                          </choose>
-  #                      </when>
-  #                  </choose>
-  #               </on-error>
-  #           </policies>
-  #          MicrosoftApiManagementAPIVersion: '2018-01-01'
+                                    </when>
+                            </choose>
+                        </when>
+                    </choose>
+                 </on-error>
+             </policies>
+            MicrosoftApiManagementAPIVersion: '2018-01-01'
