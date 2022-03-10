@@ -20,7 +20,7 @@ resources:
     memory: "1Gi"
   limits:
     cpu: "2"
-    memory: "2Gi"
+    memory: "3Gi"
 
 env:
  - name: mdmx__host-address
