@@ -52,7 +52,7 @@ startupProbe:
   initialDelaySeconds: 5
   periodSeconds: 5
   successThreshold: 1
-  timeoutSeconds: 1
+  timeoutSeconds: 3
 
 readinessProbe:
   failureThreshold: 125
@@ -60,8 +60,8 @@ readinessProbe:
     path: /ping
     port: 8080
     scheme: HTTP
-  initialDelaySeconds: 15
-  periodSeconds: 15
+  initialDelaySeconds: 5
+  periodSeconds: 5
   successThreshold: 1
   timeoutSeconds: 3
 
@@ -71,8 +71,8 @@ livenessProbe:
     path: /ping
     port: 8080
     scheme: HTTP
-  initialDelaySeconds: 15
-  periodSeconds: 15
+  initialDelaySeconds: 5
+  periodSeconds: 5
   successThreshold: 1
   timeoutSeconds: 3
   
