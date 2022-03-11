@@ -55,7 +55,7 @@ startupProbe:
   timeoutSeconds: 1
 
 readinessProbe:
-  failureThreshold: 3
+  failureThreshold: 125
   httpGet:
     path: /ping
     port: 8080
@@ -66,7 +66,7 @@ readinessProbe:
   timeoutSeconds: 3
 
 livenessProbe:
-  failureThreshold: 5
+  failureThreshold: 125
   httpGet:
     path: /ping
     port: 8080
