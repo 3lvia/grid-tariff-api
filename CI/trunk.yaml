@@ -33,7 +33,7 @@ stages:
           dockerfile: Dockerfile
 
   - stage: DeployDev
-    condition: and(succeeded(), true)
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/trunk'), true)
     dependsOn: Build
     jobs:
       - template: deploy.yaml@templates
@@ -42,7 +42,7 @@ stages:
           helmValuesFile: values.yaml
 
   - stage: DeployTest
-    condition: and(succeeded(), true)
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/trunk'), true)
     dependsOn: DeployDev
     jobs:
       - template: deploy.yaml@templates
