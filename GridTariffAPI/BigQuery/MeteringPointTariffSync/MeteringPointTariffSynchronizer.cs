@@ -59,7 +59,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
         {
             var meteringPointTariffLastSynced = elviaDbContext.SyncStatus.FirstOrDefault(x => x.Table == _tableName);
             var fullSync = meteringPointTariffLastSynced == null;
-            var stopwatch = new Stopwatch();
+            var stopwatch = Stopwatch.StartNew();
             _logger.TrackTrace("SynchronizeMeteringPointsAsyncStart", new {FullSync = fullSync, LastSynced = meteringPointTariffLastSynced});
             if (fullSync)
             {
