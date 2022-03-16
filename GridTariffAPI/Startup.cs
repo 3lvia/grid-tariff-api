@@ -140,9 +140,9 @@ namespace GridTariffApi
             services.AddTransient<IMeteringPointTariffSynchronizer, MeteringPointTariffSynchronizer>();
 
             //startup tasks
-            //services.AddTransient<IStartupTask, PrepareDatabaseStartupTask>();
-            //services.AddTransient<IStartupTask, SyncMeteringPointTariffStartupTask>();
-            
+            services.AddTransient<IStartupTask, PrepareDatabaseStartupTask>();
+            services.AddTransient<IStartupTask, SyncMeteringPointTariffStartupTask>();
+
             services.AddCronJob<MeteringPointTariffSynchronizer>(c =>
             {
                 c.TimeZoneInfo = TimeZoneInfo.Local;
