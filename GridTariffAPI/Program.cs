@@ -1,10 +1,12 @@
 using Elvia.Configuration;
+using Elvia.Telemetry;
 using GridTariffApi.Database;
 using GridTariffApi.StartupTasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,12 +18,21 @@ namespace GridTariffApi
         {
             var host = CreateHostBuilder(args).Build().MigrateDatabase<ElviaDbContext>();
 
+            var logger = host.Services.GetRequiredService<ITelemetryInsightsLogger>();
             var startupTasks = host.Services.GetServices<IStartupTask>().OrderBy(x => x.GetExecutionOrder());
             foreach (var startupTask in startupTasks)
             {
-                await startupTask.Execute();
+                try
+                {
+                    logger.TrackEvent($"Executing startupptask with name {startupTask.GetType().Name}");
+                    await startupTask.Execute();
+                    logger.TrackEvent($"Executed startupptask with name {startupTask.GetType().Name}");
+                }
+                catch (Exception e)
+                {
+                    logger.TrackException(e);
+                }
             }
-
             await host.RunAsync();
         }
 
