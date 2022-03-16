@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,21 +20,27 @@ namespace GridTariffApi
             var host = CreateHostBuilder(args).Build().MigrateDatabase<ElviaDbContext>();
 
             var logger = host.Services.GetRequiredService<ITelemetryInsightsLogger>();
-            var startupTasks = host.Services.GetServices<IStartupTask>().OrderBy(x => x.GetExecutionOrder());
+            var startupTasks = host.Services.GetServices<IStartupTask>().OrderBy(x => x.GetExecutionOrder()).ToList();
+            RunStartupTasks(startupTasks, logger); // Don't wait - it takes a long time (and the database is initiated in all environments, so we need to get the service up and running without waiting for metering point products to be fully updated.
+            logger.TrackEvent("StartupTasksDispatched_StartingHost");
+            await host.RunAsync();
+        }
+
+        private static async Task RunStartupTasks(List<IStartupTask> startupTasks, ITelemetryInsightsLogger logger)
+        {
             foreach (var startupTask in startupTasks)
             {
                 try
                 {
-                    logger.TrackEvent($"Executing startupptask with name {startupTask.GetType().Name}");
+                    logger.TrackEvent($"Executing startup task {startupTask.GetType().Name}");
                     await startupTask.Execute();
-                    logger.TrackEvent($"Executed startupptask with name {startupTask.GetType().Name}");
+                    logger.TrackEvent($"Executed startup task {startupTask.GetType().Name}");
                 }
                 catch (Exception e)
                 {
                     logger.TrackException(e);
                 }
             }
-            await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

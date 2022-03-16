@@ -42,9 +42,9 @@ ingress:
   subdomain: grid-tariff-api
   path: "/"
  
- # Syncing of data from bigquery to database  can make the startup take a long time (over 10 minutes)
+ # Syncing of data from bigquery to database  can make the startup take a long time
 startupProbe:
-  failureThreshold: 200
+  failureThreshold: 125
   httpGet:
     path: /ping
     port: 8080
