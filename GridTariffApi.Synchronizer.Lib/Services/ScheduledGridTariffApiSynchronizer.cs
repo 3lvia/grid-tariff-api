@@ -23,7 +23,7 @@ namespace GridTariffApi.Synchronizer.Lib.Services
         {
             try
             {
-                _logger.TrackTrace("Setting up scheduled synchronizing of meteringpoints with netproducts from Google BigQuery");
+                _logger.TrackTrace("ScheduledGridTariffApiSynchronizer (pilot): Setting up scheduled synchronizing of meteringpoints with netproducts from Google BigQuery");
                 return base.StartAsync(cancellationToken);
             }
             catch (Exception e)
@@ -37,9 +37,9 @@ namespace GridTariffApi.Synchronizer.Lib.Services
         {
             try
             {
-                _logger.TrackTrace("Starting synchronizing of meteringpoints with netproducts from Google BigQuery");
+                _logger.TrackTrace("ScheduledGridTariffApiSynchronizer (pilot): Starting synchronizing of meteringpoints with netproducts from Google BigQuery");
                 await _gridTariffApiSynchronizer.SynchronizeMeteringPointsAsync();
-                _logger.TrackTrace("Done synchronizing of Meteringpoints with netproducts from Google BigQuery");
+                _logger.TrackTrace("ScheduledGridTariffApiSynchronizer (pilot): Done synchronizing of Meteringpoints with netproducts from Google BigQuery");
             }
             catch (Exception e)
             {
@@ -52,7 +52,7 @@ namespace GridTariffApi.Synchronizer.Lib.Services
         {
             try
             {
-                _logger.TrackTrace("Failed synchronizing of meteringpoints with netproducts from Google BigQuery");
+                _logger.TrackTrace("ScheduledGridTariffApiSynchronizer (pilot): Failed synchronizing of meteringpoints with netproducts from Google BigQuery");
                 return base.StopAsync(cancellationToken);
             }
             catch (Exception e)

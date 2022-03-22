@@ -1,10 +1,13 @@
 using Elvia.Configuration;
+using Elvia.Telemetry;
 using GridTariffApi.Database;
 using GridTariffApi.StartupTasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,13 +19,44 @@ namespace GridTariffApi
         {
             var host = CreateHostBuilder(args).Build().MigrateDatabase<ElviaDbContext>();
 
-            var startupTasks = host.Services.GetServices<IStartupTask>().OrderBy(x => x.GetExecutionOrder());
+            var logger = host.Services.GetRequiredService<ITelemetryInsightsLogger>();
+            logger.TrackEvent("Startup");
+            AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
+            {
+                try
+                {
+                    Console.WriteLine($"Unhandled exception occured: {((Exception)eventArgs.ExceptionObject)?.GetType()}. Attempting to log exception to application insights.");
+                    logger.TrackException((Exception)eventArgs.ExceptionObject, new { eventArgs.IsTerminating, SenderType = sender?.GetType().ToString() });
+                    logger.Flush();
+                }
+                catch (Exception loggingException)
+                {
+                    Console.WriteLine($"Exception while logging unhandled exception. Unhandled exception (#1): {eventArgs}. Exception while logging original exception (#2): {loggingException}");
+                    // Don't throw (the loggingException) - let the original unhandled exception take its course
+                }
+            }; 
+
+            var startupTasks = host.Services.GetServices<IStartupTask>().OrderBy(x => x.GetExecutionOrder()).ToList();
+            RunStartupTasks(startupTasks, logger); // Don't wait - it takes a long time (and the database is initiated in all environments, so we need to get the service up and running without waiting for metering point products to be fully updated.
+            logger.TrackEvent("StartupTasksDispatched_StartingHost");
+            await host.RunAsync();
+        }
+
+        private static async Task RunStartupTasks(List<IStartupTask> startupTasks, ITelemetryInsightsLogger logger)
+        {
             foreach (var startupTask in startupTasks)
             {
-                await startupTask.Execute();
+                try
+                {
+                    logger.TrackEvent($"Executing startup task {startupTask.GetType().Name}");
+                    await startupTask.Execute();
+                    logger.TrackEvent($"Executed startup task {startupTask.GetType().Name}");
+                }
+                catch (Exception e)
+                {
+                    logger.TrackException(e);
+                }
             }
-
-            await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

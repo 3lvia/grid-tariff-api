@@ -9,7 +9,7 @@ microserviceType: webapi
 replicaCount:
   dev: 1
   test: 1
-  prod: 2
+  prod: 1
 
 image:
   repository: containerregistryelvia.azurecr.io/kunde-grid-tariff-api
