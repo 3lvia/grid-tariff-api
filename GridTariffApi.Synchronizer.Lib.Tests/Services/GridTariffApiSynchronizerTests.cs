@@ -36,6 +36,7 @@ namespace GridTariffApi.Synchronizer.Lib.Tests.Services
 
             var services = new ServiceCollection();
             services.AddDbContext<TariffContext>(u => u.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()));
+            services.AddSingleton<IBigQueryReader>(_mockBigQueryReader.Object);
             _serviceProvider = services.BuildServiceProvider();
 
             var serviceScope = new Mock<IServiceScope>();
@@ -57,7 +58,7 @@ namespace GridTariffApi.Synchronizer.Lib.Tests.Services
             Init();
 
             var dbContext = _serviceProvider.GetRequiredService<TariffContext>();
-            var gridTariffApiSynchronizer = new GridTariffApiSynchronizer(_mocklogger.Object, _mockServiceScopeFactory.Object, _mockBigQueryReader.Object);
+            var gridTariffApiSynchronizer = new GridTariffApiSynchronizer(_mocklogger.Object, _mockServiceScopeFactory.Object);
             await gridTariffApiSynchronizer.SynchronizeMeteringPointsAsync();
             VerifyDbContent(dbContext);
         }
@@ -74,7 +75,7 @@ namespace GridTariffApi.Synchronizer.Lib.Tests.Services
                 UpdatedDate = DateTime.UtcNow
             });
 
-            var gridTariffApiSynchronizer = new GridTariffApiSynchronizer(_mocklogger.Object, _mockServiceScopeFactory.Object, _mockBigQueryReader.Object);
+            var gridTariffApiSynchronizer = new GridTariffApiSynchronizer(_mocklogger.Object, _mockServiceScopeFactory.Object);
             await gridTariffApiSynchronizer.SynchronizeMeteringPointsAsync();
             VerifyDbContent(dbContext);
         }
@@ -88,7 +89,7 @@ namespace GridTariffApi.Synchronizer.Lib.Tests.Services
             AddMeteringPointProductToDatabase(dbContext, "mp1", "bogus", "GridTariff1", 0, DateTime.UtcNow);
             AddIntegrationConfig(dbContext);
 
-            var gridTariffApiSynchronizer = new GridTariffApiSynchronizer(_mocklogger.Object, _mockServiceScopeFactory.Object, _mockBigQueryReader.Object);
+            var gridTariffApiSynchronizer = new GridTariffApiSynchronizer(_mocklogger.Object, _mockServiceScopeFactory.Object);
             await gridTariffApiSynchronizer.SynchronizeMeteringPointsAsync();
             VerifyDbContent(dbContext);
         }
@@ -112,7 +113,7 @@ namespace GridTariffApi.Synchronizer.Lib.Tests.Services
             AddMeteringPointProductToDatabase(dbContext, "mp1", "HN ELHA avr", "GridTariff1", 100, DateTime.UtcNow);
             AddIntegrationConfig(dbContext);
 
-            var gridTariffApiSynchronizer = new GridTariffApiSynchronizer(_mocklogger.Object, _mockServiceScopeFactory.Object, _mockBigQueryReader.Object);
+            var gridTariffApiSynchronizer = new GridTariffApiSynchronizer(_mocklogger.Object, _mockServiceScopeFactory.Object);
             await gridTariffApiSynchronizer.SynchronizeMeteringPointsAsync();
             VerifyDbContent(dbContext);
         }
@@ -126,7 +127,7 @@ namespace GridTariffApi.Synchronizer.Lib.Tests.Services
             AddMeteringPointProductToDatabase(dbContext, "mp1", "HN ELHA avr", "Bogus", 0, DateTime.UtcNow);
             AddIntegrationConfig(dbContext);
 
-            var gridTariffApiSynchronizer = new GridTariffApiSynchronizer(_mocklogger.Object, _mockServiceScopeFactory.Object, _mockBigQueryReader.Object);
+            var gridTariffApiSynchronizer = new GridTariffApiSynchronizer(_mocklogger.Object, _mockServiceScopeFactory.Object);
             await gridTariffApiSynchronizer.SynchronizeMeteringPointsAsync();
             VerifyDbContent(dbContext);
         }

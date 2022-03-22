@@ -147,7 +147,7 @@ namespace GridTariffApi
             {
                 c.TimeZoneInfo = TimeZoneInfo.Local;
                 //c.CronExpression = @"0 6 * * *";      // every day at 6
-                c.CronExpression = @"0 * * * *";      // TODO jbg tester (hver time, men muligens timezone-problem i CronJobService)
+                c.CronExpression = @"0,15,30,45 * * * *";      // TODO jbg tester (hver time, men muligens timezone-problem i CronJobService)
             });
 
 

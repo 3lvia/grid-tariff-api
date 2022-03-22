@@ -1,6 +1,5 @@
 ﻿using Elvia.Telemetry;
 using GridTariffApi.Lib.EntityFramework;
-using GridTariffApi.Synchronizer.Lib.Config;
 using GridTariffApi.Synchronizer.Lib.Model.BigQueryMeteringPoint;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -12,7 +11,6 @@ namespace GridTariffApi.Synchronizer.Lib.Services
 {
     public class GridTariffApiSynchronizer : IGridTariffApiSynchronizer
     {
-        private readonly IBigQueryReader _bigQueryReader;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly ITelemetryInsightsLogger _logger;
 
@@ -21,23 +19,22 @@ namespace GridTariffApi.Synchronizer.Lib.Services
 
         public GridTariffApiSynchronizer(
             ITelemetryInsightsLogger logger,
-            IServiceScopeFactory serviceScopeFactory,
-            IBigQueryReader bigQueryReader)
+            IServiceScopeFactory serviceScopeFactory)
         {
             _logger = logger;
             _serviceScopeFactory = serviceScopeFactory;
-            _bigQueryReader = bigQueryReader;
         }
 
         public async Task SynchronizeMeteringPointsAsync()
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
-                var dbContext = scope.ServiceProvider.GetService<TariffContext>();
+                var dbContext = scope.ServiceProvider.GetRequiredService<TariffContext>();
+                var bigQueryReader = scope.ServiceProvider.GetRequiredService<IBigQueryReader>(); // Must create new BigQueryReader on each run/round to avoid "Cannot access a disposed object. Object name: 'Google.Apis.Http.ConfigurableHttpClient'."
                 var meteringPointSyncConfig = dbContext.IntegrationConfigs.FirstOrDefault(x => x.TableUpdated.Equals(_fullSyncedMeteringPointProduct));
                 if (meteringPointSyncConfig == null)
                 {
-                    await SynchronizeMeteringSynchronizeMeteringPointsFullAsync(dbContext);
+                    await SynchronizeMeteringSynchronizeMeteringPointsFullAsync(dbContext, bigQueryReader);
                     dbContext.Add(new IntegrationConfig()
                     {
                         TableUpdated = _fullSyncedMeteringPointProduct,
@@ -46,17 +43,17 @@ namespace GridTariffApi.Synchronizer.Lib.Services
                 }
                 else
                 {
-                    await SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(dbContext, meteringPointSyncConfig.UpdatedDate);
+                    await SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(dbContext, bigQueryReader, meteringPointSyncConfig.UpdatedDate);
                     meteringPointSyncConfig.UpdatedDate = DateTime.UtcNow;
                 }
                 await dbContext.SaveChangesAsync();
             }
         }
 
-        private async Task SynchronizeMeteringSynchronizeMeteringPointsFullAsync(TariffContext dbContext)
+        private async Task SynchronizeMeteringSynchronizeMeteringPointsFullAsync(TariffContext dbContext, IBigQueryReader bigQueryReader)
         {
             List<ProductTariffMapping> tariffMappings = dbContext.ProductTariffMappings.ToList();
-            var result = await _bigQueryReader.GetAllMeteringPointProductAsync();
+            var result = await bigQueryReader.GetAllMeteringPointProductAsync();
             try
             {
                 dbContext.ChangeTracker.AutoDetectChangesEnabled = false;
@@ -72,10 +69,10 @@ namespace GridTariffApi.Synchronizer.Lib.Services
                 dbContext.ChangeTracker.AutoDetectChangesEnabled = true;
             }
         }
-        private async Task SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(TariffContext dbContext, DateTime fromDate)
+        private async Task SynchronizeMeteringSynchronizeMeteringPointsIncrementalAsync(TariffContext dbContext, IBigQueryReader bigQueryReader, DateTime fromDate)
         {
             List<ProductTariffMapping> tariffMappings = dbContext.ProductTariffMappings.ToList();
-            var result = _bigQueryReader.GetMeteringPointsByFromDateAsync(fromDate).Result;
+            var result = await bigQueryReader.GetMeteringPointsByFromDateAsync(fromDate);
             await UpsertMeteringPointsAsync(dbContext, result, tariffMappings);
         }
 

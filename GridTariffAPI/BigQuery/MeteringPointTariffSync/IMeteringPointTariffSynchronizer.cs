@@ -7,6 +7,6 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
 {
     public interface IMeteringPointTariffSynchronizer
     {
-        Task SynchronizeMeteringPointsAsync(ElviaDbContext elviaDbContext, Company elviaCompany, DateTimeOffset timeStamp);
+        Task SynchronizeMeteringPointsAsync(ElviaDbContext elviaDbContext, IBigQueryReader bigQueryReader, Company elviaCompany, DateTimeOffset timeStamp);
     }
 }

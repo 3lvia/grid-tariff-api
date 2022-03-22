@@ -41,7 +41,8 @@ namespace GridTariffApi.Synchronizer.Lib.Services
                 var next = _expression.GetNextOccurrence(DateTimeOffset.Now, _timeZoneInfo);
                 if (next.HasValue)
                 {
-                    var delay = next.Value - DateTimeOffset.Now;
+                    var timezonedNow = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, _timeZoneInfo);
+                    var delay = next.Value - timezonedNow;
                     if (delay.TotalMilliseconds <= 0) // prevent non-positive values from being passed into Timer
                     {
                         _logger.TrackTrace("CronJobServiceRescheduledDueToNegativeDelay", new {Delay = delay});
@@ -51,7 +52,7 @@ namespace GridTariffApi.Synchronizer.Lib.Services
                     _timer = new System.Timers.Timer(delay.TotalMilliseconds);
                     _timer.Elapsed += async (sender, args) =>
                     {
-                        _timer.Dispose(); // reset and dispose timer
+                        _timer?.Dispose(); // reset and dispose timer
                         _timer = null;
 
                         if (!cancellationToken.IsCancellationRequested)

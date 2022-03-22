@@ -18,9 +18,10 @@ namespace GridTariffApi.Tests.StartupTasks
         {
             var services = new ServiceCollection();
             services.AddDbContext<ElviaDbContext>(u => u.UseInMemoryDatabase(databaseName: "ExecuteTest"));
+            services.AddSingleton<IBigQueryReader>(new Mock<IBigQueryReader>().Object);
 
             var mockIMeteringPointTariffSynchronizer = new Mock<IMeteringPointTariffSynchronizer>();
-            mockIMeteringPointTariffSynchronizer.Setup(x => x.SynchronizeMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<Company>(), It.IsAny<DateTimeOffset>())).Returns(Task.CompletedTask);
+            mockIMeteringPointTariffSynchronizer.Setup(x => x.SynchronizeMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<IBigQueryReader>(), It.IsAny<Company>(), It.IsAny<DateTimeOffset>())).Returns(Task.CompletedTask);
 
             services.AddSingleton<IMeteringPointTariffSynchronizer>(mockIMeteringPointTariffSynchronizer.Object);
 
@@ -28,7 +29,7 @@ namespace GridTariffApi.Tests.StartupTasks
 
             var mockSyncMeteringPointTariffStartupTask = new SyncMeteringPointTariffStartupTask(serviceProvider);
             await mockSyncMeteringPointTariffStartupTask.Execute();
-            mockIMeteringPointTariffSynchronizer.Verify(x => x.SynchronizeMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<Company>(), It.IsAny<DateTimeOffset>()), Times.Once);
+            mockIMeteringPointTariffSynchronizer.Verify(x => x.SynchronizeMeteringPointsAsync(It.IsAny<ElviaDbContext>(), It.IsAny<IBigQueryReader>(), It.IsAny<Company>(), It.IsAny<DateTimeOffset>()), Times.Once);
         }
     }
 }
