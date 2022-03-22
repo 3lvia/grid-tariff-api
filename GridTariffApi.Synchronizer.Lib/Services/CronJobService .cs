@@ -44,6 +44,7 @@ namespace GridTariffApi.Synchronizer.Lib.Services
                     var delay = next.Value - DateTimeOffset.Now;
                     if (delay.TotalMilliseconds <= 0) // prevent non-positive values from being passed into Timer
                     {
+                        _logger.TrackTrace("CronJobServiceRescheduledDueToNegativeDelay", new {Delay = delay});
                         await ScheduleJob(cancellationToken);
                     }
 
