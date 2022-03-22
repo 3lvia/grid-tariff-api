@@ -22,7 +22,7 @@ Returns prices per hour for the given tariff for the given timeperiod.
 Returns prices per hour for given timeperiod for the unique tariffs connected to the list of meteringpoints.  
 Each tariff contains a list of meteringpoints using the tariff.  
 Attached to each meteringpoint is a reference to a fixedpricelevel which currently applies to the meteringpoint.  
-The reference to fixedpricelevel is deduced by max consumption (kwh) for the meteringpoint for the current month.
+The reference to fixedpricelevel is deduced by max consumption (kWh) for the meteringpoint for the current month.
 
 
 ## Overview of projects in solution
