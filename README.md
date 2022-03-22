@@ -1,139 +1,97 @@
-## GridTariff Api
+# Grid-Tariff-Api
 
-GridTariff Api is an Api intended for for offering variable electrical grid tariffs.
-GridTariff Api exposes the following services:
+Grid-Tariff-Api is an implementation of "Nettariff API" specified by DiginEnergi.
+DiginEnergi is a Norwegian consortium working with information models and standards related to the national electricity grid of Norway.
 
-* Retrieve all available private tariffs (api/{v:apiVersion}/tarifftype)
-* Retrieve tariff prices per hour for a given tariff for a given timeperiod (GET api/{v:apiVersion}/tariffquery)
+"Nettariff-API" is a specification for an API which purpose is to serve information regarding grid tariffs including prices per hour.
+"Nettariff-API" specification is available for download here: https://github.com/digin-energi/API-nettleie-for-styring
+For further information see https://diginenergi.no/hva-gjor-vi/nettariff-api/ (in Norwegian).
 
-### Retrieve all available private tariffs (api/{v:apiVersion}/tarifftype)
-Service takes zero parameters
-Service returns json containing information about all tarrifs
+#The following services is available
+##Retrieve list of available tariffs
+Returns a list of available tariffs
 
-### Retrieve tariff prices per hour for a given tariff for a given timeperiod (GET api/{v:apiVersion}/tariffquery)
-Service takes two parameters.
-Parameter one is the tariff which the service is to return data for.
-Parameter two is the timeperiod in question.
-The timperiod can be specified in two ways.
-Either specify timeperiod using paramater Range. Valid values are 'yesterday','today' or 'tomorrow'.
-Or specify timeperiod using StartTime and EndTime.
+##Query a tariff for prices per hour for a given timeperiod
+Returns prices per hour for the given tariff for the given timeperiod.
 
-The service will return tariffs per hour for the given tariff and timeperiod.
-For each hour there will be returned a fixed price element, and a variable price element.
-The variable price element can change for each hour during the day.
-On public holidays, Saturdays and Sundays the variable price elements is always the cheapest available, for all hours of the day.
+##Query a list of meteringpoints for prices per hour for a given timeperiod
+Returns prices per hour for given timeperiod for the tariffs connected to the list of meteringpoints.
+Each tariff contains a list of meteringpoints using the tariff.
+Attached to each meteringpoint is a reference to a fixedpricelevel which currently applies to the meteringpoint.
+The reference to fixedpricelevel is deduced by max consumption (kwh) for the meteringpoint for the current month.
 
-### Retrieve tariff prices per hour for a set of meteringpoints for a given timeperiod(POST api/{v:apiVersion}/meteringpointsgridtariffs)
-Service takes two parameters.
-Parameter one is a list of meterpoints to return data for.
-Parameter two is the timeperiod in question.
-The timperiod can be specified in two ways.
-Either specify timeperiod using paramater Range. Valid values are 'yesterday','today' or 'tomorrow'.
-Or specify timeperiod using StartTime and EndTime.
 
-The service will return a container containing zero or more elements.
-Each element will one tariff and a list of meteringpoints which has this tarff.
-The tariff data will be the same as the "GET api/{v:apiVersion}/tariffquery" endpoint, so see that endpoint for tariff details.
+# Overview of projects in solution
 
-## Overview of projects in solution
+## GridTariffApi.lib
+Implementation of the API.
 
-### Project GridTariffApi.lib
-Contains all business logic for Api.
+## GridTariffApi.lib.Tests
+Unit tests for the implementation of the API.
 
-### Project GridTariffApi.lib.Tests
-Unit tests for project GridTarifApi.lib
+## GridTariffApi
+Project for hosting the API.
+The purpose of this project is to handle everything regarding setup, hosting and security of the API.
+This project is specific for Elvia AS.
+Anyone wanting to utilize GridTariffApi.lib for implementing "Nettariff-API" is required to write their own project for hosting the API.
 
-### Project GridTariffApi
-Project which uses GridTariffApi.lib and GridTariffApiSynchronizer.lib to and hosts the services.
-This project is native to Elvia and is intended to serve as an example of how to host the services.
+## Project GridTariffApiSynchronizer.lib
+Not needed for GridTariffApi.lib.
+The project is Elvia AS specific and is responsible for synchronizing meteringpoints and their relation to grid tariffs.
+It is only used for an earlier version of the API not specified by DiginEnergi.
+This project is to be phased out at a later time.
 
-### Project GridTariffApiSynchronizer.lib
-Project which is used by GridTariffApi.
-The functionality of this project is to retrieve meteringpoint and gridtariff from google bigquery and persist data in database for use by the api.
-This project is native to Elvia and is intended to serve as an example of how to retrieve information about meteringpoints and gridtariffs.
-
-### Project GridTariffApiSynchronizer.libTests
+## Project GridTariffApiSynchronizer.libTests
 Unit tests for project GridTariffApiSynchronizer.lib
 
-## Project GridTariffApi.lib folders
 
-### Config
+# Project GridTariffApi.lib folders
+
+## Config
 Contains classes for configuration of the project.
 
-### Controllers
+## Controllers
 Contains controllers for the offered functionality
+Subfolder v1 containts controllers for the "Nettariff-API" specified by DiginEnergi.
+Subfolder Pilot is to be removed, it is an earlier version of the API not specified by DiginEnergi.
 
-### EntityFramework
+## EntityFramework
 Contains Entity Framework classes for database persisting tariff information
+The content of this project is only used by an earlier version of the API not specified by DiginEnergi.
+It is to be phased out at a later time
 
-### Models 
-Contains classes for request/response objects used by controllers
+##Interfaces
+Interfaces used by GridTariff.lib to fetch data.
+These are to be implemented by anyone wanting to use GridTariff.lib.
 
-### Services
+## Models 
+Contains classes for request/response objects used by controllers,
+Subfolder Pilot is to be removed, it is related to an earlier version of the API not specified by DiginEnergi
+
+## Services
 Contains classes with business logic used by controllers
+Subfolder Pilot is to be removed, it is related ti an earlier version of the API not specified by DiginEnergi
 
-###  SQL
-Contains sql statements for creating required tables in database
+##  SQL
+This folder is to be removed, it is related ti an earlier version of the API not specified by DiginEnergi
 
-### Swagger
+## Swagger
 Contains classes related to documentation of of Api.
 
-## Project GridTariffApi folders
 
-### Auth
-Contains classes for basic authentication for the Api.
+# Overview of solution folders
 
-### Controllers
-Contains controllers not related to GridTariffApi
-
-### SQL 
-Contains sample sql insert statements for populating the database persisting tariff information
-
-## Most important datbase tables used by GridTariff Api
-Script for creating SQL Server database and sample data exists in folder 'SQL' in the solution.
-
-### Table 'tarifftype'
-This table contains all tariffs.
-
-### Table 'fixedpriceconfig'
-This table contains fixed price element for tariffs.
-Fixed prices is specified as the fixed price for a given month.
-(The Api will calculate fixed price element per hour based on total amount of hours for a given month).
-Fixed prices have a validity interval (pricefromdate/pricetodate).
-Fixed price validity interval can not be arbitrary, they must start/stop at beginning/end of month
-
-### Table 'variablepriceconfig'
-This table contains variable price elements for a given tariff.
-Each tariff may have one or more rows of variable price elements for a given day.
-The column 'Hours' specify which hours of the day the variable price elements is valid.
-Variable prices have a validity interval (pricefromdate/pricetodate).
-Variable price validity interval can not be arbitrary, they must start/stop at beginning/end of month
-
-### Table 'publicholiday'
-This table contains public holidays.
-(For these days the cheapest variable price element valid for the day is used, for all hours of the day).
-
-### Table 'meteringpointproduct'
-This table contains information about meteringpoints and their current gridtariffs.
-
-## Overview of solution folders
-
-### CI
+## CI
 Sample build/deployment files.
 These project is native to Elvia.
 
-### Solution Items 
+## Solution Items 
 Contains this file
 Contains Dockerfile native to Elvia.
 
-
-## Authentication
-Controllers in project GridTariffApi.Lib require authentication, but does not contain files for authentication.
-Authentication should be added by the hosting project.
-
 #Getting started
 ---------------
-### Installation
+## Installation
 You'll need the following tools to get started:
 * [Git](https://git-scm.com/downloads)
 * [.NET Core 3.1 or later](https://dotnet.microsoft.com/download)
@@ -144,27 +102,18 @@ Start by cloning this repo. Then navigate into the `/GridTariffApi` folder and s
 $ GridTariffApi> dotnet run	
 ```
 
-Open your favorite browser, and navigate to [localhost:5000/swagger](http://localhost:5000/swagger). This should open [Swagger UI](https://swagger.io/tools/swagger-ui/), where you can try out the Api.
-
 If you want to run the tests, navigate into the `/GridTariffApi.Lib` folder and run `dotnet test`:
 ```shell
 $ GridTariffApi.Lib> dotnet test
 ```
 
-### Authorizing Swagger UI
-Swagger is configured for an Api using basic authentication.
 
-#### Using basic authentication with Swagger UI
-To authorize Swagger UI, you start by clicking on the "Authorize"-button. Then add the username and password and click "Authorize".
-
-
-## Configuration
+# Configuration
 -------------
 GridTariffApi.lib uses classes under the Config directory for containing configuration.
 These classes may be configured from appsettings.json, or any other mechanism.
 
-## Azure Api Management.
-GridTariff Api can be used as is with basic authentication.
-GridTariff Api has also been successfully deployed with Azure Api Management in front.
+# Azure Api Management.
+GridTariff Api has been successfully deployed with Azure Api Management in front.
 Deployment was done using [Api Management Suite] (https://marketplace.visualstudio.com/items?itemName=stephane-eyskens.apim) , but other deployment strategies may also work.
 
