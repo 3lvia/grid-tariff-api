@@ -146,7 +146,8 @@ namespace GridTariffApi
             services.AddCronJob<MeteringPointTariffSynchronizer>(c =>
             {
                 c.TimeZoneInfo = TimeZoneInfo.Local;
-                c.CronExpression = @"0 6 * * *";      //every day at
+                //c.CronExpression = @"0 6 * * *";      // every day at 6
+                c.CronExpression = @"0 * * * *";      // TODO jbg tester (hver time, men muligens timezone-problem i CronJobService)
             });
 
 
