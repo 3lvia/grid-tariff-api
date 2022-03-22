@@ -7,9 +7,8 @@ Grid-Tariff-Api is an implementation of "Nettariff API" specified by DiginEnergi
 DiginEnergi is a Norwegian consortium working with information models and standards related to the national electricity grid of Norway.  
 
 "Nettariff-API" specification is available for download from github [here](https://github.com/digin-energi/API-nettleie-for-styring)  
-Further information regarding DiginEnergy is available [here](https://diginenergi.no/hva-gjor-vi/nettariff-api/) (in Norwegian).  
 
-Please read and adhere to [terms and conditions ](https://diginenergi.no/hva-gjor-vi/nettariff-api/) (in Norwegian)
+For terms and conditions and further details please read the [following ](https://diginenergi.no/hva-gjor-vi/nettariff-api/) (in Norwegian).  
 
 ## The following endpoints is available
 #### Retrieve list of available tariffs
@@ -121,7 +120,7 @@ $ GridTariffApi.Lib> dotnet test
 ```
 
 ## Configuration
--------------
+
 GridTariffApi.lib uses classes under the Config directory for containing configuration.  
 These classes may be configured from appsettings.json, or any other mechanism.
 
