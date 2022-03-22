@@ -25,7 +25,7 @@ namespace GridTariffApi
             {
                 try
                 {
-                    Console.WriteLine($"Unhandled exception occured: {((Exception)eventArgs?.ExceptionObject)?.GetType()}. Attempting to log exception to application insights.");
+                    Console.WriteLine($"Unhandled exception occured: {((Exception)eventArgs.ExceptionObject)?.GetType()}. Attempting to log exception to application insights.");
                     logger.TrackException((Exception)eventArgs.ExceptionObject, new { eventArgs.IsTerminating, SenderType = sender?.GetType().ToString() });
                     logger.Flush();
                 }
