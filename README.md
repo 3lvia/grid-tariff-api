@@ -7,14 +7,14 @@ DiginEnergi is a Norwegian consortium working with information models and standa
 "Nettariff-API" specification is available for download here: https://github.com/digin-energi/API-nettleie-for-styring
 For further information see https://diginenergi.no/hva-gjor-vi/nettariff-api/ (in Norwegian).
 
-#The following services is available
-##Retrieve list of available tariffs
+# The following services is available
+## Retrieve list of available tariffs
 Returns a list of available tariffs
 
-##Query a tariff for prices per hour for a given timeperiod
+## Query a tariff for prices per hour for a given timeperiod
 Returns prices per hour for the given tariff for the given timeperiod.
 
-##Query a list of meteringpoints for prices per hour for a given timeperiod
+## Query a list of meteringpoints for prices per hour for a given timeperiod
 Returns prices per hour for given timeperiod for the tariffs connected to the list of meteringpoints.
 Each tariff contains a list of meteringpoints using the tariff.
 Attached to each meteringpoint is a reference to a fixedpricelevel which currently applies to the meteringpoint.
