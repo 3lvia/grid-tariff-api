@@ -113,7 +113,6 @@ $ GridTariffApi> dotnet run
 ```
 Note that API will fail at startup outside Elvia environment.  
 This is due to project GridTariffAPI is using Elvia-specific components.
-See paragraph [GridTariffApi](#GridTariffApi.lib) for details.
 
 If you want to run the tests, navigate into the `/GridTariffApi.Lib` folder and run `dotnet test`:
 ```shell
