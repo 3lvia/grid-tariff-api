@@ -76,8 +76,7 @@ namespace GridTariffApi
             GridTariffApiSynchronizerConfig gridTariffApiSynchronizerConfig = GetGridTariffApiSynchronizerConfig();
             services.AddSingleton(gridTariffApiSynchronizerConfig);
 
-            var bigQueryClient = CreateBigQueryClient(gridTariffApiSynchronizerConfig);
-            services.AddTransient(u => bigQueryClient);
+            services.AddTransient(u => CreateBigQueryClient(gridTariffApiSynchronizerConfig));
             services.AddTransient<Synchronizer.Lib.Services.IBigQueryReader, Synchronizer.Lib.Services.BigQueryReader>();
             services.AddTransient<IGridTariffApiSynchronizer, GridTariffApiSynchronizer>();
             services.AddTransient<GridTariffApi.Lib.Services.Pilot.ITariffTypeService, GridTariffApi.Lib.Services.Pilot.TariffTypeService>();
