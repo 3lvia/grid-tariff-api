@@ -26,7 +26,8 @@ namespace GridTariffApi.StartupTasks
             var elviaDbContext = scope.ServiceProvider.GetRequiredService<ElviaDbContext>();
             var meteringPointTariffSynchronizer = scope.ServiceProvider.GetRequiredService<IMeteringPointTariffSynchronizer>();
             var elviaCompany = elviaDbContext.Company.FirstOrDefault();
-            await meteringPointTariffSynchronizer.SynchronizeMeteringPointsAsync(elviaDbContext, elviaCompany, DateTimeOffset.UtcNow);
+            var bigQueryReader = scope.ServiceProvider.GetRequiredService<IBigQueryReader>();
+            await meteringPointTariffSynchronizer.SynchronizeMeteringPointsAsync(elviaDbContext, bigQueryReader, elviaCompany, DateTimeOffset.UtcNow);
         }
     }
 }
