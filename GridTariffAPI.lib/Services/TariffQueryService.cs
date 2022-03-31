@@ -421,7 +421,10 @@ namespace GridTariffApi.Lib.Services
             }
             fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day).AddHours(-fromDateLocaled.Hour).AddMinutes(-fromDate.Minute);
             var seasonStartTimeLocaledAndTimeZoneCorrected = _serviceHelper.DbTimeZoneDateToUtc(fromDateLocaled.DateTime);
-            var seasonStart = fromDate.AddTicks(seasonStartTimeLocaledAndTimeZoneCorrected.UtcDateTime.Ticks - fromDate.Ticks);
+//            var seasonStart = fromDate.AddTicks(seasonStartTimeLocaledAndTimeZoneCorrected.UtcDateTime.Ticks - fromDate.Ticks);
+//GLUE-1541 - temp quickfix for problem related to transition from one season to another.
+//functionality to calc intersection between "season" and taxperiod should be rewritten
+            var seasonStart = fromDate.AddTicks(seasonStartTimeLocaledAndTimeZoneCorrected.UtcDateTime.Ticks - fromDate.UtcDateTime.Ticks);
             return seasonStart;
         }
 
@@ -434,7 +437,11 @@ namespace GridTariffApi.Lib.Services
             }
             fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day).AddHours(-fromDateLocaled.Hour).AddMinutes(-fromDate.Minute);
             var seasonEndTimeLocaledAndTimeZoneCorrected = _serviceHelper.DbTimeZoneDateToUtc(fromDateLocaled.DateTime);
-            var seasonEnd = fromDate.AddTicks(seasonEndTimeLocaledAndTimeZoneCorrected.UtcDateTime.Ticks - fromDate.Ticks);
+            //            var seasonEnd = fromDate.AddTicks(seasonEndTimeLocaledAndTimeZoneCorrected.UtcDateTime.Ticks - fromDate.Ticks);
+            //GLUE-1541 - temp quickfix for problem related to transition from one season to another.
+            //functionality to calc intersection between "season" and taxperiod should be rewritten
+
+            var seasonEnd = fromDate.AddTicks(seasonEndTimeLocaledAndTimeZoneCorrected.UtcDateTime.Ticks - fromDate.UtcDateTime.Ticks);
             return seasonEnd;
         }
 
