@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GridTariffApi.Lib.Models.Internal;
+using System;
+using System.Collections.Generic;
 
 namespace GridTariffApi.Lib.Services.Helpers
 {
@@ -12,5 +14,8 @@ namespace GridTariffApi.Lib.Services.Helpers
         DateTime GetTimeZonedDateTime(DateTime datetime);
         DateTimeOffset ToConfiguredTimeZone(DateTimeOffset dateTimeOffset);
         bool TimePeriodIsIncludingLocaleToday(DateTimeOffset fromDateTime, DateTimeOffset toDateTime);
+        DateTimeOffset CreateLocaledDateTimeOffset(int year, int month, int day, int hour, int minute, int second);
+        List<TimePeriod> GetMonthPeriods(DateTimeOffset fromDate, DateTimeOffset toDate, IReadOnlyList<int> months);
+
     }
 }
