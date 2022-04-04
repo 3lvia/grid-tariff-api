@@ -18,22 +18,22 @@ namespace GridTariffApi.Lib.Services.Helpers
         public List<TimePeriod> GetMonthPeriods(DateTimeOffset fromDate, DateTimeOffset toDate, IReadOnlyList<int> months)
         {
             var accumulator = new List<TimePeriod>();
-            var fromDateLocaled = ToConfiguredTimeZone(fromDate);
-            var toDateLocaled = ToConfiguredTimeZone(toDate);
+            var currPeriodStartDateLocaled = ToConfiguredTimeZone(fromDate);
+            var currPeriodEndDateLocaled = ToConfiguredTimeZone(toDate);
 
             //accumulate
-            while (fromDateLocaled < toDateLocaled)
+            while (currPeriodStartDateLocaled < currPeriodEndDateLocaled)
             {
-                if (months.Contains(fromDateLocaled.Month))
+                if (months.Contains(currPeriodStartDateLocaled.Month))
                 {
-                    DateTimeOffset monthEndLocaled = GetStartOfNextMonth(fromDateLocaled);
+                    DateTimeOffset monthEndLocaled = GetStartOfNextMonth(currPeriodStartDateLocaled);
                     var timePeriod = new TimePeriod();
-                    timePeriod.StartDate = fromDateLocaled;
-                    timePeriod.EndDate = monthEndLocaled < toDateLocaled ? monthEndLocaled : toDateLocaled;
+                    timePeriod.StartDate = currPeriodStartDateLocaled;
+                    timePeriod.EndDate = monthEndLocaled < currPeriodEndDateLocaled ? monthEndLocaled : currPeriodEndDateLocaled;
 
                     accumulator.Add(timePeriod);
                 }
-                fromDateLocaled = GetStartOfNextMonth(fromDateLocaled);
+                currPeriodStartDateLocaled = GetStartOfNextMonth(currPeriodStartDateLocaled);
             }
 
             //concat
@@ -69,7 +69,7 @@ namespace GridTariffApi.Lib.Services.Helpers
         }
 
         /// <summary>
-        /// Input is DateTimeOffset with localized values, but with possibly missing/wrongW offset.
+        /// Input is DateTimeOffset with localized values, but with possibly missing/wrong offset.
         /// Output is DateTimeOffset with localized values with correct offset.
         /// </summary>
         /// <param name="value"></param>
