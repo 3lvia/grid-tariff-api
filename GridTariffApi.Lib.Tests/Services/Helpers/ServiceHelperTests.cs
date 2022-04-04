@@ -1,5 +1,6 @@
 ﻿using GridTariffApi.Lib.Config;
 using GridTariffApi.Lib.Services.Helpers;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,29 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
                 TimeZoneForQueries = NorwegianTimeZoneInfo()
             };
             _serviceHelper = new ServiceHelper(_gridTariffApiConfig);
+        }
+
+
+        [Fact()]
+        public void CreateLocaledDateTimeOffsetDateTimeOffsetTest()
+        {
+            var mockServiceHelper = new Mock<ServiceHelper>(null);
+            mockServiceHelper.Setup(x => x.CreateLocaledDateTimeOffset(
+                It.IsAny<int>(),
+                It.IsAny<int>(),
+                It.IsAny<int>(),
+                It.IsAny<int>(),
+                It.IsAny<int>(),
+                It.IsAny<int>())).Returns(DateTimeOffset.MaxValue);
+
+            mockServiceHelper.Object.CreateLocaledDateTimeOffset(DateTimeOffset.MaxValue);
+            mockServiceHelper.Verify(x => x.CreateLocaledDateTimeOffset(
+                 It.IsAny<int>(),
+                 It.IsAny<int>(),
+                 It.IsAny<int>(),
+                 It.IsAny<int>(),
+                 It.IsAny<int>(),
+                 It.IsAny<int>()),Times.Once);
         }
 
         [Fact()]

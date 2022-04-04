@@ -67,29 +67,8 @@ namespace GridTariffApi.Lib.Services.Helpers
                 retVal.Add(accTimePeriod);
             }
 
-//adjust for standard time/DST
-            foreach (var element in accumulator)
-            {
-                element.StartDate = CreateLocaledDateTimeOffset(element.StartDate);
-                element.EndDate = CreateLocaledDateTimeOffset(element.EndDate);
-            }
             return retVal;
         }
-
-        //private DateTimeOffset CalcSeasonStart(DateTimeOffset fromDate, ref DateTimeOffset fromDateLocaled, int? startMonth)
-        //{
-        //    if (fromDateLocaled.Month != startMonth.Value)
-        //    {
-        //        fromDateLocaled = fromDateLocaled.AddMonths(startMonth.Value - fromDateLocaled.Month);
-        //    }
-        //    fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day).AddHours(-fromDateLocaled.Hour).AddMinutes(-fromDate.Minute);
-        //    var seasonStartTimeLocaledAndTimeZoneCorrected = _serviceHelper.DbTimeZoneDateToUtc(fromDateLocaled.DateTime);
-        //    //            var seasonStart = fromDate.AddTicks(seasonStartTimeLocaledAndTimeZoneCorrected.UtcDateTime.Ticks - fromDate.Ticks);
-        //    //GLUE-1541 - temp quickfix for problem related to transition from one season to another.
-        //    //functionality to calc intersection between "season" and taxperiod should be rewritten
-        //    var seasonStart = fromDate.AddTicks(seasonStartTimeLocaledAndTimeZoneCorrected.UtcDateTime.Ticks - fromDate.UtcDateTime.Ticks);
-        //    return seasonStart;
-        //}
 
         public DateTimeOffset CreateLocaledDateTimeOffset(DateTimeOffset value)
         {
@@ -102,7 +81,7 @@ namespace GridTariffApi.Lib.Services.Helpers
                 value.Second);
         }
 
-        public DateTimeOffset CreateLocaledDateTimeOffset(int year, int month, int day,int hour, int minute, int second)
+        public virtual DateTimeOffset CreateLocaledDateTimeOffset(int year, int month, int day,int hour, int minute, int second)
         {
             var dateTime = new DateTime(year, month, day, hour, minute, second);
             dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified);
