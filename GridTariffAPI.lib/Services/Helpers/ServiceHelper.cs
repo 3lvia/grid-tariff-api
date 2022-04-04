@@ -36,13 +36,6 @@ namespace GridTariffApi.Lib.Services.Helpers
                 fromDateLocaled = GetStartOfNextMonth(fromDateLocaled);
             }
 
-            //adjust for standard time/DST
-            foreach (var element in accumulator)
-            {
-                element.StartDate = CreateLocaledDateTimeOffset(element.StartDate);
-                element.EndDate = CreateLocaledDateTimeOffset(element.EndDate);
-            }
-
             //concat
             var retVal = new List<TimePeriod>();
             accumulator = accumulator.OrderBy(x => x.StartDate).ToList();
@@ -72,10 +65,17 @@ namespace GridTariffApi.Lib.Services.Helpers
         {
             var retVal = new DateTimeOffset(fromDateLocaled.Year, fromDateLocaled.Month, 1, 0, 0, 0, 0, fromDateLocaled.Offset);
             retVal = retVal.AddMonths(1);
-            return retVal;
+            return WithCorrectedLocalizedOffset(retVal);
         }
 
-        public DateTimeOffset CreateLocaledDateTimeOffset(DateTimeOffset value)
+        /// <summary>
+        /// Input is DateTimeOffset with localized values, but with possibly missing/wrongW offset.
+        /// Output is DateTimeOffset with localized values with correct offset.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// 
+        public DateTimeOffset WithCorrectedLocalizedOffset(DateTimeOffset value)
         {
             return CreateLocaledDateTimeOffset(
                 value.Year,
@@ -85,15 +85,24 @@ namespace GridTariffApi.Lib.Services.Helpers
                 value.Minute,
                 value.Second);
         }
-
+        /// <summary>
+        /// Input is localized time, output is datettimeoffset with DST-adjusted offset
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="day"></param>
+        /// <param name="hour"></param>
+        /// <param name="minute"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
         public virtual DateTimeOffset CreateLocaledDateTimeOffset(int year, int month, int day,int hour, int minute, int second)
         {
             var dateTime = new DateTime(year, month, day, hour, minute, second);
             dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified);
-            var dateTimeLocaled = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, _gridTariffApiConfig.TimeZoneForQueries.Id, "UTC");
-            var dateTimeUtc = TimeZoneInfo.ConvertTime(dateTimeLocaled, _gridTariffApiConfig.TimeZoneForQueries);
-            var timeZoneOffset = _gridTariffApiConfig.TimeZoneForQueries.GetUtcOffset(dateTimeUtc);
-            return new DateTimeOffset(dateTimeUtc, timeZoneOffset);
+            var dateTimeUtc= TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, _gridTariffApiConfig.TimeZoneForQueries.Id, "UTC");
+            var dateTimeLocaled = TimeZoneInfo.ConvertTime(dateTimeUtc, _gridTariffApiConfig.TimeZoneForQueries);
+            var timeZoneOffset = _gridTariffApiConfig.TimeZoneForQueries.GetUtcOffset(dateTimeLocaled);
+            return new DateTimeOffset(dateTimeLocaled, timeZoneOffset);
         }
 
 

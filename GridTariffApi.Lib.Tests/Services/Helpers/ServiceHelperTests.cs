@@ -28,6 +28,7 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
         public void GetStartOfNextMonthTests()
         {
             Setup();
+            //change of year
             var test1 = new DateTimeOffset(2021, 12, 31, 5, 5, 5, new TimeSpan(1, 0, 0));
             var retVal1 = _serviceHelper.GetStartOfNextMonth(test1);
             Assert.Equal(2022,retVal1.Year);
@@ -36,7 +37,9 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
             Assert.Equal(0, retVal1.Hour);
             Assert.Equal(0, retVal1.Minute);
             Assert.Equal(0, retVal1.Second);
+            Assert.Equal(1, retVal1.Offset.Hours);
 
+            //from standard time to DST
             var test2 = new DateTimeOffset(2022, 3, 26, 5, 5, 5, new TimeSpan(1, 0, 0));
             var retVal2 = _serviceHelper.GetStartOfNextMonth(test2);
             Assert.Equal(2022, retVal2.Year);
@@ -45,15 +48,30 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
             Assert.Equal(0, retVal2.Hour);
             Assert.Equal(0, retVal2.Minute);
             Assert.Equal(0, retVal2.Second);
+            Assert.Equal(2, retVal2.Offset.Hours);
 
-            var test3 = new DateTimeOffset(2022, 3, 26, 5, 5, 5, new TimeSpan(1, 0, 0));
+            //from DST to standardtime
+            var test3 = new DateTimeOffset(2022, 10, 26, 5, 5, 5, new TimeSpan(1, 0, 0));
             var retVal3 = _serviceHelper.GetStartOfNextMonth(test3);
             Assert.Equal(2022, retVal3.Year);
-            Assert.Equal(4, retVal3.Month);
+            Assert.Equal(11, retVal3.Month);
             Assert.Equal(1, retVal3.Day);
             Assert.Equal(0, retVal3.Hour);
             Assert.Equal(0, retVal3.Minute);
             Assert.Equal(0, retVal3.Second);
+            Assert.Equal(1, retVal3.Offset.Hours);
+
+            //"Wrong" offset for the configured timezone
+            var test4 = new DateTimeOffset(2022, 10, 26, 5, 5, 5, new TimeSpan(5, 0, 0));
+            var retVal4 = _serviceHelper.GetStartOfNextMonth(test4);
+            Assert.Equal(2022, retVal4.Year);
+            Assert.Equal(11, retVal4.Month);
+            Assert.Equal(1, retVal4.Day);
+            Assert.Equal(0, retVal4.Hour);
+            Assert.Equal(0, retVal4.Minute);
+            Assert.Equal(0, retVal4.Second);
+            Assert.Equal(1, retVal4.Offset.Hours);
+
         }
 
 
@@ -67,7 +85,7 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
 
 
         [Fact()]
-        public void CreateLocaledDateTimeOffsetDateTimeOffsetTest()
+        public void WithCorrectedLocalizedOffsetTest()
         {
             var mockServiceHelper = new Mock<ServiceHelper>(null);
             mockServiceHelper.Setup(x => x.CreateLocaledDateTimeOffset(
@@ -78,7 +96,7 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
                 It.IsAny<int>(),
                 It.IsAny<int>())).Returns(DateTimeOffset.MaxValue);
 
-            mockServiceHelper.Object.CreateLocaledDateTimeOffset(DateTimeOffset.MaxValue);
+            mockServiceHelper.Object.WithCorrectedLocalizedOffset(DateTimeOffset.MaxValue);
             mockServiceHelper.Verify(x => x.CreateLocaledDateTimeOffset(
                  It.IsAny<int>(),
                  It.IsAny<int>(),
