@@ -26,16 +26,14 @@ namespace GridTariffApi.Lib.Services.Helpers
             {
                 if (months.Contains(fromDateLocaled.Month))
                 {
-                    var monthEndLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day).AddMonths(1);
-                    monthEndLocaled = monthEndLocaled.AddHours(-monthEndLocaled.Hour).AddMinutes(-monthEndLocaled.Minute);
+                    DateTimeOffset monthEndLocaled = GetStartOfNextMonth(fromDateLocaled);
                     var timePeriod = new TimePeriod();
                     timePeriod.StartDate = fromDateLocaled;
                     timePeriod.EndDate = monthEndLocaled < toDateLocaled ? monthEndLocaled : toDateLocaled;
 
                     accumulator.Add(timePeriod);
                 }
-                fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day).AddMonths(1);
-                fromDateLocaled = fromDateLocaled.AddHours(-fromDateLocaled.Hour).AddMinutes(-fromDate.Minute);
+                fromDateLocaled = GetStartOfNextMonth(fromDateLocaled);
             }
 
             //adjust for standard time/DST
@@ -67,6 +65,13 @@ namespace GridTariffApi.Lib.Services.Helpers
                 retVal.Add(accTimePeriod);
             }
 
+            return retVal;
+        }
+
+        public DateTimeOffset GetStartOfNextMonth(DateTimeOffset fromDateLocaled)
+        {
+            var retVal = new DateTimeOffset(fromDateLocaled.Year, fromDateLocaled.Month, 1, 0, 0, 0, 0, fromDateLocaled.Offset);
+            retVal = retVal.AddMonths(1);
             return retVal;
         }
 

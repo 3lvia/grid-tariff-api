@@ -16,6 +16,7 @@ namespace GridTariffApi.Lib.Services.Helpers
         bool TimePeriodIsIncludingLocaleToday(DateTimeOffset fromDateTime, DateTimeOffset toDateTime);
         DateTimeOffset CreateLocaledDateTimeOffset(int year, int month, int day, int hour, int minute, int second);
         List<TimePeriod> GetMonthPeriods(DateTimeOffset fromDate, DateTimeOffset toDate, IReadOnlyList<int> months);
+        DateTimeOffset GetStartOfNextMonth(DateTimeOffset fromDateLocaled);
 
     }
 }

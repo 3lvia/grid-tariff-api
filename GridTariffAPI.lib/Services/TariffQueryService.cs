@@ -360,7 +360,7 @@ namespace GridTariffApi.Lib.Services
 
         public List<int> GetDistinctFixedPriceMonths(DateTimeOffset fromDateUtc, DateTimeOffset toDateUtc)
         {
-            var fromDateLocaled = _serviceHelper.ToConfiguredTimeZone(fromDateUtc.UtcDateTime);
+            var fromDateLocaled = _serviceHelper.ToConfiguredTimeZone(fromDateUtc);
             fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day);
             var toDateLocaled = _serviceHelper.ToConfiguredTimeZone(toDateUtc);
 

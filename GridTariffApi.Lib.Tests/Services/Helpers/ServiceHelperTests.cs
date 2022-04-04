@@ -24,6 +24,47 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
             _serviceHelper = new ServiceHelper(_gridTariffApiConfig);
         }
 
+        [Fact()]
+        public void GetStartOfNextMonthTests()
+        {
+            Setup();
+            var test1 = new DateTimeOffset(2021, 12, 31, 5, 5, 5, new TimeSpan(1, 0, 0));
+            var retVal1 = _serviceHelper.GetStartOfNextMonth(test1);
+            Assert.Equal(2022,retVal1.Year);
+            Assert.Equal(1, retVal1.Month);
+            Assert.Equal(1, retVal1.Day);
+            Assert.Equal(0, retVal1.Hour);
+            Assert.Equal(0, retVal1.Minute);
+            Assert.Equal(0, retVal1.Second);
+
+            var test2 = new DateTimeOffset(2022, 3, 26, 5, 5, 5, new TimeSpan(1, 0, 0));
+            var retVal2 = _serviceHelper.GetStartOfNextMonth(test2);
+            Assert.Equal(2022, retVal2.Year);
+            Assert.Equal(4, retVal2.Month);
+            Assert.Equal(1, retVal2.Day);
+            Assert.Equal(0, retVal2.Hour);
+            Assert.Equal(0, retVal2.Minute);
+            Assert.Equal(0, retVal2.Second);
+
+            var test3 = new DateTimeOffset(2022, 3, 26, 5, 5, 5, new TimeSpan(1, 0, 0));
+            var retVal3 = _serviceHelper.GetStartOfNextMonth(test3);
+            Assert.Equal(2022, retVal3.Year);
+            Assert.Equal(4, retVal3.Month);
+            Assert.Equal(1, retVal3.Day);
+            Assert.Equal(0, retVal3.Hour);
+            Assert.Equal(0, retVal3.Minute);
+            Assert.Equal(0, retVal3.Second);
+        }
+
+
+        private static DateTimeOffset GetStartOfNextMonthLocaled(DateTimeOffset fromDateLocaled)
+        {
+            var retVal = new DateTimeOffset(fromDateLocaled.Year, fromDateLocaled.Month, 1, 0, 0, 0, 0, fromDateLocaled.Offset);
+            retVal = retVal.AddMonths(1);
+            return retVal;
+        }
+
+
 
         [Fact()]
         public void CreateLocaledDateTimeOffsetDateTimeOffsetTest()
