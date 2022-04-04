@@ -57,7 +57,7 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
             var months = new List<int>() { 11, 12, 1, 2, 3 };
 
             var retVal = _serviceHelper.GetMonthPeriods(fromDate, toDate, months);
-            Assert.Equal(2,retVal.Count);
+            Assert.Equal(2, retVal.Count);
 
             var timePeriod1 = retVal.ElementAt(0);
             var endDate1 = new DateTimeOffset(2022, 4, 1, 0, 0, 0, 0, new TimeSpan(2, 0, 0));
@@ -65,14 +65,10 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
             Assert.Equal(endDate1, timePeriod1.EndDate);
 
             var timePeriod2 = retVal.ElementAt(1);
-            var startDate2 = new DateTimeOffset(2022,11, 1, 0, 0, 0, 0, new TimeSpan(1, 0, 0));
+            var startDate2 = new DateTimeOffset(2022, 11, 1, 0, 0, 0, 0, new TimeSpan(1, 0, 0));
             Assert.Equal(startDate2, timePeriod2.StartDate);
             Assert.Equal(toDate, timePeriod2.EndDate);
         }
-
-
-
- 
 
         [Fact()]
         public void GetMonthPeriodsOverlapStartTest()
@@ -135,7 +131,7 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
 
             var fromDate = new DateTimeOffset(2022, 5, 3, 1, 0, 0, 0, new TimeSpan(2, 0, 0));
             var toDate = new DateTimeOffset(2022, 8, 7, 2, 0, 0, 0, new TimeSpan(2, 0, 0));
-            var months = new List<int>() { 4, 5, 6, 7, 8, 9, 10 } ;
+            var months = new List<int>() { 4, 5, 6, 7, 8, 9, 10 };
 
             var retVal = _serviceHelper.GetMonthPeriods(fromDate, toDate, months);
             Assert.Single(retVal);

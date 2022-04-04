@@ -86,8 +86,9 @@ namespace GridTariffApi.Lib.Services.Helpers
             var dateTime = new DateTime(year, month, day, hour, minute, second);
             dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified);
             var dateTimeLocaled = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, _gridTariffApiConfig.TimeZoneForQueries.Id, "UTC");
-            DateTimeOffset retVal = TimeZoneInfo.ConvertTime(dateTimeLocaled, _gridTariffApiConfig.TimeZoneForQueries);
-            return retVal;
+            var dateTimeUtc = TimeZoneInfo.ConvertTime(dateTimeLocaled, _gridTariffApiConfig.TimeZoneForQueries);
+            var timeZoneOffset = _gridTariffApiConfig.TimeZoneForQueries.GetUtcOffset(dateTimeUtc);
+            return new DateTimeOffset(dateTimeUtc, timeZoneOffset);
         }
 
 
