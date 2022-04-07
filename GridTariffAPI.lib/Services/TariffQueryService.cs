@@ -280,7 +280,7 @@ namespace GridTariffApi.Lib.Services
             List<Holiday> filteredHolidays, 
             Models.PriceStructure.Season season, 
             TimePeriod seasonIntersect,
-            FixedPrices fixedpPrices)
+            FixedPrices fixedPrices)
         {
             var accumulator = InitAccumulator(tariffPricePrice,
                 seasonIntersect.StartDate,
@@ -293,7 +293,7 @@ namespace GridTariffApi.Lib.Services
                 filteredHolidays,
                 tariffType,
                 tariffPrice,
-                fixedpPrices
+                fixedPrices
                 );
             return accumulator;
         }
