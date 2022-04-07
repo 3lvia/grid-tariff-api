@@ -95,7 +95,7 @@ namespace GridTariffApi.Lib.Services
             var retVal = new List<MeteringPointsAndPriceLevels>();
 
             //mp missing maxConsumption and more than one pricelevel (do not set pricelevelid)
-            var meteringPointsNoPriceLevel = meteringPointInformations.Where(x => !x.MaxConsumption.HasValue && fixedPrices.PriceLevels.Count != 1).ToDictionary(x => x.MeteringPointId,x => x);
+            var meteringPointsNoPriceLevel = meteringPointInformations.Where(x => !x.MaxConsumption.HasValue && fixedPrices.PriceLevels.Count != 1).ToDictionary(x => x.MeteringPointId, x => x);
             if (meteringPointsNoPriceLevel.Count > 0)
             {
                 retVal.Add(MeteringPointsToPriceLevel(fixedPrices.Id, null, meteringPointsNoPriceLevel.Values.ToList()));
@@ -183,7 +183,7 @@ namespace GridTariffApi.Lib.Services
                 return new GridTariffCollection();
             }
             var tariffPrices = tariff.TariffPrices.ToList();
-            tariffPrices.RemoveAll(x => x.EndDate <= paramFromDate || x.StartDate > paramToDate);
+            tariffPrices.RemoveAll(x => x.EndDate <= paramFromDate || x.StartDate >= paramToDate);
             var company = await _tariffPriceCache.GetCompanyAsync();
 
             var gridTariffCollection = new GridTariffCollection
@@ -235,7 +235,10 @@ namespace GridTariffApi.Lib.Services
             var startDate = tariffPricePrice.StartDate <= paramFromDate ? paramFromDate : tariffPricePrice.StartDate.UtcDateTime;
             var endDate = tariffPricePrice.EndDate >= paramToDate ? paramToDate : tariffPricePrice.EndDate.UtcDateTime;
 
-            tariffPrice.PriceInfo.FixedPrices = new List<FixedPrices>();
+            if (tariffPrice.PriceInfo.FixedPrices == null)
+            {
+                tariffPrice.PriceInfo.FixedPrices = new List<FixedPrices>();
+            }
             var fixedPriceTaxes = FilterFixedPricesTaxByDate(tariffPricePrice.Taxes.FixedPriceTaxes, startDate, endDate);
             tariffPrice.PriceInfo.FixedPrices.Add(GenerateFixedPrices(startDate, endDate, tariffPricePrice.FixedPrices, fixedPriceTaxes));
 
@@ -458,7 +461,7 @@ namespace GridTariffApi.Lib.Services
         {
             var retVal = new HourSeasonIndex();
 
-            var fixedPrice = fixedPricePriceInfo.FixedPrices.FirstOrDefault();
+            var fixedPrice = fixedPricePriceInfo.FixedPrices.LastOrDefault();
             if (fixedPrice != null)
             {
                 var monthPrice = fixedPrice.PriceLevels.FirstOrDefault().HourPrices.FirstOrDefault(a => a.NumberOfDaysInMonth == daysInMonth);
