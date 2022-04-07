@@ -305,7 +305,7 @@ namespace GridTariffApi.Lib.Services
             List<Holiday> holidays,
             Models.PriceStructure.TariffType tariffType,
             TariffPrice tariffPrice,
-            FixedPrices fixedpPrices)
+            FixedPrices fixedPrices)
         {
             if (season.PowerPrices != null)
             {
@@ -334,7 +334,7 @@ namespace GridTariffApi.Lib.Services
                         daysInMonth, 
                         tariffType.UsePublicHolidayOverride, 
                         tariffType.UseWeekendPriceOverride, 
-                        fixedpPrices);
+                        fixedPrices);
                     var filteredHolidays = holidays.Where(a => a.Date >= fromDate && a.Date <= currMonthEndToDate).ToList();
                     dataAccumulator = await ProcessMonthAsync(dataAccumulator, fromDate, currMonthEndToDate, hourSeasonIndex, filteredHolidays, tariffType.Resolution);
                 }
@@ -480,16 +480,16 @@ namespace GridTariffApi.Lib.Services
             , int daysInMonth,
             string usePublicHolidayOverride,
             string useWeekendPriceOverride,
-            FixedPrices fixedpPrices)
+            FixedPrices fixedPrices)
 
         {
             var retVal = new HourSeasonIndex();
-            if (fixedpPrices != null)
+            if (fixedPrices != null)
             {
-                var monthPrice = fixedpPrices.PriceLevels.FirstOrDefault().HourPrices.FirstOrDefault(a => a.NumberOfDaysInMonth == daysInMonth);
+                var monthPrice = fixedPrices.PriceLevels.FirstOrDefault().HourPrices.FirstOrDefault(a => a.NumberOfDaysInMonth == daysInMonth);
                 retVal.FixedPriceValue = new PriceElement
                 {
-                    Id = fixedpPrices.Id,
+                    Id = fixedPrices.Id,
                     IdDaysInMonth = monthPrice.Id
                 };
             }
