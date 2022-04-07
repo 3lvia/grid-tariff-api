@@ -329,7 +329,6 @@ namespace GridTariffApi.Lib.Services
                     var daysInMonth = DateTime.DaysInMonth(fromDateLocaled.Year, fromDateLocaled.Month);
                     dataAccumulator = AddPriceLevels(dataAccumulator, season, paramFromDate, paramToDate, daysInMonth);
                     var hourSeasonIndex = BuildHourSeasonIndex(
-                        dataAccumulator.TariffPrice.PriceInfo, 
                         tariffPrice.PriceInfo, 
                         season.EnergyPrice, 
                         daysInMonth, 
@@ -477,7 +476,6 @@ namespace GridTariffApi.Lib.Services
 
 
         HourSeasonIndex BuildHourSeasonIndex(Models.Digin.PriceInfo accumulatorPriceInfo,
-            Models.Digin.PriceInfo fixedPricePriceInfo,
             Models.PriceStructure.EnergyPrice energyPrice
             , int daysInMonth,
             string usePublicHolidayOverride,
