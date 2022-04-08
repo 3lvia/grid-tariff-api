@@ -292,7 +292,6 @@ namespace GridTariffApi.Lib.Services
                 seasonIntersect.EndDate,
                 filteredHolidays,
                 tariffType,
-                tariffPrice,
                 fixedPrices
                 );
             return accumulator;
@@ -304,7 +303,6 @@ namespace GridTariffApi.Lib.Services
             DateTimeOffset paramToDate,
             List<Holiday> holidays,
             Models.PriceStructure.TariffType tariffType,
-            TariffPrice tariffPrice,
             FixedPrices fixedPrices)
         {
             if (season.PowerPrices != null)
