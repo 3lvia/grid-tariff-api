@@ -292,7 +292,6 @@ namespace GridTariffApi.Lib.Services
                 seasonIntersect.EndDate,
                 filteredHolidays,
                 tariffType,
-                tariffPrice,
                 fixedPrices
                 );
             return accumulator;
@@ -304,7 +303,6 @@ namespace GridTariffApi.Lib.Services
             DateTimeOffset paramToDate,
             List<Holiday> holidays,
             Models.PriceStructure.TariffType tariffType,
-            TariffPrice tariffPrice,
             FixedPrices fixedPrices)
         {
             if (season.PowerPrices != null)
@@ -329,12 +327,13 @@ namespace GridTariffApi.Lib.Services
                     var daysInMonth = DateTime.DaysInMonth(fromDateLocaled.Year, fromDateLocaled.Month);
                     dataAccumulator = AddPriceLevels(dataAccumulator, season, paramFromDate, paramToDate, daysInMonth);
                     var hourSeasonIndex = BuildHourSeasonIndex(
-                        tariffPrice.PriceInfo, 
+                        dataAccumulator.TariffPrice.PriceInfo, 
                         season.EnergyPrice, 
                         daysInMonth, 
                         tariffType.UsePublicHolidayOverride, 
                         tariffType.UseWeekendPriceOverride, 
                         fixedPrices);
+
                     var filteredHolidays = holidays.Where(a => a.Date >= fromDate && a.Date <= currMonthEndToDate).ToList();
                     dataAccumulator = await ProcessMonthAsync(dataAccumulator, fromDate, currMonthEndToDate, hourSeasonIndex, filteredHolidays, tariffType.Resolution);
                 }
