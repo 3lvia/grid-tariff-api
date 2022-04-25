@@ -355,6 +355,12 @@ namespace GridTariffApi.Lib.Services
             };
             List<int> daysInMonthToBeProcessed = GetDistinctFixedPriceMonths(fromDateUtc, toDateUtc);
 
+
+            foreach (var pricesFixedPriceLevel in fixedPricesPrices.FixedPriceLevel)
+            {
+                var priceLevel = 
+            }
+
             foreach (var daysInMonth in daysInMonthToBeProcessed)
             {
                 AppendFixedPriceLevels(retVal, fixedPricesPrices, fixedPriceTaxes, daysInMonth);
@@ -803,7 +809,7 @@ namespace GridTariffApi.Lib.Services
         {
             var retVal = new Models.Digin.PowerPriceLevel
             {
-                Id = powerPriceLevel.Id,
+                Id = Guid.NewGuid().ToString(),
                 ValueMin = powerPriceLevel.ValueMin,
                 ValueMax = powerPriceLevel.ValueMax,
                 NextIdDown = powerPriceLevel.NextIdDown,
@@ -852,7 +858,8 @@ namespace GridTariffApi.Lib.Services
             var vatTax = fixedPriceTaxes.FirstOrDefault(x => x.TaxType == "vat");
             double vatTaxValue = vatTax != null ? vatTax.TaxValue : 0;
 
-            retVal.Id = priceLevel.Id;
+//            retVal.Id = priceLevel.Id;
+            retVal.Id = Guid.NewGuid().ToString();
             retVal.ValueMin = priceLevel.ValueMin;
             retVal.ValueMax = priceLevel.ValueMax;
             retVal.NextIdDown = priceLevel.NextIdDown;
