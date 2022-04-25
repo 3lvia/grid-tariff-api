@@ -358,13 +358,19 @@ namespace GridTariffApi.Lib.Services
 
             foreach (var pricesFixedPriceLevel in fixedPricesPrices.FixedPriceLevel)
             {
-                var priceLevel = 
+                var priceLevel = PriceLevelPriceToFixedPriceLevel(pricesFixedPriceLevel, fixedPriceTaxes);
+                foreach (var daysInMonth in daysInMonthToBeProcessed)
+                {
+                    priceLevel.HourPrices.Add(CalcMonthlyFixedPrices(pricesFixedPriceLevel, fixedPriceTaxes, daysInMonth, Guid.NewGuid().ToString()));
+                }
+                retVal.PriceLevels.Add(priceLevel);
+
             }
 
-            foreach (var daysInMonth in daysInMonthToBeProcessed)
-            {
-                AppendFixedPriceLevels(retVal, fixedPricesPrices, fixedPriceTaxes, daysInMonth);
-            }
+            //foreach (var daysInMonth in daysInMonthToBeProcessed)
+            //{
+            //    AppendFixedPriceLevels(retVal, fixedPricesPrices, fixedPriceTaxes, daysInMonth);
+            //}
             return retVal;
         }
 
