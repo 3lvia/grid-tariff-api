@@ -359,10 +359,10 @@
                 ]
               },
               "fixedPrices": {
-                "id": "to-be-replaced",
+                "id": "52f714df-36d6-44ad-a33c-357336d8ba53",
                 "fixedPriceLevel": [
                   {
-                    "id": "to-be-replaced",
+                    "id": "165688b3-b9ea-4186-bbf7-19a7ec21132f",
                     "valueMin": null,
                     "valueMax": null,
                     "nextIdDown": null,
@@ -383,7 +383,7 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "9378d0c5-1d56-4cdc-9b1e-f14282cab318",
                         "level": "NORMAL",
                         "energyExTaxes": 0.2215,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
@@ -399,7 +399,7 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "de7d655a-3a9c-4127-8da1-35d50e544053",
                         "level": "NORMAL",
                         "energyExTaxes": 0.2215,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
@@ -766,10 +766,10 @@
                 ]
               },
               "fixedPrices": {
-                "id": "to-be-replaced",
+                "id": "d892d11c-06ad-4051-bcb5-c432307a488a",
                 "fixedPriceLevel": [
                   {
-                    "id": "to-be-replaced",
+                    "id": "85c5bab6-f9ca-46dc-b24e-94f2968f0fb9",
                     "valueMin": null,
                     "valueMax": null,
                     "nextIdDown": null,
@@ -790,7 +790,7 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "f53fe671-9f97-47cd-b490-ab6980df8bad",
                         "level": "NORMAL",
                         "energyExTaxes": 0.2215,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
@@ -806,7 +806,7 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "f27a43f0-6bb1-46f0-94a4-f6255562b182",
                         "level": "NORMAL",
                         "energyExTaxes": 0.2215,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
@@ -5618,10 +5618,10 @@
                 ]
               },
               "fixedPrices": {
-                "id": "to-be-replaced",
+                "id": "0ef1b1d1-dc08-415b-a4ae-35b03be805c0",
                 "fixedPriceLevel": [
                   {
-                    "id": "to-be-replaced",
+                    "id": "c895416d-e4b0-41ac-af9c-7abfad50a20b",
                     "valueMin": null,
                     "valueMax": null,
                     "nextIdDown": null,
@@ -5642,7 +5642,7 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "3c8f1e9a-1acf-4c68-91e0-02d2fefd78fe",
                         "level": "NORMAL",
                         "energyExTaxes": 0.2215,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
@@ -5658,7 +5658,7 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "58dbb2c1-2c23-4a60-8b75-94c97f2db8ef",
                         "level": "NORMAL",
                         "energyExTaxes": 0.2215,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
@@ -5993,10 +5993,10 @@
                 ]
               },
               "fixedPrices": {
-                "id": "to-be-replaced",
+                "id": "0474cf0c-f8be-4c0b-9a1c-de1d437f576c",
                 "fixedPriceLevel": [
                   {
-                    "id": "to-be-replaced",
+                    "id": "3863d1fc-8d66-41c9-8777-c05840a624b3",
                     "valueMin": null,
                     "valueMax": null,
                     "nextIdDown": null,
@@ -6017,7 +6017,7 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "2cf0ec79-383b-4e9c-a522-6aedd4e63374",
                         "level": "NORMAL",
                         "energyExTaxes": 0.2215,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
@@ -6033,7 +6033,7 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "39224a1d-21bd-4503-b2a6-f4f298b16ec4",
                         "level": "NORMAL",
                         "energyExTaxes": 0.2215,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
@@ -6584,10 +6584,10 @@
                 ]
               },
               "fixedPrices": {
-                "id": "to-be-replaced",
+                "id": "59100a4a-9396-4001-a226-8e86e9f1cfeb",
                 "fixedPriceLevel": [
                   {
-                    "id": "to-be-replaced",
+                    "id": "39b26c84-0c02-4708-b37a-25ebf6ad978c",
                     "valueMin": null,
                     "valueMax": null,
                     "nextIdDown": null,
@@ -6608,7 +6608,7 @@
                   "powerPrices": {
                     "powerPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "1079e23b-d724-4418-bb5a-739d414bedd5",
                         "valueMin": null,
                         "valueMax": null,
                         "nextIdDown": null,
@@ -6626,7 +6626,7 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "5a38ac17-cc84-462e-8c57-8025c83a72b7",
                         "level": "NORMAL",
                         "energyExTaxes": 0.0600,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
@@ -6642,7 +6642,7 @@
                   "powerPrices": {
                     "powerPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "d5a61f78-fa41-451b-9fe6-b4dbcceaf257",
                         "valueMin": null,
                         "valueMax": null,
                         "nextIdDown": null,
@@ -6660,7 +6660,7 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "97e1eb8e-8fb1-45e7-85f3-20b1fdfabff2",
                         "level": "NORMAL",
                         "energyExTaxes": 0.0850,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
@@ -7211,10 +7211,10 @@
                 ]
               },
               "fixedPrices": {
-                "id": "to-be-replaced",
+                "id": "0bd37619-c1be-4774-8b72-dae2984e88d1",
                 "fixedPriceLevel": [
                   {
-                    "id": "to-be-replaced",
+                    "id": "90dec77f-759c-4005-bbea-765989afc66e",
                     "valueMin": null,
                     "valueMax": null,
                     "nextIdDown": null,
@@ -7235,7 +7235,7 @@
                   "powerPrices": {
                     "powerPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "2873cad4-92f7-4bdd-8074-eb4b0b915563",
                         "valueMin": null,
                         "valueMax": null,
                         "nextIdDown": null,
@@ -7253,7 +7253,7 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "935b1f04-a588-4173-aeb1-50a107576a7c",
                         "level": "NORMAL",
                         "energyExTaxes": 0.0350,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
@@ -7269,7 +7269,7 @@
                   "powerPrices": {
                     "powerPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "7de3906c-c941-4484-bd9a-7c683f6bea69",
                         "valueMin": null,
                         "valueMax": null,
                         "nextIdDown": null,
@@ -7287,7 +7287,7 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "df9a1b73-0dca-46b8-90c9-ed64e120d2ee",
                         "level": "NORMAL",
                         "energyExTaxes": 0.0450,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
@@ -7506,10 +7506,10 @@
                 ]
               },
               "fixedPrices": {
-                "id": "to-be-replaced",
+                "id": "e11a9319-e993-4cb2-9d54-d826ada593d4",
                 "fixedPriceLevel": [
                   {
-                    "id": "to-be-replaced",
+                    "id": "4bb6c012-6c81-4c77-8016-1c23c65666cc",
                     "valueMin": null,
                     "valueMax": null,
                     "nextIdDown": null,
@@ -7530,7 +7530,7 @@
                   "powerPrices": {
                     "powerPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "49a7f141-afd8-402e-b302-259b06e02b8f",
                         "valueMin": null,
                         "valueMax": null,
                         "nextIdDown": null,
@@ -7548,7 +7548,7 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "aa65d7d9-6ed1-4aa4-a52e-822c0f014ec4",
                         "level": "NORMAL",
                         "energyExTaxes": 0.0600,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
@@ -7564,7 +7564,7 @@
                   "powerPrices": {
                     "powerPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "b7218c06-fd20-4d8c-a898-747e22f27014",
                         "valueMin": null,
                         "valueMax": null,
                         "nextIdDown": null,
@@ -7582,7 +7582,7 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "to-be-replaced",
+                        "id": "4fbe0e64-59b2-4da5-a969-69160580c02b",
                         "level": "NORMAL",
                         "energyExTaxes": 0.0850,
                         "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
