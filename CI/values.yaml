@@ -84,5 +84,7 @@ configmap:
     mdmx.host-address: https://mdmx.test-elvia.io/
     mdmx.access-token-service-config-vault-path: kunde:kv:elvid:kunde-grid-tariff-api
   prod:
-    mdmx.host-address: https://mdmx.test-elvia.io/
-    mdmx.access-token-service-config-vault-path: kunde:kv:manual:kunde-grid-tariff-api-test
+    mdmx.host-address: https://mdmx.elvia.io/
+    # No longer calling mdmx test from prod (mdmx is in prod now), so we'll use our normal machine client credentials
+    # mdmx.access-token-service-config-vault-path: kunde:kv:manual:kunde-grid-tariff-api-test
+    mdmx.access-token-service-config-vault-path: kunde:kv:elvid:kunde-grid-tariff-api
