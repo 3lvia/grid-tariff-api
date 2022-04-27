@@ -144,14 +144,14 @@ namespace GridTariffApi
 
             services.AddCronJob<MeteringPointTariffSynchronizer>(c =>
             {
-                c.TimeZoneInfo = TimeZoneInfo.Local;
+                c.TimeZoneInfo = NorwegianTimeZoneInfo();
                 c.CronExpression = @"0 6 * * *";      // every day at 06:00
             });
 
 
             services.AddCronJob<ScheduledGridTariffApiSynchronizer>(c =>
             {
-                c.TimeZoneInfo = TimeZoneInfo.Local;
+                c.TimeZoneInfo = NorwegianTimeZoneInfo();
                 c.CronExpression = @"0 5 * * *";      //every day at 05:00
             });
 
