@@ -12,7 +12,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Xunit;
-
+using System.Collections.ObjectModel;
 
 namespace GridTariffApi.Lib.Tests.Services
 {
@@ -35,6 +35,90 @@ namespace GridTariffApi.Lib.Tests.Services
             _serviceHelper = new ServiceHelper(gridTariffApIConfig);
             _tariffQueryService = new TariffQueryService(null, null, _serviceHelper);
         }
+
+
+        [Fact]
+        public void AppendPowerPriceLevelsTest()
+        {
+            Setup();
+            var powerPrices = new Models.Digin.PowerPrices();
+
+            _tariffQueryService.AppendPowerPriceLevels(powerPrices, null,null,null);
+            Assert.Null(powerPrices.PriceLevels);
+
+            var powerPricePrices = new Models.PriceStructure.PowerPrices(null,null);
+            _tariffQueryService.AppendPowerPriceLevels(powerPrices, powerPricePrices, null, null);
+            Assert.Null(powerPrices.PriceLevels);
+
+            var powerPriceLevels = new List<PowerPriceLevel>
+            {
+                new PowerPriceLevel("a", null, null, null, null, null, 0, 0, null, null, null, null),
+                new PowerPriceLevel("b", null, null, null, null, null, 0, 0, null, null, null, null)
+            };
+
+            var daysInMonths = new List<int>();
+            daysInMonths.Add(28);
+            daysInMonths.Add(29);
+            daysInMonths.Add(30);
+            daysInMonths.Add(31);
+
+            var powerPricePricesWithLevels = new Models.PriceStructure.PowerPrices(powerPriceLevels, null);
+            var powerPrices2 = new Models.Digin.PowerPrices();
+            powerPrices2.PriceLevels = new Collection<Models.Digin.PowerPriceLevel>();
+            _tariffQueryService.AppendPowerPriceLevels(powerPrices2, powerPricePricesWithLevels, null, daysInMonths);
+
+            Assert.Equal(2, powerPrices2.PriceLevels.Count);
+            foreach (var priceLevel in powerPrices2.PriceLevels)
+            {
+                Guid guid = new Guid();
+                Assert.True(Guid.TryParse(priceLevel.Id, out guid));
+
+                Assert.Equal(4,priceLevel.HourPrices.Count);
+                foreach (var daysInMonth in daysInMonths)
+                {
+                    Assert.Equal(1,priceLevel.HourPrices.Count(x => x.NumberOfDaysInMonth == daysInMonth));
+                }
+
+                foreach (var hourPrice in priceLevel.HourPrices)
+                {
+                    Guid guid2 = new Guid();
+                    Assert.True(Guid.TryParse(hourPrice.Id, out guid2));
+                }
+            }
+        }
+
+        [Fact]
+        public void AppendEnergyPriceLevelsTest()
+        {
+            Setup();
+
+            var priceInfo = new Models.Digin.PriceInfo();
+            _tariffQueryService.AppendEnergyPriceLevels(priceInfo, null, null, null, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
+            Assert.Null(priceInfo.EnergyPrices);
+
+            var energyPricePrices = new Models.PriceStructure.EnergyPrice(null,null,null);
+            _tariffQueryService.AppendEnergyPriceLevels(priceInfo, energyPricePrices, null, null, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
+            Assert.Null(priceInfo.EnergyPrices);
+
+            var energyPriceLevels = new List<EnergyPriceLevel>();
+            energyPriceLevels.Add(new EnergyPriceLevel("a", "1", 0, null));
+            energyPriceLevels.Add(new EnergyPriceLevel("b", "2", 0, null));
+
+            priceInfo.EnergyPrices = new List<Models.Digin.EnergyPrices>();
+            var energyPricePrices2 = new Models.PriceStructure.EnergyPrice(energyPriceLevels, null, null);
+            _tariffQueryService.AppendEnergyPriceLevels(priceInfo, energyPricePrices2, null, null, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
+            Assert.Equal(2, priceInfo.EnergyPrices.Count);
+            Assert.Equal(1, priceInfo.EnergyPrices.Count(x => x.Level == "1"));
+            Assert.Equal(1, priceInfo.EnergyPrices.Count(x => x.Level== "2"));
+
+            foreach (var energyPrice in priceInfo.EnergyPrices)
+            {
+                Guid guid = new Guid();
+                Assert.True(Guid.TryParse(energyPrice.Id, out guid));
+            }
+        }
+
+
 
         [Theory]
         [InlineData(100, 0, 1, "identificator", 4.1667, 4.1667)]
@@ -146,75 +230,75 @@ namespace GridTariffApi.Lib.Tests.Services
             Assert.Equal(taxes, (decimal)energyPrices.Taxes);
         }
 
-        //[Theory]
-        //[InlineData(104, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 104, 26, 130)]
-        //[InlineData(152, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 152, 38, 190)]
-        //[InlineData(224, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 224, 56, 280)]
-        //[InlineData(300, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 300, 75, 375)]
-        //[InlineData(376, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 376, 94, 470)]
-        //[InlineData(452, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 452, 113, 565)]
-        //[InlineData(1000, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 1000, 250, 1250)]
-        //[InlineData(1376, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 1376, 344, 1720)]
-        //[InlineData(1752, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 1752, 438, 2190)]
-        //[InlineData(3344, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 3344, 836, 4180)]
+        [Theory]
+        [InlineData(104, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 104, 26, 130)]
+        [InlineData(152, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 152, 38, 190)]
+        [InlineData(224, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 224, 56, 280)]
+        [InlineData(300, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 300, 75, 375)]
+        [InlineData(376, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 376, 94, 470)]
+        [InlineData(452, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 452, 113, 565)]
+        [InlineData(1000, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 1000, 250, 1250)]
+        [InlineData(1376, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 1376, 344, 1720)]
+        [InlineData(1752, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 1752, 438, 2190)]
+        [InlineData(3344, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 3344, 836, 4180)]
 
-        //public void PriceLevelPriceToFixedPriceLevelTest(
-        //    int monthlyPriceExAllTaxes,
-        //    int vatPercent,
-        //    string id,
-        //    double? valueMin,
-        //    double? valueMax,
-        //    string nextIdDown,
-        //    string nextIdUp,
-        //    string valueUnitOfMeasure,
-        //    string monthlyUnitOfMeasure,
-        //    string levelInfo,
-        //    string currency,
-        //    string monetaryUnitOfMeasure,
-        //    decimal MonthlyTotalExVat,
-        //    decimal monthlyTaxes,
-        //    decimal monthlyTotal)
-        //{
-        //    Setup();
+        public void PriceLevelPriceToFixedPriceLevelTest(
+            int monthlyPriceExAllTaxes,
+            int vatPercent,
+            string id,
+            double? valueMin,
+            double? valueMax,
+            string nextIdDown,
+            string nextIdUp,
+            string valueUnitOfMeasure,
+            string monthlyUnitOfMeasure,
+            string levelInfo,
+            string currency,
+            string monetaryUnitOfMeasure,
+            decimal MonthlyTotalExVat,
+            decimal monthlyTaxes,
+            decimal monthlyTotal)
+        {
+            Setup();
 
-        //    var vatTax = new FixedPriceTax(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, "vat", vatPercent, "", "");
-        //    var taxes = new List<FixedPriceTax>
-        //    {
-        //        vatTax
-        //    };
-        //    var fixedPricePriceLevel = new FixedPriceLevel(
-        //        id,
-        //        valueMin,
-        //        valueMax,
-        //        nextIdDown,
-        //        nextIdUp,
-        //        valueUnitOfMeasure,
-        //        monthlyPriceExAllTaxes,
-        //        monthlyUnitOfMeasure,
-        //        levelInfo,
-        //        currency,
-        //        monetaryUnitOfMeasure);
+            var vatTax = new FixedPriceTax(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, "vat", vatPercent, "", "");
+            var taxes = new List<FixedPriceTax>
+            {
+                vatTax
+            };
+            var fixedPricePriceLevel = new FixedPriceLevel(
+                id,
+                valueMin,
+                valueMax,
+                nextIdDown,
+                nextIdUp,
+                valueUnitOfMeasure,
+                monthlyPriceExAllTaxes,
+                monthlyUnitOfMeasure,
+                levelInfo,
+                currency,
+                monetaryUnitOfMeasure);
 
-        //    var guid = new Guid();
-        //    var fixedPriceLevel = _tariffQueryService.PriceLevelPriceToFixedPriceLevel(fixedPricePriceLevel, taxes);
-        //    Assert.NotEqual(id, fixedPriceLevel.Id);
-        //    Assert.True(Guid.TryParse(fixedPriceLevel.Id, out guid));
-        //    Assert.Equal(valueMin, fixedPriceLevel.ValueMin);
-        //    Assert.Equal(valueMax, fixedPriceLevel.ValueMax);
-        //    Assert.Equal(nextIdDown, fixedPriceLevel.NextIdDown);
-        //    Assert.Equal(nextIdUp, fixedPriceLevel.NextIdUp);
-        //    Assert.Equal(valueUnitOfMeasure, fixedPriceLevel.ValueUnitOfMeasure);
-        //    Assert.Equal(monthlyUnitOfMeasure, fixedPriceLevel.MonthlyUnitOfMeasure);
-        //    Assert.Equal(levelInfo, fixedPriceLevel.LevelInfo);
-        //    Assert.Equal(currency, fixedPriceLevel.Currency);
-        //    Assert.Equal(monthlyUnitOfMeasure, fixedPriceLevel.MonthlyUnitOfMeasure);
+            var guid = new Guid();
+            var fixedPriceLevel = _tariffQueryService.PriceLevelPriceToFixedPriceLevel(fixedPricePriceLevel, taxes);
+            Assert.NotEqual(id, fixedPriceLevel.Id);
+            Assert.True(Guid.TryParse(fixedPriceLevel.Id, out guid));
+            Assert.Equal(valueMin, fixedPriceLevel.ValueMin);
+            Assert.Equal(valueMax, fixedPriceLevel.ValueMax);
+            Assert.Equal(nextIdDown, fixedPriceLevel.NextIdDown);
+            Assert.Equal(nextIdUp, fixedPriceLevel.NextIdUp);
+            Assert.Equal(valueUnitOfMeasure, fixedPriceLevel.ValueUnitOfMeasure);
+            Assert.Equal(monthlyUnitOfMeasure, fixedPriceLevel.MonthlyUnitOfMeasure);
+            Assert.Equal(levelInfo, fixedPriceLevel.LevelInfo);
+            Assert.Equal(currency, fixedPriceLevel.Currency);
+            Assert.Equal(monthlyUnitOfMeasure, fixedPriceLevel.MonthlyUnitOfMeasure);
 
-        //    Assert.Equal(monthlyPriceExAllTaxes, fixedPriceLevel.MonthlyExTaxes, 4);
-        //    Assert.Equal(MonthlyTotalExVat, (decimal)fixedPriceLevel.MonthlyExTaxes, 4);
-        //    Assert.Equal(monthlyTaxes, (decimal)fixedPriceLevel.MonthlyTaxes, 4);
-        //    Assert.Equal(monthlyTotal, (decimal)fixedPriceLevel.MonthlyTotal, 4);
+            Assert.Equal(monthlyPriceExAllTaxes, fixedPriceLevel.MonthlyExTaxes, 4);
+            Assert.Equal(MonthlyTotalExVat, (decimal)fixedPriceLevel.MonthlyExTaxes, 4);
+            Assert.Equal(monthlyTaxes, (decimal)fixedPriceLevel.MonthlyTaxes, 4);
+            Assert.Equal(monthlyTotal, (decimal)fixedPriceLevel.MonthlyTotal, 4);
 
-        //}
+        }
 
         [Theory]
         [InlineData(25, "1", null, 2, "2", "3", "4", 11, 5.61, "5", "6", "7", "8", 11, 11, 13.75, 2.75, 5.61, 5.61, 7.0125, 1.4025)]
@@ -765,29 +849,6 @@ namespace GridTariffApi.Lib.Tests.Services
                 Assert.True(fixedPriceLevel.HourPrices != null);
                 Assert.Equal(1, fixedPriceLevel.HourPrices.Count);
                 Assert.Single(fixedPriceLevel.HourPrices.Where(a => a.NumberOfDaysInMonth == 31));
-            }
-
-            //no duplicate monthday when adding monthday already existing
-            _tariffQueryService.AppendFixedPriceLevels(fixedPrices, fixedPricePrices, fixedPriceTaxes, 31);
-            Assert.True(fixedPrices.PriceLevels != null);
-            Assert.Equal(3, fixedPrices.PriceLevels.Count);
-            foreach (var fixedPriceLevel in fixedPrices.PriceLevels)
-            {
-                Assert.True(fixedPriceLevel.HourPrices != null);
-                Assert.Equal(1, fixedPriceLevel.HourPrices.Count);
-                Assert.Single(fixedPriceLevel.HourPrices.Where(a => a.NumberOfDaysInMonth == 31));
-            }
-
-            //add new monthday
-            _tariffQueryService.AppendFixedPriceLevels(fixedPrices, fixedPricePrices, fixedPriceTaxes, 30);
-            Assert.True(fixedPrices.PriceLevels != null);
-            Assert.Equal(3, fixedPrices.PriceLevels.Count);
-            foreach (var fixedPriceLevel in fixedPrices.PriceLevels)
-            {
-                Assert.True(fixedPriceLevel.HourPrices != null);
-                Assert.Equal(2, fixedPriceLevel.HourPrices.Count);
-                Assert.Single(fixedPriceLevel.HourPrices.Where(a => a.NumberOfDaysInMonth == 31));
-                Assert.Single(fixedPriceLevel.HourPrices.Where(a => a.NumberOfDaysInMonth == 30));
             }
         }
 
