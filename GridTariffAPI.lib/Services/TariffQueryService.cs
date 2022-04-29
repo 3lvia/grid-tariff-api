@@ -886,7 +886,6 @@ namespace GridTariffApi.Lib.Services
             var vatTax = fixedPriceTaxes.FirstOrDefault(x => x.TaxType == "vat");
             double vatTaxValue = vatTax != null ? vatTax.TaxValue : 0;
 
-//            retVal.Id = priceLevel.Id;
             retVal.Id = Guid.NewGuid().ToString();
             retVal.ValueMin = priceLevel.ValueMin;
             retVal.ValueMax = priceLevel.ValueMax;
