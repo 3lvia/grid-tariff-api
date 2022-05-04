@@ -72,6 +72,7 @@ namespace GridTariffApi.Lib.Tests.Services
             {
                 Guid guid = new Guid();
                 Assert.True(Guid.TryParse(priceLevel.Id, out guid));
+                Assert.Equal(0,powerPriceLevels.Count(x => x.Id == priceLevel.Id));
 
                 Assert.Equal(4,priceLevel.HourPrices.Count);
                 foreach (var daysInMonth in daysInMonths)
