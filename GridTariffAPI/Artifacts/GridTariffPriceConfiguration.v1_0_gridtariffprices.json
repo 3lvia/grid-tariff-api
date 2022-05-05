@@ -6066,6 +6066,10 @@
             "months": null,
             "monthsOffset": null
           },
+          "powerPriceConfiguration": {
+            "reactivePowerPricing": true,
+            "powerFactorPercentage": 50.0000
+          },
           "resolution": 60,
           "tariffPrices": [
             {
@@ -6692,6 +6696,10 @@
             "maxhoursPerMonth": null,
             "months": null,
             "monthsOffset": null
+          },
+          "powerPriceConfiguration": {
+            "reactivePowerPricing": true,
+            "powerFactorPercentage": 50.0000
           },
           "resolution": 60,
           "tariffPrices": [
@@ -7320,6 +7328,10 @@
             "months": null,
             "monthsOffset": null
           },
+          "powerPriceConfiguration": {
+            "reactivePowerPricing": true,
+            "powerFactorPercentage": 50.0000
+          },
           "resolution": 60,
           "tariffPrices": [
             {
@@ -7614,6 +7626,10 @@
             "maxhoursPerMonth": null,
             "months": null,
             "monthsOffset": null
+          },
+          "powerPriceConfiguration": {
+            "reactivePowerPricing": true,
+            "powerFactorPercentage": 50.0000
           },
           "resolution": 60,
           "tariffPrices": [
