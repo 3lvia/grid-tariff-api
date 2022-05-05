@@ -319,12 +319,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -334,7 +334,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -342,7 +342,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
@@ -350,7 +350,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -726,12 +726,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -741,7 +741,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -749,7 +749,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
@@ -757,7 +757,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -1133,12 +1133,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -1148,7 +1148,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -1156,7 +1156,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
@@ -1164,7 +1164,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -1540,12 +1540,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -1555,7 +1555,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -1563,7 +1563,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
@@ -1571,7 +1571,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -1947,12 +1947,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -1962,7 +1962,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -1970,7 +1970,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
@@ -1978,7 +1978,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -2354,12 +2354,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -2369,7 +2369,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -2377,7 +2377,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
@@ -2385,7 +2385,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -2761,12 +2761,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -2776,7 +2776,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -2784,7 +2784,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
@@ -2792,7 +2792,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -3168,12 +3168,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -3183,7 +3183,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -3191,7 +3191,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
@@ -3199,7 +3199,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -3575,12 +3575,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -3590,7 +3590,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -3598,7 +3598,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
@@ -3606,7 +3606,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -3982,12 +3982,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -3997,7 +3997,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -4005,7 +4005,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
@@ -4013,7 +4013,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -4389,12 +4389,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -4404,7 +4404,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -4412,7 +4412,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
@@ -4420,7 +4420,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -4796,12 +4796,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -4811,7 +4811,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -4819,7 +4819,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
@@ -4827,7 +4827,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -5203,12 +5203,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -5218,7 +5218,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -5226,7 +5226,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
@@ -5234,7 +5234,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -5586,12 +5586,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -5601,7 +5601,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -5609,7 +5609,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -5961,12 +5961,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -5976,7 +5976,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -5984,7 +5984,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -6546,12 +6546,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -6561,7 +6561,7 @@
                 "powerPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -6571,7 +6571,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -6579,7 +6579,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -7177,12 +7177,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -7192,7 +7192,7 @@
                 "powerPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -7202,7 +7202,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -7210,7 +7210,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -7476,12 +7476,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -7491,7 +7491,7 @@
                 "powerPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -7501,7 +7501,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -7509,7 +7509,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -7775,12 +7775,12 @@
             },
             {
               "startDate": "2022-04-30T22:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -7790,7 +7790,7 @@
                 "powerPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -7800,7 +7800,7 @@
                 "energyPriceTaxes": [
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
@@ -7808,7 +7808,7 @@
                   },
                   {
                     "startDate": "2022-04-30T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -7908,34 +7908,34 @@
           ]
         },
         {
-          "tariffKey": "standard_for_tariffkalkulator",
-          "product": "standard_for_tariffkalkulator",
-          "title": "Standard - FOR TARIFFKALKULATOR",
-          "description": "OBS! TIL BRUK FOR TARIFFSAMMENLIGNING. INNEHOLDER FIKTIVE PRISER: Tariff opprinnelig planlagt innført 01.01.2022 for kunder med forbruk < 100.000 kWh/år. Tariffen inneholder priser for 2021-2022. Opprinnelig kunngjorte 2022-priser for denne tariffen er nedjustert med 11% for å fjerne en innberegnet planlagt prisøkning som foreløpig ikke er gjennomført. Prisene for 2021 og 2022 er like, for å gjenspeile at eksisterende tariffer heller ikke er øket pr januar 2022. Prisene må ansees som omtrentlige og kan gi en indikasjon på hvordan en privatkunde ville komme ut med ny vs eksisterende tariff. Det er lagt til grunn korrekte avgifter i hvert enkelt år.",
+          "tariffKey": "standard",
+          "product": "standard",
+          "title": "Standard - NB! IKKE REELLE PRISER",
+          "description": "NB! Reelle priser fra 01.07.2022 blir publisert innen utgangen av mai 2022. For alle forbrukerkunder og alle næringskunder med årsforbruk < 100.000 kWh.",
           "usePublicHolidayOverride": "CHEAP",
           "useWeekendPriceOverride": "CHEAP",
           "consumptionFlag": true,
-          "lastUpdated": "2022-01-06T08:00:00Z",
+          "lastUpdated": "2022-05-04T08:00:00Z",
           "usePowerPriceConfiguration": false,
           "fixedPriceConfiguration": {
             "basis": "monthlymax",
             "maxhoursPerDay": null,
             "daysPerMonth": null,
             "allDaysPerMonth": null,
-            "maxhoursPerMonth": 1,
+            "maxhoursPerMonth": 3,
             "months": 1,
             "monthsOffset": 0
           },
           "resolution": 60,
           "tariffPrices": [
             {
-              "startDate": "2020-12-31T23:00:00Z",
-              "endDate": "2021-12-31T23:00:00Z",
+              "startDate": "2022-06-30T22:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
-                    "startDate": "2020-12-31T23:00:00Z",
-                    "endDate": "2021-12-31T23:00:00Z",
+                    "startDate": "2022-06-30T22:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -7944,24 +7944,24 @@
                 ],
                 "energyPriceTaxes": [
                   {
-                    "startDate": "2020-12-31T23:00:00Z",
-                    "endDate": "2021-12-31T23:00:00Z",
+                    "startDate": "2022-06-30T22:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
-                    "taxValue": 0.1669,
+                    "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
                     "taxTypeDescription": "elavgift"
                   },
                   {
-                    "startDate": "2020-12-31T23:00:00Z",
-                    "endDate": "2021-12-31T23:00:00Z",
+                    "startDate": "2022-06-30T22:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
                     "taxTypeDescription": "Enovaavgift"
                   },
                   {
-                    "startDate": "2020-12-31T23:00:00Z",
-                    "endDate": "2021-12-31T23:00:00Z",
+                    "startDate": "2022-06-30T22:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -7970,14 +7970,14 @@
                 ]
               },
               "fixedPrices": {
-                "id": "a2d28cb5-7cea-4962-b024-cd279cfe3838",
+                "id": "ac725d78-836a-40de-8db4-208868e0d8af",
                 "fixedPriceLevel": [
                   {
-                    "id": "4a2edffd-dee5-4777-890d-47a4fcf89f01",
+                    "id": "6e51e6ed-a273-45c0-8183-a34549b783b5",
                     "valueMin": 0.0000,
                     "valueMax": 2.0001,
                     "nextIdDown": null,
-                    "nextIdUp": "47505584-b58a-4318-9347-b7e5dfbe647a",
+                    "nextIdUp": "c889b598-3016-45b0-9729-69f96511a5c7",
                     "valueUnitOfMeasure": "kWh/h",
                     "monthlyFixedExTaxes": 93.6936,
                     "monthlyUnitOfMeasure": "kr/month",
@@ -7986,11 +7986,11 @@
                     "monetaryUnitOfMeasure": "kr/hour"
                   },
                   {
-                    "id": "47505584-b58a-4318-9347-b7e5dfbe647a",
+                    "id": "c889b598-3016-45b0-9729-69f96511a5c7",
                     "valueMin": 2.0001,
                     "valueMax": 5.0001,
-                    "nextIdDown": "4a2edffd-dee5-4777-890d-47a4fcf89f01",
-                    "nextIdUp": "d1def606-5148-48cd-a263-0f63b9df600d",
+                    "nextIdDown": "6e51e6ed-a273-45c0-8183-a34549b783b5",
+                    "nextIdUp": "a1c3aae7-3e9c-4646-9a7b-5340c70b84c4",
                     "valueUnitOfMeasure": "kWh/h",
                     "monthlyFixedExTaxes": 136.9369,
                     "monthlyUnitOfMeasure": "kr/month",
@@ -7999,11 +7999,11 @@
                     "monetaryUnitOfMeasure": "kr/hour"
                   },
                   {
-                    "id": "d1def606-5148-48cd-a263-0f63b9df600d",
+                    "id": "a1c3aae7-3e9c-4646-9a7b-5340c70b84c4",
                     "valueMin": 5.0001,
                     "valueMax": 10.0001,
-                    "nextIdDown": "47505584-b58a-4318-9347-b7e5dfbe647a",
-                    "nextIdUp": "1e3033e8-c392-42ce-9a69-50cb0ecf0df5",
+                    "nextIdDown": "c889b598-3016-45b0-9729-69f96511a5c7",
+                    "nextIdUp": "9dfeed0b-b4ed-4dfa-a1a6-5e360c8e1afb",
                     "valueUnitOfMeasure": "kWh/h",
                     "monthlyFixedExTaxes": 201.8018,
                     "monthlyUnitOfMeasure": "kr/month",
@@ -8012,11 +8012,11 @@
                     "monetaryUnitOfMeasure": "kr/hour"
                   },
                   {
-                    "id": "1e3033e8-c392-42ce-9a69-50cb0ecf0df5",
+                    "id": "9dfeed0b-b4ed-4dfa-a1a6-5e360c8e1afb",
                     "valueMin": 10.0001,
                     "valueMax": 15.0001,
-                    "nextIdDown": "d1def606-5148-48cd-a263-0f63b9df600d",
-                    "nextIdUp": "7bfb7f17-a759-47cd-8522-598d19801080",
+                    "nextIdDown": "a1c3aae7-3e9c-4646-9a7b-5340c70b84c4",
+                    "nextIdUp": "2a30cd0c-448a-48f9-8e94-4a01ddace560",
                     "valueUnitOfMeasure": "kWh/h",
                     "monthlyFixedExTaxes": 270.2702,
                     "monthlyUnitOfMeasure": "kr/month",
@@ -8025,11 +8025,11 @@
                     "monetaryUnitOfMeasure": "kr/hour"
                   },
                   {
-                    "id": "7bfb7f17-a759-47cd-8522-598d19801080",
+                    "id": "2a30cd0c-448a-48f9-8e94-4a01ddace560",
                     "valueMin": 15.0001,
                     "valueMax": 20.0001,
-                    "nextIdDown": "1e3033e8-c392-42ce-9a69-50cb0ecf0df5",
-                    "nextIdUp": "345341db-00ab-4249-96eb-68ebc9f1927b",
+                    "nextIdDown": "9dfeed0b-b4ed-4dfa-a1a6-5e360c8e1afb",
+                    "nextIdUp": "3dc2444e-09d4-4153-84ab-d0507bfdc816",
                     "valueUnitOfMeasure": "kWh/h",
                     "monthlyFixedExTaxes": 338.7387,
                     "monthlyUnitOfMeasure": "kr/month",
@@ -8038,11 +8038,11 @@
                     "monetaryUnitOfMeasure": "kr/hour"
                   },
                   {
-                    "id": "345341db-00ab-4249-96eb-68ebc9f1927b",
+                    "id": "3dc2444e-09d4-4153-84ab-d0507bfdc816",
                     "valueMin": 20.0001,
                     "valueMax": 25.0001,
-                    "nextIdDown": "7bfb7f17-a759-47cd-8522-598d19801080",
-                    "nextIdUp": "3687acb0-547e-4152-be02-1764a9633d9b",
+                    "nextIdDown": "2a30cd0c-448a-48f9-8e94-4a01ddace560",
+                    "nextIdUp": "62e8a092-6490-4e26-a30e-14c58ce64967",
                     "valueUnitOfMeasure": "kWh/h",
                     "monthlyFixedExTaxes": 407.2072,
                     "monthlyUnitOfMeasure": "kr/month",
@@ -8051,11 +8051,11 @@
                     "monetaryUnitOfMeasure": "kr/hour"
                   },
                   {
-                    "id": "3687acb0-547e-4152-be02-1764a9633d9b",
+                    "id": "62e8a092-6490-4e26-a30e-14c58ce64967",
                     "valueMin": 25.0001,
                     "valueMax": 50.0001,
-                    "nextIdDown": "345341db-00ab-4249-96eb-68ebc9f1927b",
-                    "nextIdUp": "849eb500-50d7-49e0-9a9e-2d6aadf26296",
+                    "nextIdDown": "3dc2444e-09d4-4153-84ab-d0507bfdc816",
+                    "nextIdUp": "5710c5d7-8c24-42ed-bb4e-3375cae3881d",
                     "valueUnitOfMeasure": "kWh/h",
                     "monthlyFixedExTaxes": 900.9009,
                     "monthlyUnitOfMeasure": "kr/month",
@@ -8064,11 +8064,11 @@
                     "monetaryUnitOfMeasure": "kr/hour"
                   },
                   {
-                    "id": "849eb500-50d7-49e0-9a9e-2d6aadf26296",
+                    "id": "5710c5d7-8c24-42ed-bb4e-3375cae3881d",
                     "valueMin": 50.0001,
                     "valueMax": 75.0001,
-                    "nextIdDown": "3687acb0-547e-4152-be02-1764a9633d9b",
-                    "nextIdUp": "a9bb128b-5686-41ec-92be-ed8f6c12141a",
+                    "nextIdDown": "62e8a092-6490-4e26-a30e-14c58ce64967",
+                    "nextIdUp": "21aaaf18-4bbd-442d-b450-1b046ef8eabf",
                     "valueUnitOfMeasure": "kWh/h",
                     "monthlyFixedExTaxes": 1239.6396,
                     "monthlyUnitOfMeasure": "kr/month",
@@ -8077,11 +8077,11 @@
                     "monetaryUnitOfMeasure": "kr/hour"
                   },
                   {
-                    "id": "a9bb128b-5686-41ec-92be-ed8f6c12141a",
+                    "id": "21aaaf18-4bbd-442d-b450-1b046ef8eabf",
                     "valueMin": 75.0001,
                     "valueMax": 100.0001,
-                    "nextIdDown": "849eb500-50d7-49e0-9a9e-2d6aadf26296",
-                    "nextIdUp": "15003938-faee-42e2-9fa5-12f24969a019",
+                    "nextIdDown": "5710c5d7-8c24-42ed-bb4e-3375cae3881d",
+                    "nextIdUp": "b83e2273-65f3-4d7b-a137-f84f6f85d11e",
                     "valueUnitOfMeasure": "kWh/h",
                     "monthlyFixedExTaxes": 1578.3783,
                     "monthlyUnitOfMeasure": "kr/month",
@@ -8090,10 +8090,10 @@
                     "monetaryUnitOfMeasure": "kr/hour"
                   },
                   {
-                    "id": "15003938-faee-42e2-9fa5-12f24969a019",
+                    "id": "b83e2273-65f3-4d7b-a137-f84f6f85d11e",
                     "valueMin": 100.0001,
                     "valueMax": null,
-                    "nextIdDown": "a9bb128b-5686-41ec-92be-ed8f6c12141a",
+                    "nextIdDown": "21aaaf18-4bbd-442d-b450-1b046ef8eabf",
                     "nextIdUp": null,
                     "valueUnitOfMeasure": "kWh/h",
                     "monthlyFixedExTaxes": 3012.6126,
@@ -8111,13 +8111,13 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "c67553bc-3028-42a6-9348-5cfca7d2cfdc",
+                        "id": "c8bbb9f6-90c8-4398-97c9-d3ee01726748",
                         "level": "CHEAP",
                         "energyExTaxes": 0.0763,
                         "hours": [ 0, 1, 2, 3, 4, 5, 22, 23 ]
                       },
                       {
-                        "id": "713d7a68-026c-47af-9e3c-8b14f3bb1bf0",
+                        "id": "50755ebc-8d1c-4899-b653-00824d08c915",
                         "level": "NORMAL",
                         "energyExTaxes": 0.1214,
                         "hours": [ 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
@@ -8133,13 +8133,13 @@
                   "energyPrice": {
                     "energyPriceLevel": [
                       {
-                        "id": "57f32f01-9ff9-41b1-ad79-b63bfd90d4b2",
+                        "id": "93f657f3-ae87-4e0e-9b23-6b941fae35ba",
                         "level": "CHEAP",
                         "energyExTaxes": 0.1212,
                         "hours": [ 0, 1, 2, 3, 4, 5, 22, 23 ]
                       },
                       {
-                        "id": "aca74e41-da88-4c51-ba42-eafaf7313ab7",
+                        "id": "92ccd513-48d7-4217-8e28-437d13ef55a0",
                         "level": "EXPENSIVE",
                         "energyExTaxes": 0.2113,
                         "hours": [ 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
@@ -8150,15 +8150,38 @@
                   }
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "tariffKey": "private_flatrate_house_for_tariffkalkulator",
+          "product": "HN ELHA avr_for_tariffkalkulator",
+          "title": "Nettleie - bolig (Oslo og Viken)_for_tariffkalkulator",
+          "description": "Nettleie - bolig (Oslo og Viken) FOR TARIFFKALKULATOR. Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "resolution": 60,
+          "tariffPrices": [
             {
-              "startDate": "2021-12-31T23:00:00Z",
-              "endDate": "2022-12-31T23:00:00Z",
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
-                    "startDate": "2021-12-31T23:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
@@ -8167,32 +8190,2399 @@
                 ],
                 "energyPriceTaxes": [
                   {
-                    "startDate": "2021-12-31T23:00:00Z",
-                    "endDate": "2022-03-31T22:00:00Z",
-                    "taxType": "consumptionTax",
-                    "taxValue": 0.0891,
-                    "taxUom": "kr/kWh",
-                    "taxTypeDescription": "elavgift"
-                  },
-                  {
-                    "startDate": "2022-03-31T22:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
                     "taxUom": "kr/kWh",
                     "taxTypeDescription": "elavgift"
                   },
                   {
-                    "startDate": "2021-12-31T23:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
                     "taxUom": "kr/kWh",
                     "taxTypeDescription": "Enovaavgift"
                   },
                   {
-                    "startDate": "2021-12-31T23:00:00Z",
-                    "endDate": "2022-12-31T23:00:00Z",
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "08755369-b9c9-484e-8f03-3ff40f35f5c6",
+                "fixedPriceLevel": [
+                  {
+                    "id": "f38529fe-691a-4cd3-a1af-87f2cd2661f0",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 92.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "b9e3945a-aa2c-487c-ad2f-630df3da6a48",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.2215,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "396b35cf-c7b6-441c-aaf1-6bb14495e015",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.2215,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "private_flatrate_cabin_for_tariffkalkulator",
+          "product": "HN ELHYA avr_for_tariffkalkulator",
+          "title": "Nettleie - fritidsbolig (Oslo og Viken) FOR TARIFFKALKULATOR",
+          "description": "Nettleie - fritidsbolig (Oslo og Viken) FOR TARIFFKALKULATOR. Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "enovaTax",
+                    "taxValue": 0.0100,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "Enovaavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "88c96cda-5dd0-4eef-a794-ac4f3f6c84a8",
+                "fixedPriceLevel": [
+                  {
+                    "id": "5d842aa1-a056-4451-840e-60c8f0cd0115",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 144.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "856e17ca-c71d-4ee5-aa5f-33daa2bd2577",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.2215,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "52285226-50b6-4e36-a1d6-9fc077bfa7c6",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.2215,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "private_flatrate_fuselevel1_for_tariffkalkulator",
+          "product": "E10_for_tariffkalkulator",
+          "title": "Nettleie - E10 FOR TARIFFKALKULATOR",
+          "description": "Nettleie - E10 FOR TARIFFKALKULATOR. Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "enovaTax",
+                    "taxValue": 0.0100,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "Enovaavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "2bb1372c-9055-4af4-a170-0c0114700786",
+                "fixedPriceLevel": [
+                  {
+                    "id": "19d75834-ae60-409a-919c-0b2356fffcaa",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 223.3333,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "d9326abe-d999-4c15-afc8-bd23d4586573",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0800,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "279cf8f2-f06e-4e10-ad91-f58e1081c899",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.1100,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "private_flatrate_fuselevel2_for_tariffkalkulator",
+          "product": "E17_for_tariffkalkulator",
+          "title": "Nettleie - E17 FOR TARIFFKALKULATOR",
+          "description": "Nettleie - E17 (Innlandet) FOR TARIFFKALKULATOR. Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "enovaTax",
+                    "taxValue": 0.0100,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "Enovaavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "3ee26e44-afb1-47af-8714-52b6aafa6fde",
+                "fixedPriceLevel": [
+                  {
+                    "id": "cd0e4d0f-d1cf-47e7-91ea-699eedac04e0",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 296.6666,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "237e5048-b06b-46ae-b514-2a9fa14d5442",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0800,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "e2a5e914-3228-4b42-96ca-67b8f01196aa",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.1100,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "private_flatrate_fuselevel3_for_tariffkalkulator",
+          "product": "E25_for_tariffkalkulator",
+          "title": "Nettleie - E25 FOR TARIFFKALKULATOR",
+          "description": "Nettleie - E25 (Innlandet) FOR TARIFFKALKULATOR. Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "enovaTax",
+                    "taxValue": 0.0100,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "Enovaavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "4e9dad0b-df6e-4fe4-b16c-a29566d5323a",
+                "fixedPriceLevel": [
+                  {
+                    "id": "01f77271-f02c-44e8-a56a-3db0d74566c3",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 423.3334,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "13d47350-7d14-41da-84c0-43bd39cb7750",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0800,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "727604f4-6013-43ed-84de-04643cacc182",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.1100,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "private_flatrate_fuselevel4_for_tariffkalkulator",
+          "product": "E35_for_tariffkalkulator",
+          "title": "Nettleie - E35 FOR TARIFFKALKULATOR",
+          "description": "Nettleie - E35 (Innlandet) FOR TARIFFKALKULATOR. Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "enovaTax",
+                    "taxValue": 0.0100,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "Enovaavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "0cd367d8-9804-441d-a069-c1e925f9d46e",
+                "fixedPriceLevel": [
+                  {
+                    "id": "17f32012-9314-4081-9185-2f65d9878b43",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 563.3334,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "bc4b26d4-ad0e-4e18-998a-9974272bac81",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0800,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "9f4b851a-65d2-4532-9ef3-9d55da196c29",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.1100,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "private_flatrate_fuselevel5_for_tariffkalkulator",
+          "product": "E50_for_tariffkalkulator",
+          "title": "Nettleie - E50 FOR TARIFFKALKULATOR",
+          "description": "Nettleie - E50 (Innlandet) FOR TARIFFKALKULATOR. Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "enovaTax",
+                    "taxValue": 0.0100,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "Enovaavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "1b2d0511-e430-4ffb-a677-bc616cfd9ce8",
+                "fixedPriceLevel": [
+                  {
+                    "id": "8c549a00-7078-4fa5-a646-8458ac4ab1cd",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 776.6666,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "07b6a73f-9fc8-4765-9358-0f35ea5961b8",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0800,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "5ea0cc5b-c624-4ea3-9696-e16166932c7c",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.1100,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "private_flatrate_fuselevel6_for_tariffkalkulator",
+          "product": "E65_for_tariffkalkulator",
+          "title": "Nettleie - E65 FOR TARIFFKALKULATOR",
+          "description": "Nettleie - E65 (Innlandet) FOR TARIFFKALKULATOR. Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "enovaTax",
+                    "taxValue": 0.0100,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "Enovaavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "6d35f34d-b7c7-4fe8-bcbd-56ea8ed5e587",
+                "fixedPriceLevel": [
+                  {
+                    "id": "0a3fcb3c-188d-4c3a-8182-128f8dc53339",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 980.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "2d0152a6-9fb3-42bc-88e2-80aa7bf2814c",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0399,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "ab48ef69-6760-46dc-b8c8-9b5d8c5f8743",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0699,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "private_flatrate_fuselevel7_for_tariffkalkulator",
+          "product": "E80_for_tariffkalkulator",
+          "title": "Nettleie - E80 FOR TARIFFKALKULATOR",
+          "description": "Nettleie - E80 (Innlandet) FOR TARIFFKALKULATOR. Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "enovaTax",
+                    "taxValue": 0.0100,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "Enovaavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "7721281c-53c0-4f03-b85b-90008d8cab1c",
+                "fixedPriceLevel": [
+                  {
+                    "id": "3b5aa6a3-f827-4e1f-850d-f0b37a37307a",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 1186.6666,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "265d438a-9716-4973-b07c-b15de871a5d6",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0800,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "76008e18-4a62-48bb-9778-1b3c5bc5e50e",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.1100,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "private_flatrate_fuselevel8_for_tariffkalkulator",
+          "product": "E99_for_tariffkalkulator",
+          "title": "Nettleie - E99 FOR TARIFFKALKULATOR",
+          "description": "Nettleie - E99 (Innlandet) FOR TARIFFKALKULATOR. Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "enovaTax",
+                    "taxValue": 0.0100,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "Enovaavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "cb247224-26ed-4cf6-89ef-dbfd1655d368",
+                "fixedPriceLevel": [
+                  {
+                    "id": "1f487928-4e70-4fd4-94f3-bd9f4c7c3d56",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 1440.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "bf360f9e-f1d3-4fe8-a5df-b49c7763d306",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0800,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "c99199c6-48d7-4744-b8a2-a224596a6d95",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.1100,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "private_flatrate_fuselevel_1B_for_tariffkalkulator",
+          "product": "E10B_for_tariffkalkulator",
+          "title": "Nettleie - E10B FOR TARIFFKALKULATOR",
+          "description": "Nettleie - E10B - Blokk husholdning/fritidsbolig. Hovedsikring t.o.m 2x42A/3x25A(230V) og 3x16A(400V) FOR TARIFFKALKULATOR.  Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "enovaTax",
+                    "taxValue": 0.0100,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "Enovaavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "f1782cdc-b31e-435b-8541-2c576a6f392c",
+                "fixedPriceLevel": [
+                  {
+                    "id": "547b276d-b0d5-4f27-8bba-0fbe24334c1a",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 170.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "4c08072d-12b9-40f2-a18b-a2620055df4b",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0800,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "3f14ccc7-6d4b-4bd6-b06c-882483d5800f",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.1100,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "private_flatrate_fuselevel_2B_for_tariffkalkulator",
+          "product": "E17B_for_tariffkalkulator",
+          "title": "Nettleie - E17B FOR TARIFFKALKULATOR",
+          "description": "Nettleie - E17B - Blokk husholdning/fritidsbolig. Hovedsikring t.o.m 2x63A/3x42A(230V) og 3x25A(400V). FOR TARIFFKALKULATOR. Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "enovaTax",
+                    "taxValue": 0.0100,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "Enovaavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "88fbb262-423f-469d-8113-92c6682644d0",
+                "fixedPriceLevel": [
+                  {
+                    "id": "497730df-bb48-40f1-a3df-9c70939adc75",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 216.6667,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "b0e233b1-5bdc-4dcd-9c46-fc1094c9a541",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0800,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "3c40b0a4-a67d-4ed0-abd3-7f7fe736af71",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.1100,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "private_flatrate_fuselevel_3B_for_tariffkalkulator",
+          "product": "E25B_for_tariffkalkulator",
+          "title": "Nettleie - E25B FOR TARIFFKALKULATOR",
+          "description": "Nettleie - E25B - Blokk husholdning/fritidsbolig. Hovedsikring t.o.m 3x63A(230V) og 3x40A(400V). FOR TARIFFKALKULATOR.  Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "enovaTax",
+                    "taxValue": 0.0100,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "Enovaavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "8d0af730-0e6a-45ee-91fd-a7c5fd52f917",
+                "fixedPriceLevel": [
+                  {
+                    "id": "707aac45-bfb3-494a-a547-08ebebc5b379",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 363.3333,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "0bc8e992-b35c-407b-bb41-b9759e7318ae",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0800,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "e79eae1f-a8d3-4dad-8ce3-b3421d1eac3b",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.1100,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "company_energytariff_prepay_for_tariffkalkulator",
+          "product": "HN ELNF akonto_for_tariffkalkulator",
+          "title": "ELN - Energitariff bedrift - a konto - Lavspenning 230 V og 400 V. FOR TARIFFKALKULATOR",
+          "description": "Enovaavgift inkludert i fastprisleddet. Eventuell redusert elavgift ikke inkludert. FOR TARIFFKALKULATOR.  Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "e4c20534-9e0c-4b5d-aa31-c2c3538aeba8",
+                "fixedPriceLevel": [
+                  {
+                    "id": "34373219-bba6-4553-8d42-04648d6f999e",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 158.6667,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "c7932e7f-4ae3-49c5-a61e-56d8d5682a38",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.2215,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "a45c1949-8da1-4c84-a597-3215c03f6e02",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.2215,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "company_energytariff_settlement_for_tariffkalkulator",
+          "product": "HN ELNA avr_for_tariffkalkulator",
+          "title": "ELN - Energitariff bedrift - avregnet - Lavspenning 230 V og 400 V. FOR TARIFFKALKULATOR",
+          "description": "Enovaavgift inkludert i fastprisleddet. Eventuell redusert elavgift ikke inkludert. FOR TARIFFKALKULATOR.  Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "8c6f82d4-b3ed-4738-92ff-fb37b25cfdb1",
+                "fixedPriceLevel": [
+                  {
+                    "id": "47f93da3-d218-4a9b-8573-39108926fd10",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 158.6667,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "4c935fe9-704e-4d16-8a95-763bad7dd710",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.2215,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "1ea6fa4e-f01b-47f0-aa9f-1b8c730356ab",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.2215,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "company_powertariff_lowvoltage_south_for_tariffkalkulator",
+          "product": "HN PL_for_tariffkalkulator",
+          "title": "PL - Effekttariff bedrift, lavspenning FOR TARIFFKALKULATOR",
+          "description": "Enovaavgift inkludert i fastprisleddet. Eventuell redusert elavgift ikke inkludert. FOR TARIFFKALKULATOR. Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": true,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "powerPriceConfiguration": {
+            "reactivePowerPricing": true,
+            "powerFactorPercentage": 50.0000
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "powerPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "3072cd0f-6403-43b4-8e53-aa860afdabe3",
+                "fixedPriceLevel": [
+                  {
+                    "id": "34f4f404-3c20-4770-ae26-54d343c8e463",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 340.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "powerPrices": {
+                    "powerPriceLevel": [
+                      {
+                        "id": "3de8091d-009f-4789-ab27-0fc7b92fb942",
+                        "valueMin": null,
+                        "valueMax": null,
+                        "nextIdDown": null,
+                        "nextIdUp": null,
+                        "valueUnitOfMeasure": null,
+                        "monthlyActivePowerExTaxes": 40.0000,
+                        "monthlyReactivePowerExTaxes": 15.0000,
+                        "monthlyUnitOfMeasure": "kr/kW/month",
+                        "levelInfo": "Power price component",
+                        "currency": "NOK",
+                        "monetaryUnitOfMeasure": "kr/kW/month"
+                      }
+                    ]
+                  },
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "8daaa264-0efc-44bf-b0d8-192468c7c5df",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0600,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "powerPrices": {
+                    "powerPriceLevel": [
+                      {
+                        "id": "f122be46-4b52-404e-b0f2-91a14bf8cc23",
+                        "valueMin": null,
+                        "valueMax": null,
+                        "nextIdDown": null,
+                        "nextIdUp": null,
+                        "valueUnitOfMeasure": null,
+                        "monthlyActivePowerExTaxes": 90.0000,
+                        "monthlyReactivePowerExTaxes": 35.0000,
+                        "monthlyUnitOfMeasure": "kr/kW/month",
+                        "levelInfo": "Power price component",
+                        "currency": "NOK",
+                        "monetaryUnitOfMeasure": "kr/kW/month"
+                      }
+                    ]
+                  },
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "47e2b78f-fd47-47a8-ac02-29f5d957aa31",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0850,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "company_powertariff_highvoltage_south_for_tariffkalkulator",
+          "product": "HN P3_for_tariffkalkulator",
+          "title": "P3 - Effekttariff bedrift, høyspenning. FOR TARIFFKALKULATOR",
+          "description": "Enovaavgift inkludert i fastprisleddet. Eventuell redusert elavgift ikke inkludert. FOR TARIFFKALKULATOR. Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": true,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "powerPriceConfiguration": {
+            "reactivePowerPricing": true,
+            "powerFactorPercentage": 50.0000
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "powerPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "5e2521e4-9305-42b9-b382-aa71aea30d5d",
+                "fixedPriceLevel": [
+                  {
+                    "id": "ccd405e2-b2ba-48b7-bdec-3a2f7594c4cf",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 900.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "powerPrices": {
+                    "powerPriceLevel": [
+                      {
+                        "id": "d6690568-1773-46ce-81b2-776025b97af1",
+                        "valueMin": null,
+                        "valueMax": null,
+                        "nextIdDown": null,
+                        "nextIdUp": null,
+                        "valueUnitOfMeasure": null,
+                        "monthlyActivePowerExTaxes": 30.0000,
+                        "monthlyReactivePowerExTaxes": 10.0000,
+                        "monthlyUnitOfMeasure": "kr/kW/month",
+                        "levelInfo": "Power price component",
+                        "currency": "NOK",
+                        "monetaryUnitOfMeasure": "kr/kW/month"
+                      }
+                    ]
+                  },
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "f9975106-c54e-4361-b594-c60366bc7267",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0350,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "powerPrices": {
+                    "powerPriceLevel": [
+                      {
+                        "id": "70b45974-ad6c-4a62-af0b-ac16f3347b80",
+                        "valueMin": null,
+                        "valueMax": null,
+                        "nextIdDown": null,
+                        "nextIdUp": null,
+                        "valueUnitOfMeasure": null,
+                        "monthlyActivePowerExTaxes": 70.0000,
+                        "monthlyReactivePowerExTaxes": 30.0000,
+                        "monthlyUnitOfMeasure": "kr/kW/month",
+                        "levelInfo": "Power price component",
+                        "currency": "NOK",
+                        "monetaryUnitOfMeasure": "kr/kW/month"
+                      }
+                    ]
+                  },
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "db155704-cab8-413d-ac41-4b002d9744de",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0450,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "company_powertariff_lowvoltage_north_for_tariffkalkulator",
+          "product": "PL_for_tariffkalkulator",
+          "title": "PL Standard Næring Lavspent FOR TARIFFKALKULATOR",
+          "description": "Effekttariff - lavspent. Hovedsikring > 250A(230V) eller 145A(400V). Enovaavgift inkludert i fastprisleddet. Eventuell redusert elavgift ikke inkludert. FOR TARIFFKALKULATOR. Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": true,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "powerPriceConfiguration": {
+            "reactivePowerPricing": true,
+            "powerFactorPercentage": 50.0000
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "powerPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "1a455dc8-bdf8-4b7c-969f-67e65c959d79",
+                "fixedPriceLevel": [
+                  {
+                    "id": "54ac81e9-70df-4866-9d94-9a6d5ca09247",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 340.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "powerPrices": {
+                    "powerPriceLevel": [
+                      {
+                        "id": "256641c7-c035-4727-b0bb-43506802bb5a",
+                        "valueMin": null,
+                        "valueMax": null,
+                        "nextIdDown": null,
+                        "nextIdUp": null,
+                        "valueUnitOfMeasure": null,
+                        "monthlyActivePowerExTaxes": 40.0000,
+                        "monthlyReactivePowerExTaxes": 15.0000,
+                        "monthlyUnitOfMeasure": "kr/kW/month",
+                        "levelInfo": "Power price component",
+                        "currency": "NOK",
+                        "monetaryUnitOfMeasure": "kr/kW/month"
+                      }
+                    ]
+                  },
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "1a9fa388-cffa-47a5-bf53-899a325232ca",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0600,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "powerPrices": {
+                    "powerPriceLevel": [
+                      {
+                        "id": "fee0451e-f6e7-4b7b-a277-486ff62741ef",
+                        "valueMin": null,
+                        "valueMax": null,
+                        "nextIdDown": null,
+                        "nextIdUp": null,
+                        "valueUnitOfMeasure": null,
+                        "monthlyActivePowerExTaxes": 90.0000,
+                        "monthlyReactivePowerExTaxes": 35.0000,
+                        "monthlyUnitOfMeasure": "kr/kW/month",
+                        "levelInfo": "Power price component",
+                        "currency": "NOK",
+                        "monetaryUnitOfMeasure": "kr/kW/month"
+                      }
+                    ]
+                  },
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "17db54fb-07ff-48f5-a9c2-57cc3d30e455",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0850,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "company_powertariff_highvoltage_north_for_tariffkalkulator",
+          "product": "P3_for_tariffkalkulator",
+          "title": "P3 Standard Næring Høyspent FOR TARIFFKALKULATOR",
+          "description": "Effekttariff - høyspent. Enovaavgift inkludert i fastprisleddet. Eventuell redusert elavgift ikke inkludert. FOR TARIFFKALKULATOR. Priser og avgifter som gjelder 01.05.2022 er lagt ut for 01.01.2020 - 31.12.2023.",
+          "usePublicHolidayOverride": null,
+          "useWeekendPriceOverride": null,
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": true,
+          "fixedPriceConfiguration": {
+            "basis": "fixed",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": null,
+            "months": null,
+            "monthsOffset": null
+          },
+          "powerPriceConfiguration": {
+            "reactivePowerPricing": true,
+            "powerFactorPercentage": 50.0000
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "powerPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "fdefe83e-2536-4431-92dd-2b0f6e3bb9f7",
+                "fixedPriceLevel": [
+                  {
+                    "id": "41d33cc1-dca4-4531-a9b6-aa570bd89b63",
+                    "valueMin": null,
+                    "valueMax": null,
+                    "nextIdDown": null,
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": null,
+                    "monthlyFixedExTaxes": 900.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Fixed price per month",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "powerPrices": {
+                    "powerPriceLevel": [
+                      {
+                        "id": "6677be8b-d6bb-4df0-ae6d-8e24e041c250",
+                        "valueMin": null,
+                        "valueMax": null,
+                        "nextIdDown": null,
+                        "nextIdUp": null,
+                        "valueUnitOfMeasure": null,
+                        "monthlyActivePowerExTaxes": 30.0000,
+                        "monthlyReactivePowerExTaxes": 10.0000,
+                        "monthlyUnitOfMeasure": "kr/kW/month",
+                        "levelInfo": "Power price component",
+                        "currency": "NOK",
+                        "monetaryUnitOfMeasure": "kr/kW/month"
+                      }
+                    ]
+                  },
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "3f90cea1-a35b-4e96-bf60-385313eef833",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0350,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "powerPrices": {
+                    "powerPriceLevel": [
+                      {
+                        "id": "4dcdffdc-8cfa-4de0-94da-109d48f4c088",
+                        "valueMin": null,
+                        "valueMax": null,
+                        "nextIdDown": null,
+                        "nextIdUp": null,
+                        "valueUnitOfMeasure": null,
+                        "monthlyActivePowerExTaxes": 70.0000,
+                        "monthlyReactivePowerExTaxes": 30.0000,
+                        "monthlyUnitOfMeasure": "kr/kW/month",
+                        "levelInfo": "Power price component",
+                        "currency": "NOK",
+                        "monetaryUnitOfMeasure": "kr/kW/month"
+                      }
+                    ]
+                  },
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "21ac8a6e-ed7a-49b0-af4a-9eb51d5fb5c8",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.0450,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "standard_for_tariffkalkulator",
+          "product": "standard_for_tariffkalkulator",
+          "title": "Standard - FOR TARIFFKALKULATOR. NB! IKKE REELLE PRISER",
+          "description": "NB! Reelle priser fra 01.07.2022 blir publisert innen utgangen av mai 2022. OBS! TIL BRUK FOR TARIFFSAMMENLIGNING. INNEHOLDER FIKTIVE PRISER: Priser fra 01.07.2022 ligger i perioden 01.01.2021 - 31.12.2023. Avgifter i hele perioden er lik avgiftene som gjelder 01.07.2022. For kunder med forbruk < 100.000 kWh/år.",
+          "usePublicHolidayOverride": "CHEAP",
+          "useWeekendPriceOverride": "CHEAP",
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-04T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "monthlymax",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": 3,
+            "months": 1,
+            "monthsOffset": 0
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2020-12-31T23:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "enovaTax",
+                    "taxValue": 0.0100,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "Enovaavgift"
+                  },
+                  {
+                    "startDate": "2020-12-31T23:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
                     "taxUom": "%",
