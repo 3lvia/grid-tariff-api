@@ -373,7 +373,7 @@ namespace GridTariffApi.Lib.Services
         {
             var retVal = new FixedPrices()
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = fixedPricesPrices.Id,
                 StartDate = _serviceHelper.ToConfiguredTimeZone(fromDateUtc),
                 EndDate = _serviceHelper.ToConfiguredTimeZone(toDateUtc),
                 PriceLevels = new List<FixedPriceLevel>()
@@ -746,7 +746,7 @@ namespace GridTariffApi.Lib.Services
             var consumptionTaxValue = consumptionTax != null ? consumptionTax.TaxValue : 0;
             var enovaTaxValue = enovaTax != null ? enovaTax.TaxValue : 0;
 
-            retval.Id = Guid.NewGuid().ToString();
+            retval.Id = energyPriceLevel.Id;
             retval.StartDate = _serviceHelper.ToConfiguredTimeZone(fromDate);
             retval.EndDate = _serviceHelper.ToConfiguredTimeZone(toDate);
             retval.Season = season;
@@ -837,7 +837,7 @@ namespace GridTariffApi.Lib.Services
         {
             var retVal = new Models.Digin.PowerPriceLevel
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = powerPriceLevel.Id,
                 ValueMin = powerPriceLevel.ValueMin,
                 ValueMax = powerPriceLevel.ValueMax,
                 NextIdDown = powerPriceLevel.NextIdDown,
@@ -886,7 +886,7 @@ namespace GridTariffApi.Lib.Services
             var vatTax = fixedPriceTaxes.FirstOrDefault(x => x.TaxType == "vat");
             double vatTaxValue = vatTax != null ? vatTax.TaxValue : 0;
 
-            retVal.Id = Guid.NewGuid().ToString();
+            retVal.Id = priceLevel.Id;
             retVal.ValueMin = priceLevel.ValueMin;
             retVal.ValueMax = priceLevel.ValueMax;
             retVal.NextIdDown = priceLevel.NextIdDown;
