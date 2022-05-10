@@ -22,12 +22,12 @@ namespace GridTariffApi.Tests.Services
             var meteringPointMaxConsumptions = meteringPointIds.Select(mpid => new MeteringPointMaxConsumption
             {
                 MeteringPointId = mpid,
-                MaxHourlyEnergyConsumption = maxConsumption,
+                MaxConsumption = maxConsumption,
                 LastVolumeEndTime = DateTimeOffset.UtcNow
             }).ToList();
             Mock<IMdmxClient> mdmxClientMock = new Mock<IMdmxClient>();
             mdmxClientMock
-                .Setup(x => x.GetVolumeAggregationsForThisMonthAsync(It.IsAny<List<String>>()))
+                .Setup(x => x.GetMaxConsumptionsAsync(It.IsAny<List<String>>()))
                 .ReturnsAsync(meteringPointMaxConsumptions);
 
             var cachingRepository = new MeteringPointMaxConsumptionCachingMdmxRepository(mdmxClientMock.Object, new MeteringPointMaxConsumptionRepositoryConfig
@@ -36,17 +36,17 @@ namespace GridTariffApi.Tests.Services
                 TimeZoneForMonthLimiting = Startup.NorwegianTimeZoneInfo()
             });
 
-            mdmxClientMock.Verify(x => x.GetVolumeAggregationsForThisMonthAsync(meteringPointIds), Times.Never);
+            mdmxClientMock.Verify(x => x.GetMaxConsumptionsAsync(meteringPointIds), Times.Never);
 
             await cachingRepository.GetMeteringPointMaxConsumptionsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, meteringPointIds);
-            mdmxClientMock.Verify(x => x.GetVolumeAggregationsForThisMonthAsync(meteringPointIds), Times.Once);
+            mdmxClientMock.Verify(x => x.GetMaxConsumptionsAsync(meteringPointIds), Times.Once);
 
             var maxConsumptions = await cachingRepository.GetMeteringPointMaxConsumptionsAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, meteringPointIds);
-            mdmxClientMock.Verify(x => x.GetVolumeAggregationsForThisMonthAsync(meteringPointIds), Times.Once);
+            mdmxClientMock.Verify(x => x.GetMaxConsumptionsAsync(meteringPointIds), Times.Once);
 
             foreach (var meteringPointMaxConsumption in maxConsumptions)
             {
-                Assert.Equal(maxConsumption, meteringPointMaxConsumption.MaxHourlyEnergyConsumption);
+                Assert.Equal(maxConsumption, meteringPointMaxConsumption.MaxConsumption);
             }
         }
 
@@ -82,7 +82,7 @@ namespace GridTariffApi.Tests.Services
     
             foreach (var meteringPointMaxConsumption in maxConsumptions)
             {
-                Assert.Null(meteringPointMaxConsumption.MaxHourlyEnergyConsumption);
+                Assert.Null(meteringPointMaxConsumption.MaxConsumption);
             }
         }
     }

@@ -32,7 +32,7 @@ namespace GridTariffApi.Tests.Mdmx.UnitTests
                 .ReturnsAsync(new HttpResponseMessage()
                 {
                     StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("[{'meteringPointId':'707057599999990530','min':0,'max':56.52,'sum':142189.23919999308,'lastVolumeEndTime':'2022-01-06T11:00:00+00:00'},{'meteringPointId':'707057599999990540','min':0,'max':0.0147,'sum':53.40549999999888}]", Encoding.UTF8, "application/json")
+                    Content = new StringContent("[{'meteringPointId':'707057599999990530','min':0,'max':89.33,'maxConsumption':56.52,'sum':142189.23919999308,'lastVolumeEndTime':'2022-01-06T11:00:00+00:00'},{'meteringPointId':'707057599999990540','min':0,'max':1.13,'maxConsumption':0.0147,'sum':53.40549999999888}]", Encoding.UTF8, "application/json")
                 })
                 .Verifiable();
 
@@ -46,13 +46,12 @@ namespace GridTariffApi.Tests.Mdmx.UnitTests
 
             var mdmxClient = new MdmxClient(httpClientFactoryMock.Object, accessTokenServiceMock.Object, new MdmxConfig
                 {
-                    HostAddress = "https://mdmx.mocked-elvia.no/",
-                    TimeZoneForMonthLimiting = Startup.NorwegianTimeZoneInfo()
+                    HostAddress = "https://mdmx.mocked-elvia.no/api/",
                 },
                 new LoggingDataCollector());
 
             var mpids = new List<string> { "707057599999990530", "707057599999990540" };
-            var maxConsumptions = await mdmxClient.GetVolumeAggregationsForThisMonthAsync(mpids);
+            var maxConsumptions = await mdmxClient.GetMaxConsumptionsAsync(mpids);
 
             httpMessageHandlerMock.Verify();
             accessTokenServiceMock.Verify(service => service.GetAccessToken(), Times.Once);
@@ -62,7 +61,7 @@ namespace GridTariffApi.Tests.Mdmx.UnitTests
             var sample1 = maxConsumptions.FirstOrDefault(maxConsumption => maxConsumption.MeteringPointId == "707057599999990530");
             Assert.NotNull(sample1);
             Assert.Equal(DateTimeOffset.Parse("2022-01-06T11:00:00+00:00"), sample1.LastVolumeEndTime);
-            Assert.Equal(56.52d, sample1.MaxHourlyEnergyConsumption);
+            Assert.Equal(56.52d, sample1.MaxConsumption);
         }
     }
 }

@@ -2,7 +2,7 @@ using System;
 
 namespace GridTariffApi.Mdmx.Dtos
 {
-    public class VolumeAggregationDto
+    public class MaxConsumptionAggregationDto
     {
         public string MeteringPointId { get; set; }
 
@@ -30,5 +30,22 @@ namespace GridTariffApi.Mdmx.Dtos
         /// The max LastMeasurementTime from all the aggregated volumes (except estimated volumes). An indication of the freshness of the meter values that the aggregation is based on.
         /// </summary>
         public DateTimeOffset? LastVolumeEndTime { get; set; }
+
+        /// <summary>
+        /// The "MaxConsumption", the value used for determining the power based fixed price level in the tariff.
+        /// The average of the max hourly consumptions (volumes) on 3 different days within the calendar month.
+        /// See https://github.com/3lvia/mdmx/tree/trunk/Server/src/Mdmx.Apps.Shared/Api/Model/VolumeAggregations/MaxConsumptionAggregation.cs.
+        /// </summary> 
+        public double? MaxConsumption { get; set; }
+
+        /// <summary>
+        /// The start of the period used for retrieving volumes.
+        /// </summary>
+        public DateTimeOffset MeasurementTimeGe { get; set; }
+
+        /// <summary>
+        /// The end of the period used for retrieving volumes.
+        /// </summary>
+        public DateTimeOffset MeasurementTimeLe { get; set; }
     }
 }

@@ -78,13 +78,13 @@ livenessProbe:
   
 configmap:
   dev:
-    mdmx.host-address: https://mdmx.dev-elvia.io/
+    mdmx.host-address: https://mdmx.dev-elvia.io/api/
     mdmx.access-token-service-config-vault-path: kunde:kv:elvid:kunde-grid-tariff-api
   test:
-    mdmx.host-address: https://mdmx.test-elvia.io/
+    mdmx.host-address: https://mdmx.test-elvia.io/api/
     mdmx.access-token-service-config-vault-path: kunde:kv:elvid:kunde-grid-tariff-api
   prod:
-    mdmx.host-address: https://mdmx.elvia.io/
+    mdmx.host-address: https://mdmx.elvia.io/api/
     # No longer calling mdmx test from prod (mdmx is in prod now), so we'll use our normal machine client credentials
     # mdmx.access-token-service-config-vault-path: kunde:kv:manual:kunde-grid-tariff-api-test
     mdmx.access-token-service-config-vault-path: kunde:kv:elvid:kunde-grid-tariff-api
