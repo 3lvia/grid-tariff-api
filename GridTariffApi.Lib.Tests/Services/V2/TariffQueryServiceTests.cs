@@ -52,8 +52,8 @@ namespace GridTariffApi.Lib.Tests.Services
 
             var powerPriceLevels = new List<PowerPriceLevel>
             {
-                new PowerPriceLevel("a", null, null, null, null, null, 0, 0, null, null, null, null),
-                new PowerPriceLevel("b", null, null, null, null, null, 0, 0, null, null, null, null)
+                new PowerPriceLevel("a7fb1f2e-4d73-4ab5-858d-aea3c7370a41", null, null, null, null, null, 0, 0, null, null, null, null),
+                new PowerPriceLevel("b8b16d89-6436-4133-bc98-d3c86a8187e3", null, null, null, null, null, 0, 0, null, null, null, null)
             };
 
             var daysInMonths = new List<int>();
@@ -72,7 +72,7 @@ namespace GridTariffApi.Lib.Tests.Services
             {
                 Guid guid = new Guid();
                 Assert.True(Guid.TryParse(priceLevel.Id, out guid));
-                Assert.Equal(0,powerPriceLevels.Count(x => x.Id == priceLevel.Id));
+                Assert.Equal(1,powerPriceLevels.Count(x => x.Id == priceLevel.Id));
 
                 Assert.Equal(4,priceLevel.HourPrices.Count);
                 foreach (var daysInMonth in daysInMonths)
@@ -102,8 +102,8 @@ namespace GridTariffApi.Lib.Tests.Services
             Assert.Null(priceInfo.EnergyPrices);
 
             var energyPriceLevels = new List<EnergyPriceLevel>();
-            energyPriceLevels.Add(new EnergyPriceLevel("a", "1", 0, null));
-            energyPriceLevels.Add(new EnergyPriceLevel("b", "2", 0, null));
+            energyPriceLevels.Add(new EnergyPriceLevel("a7fb1f2e-4d73-4ab5-858d-aea3c7370a41", "1", 0, null));
+            energyPriceLevels.Add(new EnergyPriceLevel("b8b16d89-6436-4133-bc98-d3c86a8187e3", "2", 0, null));
 
             priceInfo.EnergyPrices = new List<Models.Digin.EnergyPrices>();
             var energyPricePrices2 = new Models.PriceStructure.EnergyPrice(energyPriceLevels, null, null);
@@ -232,16 +232,16 @@ namespace GridTariffApi.Lib.Tests.Services
         }
 
         [Theory]
-        [InlineData(104, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 104, 26, 130)]
-        [InlineData(152, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 152, 38, 190)]
-        [InlineData(224, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 224, 56, 280)]
-        [InlineData(300, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 300, 75, 375)]
-        [InlineData(376, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 376, 94, 470)]
-        [InlineData(452, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 452, 113, 565)]
-        [InlineData(1000, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 1000, 250, 1250)]
-        [InlineData(1376, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 1376, 344, 1720)]
-        [InlineData(1752, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 1752, 438, 2190)]
-        [InlineData(3344, 25, "1", null, 2, "2", "3", "4", "5", "6", "7", "8", 3344, 836, 4180)]
+        [InlineData(104, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 104, 26, 130)]
+        [InlineData(152, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 152, 38, 190)]
+        [InlineData(224, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 224, 56, 280)]
+        [InlineData(300, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 300, 75, 375)]
+        [InlineData(376, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 376, 94, 470)]
+        [InlineData(452, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 452, 113, 565)]
+        [InlineData(1000, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 1000, 250, 1250)]
+        [InlineData(1376, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 1376, 344, 1720)]
+        [InlineData(1752, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 1752, 438, 2190)]
+        [InlineData(3344, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 3344, 836, 4180)]
 
         public void PriceLevelPriceToFixedPriceLevelTest(
             int monthlyPriceExAllTaxes,
@@ -282,7 +282,7 @@ namespace GridTariffApi.Lib.Tests.Services
 
             var guid = new Guid();
             var fixedPriceLevel = _tariffQueryService.PriceLevelPriceToFixedPriceLevel(fixedPricePriceLevel, taxes);
-            Assert.NotEqual(id, fixedPriceLevel.Id);
+            Assert.Equal(id, fixedPriceLevel.Id);
             Assert.True(Guid.TryParse(fixedPriceLevel.Id, out guid));
             Assert.Equal(valueMin, fixedPriceLevel.ValueMin);
             Assert.Equal(valueMax, fixedPriceLevel.ValueMax);
@@ -302,7 +302,7 @@ namespace GridTariffApi.Lib.Tests.Services
         }
 
         [Theory]
-        [InlineData(25, "1", null, 2, "2", "3", "4", 11, 5.61, "5", "6", "7", "8", 11, 11, 13.75, 2.75, 5.61, 5.61, 7.0125, 1.4025)]
+        [InlineData(25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", 11, 5.61, "5", "6", "7", "8", 11, 11, 13.75, 2.75, 5.61, 5.61, 7.0125, 1.4025)]
         public void PriceLevelPriceToPowerPriceLevelTest(
             int vatPercent,
             string id,
@@ -340,7 +340,7 @@ namespace GridTariffApi.Lib.Tests.Services
 
             var guid = Guid.NewGuid();
             var powerPriceLevel = _tariffQueryService.PriceLevelPowerPriceToPowerPriceLevel(powerPricePriceLevel, taxes);
-            Assert.NotEqual(id, powerPriceLevel.Id);
+            Assert.Equal(id, powerPriceLevel.Id);
             Assert.True(Guid.TryParse(powerPriceLevel.Id, out guid));
             Assert.Equal(valueMin, powerPriceLevel.ValueMin);
             Assert.Equal(valueMax, powerPriceLevel.ValueMax);
