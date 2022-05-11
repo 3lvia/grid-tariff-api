@@ -39,10 +39,8 @@ namespace GridTariffApi.Mdmx
                 MeasurementTimeLe = null // null for the current MaxConsumption
             };
 
-            var uriBuilder = new UriBuilder(_config.HostAddress)
-            {
-                Path = "volumeaggregation/maxConsumption",
-            };
+            var uriBuilder = new UriBuilder(_config.HostAddress);
+            uriBuilder.Path += "volumeaggregation/maxConsumption"; // HostAddress might contain a path postfix. Preserve it.
 
             var requestJson = JsonConvert.SerializeObject(request);
             var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
