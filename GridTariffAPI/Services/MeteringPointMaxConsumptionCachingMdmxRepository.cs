@@ -52,7 +52,7 @@ namespace GridTariffApi.Services
             if (uncachedMpids.Count > 0)
             {
                 // There is a possible race condition here, so we might consider doing another lookup after locking. But an additional cache miss on parallel calls for the same metering point(s) is not that important. And the last one will update the cache.
-                var uncachedMaxConsumptions = await _mdmxClient.GetVolumeAggregationsForThisMonthAsync(meteringPointIds);
+                var uncachedMaxConsumptions = await _mdmxClient.GetMaxConsumptionsAsync(meteringPointIds);
 
                 lock (MemoryCache)
                 {

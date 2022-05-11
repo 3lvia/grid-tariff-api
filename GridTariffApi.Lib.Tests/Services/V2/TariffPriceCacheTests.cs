@@ -19,7 +19,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
         private Mock<IMeteringPointTariffRepository> _meteringPointTariffRepository;
         private Mock<IMeteringPointMaxConsumptionRepository> _meteringPointMaxConsumptionRepository;
         private List<string> _meteringPointIds;
-        private void Setup(string tariffKey = "standard", double? maxHourlyEnergyConsumption = null)
+        private void Setup(string tariffKey = "standard", double? maxConsumption = null)
         {
             _tariffRepositoryMock = new Mock<ITariffRepository>();
             _tariffRepositoryMock
@@ -48,7 +48,7 @@ namespace GridTariffApi.Lib.Tests.Services.V2
             var meteringPointMaxConsumptions = _meteringPointIds.Select(mpid => new MeteringPointMaxConsumption
             {
                 MeteringPointId = mpid,
-                MaxHourlyEnergyConsumption = maxHourlyEnergyConsumption,
+                MaxConsumption = maxConsumption,
                 LastVolumeEndTime = DateTimeOffset.UtcNow
             }).ToList();
             _meteringPointMaxConsumptionRepository = new Mock<IMeteringPointMaxConsumptionRepository>();

@@ -128,14 +128,13 @@ namespace GridTariffApi
             services.AddSingleton(new MdmxConfig
             {
                 HostAddress = Configuration.EnsureHasValue("mdmx:host-address"),
-                TimeZoneForMonthLimiting = gridTariffApiConfig.TimeZoneForQueries
             });
             services.AddScoped<IMdmxClient, MdmxClient>();
 
             services.AddStandardElviaTelemetryLogging(Configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true);
 
             //bigquery (meteringpointtariff)
-            services.AddTransient<GridTariffApi.BigQuery.MeteringPointTariffSync.IBigQueryReader, GridTariffApi.BigQuery.MeteringPointTariffSync.BigQueryReader>();
+            services.AddTransient<BigQuery.MeteringPointTariffSync.IBigQueryReader, BigQuery.MeteringPointTariffSync.BigQueryReader>();
             services.AddTransient<IMeteringPointTariffSynchronizer, MeteringPointTariffSynchronizer>();
 
             //startup tasks

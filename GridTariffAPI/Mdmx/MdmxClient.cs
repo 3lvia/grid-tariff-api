@@ -31,22 +31,17 @@ namespace GridTariffApi.Mdmx
         }
 
 
-        public async Task<List<MeteringPointMaxConsumption>> GetVolumeAggregationsForThisMonthAsync(List<string> meteringPointIds)
+        public async Task<List<MeteringPointMaxConsumption>> GetMaxConsumptionsAsync(List<string> meteringPointIds)
         {
-            var localNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _config.TimeZoneForMonthLimiting);
-            var localMonthStart = new DateTime(localNow.Year, localNow.Month, 1, 0, 0, 0, localNow.Kind);
-
-            var request = new VolumeAggregationBatchQuery
+            var request = new MaxConsumptionAggregationBatchQuery
             {
                 MeteringPointIds = meteringPointIds.ToArray(),
-                Register = "ActivePlus",
-                MeasurementTimeGe = localMonthStart,
-                MeasurementTimeLe = localNow
+                MeasurementTimeLe = null // null for the current MaxConsumption
             };
 
             var uriBuilder = new UriBuilder(_config.HostAddress)
             {
-                Path = "api/volumeaggregation",
+                Path = "volumeaggregation/maxConsumption",
             };
 
             var requestJson = JsonConvert.SerializeObject(request);
@@ -58,20 +53,20 @@ namespace GridTariffApi.Mdmx
             if (!res.IsSuccessStatusCode)
             {
                 var errorContent = await res.Content.ReadAsStringAsync();
-                throw new MdmxClientException($"Error when calling MDMx API {_config.HostAddress} for {meteringPointIds.Count} mpids: HTTP {(int)res.StatusCode} {res.ReasonPhrase} - {errorContent}", (int)res.StatusCode);
+                throw new MdmxClientException($"Error when calling MDMx API {uriBuilder.Uri} for {meteringPointIds.Count} mpids: HTTP {(int)res.StatusCode} {res.ReasonPhrase} - {errorContent}", (int)res.StatusCode);
             }
 
             if (res.Content.Headers.ContentType.MediaType != "application/json")
             {
                 var stringContent = await res.Content.ReadAsStringAsync();
-                throw new MdmxClientException($"MDMx API {_config.HostAddress} for {meteringPointIds.Count} mpids returned {res.Content.Headers.ContentType.MediaType} instead of JSON: HTTP {(int)res.StatusCode} - {stringContent}", (int)res.StatusCode);
+                throw new MdmxClientException($"MDMx API {uriBuilder.Uri} for {meteringPointIds.Count} mpids returned {res.Content.Headers.ContentType.MediaType} instead of JSON: HTTP {(int)res.StatusCode} - {stringContent}", (int)res.StatusCode);
             }
 
-            var aggregations = await res.Content.ReadAsAsync<VolumeAggregationDto[]>();
+            var aggregations = await res.Content.ReadAsAsync<MaxConsumptionAggregationDto[]>();
             return aggregations.Select(agg => new MeteringPointMaxConsumption
                 {
                     MeteringPointId = agg.MeteringPointId,
-                    MaxHourlyEnergyConsumption = agg.Max,
+                    MaxConsumption = agg.MaxConsumption,
                     LastVolumeEndTime = agg.LastVolumeEndTime
                 })
                 .ToList();

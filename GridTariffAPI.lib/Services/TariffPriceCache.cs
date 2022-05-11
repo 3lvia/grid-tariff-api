@@ -50,7 +50,7 @@ namespace GridTariffApi.Lib.Services
             foreach (var mpMaxConsumption in mpMaxConsumptions)
             {
                 var mpInfo = resDict[mpMaxConsumption.MeteringPointId];
-                mpInfo.MaxConsumption = mpMaxConsumption.MaxHourlyEnergyConsumption;
+                mpInfo.MaxConsumption = mpMaxConsumption.MaxConsumption;
                 mpInfo.MaxConsumptionLastUpdated = mpMaxConsumption.LastVolumeEndTime;
             }
 

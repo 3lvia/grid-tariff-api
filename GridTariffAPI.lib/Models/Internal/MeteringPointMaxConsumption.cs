@@ -5,12 +5,15 @@ namespace GridTariffApi.Lib.Models.Internal
     public class MeteringPointMaxConsumption
     {
         public string MeteringPointId { get; set; }
+
         /// <summary>
-        /// The maximum hourly energy consumption (max measured volume) for the meteringPoint this current month. Null if no measured volumes are available.
+        /// The "MaxConsumption", the value used for determining the power based fixed price level in the tariff.
+        /// The average of the max hourly consumptions (volumes) on 3 different days within the calendar month.
         /// </summary>
-        public double? MaxHourlyEnergyConsumption { get; set; }
+        public double? MaxConsumption { get; set; }
+
         /// <summary>
-        /// The end time of the newest volume that the MaxHourlyEnergyConsumption is based on. An indication of the freshness of the data that the aggregation is based on.
+        /// The end time of the newest volume that the MaxConsumption is based on. An indication of the freshness of the data available.
         /// </summary>
         public DateTimeOffset? LastVolumeEndTime { get; set; }
     }
