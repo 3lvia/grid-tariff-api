@@ -41,14 +41,14 @@ stages:
           environment: dev
           helmValuesFile: values.yaml
 
-  - stage: DeployTest
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/trunk'), true)
-    dependsOn: DeployDev
-    jobs:
-      - template: deploy.yaml@templates
-        parameters:
-          environment: test
-          helmValuesFile: values.yaml
+  #- stage: DeployTest
+  #  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/trunk'), true)
+  #  dependsOn: DeployDev
+  #  jobs:
+  #    - template: deploy.yaml@templates
+  #      parameters:
+  #        environment: test
+  #        helmValuesFile: values.yaml
 
   - stage: RegisterAzureApiManagementTest
     dependsOn: DeployTest
