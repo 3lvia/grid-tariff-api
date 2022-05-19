@@ -10775,8 +10775,8 @@
           ]
         },
         {
-          "tariffKey": "standard_for_tariffkalkulator_bedrift",
-          "product": "standard_for_tariffkalkulator_bedrift",
+          "tariffKey": "standard_bedrift_for_tariffkalkulator",
+          "product": "standard_bedrift_for_tariffkalkulator",
           "title": "Standard - FOR TARIFFKALKULATOR FOR BEDRIFTER. NB! IKKE REELLE PRISER",
           "description": "NB! Tariff for tariffsammenligning. Inneholder fiktive priser før 01.07.2022, samt elavgift inkludert i fastleddet. For næringskunder med enovapåslag i fastleddet.",
           "usePublicHolidayOverride": "CHEAP",
