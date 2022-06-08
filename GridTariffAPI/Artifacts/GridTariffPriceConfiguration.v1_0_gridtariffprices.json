@@ -10536,7 +10536,7 @@
           "usePublicHolidayOverride": "CHEAP",
           "useWeekendPriceOverride": "CHEAP",
           "consumptionFlag": true,
-          "lastUpdated": "2022-05-18T08:00:00Z",
+          "lastUpdated": "2022-06-08T11:00:00Z",
           "usePowerPriceConfiguration": false,
           "fixedPriceConfiguration": {
             "basis": "monthlymax",
@@ -10550,12 +10550,12 @@
           "resolution": 60,
           "tariffPrices": [
             {
-              "startDate": "2020-12-31T23:00:00Z",
+              "startDate": "2018-12-31T23:00:00Z",
               "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
-                    "startDate": "2020-12-31T23:00:00Z",
+                    "startDate": "2018-12-31T23:00:00Z",
                     "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
@@ -10565,7 +10565,7 @@
                 ],
                 "energyPriceTaxes": [
                   {
-                    "startDate": "2020-12-31T23:00:00Z",
+                    "startDate": "2018-12-31T23:00:00Z",
                     "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
@@ -10573,7 +10573,7 @@
                     "taxTypeDescription": "elavgift"
                   },
                   {
-                    "startDate": "2020-12-31T23:00:00Z",
+                    "startDate": "2018-12-31T23:00:00Z",
                     "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "enovaTax",
                     "taxValue": 0.0100,
@@ -10581,7 +10581,7 @@
                     "taxTypeDescription": "Enovaavgift"
                   },
                   {
-                    "startDate": "2020-12-31T23:00:00Z",
+                    "startDate": "2018-12-31T23:00:00Z",
                     "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
@@ -10782,7 +10782,7 @@
           "usePublicHolidayOverride": "CHEAP",
           "useWeekendPriceOverride": "CHEAP",
           "consumptionFlag": true,
-          "lastUpdated": "2022-05-18T08:00:00Z",
+          "lastUpdated": "2022-06-08T11:00:00Z",
           "usePowerPriceConfiguration": false,
           "fixedPriceConfiguration": {
             "basis": "monthlymax",
@@ -10796,12 +10796,12 @@
           "resolution": 60,
           "tariffPrices": [
             {
-              "startDate": "2020-12-31T23:00:00Z",
+              "startDate": "2018-12-31T23:00:00Z",
               "endDate": "2023-12-31T23:00:00Z",
               "taxes": {
                 "fixedPriceTaxes": [
                   {
-                    "startDate": "2020-12-31T23:00:00Z",
+                    "startDate": "2018-12-31T23:00:00Z",
                     "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
@@ -10811,7 +10811,7 @@
                 ],
                 "energyPriceTaxes": [
                   {
-                    "startDate": "2020-12-31T23:00:00Z",
+                    "startDate": "2018-12-31T23:00:00Z",
                     "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "consumptionTax",
                     "taxValue": 0.1541,
@@ -10819,7 +10819,7 @@
                     "taxTypeDescription": "elavgift"
                   },
                   {
-                    "startDate": "2020-12-31T23:00:00Z",
+                    "startDate": "2018-12-31T23:00:00Z",
                     "endDate": "2023-12-31T23:00:00Z",
                     "taxType": "vat",
                     "taxValue": 25.0000,
