@@ -351,3 +351,5 @@ MigrationBackup/
 
 launchSettings.json
 /GridTariffAPI/appsettings.development.json
+/GridTariffAPI/Properties/Resources.Designer.cs
+/GridTariffAPI/Properties/Resources.resx
