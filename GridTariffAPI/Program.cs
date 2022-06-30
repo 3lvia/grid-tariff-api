@@ -35,10 +35,10 @@ namespace GridTariffApi
                     Console.WriteLine($"Exception while logging unhandled exception. Unhandled exception (#1): {eventArgs}. Exception while logging original exception (#2): {loggingException}");
                     // Don't throw (the loggingException) - let the original unhandled exception take its course
                 }
-            }; 
+            };
 
-            //var startupTasks = host.Services.GetServices<IStartupTask>().OrderBy(x => x.GetExecutionOrder()).ToList();
-            //RunStartupTasks(startupTasks, logger); // Don't wait - it takes a long time (and the database is initiated in all environments, so we need to get the service up and running without waiting for metering point products to be fully updated.
+            var startupTasks = host.Services.GetServices<IStartupTask>().OrderBy(x => x.GetExecutionOrder()).ToList();
+            RunStartupTasks(startupTasks, logger); // Don't wait - it takes a long time (and the database is initiated in all environments, so we need to get the service up and running without waiting for metering point products to be fully updated.
             logger.TrackEvent("StartupTasksDispatched_StartingHost");
             await host.RunAsync();
         }
