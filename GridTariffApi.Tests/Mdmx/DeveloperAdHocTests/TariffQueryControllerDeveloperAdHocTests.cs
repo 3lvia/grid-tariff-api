@@ -34,7 +34,8 @@ namespace GridTariffApi.Tests.Mdmx.DeveloperAdHocTests
                 host.Services.GetRequiredService<ITariffQueryService>(),
                 host.Services.GetRequiredService<IServiceHelper>(),
                 host.Services.GetRequiredService<ILoggingDataCollector>(),
-                host.Services.GetRequiredService<IControllerValidationHelper>());
+                host.Services.GetRequiredService<IControllerValidationHelper>(),
+                null);
 
             var request = new TariffQueryRequestMeteringPoints
             {
