@@ -45,9 +45,9 @@ startupProbe:
   successThreshold: 1
   timeoutSeconds: 1
 
-# Large synchronizations might take a long time - allow for unresponsiveness for about half an hour
+# Large synchronizations might take a long time - allow for unresponsiveness for about an hour
 readinessProbe:
- failureThreshold: 120
+ failureThreshold: 240
  httpGet:
    path: /ping
    port: 8080
@@ -58,7 +58,7 @@ readinessProbe:
  timeoutSeconds: 3
 
 livenessProbe:
- failureThreshold: 120
+ failureThreshold: 240
  httpGet:
    path: /ping
    port: 8080

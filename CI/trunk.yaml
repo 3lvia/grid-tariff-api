@@ -32,26 +32,25 @@ stages:
         parameters:
           dockerfile: Dockerfile
 
-  # - stage: DeployApiDev
-  #   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/trunk'), true)
-  #   dependsOn: Build
-  #   jobs:
-  #     - template: deploy.yaml@templates
-  #       parameters:
-  #         environment: dev
-  #         helmValuesFile: values-api.yaml
-  # - stage: DeploySynchronizerDev
-  #   dependsOn: DeployApiDev
-  #   jobs:
-  #     - template: deploy.yaml@templates
-  #       parameters:
-  #         name: grid-tariff-api-synchronizer
-  #         environment: dev
-  #         helmValuesFile: values-synchronizer.yaml
+  - stage: DeployApiDev
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/trunk'), true)
+    dependsOn: Build
+    jobs:
+      - template: deploy.yaml@templates
+        parameters:
+          environment: dev
+          helmValuesFile: values-api.yaml
+  - stage: DeploySynchronizerDev
+    dependsOn: DeployApiDev
+    jobs:
+      - template: deploy.yaml@templates
+        parameters:
+          name: grid-tariff-api-synchronizer
+          environment: dev
+          helmValuesFile: values-synchronizer.yaml
 
   - stage: DeployApiTest
-#    dependsOn: DeploySynchronizerDev
-    dependsOn: Build
+    dependsOn: DeploySynchronizerDev
     jobs:
       - template: deploy.yaml@templates
         parameters:
