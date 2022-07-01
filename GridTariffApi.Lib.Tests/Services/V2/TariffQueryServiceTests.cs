@@ -694,6 +694,17 @@ namespace GridTariffApi.Lib.Tests.Services
             DateTimeOffset dateLeapYearStart = new DateTimeOffset(new DateTime(2020, 01, 01, 0, 0, 0, DateTimeKind.Utc));
             DateTimeOffset dateLeapYearEnd = new DateTimeOffset(new DateTime(2020, 12, 01, 0, 0, 0, DateTimeKind.Utc));
 
+
+            DateTimeOffset glue1807SpecialMonthCase1Start = new DateTimeOffset(new DateTime(2022, 6, 29, 13, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset glue1807SpecialMonthCase1End = new DateTimeOffset(new DateTime(2022, 7, 1, 13, 0, 0, DateTimeKind.Utc));
+
+            DateTimeOffset glue1807SpecialMonthCase2Start = new DateTimeOffset(new DateTime(2022, 6, 29, 13, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset glue1807SpecialMonthCase2End = new DateTimeOffset(new DateTime(2022, 7, 1, 0, 0, 0, DateTimeKind.Utc));
+
+            DateTimeOffset glue1807SpecialMonthCase3Start = new DateTimeOffset(new DateTime(2022, 6, 29, 13, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset glue1807SpecialMonthCase3End = new DateTimeOffset(new DateTime(2022, 7, 1, 1, 0, 0, DateTimeKind.Utc));
+
+
             var yearMonths = _tariffQueryService.GetDistinctFixedPriceMonths(dateYearStart, dateYearEnd);
             Assert.Equal(3, yearMonths.Count);
             Assert.Contains(28, yearMonths);
@@ -714,6 +725,22 @@ namespace GridTariffApi.Lib.Tests.Services
             var endOfMonth = _tariffQueryService.GetDistinctFixedPriceMonths(dateJanuarMiddle, dateJanuarEnd);
             Assert.Single(endOfMonth);
             Assert.Contains(31, endOfMonth);
+
+            var glue1807SpecialMonthCase1Months = _tariffQueryService.GetDistinctFixedPriceMonths(glue1807SpecialMonthCase1Start, glue1807SpecialMonthCase1End);
+            Assert.Equal(2, glue1807SpecialMonthCase1Months.Count);
+            Assert.Contains(30, glue1807SpecialMonthCase1Months);
+            Assert.Contains(31, glue1807SpecialMonthCase1Months);
+
+            var glue1807SpecialMonthCase2Months = _tariffQueryService.GetDistinctFixedPriceMonths(glue1807SpecialMonthCase2Start, glue1807SpecialMonthCase2End);
+            Assert.Equal(2, glue1807SpecialMonthCase2Months.Count);
+            Assert.Contains(30, glue1807SpecialMonthCase2Months);
+            Assert.Contains(31, glue1807SpecialMonthCase2Months);
+
+            var glue1807SpecialMonthCase3Months = _tariffQueryService.GetDistinctFixedPriceMonths(glue1807SpecialMonthCase3Start, glue1807SpecialMonthCase3End);
+            Assert.Equal(2, glue1807SpecialMonthCase3Months.Count);
+            Assert.Contains(30, glue1807SpecialMonthCase3Months);
+            Assert.Contains(31, glue1807SpecialMonthCase3Months);
+
 
         }
 

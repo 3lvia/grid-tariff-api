@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using GridTariffApi.Lib.Interfaces;
+using Elvia.Telemetry;
 
 namespace GridTariffApi.Lib.Controllers.v1
 {
@@ -23,16 +24,19 @@ namespace GridTariffApi.Lib.Controllers.v1
         private readonly IServiceHelper _serviceHelper;
         private readonly ILoggingDataCollector _loggingDataCollector;
         private readonly IControllerValidationHelper _controllerValidationHelper;
+        private readonly ITelemetryInsightsLogger _logger;
 
         public TariffQueryController(ITariffQueryService tariffQueryService,
             IServiceHelper serviceHelper,
             ILoggingDataCollector loggingDataCollector,
-            IControllerValidationHelper controllerValidationHelper)
+            IControllerValidationHelper controllerValidationHelper,
+            ITelemetryInsightsLogger telemetryInsightsLogger)
         {
             _tariffQueryService = tariffQueryService;
             _serviceHelper = serviceHelper;
             _loggingDataCollector = loggingDataCollector;
             _controllerValidationHelper = controllerValidationHelper;
+            _logger = telemetryInsightsLogger;
         }
 
 
@@ -49,23 +53,32 @@ namespace GridTariffApi.Lib.Controllers.v1
 
         public async Task<ActionResult<Models.Digin.TariffQueryResult>> TariffQuery([FromQuery] TariffQueryRequest request)  
         {
-            string validationErrorMsg =  _controllerValidationHelper.ValidateRequestInput(request);
-            if (!String.IsNullOrEmpty(validationErrorMsg))
+            try
             {
-                return BadRequest(validationErrorMsg);
-            }
+                string validationErrorMsg = _controllerValidationHelper.ValidateRequestInput(request);
+                if (!String.IsNullOrEmpty(validationErrorMsg))
+                {
+                    return BadRequest(validationErrorMsg);
+                }
 
-            var tariffKey = await _controllerValidationHelper.DecideTariffKeyFromInputAsync(request);
-            if (!await _controllerValidationHelper.ValidateTariffExistsAsync(tariffKey))
+                var tariffKey = await _controllerValidationHelper.DecideTariffKeyFromInputAsync(request);
+                if (!await _controllerValidationHelper.ValidateTariffExistsAsync(tariffKey))
+                {
+                    return NotFound();
+                }
+
+                DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
+                DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
+                _loggingDataCollector?.RegisterTariffPeriodAndNumMeteringPoints(startDateTime, endDateTime, null);
+                var result = await _tariffQueryService.QueryTariffUsingTariffKeyAsync(tariffKey, startDateTime, endDateTime);
+                return Ok(result);
+
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                _logger.TrackException(ex);
+                return Problem(ex.Message);
             }
-
-            DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
-            DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
-            _loggingDataCollector?.RegisterTariffPeriodAndNumMeteringPoints(startDateTime, endDateTime, null);
-            var result = await _tariffQueryService.QueryTariffUsingTariffKeyAsync(tariffKey, startDateTime, endDateTime);
-            return Ok(result);
         }
 
         /// <summary>
@@ -80,16 +93,24 @@ namespace GridTariffApi.Lib.Controllers.v1
 
         public async Task<ActionResult<Models.Digin.TariffQueryRequestMeteringPointsResult>> MeteringPointsTariffQuery([FromBody] TariffQueryRequestMeteringPoints request)
         {
-            string validationErrorMsg = _controllerValidationHelper.ValidateRequestInput(request);
-            if (!String.IsNullOrEmpty(validationErrorMsg))
+            try
             {
-                return BadRequest(validationErrorMsg);
+                string validationErrorMsg = _controllerValidationHelper.ValidateRequestInput(request);
+                if (!String.IsNullOrEmpty(validationErrorMsg))
+                {
+                    return BadRequest(validationErrorMsg);
+                }
+                DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
+                DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
+                _loggingDataCollector?.RegisterTariffPeriodAndNumMeteringPoints(startDateTime, endDateTime, request.MeteringPointIds?.Count);
+                var result = await _tariffQueryService.QueryMeteringPointsTariffsAsync(startDateTime, endDateTime, request.MeteringPointIds.Distinct().ToList());
+                return Ok(result);
             }
-            DateTimeOffset startDateTime = _serviceHelper.GetStartDateTimeOffset(request.Range, request.StartTime);
-            DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
-            _loggingDataCollector?.RegisterTariffPeriodAndNumMeteringPoints(startDateTime, endDateTime, request.MeteringPointIds?.Count);
-            var result = await _tariffQueryService.QueryMeteringPointsTariffsAsync(startDateTime, endDateTime,request.MeteringPointIds.Distinct().ToList());
-            return Ok(result);
+            catch (Exception ex)
+            {
+                _logger.TrackException(ex);
+                return Problem(ex.Message);
+            }
         }
     }
 }
