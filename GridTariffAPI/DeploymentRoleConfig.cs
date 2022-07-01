@@ -15,7 +15,7 @@ namespace GridTariffApi
 
         public DeploymentRoleConfig(string roleType)
         {
-            Role = roleType.ToLower() switch
+            Role = (roleType ?? "").ToLower() switch
             {
                 "synchronizer" => RoleType.Synchronizer,
                 _ => RoleType.Api // Default to Api

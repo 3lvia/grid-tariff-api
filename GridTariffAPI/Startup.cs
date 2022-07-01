@@ -148,7 +148,7 @@ namespace GridTariffApi
                 services.AddCronJob<MeteringPointTariffSynchronizer>(c =>
                 {
                     c.TimeZoneInfo = NorwegianTimeZoneInfo();
-                    c.CronExpression = @"0 0/1 * * *"; // every hour
+                    c.CronExpression = @"25 0/1 * * *"; // every hour
                 });
             }
 
