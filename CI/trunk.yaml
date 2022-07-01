@@ -21,13 +21,13 @@ resources:
 stages:
   - stage: Build
     jobs:
-      #- template: test.yaml@templates
-      #  parameters:
-      #    unitTestProjects: |
-      #      **/*Tests/*.csproj
-      #      !**/*IntegrationTests/*.csproj
-      #      !**/*SmokeTests/*.csproj
-      #    sonarcloudProjectName: "3lvia_kunde-tariff-api"
+      - template: test.yaml@templates
+        parameters:
+          unitTestProjects: |
+            **/*Tests/*.csproj
+            !**/*IntegrationTests/*.csproj
+            !**/*SmokeTests/*.csproj
+          sonarcloudProjectName: "3lvia_kunde-tariff-api"
       - template: build.yaml@templates
         parameters:
           dockerfile: Dockerfile
