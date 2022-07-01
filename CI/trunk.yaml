@@ -37,12 +37,12 @@ stages:
     dependsOn: Build
     jobs:
       - template: deploy.yaml@templates
-        displayName: DeployApiDev
+        jobName: DeployApiDev
         parameters:
           environment: dev
           helmValuesFile: values-api.yaml
       - template: deploy.yaml@templates
-        displayName: DeploySynchronizerDev
+        jobName: DeploySynchronizerDev
         parameters:
           environment: dev
           helmValuesFile: values-synchronizer.yaml
@@ -52,12 +52,12 @@ stages:
     dependsOn: DeployDev
     jobs:
       - template: deploy.yaml@templates
-        displayName: DeployApiTest
+        jobName: DeployApiTest
         parameters:
           environment: test
           helmValuesFile: values-api.yaml
       - template: deploy.yaml@templates
-        displayName: DeploySynchronizerTest
+        jobName: DeploySynchronizerTest
         parameters:
           environment: test
           helmValuesFile: values-synchronizer.yaml
@@ -154,12 +154,12 @@ stages:
     dependsOn: RegisterAzureApiManagementTest
     jobs:
      - template: deploy.yaml@templates
-       displayName: DeployApiProd
+       jobName: DeployApiProd
        parameters:
          environment: prod
          helmValuesFile: values-api.yaml
      - template: deploy.yaml@templates
-       displayName: DeploySynchronizerProd
+       jobName: DeploySynchronizerProd
        parameters:
          environment: prod
          helmValuesFile: values-synchronizer.yaml
