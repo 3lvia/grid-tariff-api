@@ -37,14 +37,14 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
         {
             try
             {
-                _logger.TrackTrace("MeteringPointTariffSynchronizerDoWorkStart: Starting synchronizing of meteringpoints with netproducts from Google BigQuery");
+                _logger.TrackTrace($"{DisplayName}DoWorkStart: Starting synchronizing of meteringpoints with netproducts from Google BigQuery");
                 using var scope = _serviceProvider.CreateScope();
                 ElviaDbContext elviaDbContext = scope.ServiceProvider.GetRequiredService<ElviaDbContext>();
                 var elviaCompany = elviaDbContext.Company.FirstOrDefault(x => x.OrgNumber == _elviaCompanyOrgNumber);
                 var currentTimestamp = DateTimeOffset.UtcNow;
                 var bigQueryReader = scope.ServiceProvider.GetRequiredService<IBigQueryReader>(); // Must create new BigQueryReader on each DoWork to avoid "Cannot access a disposed object. Object name: 'Google.Apis.Http.ConfigurableHttpClient'."
                 await SynchronizeMeteringPointsAsync(elviaDbContext, bigQueryReader, elviaCompany, currentTimestamp);
-                _logger.TrackTrace("MeteringPointTariffSynchronizerDoWorkFinished: Done synchronizing of Meteringpoints with netproducts from Google BigQuery");
+                _logger.TrackTrace($"{DisplayName}DoWorkFinished: Done synchronizing of Meteringpoints with netproducts from Google BigQuery");
             }
             catch (Exception e)
             {
@@ -58,7 +58,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             var meteringPointTariffLastSynced = elviaDbContext.SyncStatus.FirstOrDefault(x => x.Table == _tableName);
             var fullSync = meteringPointTariffLastSynced == null;
             var stopwatch = Stopwatch.StartNew();
-            _logger.TrackTrace("SynchronizeMeteringPointsAsyncStart", new {FullSync = fullSync, LastSynced = meteringPointTariffLastSynced});
+            _logger.TrackTrace($"{DisplayName}SynchronizeMeteringPointsAsyncStart", new {FullSync = fullSync, LastSynced = meteringPointTariffLastSynced});
             if (fullSync)
             {
                 await MeteringPointTariffFullSync(elviaDbContext, bigQueryReader, timeStamp, elviaCompany);
@@ -74,15 +74,15 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
                 await SynchronizeMeteringPointsIncrementalAsync(elviaDbContext, bigQueryReader, meteringPointTariffLastSynced.LastUpdatedUtc, timeStamp, elviaCompany);
                 meteringPointTariffLastSynced.LastUpdatedUtc = timeStamp;
             }
-            _logger.TrackTrace("SynchronizeMeteringPointsAsyncPreSaveChanges", new {FullSync = fullSync, LastSynced = meteringPointTariffLastSynced, ElapsedSinceStart = stopwatch.Elapsed});
+            _logger.TrackTrace($"{DisplayName}SynchronizeMeteringPointsAsyncPreSaveChanges", new {FullSync = fullSync, LastSynced = meteringPointTariffLastSynced, ElapsedSinceStart = stopwatch.Elapsed});
             await elviaDbContext.SaveChangesAsync();
-            _logger.TrackTrace("SynchronizeMeteringPointsAsyncFinished", new {FullSync = fullSync, LastSynced = meteringPointTariffLastSynced, ElapsedSinceStart = stopwatch.Elapsed});
+            _logger.TrackTrace($"{DisplayName}SynchronizeMeteringPointsAsyncFinished", new {FullSync = fullSync, LastSynced = meteringPointTariffLastSynced, ElapsedSinceStart = stopwatch.Elapsed});
         }
 
         public virtual async Task MeteringPointTariffFullSync(ElviaDbContext elviaDbContext, IBigQueryReader bigQueryReader, DateTimeOffset timeStamp, Company elviaCompany)
         {
             var result = await bigQueryReader.GetAllMeteringPointProductAsync();
-            _logger.TrackTrace("MeteringPointTariffFullSyncAboutToInsert", new {NumUpdates = result.Count});
+            _logger.TrackTrace($"{DisplayName}MeteringPointTariffFullSyncAboutToInsert", new {NumUpdates = result.Count});
             try
             {
                 elviaDbContext.ChangeTracker.AutoDetectChangesEnabled = false;
@@ -90,7 +90,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
             }
             catch (Exception exception)
             {
-                _logger.TrackException(new GridTariffApiException("MeteringPointTariffFullSyncFailed", exception));
+                _logger.TrackException(new GridTariffApiException($"{DisplayName}MeteringPointTariffFullSyncFailed", exception));
             }
             finally
             {
@@ -122,7 +122,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
         public virtual async Task SynchronizeMeteringPointsIncrementalAsync(ElviaDbContext elviaDbContext, IBigQueryReader bigQueryReader, DateTimeOffset lastUpdated, DateTimeOffset timeStamp, Company elviaCompany)
         {
             var result = await bigQueryReader.GetMeteringPointsByFromDateAsync(lastUpdated);
-            _logger.TrackTrace("SynchronizeMeteringPointsIncrementalAsyncAboutToUpsert", new {NumUpdates = result.Count});
+            _logger.TrackTrace($"{DisplayName}SynchronizeMeteringPointsIncrementalAsyncAboutToUpsert", new {NumUpdates = result.Count});
             await UpsertMeteringPointsAsync(elviaDbContext, result, timeStamp, elviaCompany);
         }
 
@@ -167,7 +167,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
         {
             try
             {
-                _logger.TrackTrace("MeteringPointTariffSynchronizerStartAsync: Setting up scheduled synchronizing of meteringpoints with netproducts from Google BigQuery");
+                _logger.TrackTrace($"{DisplayName}MeteringPointTariffSynchronizerStartAsync: Setting up scheduled synchronizing of meteringpoints with netproducts from Google BigQuery");
                 return base.StartAsync(cancellationToken);
             }
             catch (Exception e)
@@ -181,7 +181,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
         {
             try
             {
-                _logger.TrackTrace("MeteringPointTariffSynchronizerStopAsync");
+                _logger.TrackTrace($"{DisplayName}MeteringPointTariffSynchronizerStopAsync");
                 return base.StopAsync(cancellationToken);
             }
             catch (Exception e)
