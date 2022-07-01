@@ -23,6 +23,27 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
         private readonly ITelemetryInsightsLogger _logger;
         private readonly IServiceProvider _serviceProvider;
 
+        private readonly List<string> _productsToUseStandardProduct = new List<string>()
+        {
+            "HN ELHA avr",
+            "HN ELHYA avr",
+            "E10",
+            "E17",
+            "E25",
+            "E35",
+            "E50",
+            "E65",
+            "E80",
+            "E99",
+            "E10B",
+            "E17B",
+            "E25B",
+            "ST",
+            "HN Standard"
+        };
+
+        private string _standardProductCode = "standard";
+
         public MeteringPointTariffSynchronizer(
             ITelemetryInsightsLogger logger,
             IScheduleConfig<MeteringPointTariffSynchronizer> config,
@@ -82,6 +103,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
         public virtual async Task MeteringPointTariffFullSync(ElviaDbContext elviaDbContext, IBigQueryReader bigQueryReader, DateTimeOffset timeStamp, Company elviaCompany)
         {
             var result = await bigQueryReader.GetAllMeteringPointProductAsync();
+            HandleTransformationToCurrentBasedTariffs(result);
             _logger.TrackTrace("MeteringPointTariffFullSyncAboutToInsert", new {NumUpdates = result.Count});
             try
             {
@@ -122,6 +144,7 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
         public virtual async Task SynchronizeMeteringPointsIncrementalAsync(ElviaDbContext elviaDbContext, IBigQueryReader bigQueryReader, DateTimeOffset lastUpdated, DateTimeOffset timeStamp, Company elviaCompany)
         {
             var result = await bigQueryReader.GetMeteringPointsByFromDateAsync(lastUpdated);
+            HandleTransformationToCurrentBasedTariffs(result);
             _logger.TrackTrace("SynchronizeMeteringPointsIncrementalAsyncAboutToUpsert", new {NumUpdates = result.Count});
             await UpsertMeteringPointsAsync(elviaDbContext, result, timeStamp, elviaCompany);
         }
@@ -162,6 +185,17 @@ namespace GridTariffApi.BigQuery.MeteringPointTariffSync
                 }
             }
         }
+        private void HandleTransformationToCurrentBasedTariffs(List<BigQueryMeteringPointProduct> mpProducts)
+        {
+            foreach (var mpProduct in mpProducts)
+            {
+                if (_productsToUseStandardProduct.Contains(mpProduct.Product))
+                {
+                    mpProduct.Product = _standardProductCode;
+                }
+            }
+        }
+
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
