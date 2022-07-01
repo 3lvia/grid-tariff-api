@@ -420,6 +420,7 @@ namespace GridTariffApi.Lib.Services
         {
             var fromDateLocaled = _serviceHelper.ToConfiguredTimeZone(fromDateUtc);
             fromDateLocaled = fromDateLocaled.AddDays(1 - fromDateLocaled.Day);
+            fromDateLocaled = fromDateLocaled.AddHours(-fromDateLocaled.Hour);
             var toDateLocaled = _serviceHelper.ToConfiguredTimeZone(toDateUtc);
 
             List<int> daysInMonthToBeProcessed = new List<int>();
