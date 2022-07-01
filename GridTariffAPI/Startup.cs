@@ -133,26 +133,24 @@ namespace GridTariffApi
 
             services.AddStandardElviaTelemetryLogging(Configuration.EnsureHasValue("kunde:kv:appinsights:kunde:instrumentation-key"), writeToConsole: true);
 
-            //bigquery (meteringpointtariff)
-            services.AddTransient<BigQuery.MeteringPointTariffSync.IBigQueryReader, BigQuery.MeteringPointTariffSync.BigQueryReader>();
-            services.AddTransient<IMeteringPointTariffSynchronizer, MeteringPointTariffSynchronizer>();
-
             //startup tasks
             services.AddTransient<IStartupTask, PrepareDatabaseStartupTask>();
-            services.AddTransient<IStartupTask, SyncMeteringPointTariffStartupTask>();
+            // We no longer sync mp tariffs on startup. It is handled on a schedule (in a separate synk-deployment with deployment-role=synchronizer)
+            // services.AddTransient<IStartupTask, SyncMeteringPointTariffStartupTask>();
 
-            services.AddCronJob<MeteringPointTariffSynchronizer>(c =>
+            // BigQuery synchronizer (only if running as deployment role "synchronizer")
+            var deploymentRoleConfig = new DeploymentRoleConfig(Configuration.GetValue<string>("deployment-role"));
+            services.AddSingleton(deploymentRoleConfig);
+            if(deploymentRoleConfig.Role == DeploymentRoleConfig.RoleType.Synchronizer)
             {
-                c.TimeZoneInfo = NorwegianTimeZoneInfo();
-                c.CronExpression = @"0 6 * * *";      // every day at 06:00
-            });
-
-
-            services.AddCronJob<ScheduledGridTariffApiSynchronizer>(c =>
-            {
-                c.TimeZoneInfo = NorwegianTimeZoneInfo();
-                c.CronExpression = @"0 5 * * *";      //every day at 05:00
-            });
+                services.AddTransient<BigQuery.MeteringPointTariffSync.IBigQueryReader, BigQuery.MeteringPointTariffSync.BigQueryReader>();
+                services.AddTransient<IMeteringPointTariffSynchronizer, MeteringPointTariffSynchronizer>();
+                services.AddCronJob<MeteringPointTariffSynchronizer>(c =>
+                {
+                    c.TimeZoneInfo = NorwegianTimeZoneInfo();
+                    c.CronExpression = @"0 0/1 * * *"; // every hour
+                });
+            }
 
             var swaggerSettings = Configuration.GetSection("SwaggerSettings").Get<SwaggerSettings>();
             services.AddSwaggerConfiguration(swaggerSettings);

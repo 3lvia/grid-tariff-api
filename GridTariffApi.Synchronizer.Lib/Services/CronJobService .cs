@@ -22,6 +22,8 @@ namespace GridTariffApi.Synchronizer.Lib.Services
             _timeZoneInfo = timeZoneInfo;
         }
 
+        public virtual string DisplayName => GetType().Name;
+
         public virtual async Task StartAsync(CancellationToken cancellationToken)
         {
             try
@@ -45,9 +47,12 @@ namespace GridTariffApi.Synchronizer.Lib.Services
                     var delay = next.Value - timezonedNow;
                     if (delay.TotalMilliseconds <= 0) // prevent non-positive values from being passed into Timer
                     {
-                        _logger.TrackTrace("CronJobServiceRescheduledDueToNegativeDelay", new {Delay = delay});
+                        _logger.TrackTrace($"{DisplayName} CronJobServiceRescheduledDueToNegativeDelay", new {Delay = delay});
                         await ScheduleJob(cancellationToken);
                     }
+
+                    var nextScheduledTime = DateTime.UtcNow.Add(delay);
+                    _logger.TrackTrace($"{DisplayName}Rescheduled", new { Delay = delay, NextScheduledTimeUtc = nextScheduledTime, NextScheduledTimeLocal = TimeZoneInfo.ConvertTime(nextScheduledTime, _timeZoneInfo)});
 
                     _timer = new System.Timers.Timer(delay.TotalMilliseconds);
                     _timer.Elapsed += async (sender, args) =>
@@ -118,7 +123,7 @@ namespace GridTariffApi.Synchronizer.Lib.Services
         {
             if (options == null)
             {
-                throw new ArgumentNullException(nameof(options), @"Please provide Schedule Configurations.");
+                throw new ArgumentNullException(nameof(options), "Please provide Schedule Configurations.");
             }
 
             var config = new ScheduleConfig<T>();

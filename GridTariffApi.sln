@@ -8,7 +8,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CI", "CI", "{041DA3EE-5BB6-47A5-B1D5-4E556FC71FFA}"
 	ProjectSection(SolutionItems) = preProject
 		CI\trunk.yaml = CI\trunk.yaml
-		CI\values.yaml = CI\values.yaml
+		CI\values-api.yaml = CI\values-api.yaml
+		CI\values-synchronizer.yaml = CI\values-synchronizer.yaml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GridTariffApi.Lib.Tests", "GridTariffApi.Lib.Tests\GridTariffApi.Lib.Tests.csproj", "{DB0D0D26-5B4C-4ABB-89BE-F0560E1E61E8}"

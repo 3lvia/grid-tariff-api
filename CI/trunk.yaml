@@ -37,18 +37,30 @@ stages:
     dependsOn: Build
     jobs:
       - template: deploy.yaml@templates
+        displayName: DeployApiDev
         parameters:
           environment: dev
-          helmValuesFile: values.yaml
+          helmValuesFile: values-api.yaml
+      - template: deploy.yaml@templates
+        displayName: DeploySynchronizerDev
+        parameters:
+          environment: dev
+          helmValuesFile: values-synchronizer.yaml
 
   - stage: DeployTest
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/trunk'), true)
     dependsOn: DeployDev
     jobs:
       - template: deploy.yaml@templates
+        displayName: DeployApiTest
         parameters:
           environment: test
-          helmValuesFile: values.yaml
+          helmValuesFile: values-api.yaml
+      - template: deploy.yaml@templates
+        displayName: DeploySynchronizerTest
+        parameters:
+          environment: test
+          helmValuesFile: values-synchronizer.yaml
 
   - stage: RegisterAzureApiManagementTest
     dependsOn: DeployTest
@@ -141,10 +153,16 @@ stages:
   - stage: DeployProd
     dependsOn: RegisterAzureApiManagementTest
     jobs:
-    - template: deploy.yaml@templates
-      parameters:
-        environment: prod
-        helmValuesFile: values.yaml
+     - template: deploy.yaml@templates
+       displayName: DeployApiProd
+       parameters:
+         environment: prod
+         helmValuesFile: values-api.yaml
+     - template: deploy.yaml@templates
+       displayName: DeploySynchronizerProd
+       parameters:
+         environment: prod
+         helmValuesFile: values-synchronizer.yaml
 
   - stage: RegisterAzureApiManagementProd
     dependsOn: DeployProd
