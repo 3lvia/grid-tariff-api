@@ -32,38 +32,39 @@ stages:
         parameters:
           dockerfile: Dockerfile
 
-  - stage: DeployDev
+  - stage: DeployApiDev
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/trunk'), true)
     dependsOn: Build
     jobs:
       - template: deploy.yaml@templates
         parameters:
-          jobName: DeployApiDev
           environment: dev
           helmValuesFile: values-api.yaml
-      - template: deploy.yaml@templates
-        parameters:
-          jobName: DeploySynchronizerDev
-          environment: dev
-          helmValuesFile: values-synchronizer.yaml
-
-  - stage: DeployTest
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/trunk'), true)
-    dependsOn: DeployDev
+  - stage: DeploySynchronizerDev
+    dependsOn: DeployApiDev
     jobs:
       - template: deploy.yaml@templates
         parameters:
-          jobName: DeployApiTest
-          environment: test
-          helmValuesFile: values-api.yaml
+          environment: dev
+          helmValuesFile: values-synchronizer.yaml
+
+  - stage: DeployApiTest
+    dependsOn: DeploySynchronizerDev
+    jobs:
       - template: deploy.yaml@templates
         parameters:
-          jobName: DeploySynchronizerTest
+          environment: test
+          helmValuesFile: values-api.yaml
+  - stage: DeploySynchronizerTest
+    dependsOn: DeployApiTest
+    jobs:
+      - template: deploy.yaml@templates
+        parameters:
           environment: test
           helmValuesFile: values-synchronizer.yaml
 
   - stage: RegisterAzureApiManagementTest
-    dependsOn: DeployTest
+    dependsOn: DeployApiTest
     jobs:
     - job: RegisterAzureApiManagementTest
       pool:
@@ -150,22 +151,23 @@ stages:
              </policies>
             MicrosoftApiManagementAPIVersion: '2018-01-01'
 
-  - stage: DeployProd
+  - stage: DeployApiProd
     dependsOn: RegisterAzureApiManagementTest
     jobs:
      - template: deploy.yaml@templates
        parameters:
-         jobName: DeployApiProd
          environment: prod
          helmValuesFile: values-api.yaml
+  - stage: DeploySynchronizerProd
+    dependsOn: DeployApiProd
+    jobs:
      - template: deploy.yaml@templates
        parameters:
-         jobName: DeploySynchronizerProd
          environment: prod
          helmValuesFile: values-synchronizer.yaml
 
   - stage: RegisterAzureApiManagementProd
-    dependsOn: DeployProd
+    dependsOn: DeployApiProd
     jobs:
     - job: RegisterAzureApiManagementProd
       pool:
