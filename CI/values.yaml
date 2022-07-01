@@ -9,7 +9,7 @@ microserviceType: webapi
 replicaCount:
   dev: 1
   test: 1
-  prod: 1
+  prod: 3
 
 image:
   repository: containerregistryelvia.azurecr.io/kunde-grid-tariff-api
@@ -54,27 +54,27 @@ startupProbe:
   successThreshold: 1
   timeoutSeconds: 3
 
-readinessProbe:
-  failureThreshold: 5
-  httpGet:
-    path: /ping
-    port: 8080
-    scheme: HTTP
-  initialDelaySeconds: 15
-  periodSeconds: 15
-  successThreshold: 1
-  timeoutSeconds: 3
+#readinessProbe:
+#  failureThreshold: 5
+#  httpGet:
+#    path: /ping
+#    port: 8080
+#    scheme: HTTP
+#  initialDelaySeconds: 15
+#  periodSeconds: 15
+#  successThreshold: 1
+#  timeoutSeconds: 3
 
-livenessProbe:
-  failureThreshold: 5
-  httpGet:
-    path: /ping
-    port: 8080
-    scheme: HTTP
-  initialDelaySeconds: 15
-  periodSeconds: 15
-  successThreshold: 1
-  timeoutSeconds: 3
+#livenessProbe:
+#  failureThreshold: 5
+#  httpGet:
+#    path: /ping
+#    port: 8080
+#    scheme: HTTP
+#  initialDelaySeconds: 15
+#  periodSeconds: 15
+#  successThreshold: 1
+#  timeoutSeconds: 3
   
 configmap:
   dev:
