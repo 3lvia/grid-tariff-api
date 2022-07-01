@@ -37,9 +37,9 @@ namespace GridTariffApi
                 }
             };
 
-            var startupTasks = host.Services.GetServices<IStartupTask>().OrderBy(x => x.GetExecutionOrder()).ToList();
-            RunStartupTasks(startupTasks, logger); // Don't wait - it takes a long time (and the database is initiated in all environments, so we need to get the service up and running without waiting for metering point products to be fully updated.
-            logger.TrackEvent("StartupTasksDispatched_StartingHost");
+            //var startupTasks = host.Services.GetServices<IStartupTask>().OrderBy(x => x.GetExecutionOrder()).ToList();
+            //RunStartupTasks(startupTasks, logger); // Don't wait - it takes a long time (and the database is initiated in all environments, so we need to get the service up and running without waiting for metering point products to be fully updated.
+            //logger.TrackEvent("StartupTasksDispatched_StartingHost");
             await host.RunAsync();
         }
 
