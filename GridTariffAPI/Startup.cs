@@ -135,7 +135,7 @@ namespace GridTariffApi
 
             //startup tasks
             services.AddTransient<IStartupTask, PrepareDatabaseStartupTask>();
-            // We no longer sync mp tariffs on startup. It is handled on a schedule (in a separate synk-deployment with XX=true)
+            // We no longer sync mp tariffs on startup. It is handled on a schedule (in a separate synk-deployment with deployment-role=synchronizer)
             // services.AddTransient<IStartupTask, SyncMeteringPointTariffStartupTask>();
 
             // BigQuery synchronizer (only if running as deployment role "synchronizer")
