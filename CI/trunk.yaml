@@ -9,6 +9,7 @@ variables:
   containerregistry: "ContainerRegistryElvia"
   imagetag: $(Build.BuildNumber)
   namespace: kunde
+  name: grid-tariff-api
 
 resources:
   repositories:
@@ -37,7 +38,6 @@ stages:
     jobs:
       - template: deploy.yaml@templates
         parameters:
-          name: grid-tariff-api
           environment: dev
           helmValuesFile: values-api.yaml
   - stage: DeploySynchronizerDev
@@ -54,7 +54,6 @@ stages:
     jobs:
       - template: deploy.yaml@templates
         parameters:
-          name: grid-tariff-api
           environment: test
           helmValuesFile: values-api.yaml
   - stage: DeploySynchronizerTest
@@ -159,7 +158,6 @@ stages:
     jobs:
      - template: deploy.yaml@templates
        parameters:
-         name: grid-tariff-api
          environment: prod
          helmValuesFile: values-api.yaml
   - stage: DeploySynchronizerProd
