@@ -8,7 +8,6 @@ pool:
 variables:
   containerregistry: "ContainerRegistryElvia"
   imagetag: $(Build.BuildNumber)
-  name: grid-tariff-api
   namespace: kunde
 
 resources:
@@ -21,13 +20,13 @@ resources:
 stages:
   - stage: Build
     jobs:
-      - template: test.yaml@templates
-        parameters:
-          unitTestProjects: |
-            **/*Tests/*.csproj
-            !**/*IntegrationTests/*.csproj
-            !**/*SmokeTests/*.csproj
-          sonarcloudProjectName: "3lvia_kunde-tariff-api"
+      # - template: test.yaml@templates
+      #   parameters:
+      #     unitTestProjects: |
+      #       **/*Tests/*.csproj
+      #       !**/*IntegrationTests/*.csproj
+      #       !**/*SmokeTests/*.csproj
+      #     sonarcloudProjectName: "3lvia_kunde-tariff-api"
       - template: build.yaml@templates
         parameters:
           dockerfile: Dockerfile
@@ -38,6 +37,7 @@ stages:
     jobs:
       - template: deploy.yaml@templates
         parameters:
+          name: grid-tariff-api
           environment: dev
           helmValuesFile: values-api.yaml
   - stage: DeploySynchronizerDev
@@ -45,6 +45,7 @@ stages:
     jobs:
       - template: deploy.yaml@templates
         parameters:
+          name: grid-tariff-api-synchronizer
           environment: dev
           helmValuesFile: values-synchronizer.yaml
 
@@ -53,6 +54,7 @@ stages:
     jobs:
       - template: deploy.yaml@templates
         parameters:
+          name: grid-tariff-api
           environment: test
           helmValuesFile: values-api.yaml
   - stage: DeploySynchronizerTest
@@ -60,6 +62,7 @@ stages:
     jobs:
       - template: deploy.yaml@templates
         parameters:
+          name: grid-tariff-api-synchronizer
           environment: test
           helmValuesFile: values-synchronizer.yaml
 
@@ -156,6 +159,7 @@ stages:
     jobs:
      - template: deploy.yaml@templates
        parameters:
+         name: grid-tariff-api
          environment: prod
          helmValuesFile: values-api.yaml
   - stage: DeploySynchronizerProd
@@ -163,6 +167,7 @@ stages:
     jobs:
      - template: deploy.yaml@templates
        parameters:
+         name: grid-tariff-api-synchronizer
          environment: prod
          helmValuesFile: values-synchronizer.yaml
 
