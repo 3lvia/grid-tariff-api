@@ -11011,6 +11011,498 @@
               ]
             }
           ]
+        },
+        {
+          "tariffKey": "standard_south",
+          "product": "HN Standard",
+          "title": "Standard Oslo og Viken",
+          "description": "NB! Bruk tariffen Standard. Denne er for internt bruk i Elvia. For alle forbrukerkunder og alle næringskunder med årsforbruk < 100.000 kWh. NB! Næringskunder med enovapåslag i fastleddet må selv legge til dette i fastleddet og trekke fra angitt enovapåslag i energileddet.",
+          "usePublicHolidayOverride": "CHEAP",
+          "useWeekendPriceOverride": "CHEAP",
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-18T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "monthlymax",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": 3,
+            "months": 1,
+            "monthsOffset": 0
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2022-06-30T22:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2022-06-30T22:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2022-06-30T22:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2022-06-30T22:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "enovaTax",
+                    "taxValue": 0.0100,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "Enovaavgift"
+                  },
+                  {
+                    "startDate": "2022-06-30T22:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "702fb787-9a49-4a7d-96bb-53938faae5d6",
+                "fixedPriceLevel": [
+                  {
+                    "id": "797fc526-41af-4766-9bdd-2c5494572993",
+                    "valueMin": 0.0000,
+                    "valueMax": 2.0001,
+                    "nextIdDown": null,
+                    "nextIdUp": "23353beb-438c-4786-bfc4-092357fb451d",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 100.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 0-2 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "23353beb-438c-4786-bfc4-092357fb451d",
+                    "valueMin": 2.0001,
+                    "valueMax": 5.0001,
+                    "nextIdDown": "797fc526-41af-4766-9bdd-2c5494572993",
+                    "nextIdUp": "d7381c12-fad1-4567-8abe-51d5b7cb3e3a",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 160.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 2-5 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "d7381c12-fad1-4567-8abe-51d5b7cb3e3a",
+                    "valueMin": 5.0001,
+                    "valueMax": 10.0001,
+                    "nextIdDown": "23353beb-438c-4786-bfc4-092357fb451d",
+                    "nextIdUp": "117aa370-4c9b-4a8b-a8c3-8e95d0ed5059",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 260.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 5-10 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "117aa370-4c9b-4a8b-a8c3-8e95d0ed5059",
+                    "valueMin": 10.0001,
+                    "valueMax": 15.0001,
+                    "nextIdDown": "d7381c12-fad1-4567-8abe-51d5b7cb3e3a",
+                    "nextIdUp": "ebc8d049-78e3-4ca8-a37f-73d240be0ae1",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 360.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 10-15 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "ebc8d049-78e3-4ca8-a37f-73d240be0ae1",
+                    "valueMin": 15.0001,
+                    "valueMax": 20.0001,
+                    "nextIdDown": "117aa370-4c9b-4a8b-a8c3-8e95d0ed5059",
+                    "nextIdUp": "b7f2dba0-4de5-45cd-b4e3-0399493c856b",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 460.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 15-20 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "b7f2dba0-4de5-45cd-b4e3-0399493c856b",
+                    "valueMin": 20.0001,
+                    "valueMax": 25.0001,
+                    "nextIdDown": "ebc8d049-78e3-4ca8-a37f-73d240be0ae1",
+                    "nextIdUp": "0bb3c299-e945-4ea8-8154-6e1af77193d7",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 560.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 20-25 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "0bb3c299-e945-4ea8-8154-6e1af77193d7",
+                    "valueMin": 25.0001,
+                    "valueMax": 50.0001,
+                    "nextIdDown": "b7f2dba0-4de5-45cd-b4e3-0399493c856b",
+                    "nextIdUp": "334b1e2d-7491-4202-aa00-d2d9a40f9adc",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 1060.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 25-50 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "334b1e2d-7491-4202-aa00-d2d9a40f9adc",
+                    "valueMin": 50.0001,
+                    "valueMax": 75.0001,
+                    "nextIdDown": "0bb3c299-e945-4ea8-8154-6e1af77193d7",
+                    "nextIdUp": "f9f6f197-1bef-4179-b311-81fa86f2d194",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 1560.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 50-75 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "f9f6f197-1bef-4179-b311-81fa86f2d194",
+                    "valueMin": 75.0001,
+                    "valueMax": 100.0001,
+                    "nextIdDown": "334b1e2d-7491-4202-aa00-d2d9a40f9adc",
+                    "nextIdUp": "afb111fb-7124-41ef-a98c-b6a4c4b61aa6",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 2060.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 75-100 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "afb111fb-7124-41ef-a98c-b6a4c4b61aa6",
+                    "valueMin": 100.0001,
+                    "valueMax": null,
+                    "nextIdDown": "f9f6f197-1bef-4179-b311-81fa86f2d194",
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 4120.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: >100 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "aaa46a43-11f5-41de-a813-496cd3872d23",
+                        "level": "CHEAP",
+                        "energyExTaxes": 0.1307,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 22, 23 ]
+                      },
+                      {
+                        "id": "5651f3bb-784a-402b-a09d-5ef5076bcf3b",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.1807,
+                        "hours": [ 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "982dbf55-472b-4e00-9498-bb43884485c0",
+                        "level": "CHEAP",
+                        "energyExTaxes": 0.1307,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 22, 23 ]
+                      },
+                      {
+                        "id": "2dd44b18-8539-4f9c-a12c-90d0dd9aa818",
+                        "level": "EXPENSIVE",
+                        "energyExTaxes": 0.1807,
+                        "hours": [ 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tariffKey": "standard_north",
+          "product": "ST",
+          "title": "Standard for Innlandet",
+          "description": "NB! Bruk tariffen Standard. Denne er for internt bruk i Elvia. For alle forbrukerkunder og alle næringskunder med årsforbruk < 100.000 kWh. NB! Næringskunder med enovapåslag i fastleddet må selv legge til dette i fastleddet og trekke fra angitt enovapåslag i energileddet.",
+          "usePublicHolidayOverride": "CHEAP",
+          "useWeekendPriceOverride": "CHEAP",
+          "consumptionFlag": true,
+          "lastUpdated": "2022-05-18T08:00:00Z",
+          "usePowerPriceConfiguration": false,
+          "fixedPriceConfiguration": {
+            "basis": "monthlymax",
+            "maxhoursPerDay": null,
+            "daysPerMonth": null,
+            "allDaysPerMonth": null,
+            "maxhoursPerMonth": 3,
+            "months": 1,
+            "monthsOffset": 0
+          },
+          "resolution": 60,
+          "tariffPrices": [
+            {
+              "startDate": "2022-06-30T22:00:00Z",
+              "endDate": "2023-12-31T23:00:00Z",
+              "taxes": {
+                "fixedPriceTaxes": [
+                  {
+                    "startDate": "2022-06-30T22:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ],
+                "energyPriceTaxes": [
+                  {
+                    "startDate": "2022-06-30T22:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "consumptionTax",
+                    "taxValue": 0.1541,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "elavgift"
+                  },
+                  {
+                    "startDate": "2022-06-30T22:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "enovaTax",
+                    "taxValue": 0.0100,
+                    "taxUom": "kr/kWh",
+                    "taxTypeDescription": "Enovaavgift"
+                  },
+                  {
+                    "startDate": "2022-06-30T22:00:00Z",
+                    "endDate": "2023-12-31T23:00:00Z",
+                    "taxType": "vat",
+                    "taxValue": 25.0000,
+                    "taxUom": "%",
+                    "taxTypeDescription": "MVA"
+                  }
+                ]
+              },
+              "fixedPrices": {
+                "id": "8192d121-418a-4ad9-a35f-3b79ecdaaa46",
+                "fixedPriceLevel": [
+                  {
+                    "id": "8b7b6084-fad4-4c06-96b5-51acf829d78b",
+                    "valueMin": 0.0000,
+                    "valueMax": 2.0001,
+                    "nextIdDown": null,
+                    "nextIdUp": "a7ed6c16-84b4-473e-a334-9f055fdcf060",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 100.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 0-2 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "a7ed6c16-84b4-473e-a334-9f055fdcf060",
+                    "valueMin": 2.0001,
+                    "valueMax": 5.0001,
+                    "nextIdDown": "8b7b6084-fad4-4c06-96b5-51acf829d78b",
+                    "nextIdUp": "83fd71f9-1c26-49ee-a096-bb8f6e64346d",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 160.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 2-5 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "83fd71f9-1c26-49ee-a096-bb8f6e64346d",
+                    "valueMin": 5.0001,
+                    "valueMax": 10.0001,
+                    "nextIdDown": "a7ed6c16-84b4-473e-a334-9f055fdcf060",
+                    "nextIdUp": "498519f2-df04-4748-b80f-303b0d178323",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 260.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 5-10 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "498519f2-df04-4748-b80f-303b0d178323",
+                    "valueMin": 10.0001,
+                    "valueMax": 15.0001,
+                    "nextIdDown": "83fd71f9-1c26-49ee-a096-bb8f6e64346d",
+                    "nextIdUp": "5ef4f888-a8b7-4ed6-84e6-434b4fbfe2f5",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 360.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 10-15 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "5ef4f888-a8b7-4ed6-84e6-434b4fbfe2f5",
+                    "valueMin": 15.0001,
+                    "valueMax": 20.0001,
+                    "nextIdDown": "498519f2-df04-4748-b80f-303b0d178323",
+                    "nextIdUp": "5af32b7b-90dc-4390-8c8a-b3dc89010b92",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 460.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 15-20 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "5af32b7b-90dc-4390-8c8a-b3dc89010b92",
+                    "valueMin": 20.0001,
+                    "valueMax": 25.0001,
+                    "nextIdDown": "5ef4f888-a8b7-4ed6-84e6-434b4fbfe2f5",
+                    "nextIdUp": "9aa841b0-7753-410d-a9a4-f21debc71600",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 560.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 20-25 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "9aa841b0-7753-410d-a9a4-f21debc71600",
+                    "valueMin": 25.0001,
+                    "valueMax": 50.0001,
+                    "nextIdDown": "5af32b7b-90dc-4390-8c8a-b3dc89010b92",
+                    "nextIdUp": "aa76bcbf-9458-41e4-9e53-e262d5ad902d",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 1060.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 25-50 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "aa76bcbf-9458-41e4-9e53-e262d5ad902d",
+                    "valueMin": 50.0001,
+                    "valueMax": 75.0001,
+                    "nextIdDown": "9aa841b0-7753-410d-a9a4-f21debc71600",
+                    "nextIdUp": "dfc792ea-372b-4921-be19-24ab6e2396da",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 1560.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 50-75 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "dfc792ea-372b-4921-be19-24ab6e2396da",
+                    "valueMin": 75.0001,
+                    "valueMax": 100.0001,
+                    "nextIdDown": "aa76bcbf-9458-41e4-9e53-e262d5ad902d",
+                    "nextIdUp": "41345a8a-bc16-492e-9004-bd03aec3b68d",
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 2060.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: 75-100 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  },
+                  {
+                    "id": "41345a8a-bc16-492e-9004-bd03aec3b68d",
+                    "valueMin": 100.0001,
+                    "valueMax": null,
+                    "nextIdDown": "dfc792ea-372b-4921-be19-24ab6e2396da",
+                    "nextIdUp": null,
+                    "valueUnitOfMeasure": "kWh/h",
+                    "monthlyFixedExTaxes": 4120.0000,
+                    "monthlyUnitOfMeasure": "kr/month",
+                    "levelInfo": "Power consumption: >100 kWh/h",
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/hour"
+                  }
+                ]
+              },
+              "seasons": [
+                {
+                  "name": "summer",
+                  "months": [ 4, 5, 6, 7, 8, 9, 10 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "809bc623-606c-49f4-ba8e-a34cb0736cf0",
+                        "level": "CHEAP",
+                        "energyExTaxes": 0.1307,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 22, 23 ]
+                      },
+                      {
+                        "id": "3d1b1b10-457f-468d-a428-bc035f9d677b",
+                        "level": "NORMAL",
+                        "energyExTaxes": 0.1807,
+                        "hours": [ 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                },
+                {
+                  "name": "winter",
+                  "months": [ 11, 12, 1, 2, 3 ],
+                  "energyPrice": {
+                    "energyPriceLevel": [
+                      {
+                        "id": "49e73286-815e-4e36-aa89-727baeef4473",
+                        "level": "CHEAP",
+                        "energyExTaxes": 0.1307,
+                        "hours": [ 0, 1, 2, 3, 4, 5, 22, 23 ]
+                      },
+                      {
+                        "id": "e7ead082-148a-4969-b240-0c496a53f4b8",
+                        "level": "EXPENSIVE",
+                        "energyExTaxes": 0.1807,
+                        "hours": [ 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
+                      }
+                    ],
+                    "currency": "NOK",
+                    "monetaryUnitOfMeasure": "kr/kWh"
+                  }
+                }
+              ]
+            }
+          ]
         }
       ]
     }
