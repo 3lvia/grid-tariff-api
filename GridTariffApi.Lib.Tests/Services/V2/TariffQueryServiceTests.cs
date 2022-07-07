@@ -181,13 +181,13 @@ namespace GridTariffApi.Lib.Tests.Services
         }
 
         [Theory]
-        [InlineData("nok", "kr/kwh", "level", 1, 0, 1.1, 1, "season", 3.1, 3.1, 0)]
-        [InlineData("nok", "kr/kwh", "level", 1, 25, 1.1, 1, "season", 3.1, 3.875, 0.775)]
+        [InlineData("nok", "kr/kwh", "level", 1, 0, 1.1, 1, "season", 3.1, 3.1, 2.1)]
+        [InlineData("nok", "kr/kwh", "level", 1, 25, 1.1, 1, "season", 3.1, 3.875, 2.875)]
         [InlineData("nok", "kr/kwh", "level", 0, 25, 0, 0, "season", 0, 0, 0)]
         [InlineData("nok", "kr/kwh", "level", 10, 25, 0, 0, "season", 10, 12.5, 2.5)]
-        [InlineData("nok", "kr/kwh", "level", 0, 25, 1, 0, "season", 1, 1.25, 0.25)]
-        [InlineData("nok", "kr/kwh", "level", 0, 25, 0, 1, "season", 1, 1.25, 0.25)]
-        [InlineData("nok", "kr/kwh", "level", 0, 25, 1, 1, "season", 2, 2.5, 0.5)]
+        [InlineData("nok", "kr/kwh", "level", 0, 25, 1, 0, "season", 1, 1.25, 1.25)]
+        [InlineData("nok", "kr/kwh", "level", 0, 25, 0, 1, "season", 1, 1.25, 1.25)]
+        [InlineData("nok", "kr/kwh", "level", 0, 25, 1, 1, "season", 2, 2.5, 2.5)]
         public void PriceLevelEnergyPriceToEnergyPriceLevelTest(
             string currency,
             string monetaryUnitOfMeasure,
@@ -207,9 +207,9 @@ namespace GridTariffApi.Lib.Tests.Services
             var energyPrice = new EnergyPrice(null, currency, monetaryUnitOfMeasure);
             var energyPriceLevel = new EnergyPriceLevel(string.Empty, level, (double)energyExTaxes, null);
 
-            var vatTax = new EnergyPriceTax(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, "vat", vatPercentValue, "", "");
-            var cumsumptionTax = new EnergyPriceTax(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, "consumptionTax", consumptionTaxValue, "", "");
-            var enovaTax = new EnergyPriceTax(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, "enovaTax", enovaTaxValue, "", "");
+            var vatTax = new EnergyPriceTax(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, "vat", vatPercentValue, "%", "");
+            var cumsumptionTax = new EnergyPriceTax(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, "consumptionTax", consumptionTaxValue, monetaryUnitOfMeasure, "");
+            var enovaTax = new EnergyPriceTax(DateTimeOffset.MinValue, DateTimeOffset.MaxValue, "enovaTax", enovaTaxValue, monetaryUnitOfMeasure, "");
             var energyTaxes = new List<EnergyPriceTax>
             {
                 vatTax,
