@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Elvia.Configuration" Version="1.9.6" />
+    <PackageReference Include="Elvia.Configuration" Version="1.15.0" />
     <PackageReference Include="Elvia.Telemetry.AspNetCore" Version="3.0.3" />
     <PackageReference Include="IdentityModel" Version="5.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.21" />
