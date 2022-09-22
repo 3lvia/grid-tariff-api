@@ -104,6 +104,10 @@ namespace GridTariffApi.Lib.Controllers.v1
                 DateTimeOffset endDateTime = _serviceHelper.GetEndDateTimeOffset(request.Range, request.EndTime);
                 _loggingDataCollector?.RegisterTariffPeriodAndNumMeteringPoints(startDateTime, endDateTime, request.MeteringPointIds?.Count);
                 var result = await _tariffQueryService.QueryMeteringPointsTariffsAsync(startDateTime, endDateTime, request.MeteringPointIds.Distinct().ToList());
+                if (result?.GridTariffCollections?.FirstOrDefault()?.GridTariff == null)
+                {
+                    return NotFound();
+                }
                 return Ok(result);
             }
             catch (Exception ex)
