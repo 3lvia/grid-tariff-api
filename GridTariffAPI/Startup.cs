@@ -92,7 +92,7 @@ namespace GridTariffApi
             services.AddScoped<IMeteringPointTariffRepository, MeteringPointTariffRepositoryEf>();
             services.AddSingleton(new MeteringPointMaxConsumptionRepositoryConfig
             {
-                MaxConsumptionCacheTimeout = TimeSpan.FromHours(1),
+                MaxConsumptionCacheTimeout = TimeSpan.FromHours(6),
                 TimeZoneForMonthLimiting = gridTariffApiConfig.TimeZoneForQueries
             });
             services.AddScoped<IMeteringPointMaxConsumptionRepository, MeteringPointMaxConsumptionCachingMdmxRepository>();
