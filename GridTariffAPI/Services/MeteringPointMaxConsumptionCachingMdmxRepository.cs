@@ -76,28 +76,5 @@ namespace GridTariffApi.Services
 
             return meteringPointIds.Select(mpid => cachedMaxConsumptions[mpid]).ToList();
         }
-
-        //public bool MaxConsumptionIsValidForPeriod(DateTimeOffset fromDateTime, DateTimeOffset toDateTime)
-        //{
-        //    // If any part of the current month is included in the period, we'll return the maxConsumption if we have it. If not, we consider it not valid for the period.
-        //    // Note: we use "today" when connecting metering points to fixed prices. So in practice, we don't need this "current month" check. But it is a logical part of the max consumption interface.
-        //    var localNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _config.TimeZoneForMonthLimiting);
-        //    var localMonthStart = new DateTime(localNow.Year, localNow.Month, 1, 0, 0, 0, localNow.Kind);
-        //    var localMiddleOfNextMonth = localMonthStart.AddDays(30 + 15);
-        //    var localMonthEnd = new DateTime(localMiddleOfNextMonth.Year, localMiddleOfNextMonth.Month, 1, 0, 0, 0, localNow.Kind);
-        //    // TODO: move month/period handling to helper methods
-
-        //    if (fromDateTime >= localMonthEnd)
-        //    {
-        //        return false;
-        //    }
-
-        //    if (toDateTime <= localMonthStart)
-        //    {
-        //        return false;
-        //    }
-
-        //    return true;
-        //}
     }
 }
