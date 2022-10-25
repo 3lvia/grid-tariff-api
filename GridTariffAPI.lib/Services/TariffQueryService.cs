@@ -61,11 +61,11 @@ namespace GridTariffApi.Lib.Services
             DateTimeOffset paramToDate,
             List<MeteringPointInformation> meteringPointInformation)
         {
-
+            bool isMapToFixedPriceLevel = _serviceHelper.TimePeriodIsIncludingLocaleToday(paramFromDate, paramToDate);
             var gridTariff = await QueryTariffUsingProductKeyAsync(productKey, paramFromDate, paramToDate);
             gridTariff.MeteringPointsAndPriceLevels = new List<MeteringPointsAndPriceLevels>();
 
-            if (_serviceHelper.TimePeriodIsIncludingLocaleToday(paramFromDate, paramToDate))
+            if (isMapToFixedPriceLevel)
             {
                 //query overlaps localed "today"
                 var currentFixedPrices = GetFixedPricesValidToday(gridTariff.GridTariff?.TariffPrice?.PriceInfo?.FixedPrices);
