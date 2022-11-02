@@ -1336,5 +1336,41 @@ namespace GridTariffApi.Lib.Tests.Services
             tariffQueryServiceMock.Verify(x => x.QueryTariffUsingProductKeyAsync(productKey, utcNow, utcNow), Times.Once);
             Assert.NotNull(retVal);
         }
+
+        [Fact()]
+        public void GetNextMonthEndDateTestDSTEnd()
+        {
+            Setup();
+
+            var input = new DateTimeOffset(2022, 10, 10, 0, 0, 0, new TimeSpan(2, 0, 0));
+            var expected = new DateTimeOffset(2022, 11, 1, 0, 0, 0, new TimeSpan(1, 0, 0));
+
+            var result = _tariffQueryService.GetNextMonthEndDate(input, DateTimeOffset.MaxValue);
+            Assert.Equal(expected,result);
+        }
+
+        [Fact()]
+        public void GetNextMonthEndDateTestDSTBegin()
+        {
+            Setup();
+
+            var input = new DateTimeOffset(2022, 3, 10, 0, 0, 0, new TimeSpan(1, 0, 0));
+            var expected = new DateTimeOffset(2022,4, 1, 0, 0, 0, new TimeSpan(2, 0, 0));
+            var result = _tariffQueryService.GetNextMonthEndDate(input, DateTimeOffset.MaxValue);
+            Assert.Equal(expected, result);
+        }
+
+        [Fact()]
+        public void GetNextMonthEndDateReturnPeriod()
+        {
+            Setup();
+
+            var input = new DateTimeOffset(2022, 10, 10, 0, 0, 0, new TimeSpan(2, 0, 0));
+            var expected = new DateTimeOffset(2022, 10, 20, 0, 0, 0, new TimeSpan(2, 0, 0));
+
+            var result = _tariffQueryService.GetNextMonthEndDate(input, expected);
+            Assert.Equal(expected, result);
+        }
+
     }
 }
