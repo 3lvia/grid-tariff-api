@@ -349,12 +349,12 @@ namespace GridTariffApi
         {
             var result = new List<MeteringPointProduct>
             {
-                new MeteringPointProduct() { MeteringpointId = "test1", TariffKey = "test1" },
-                new MeteringPointProduct() { MeteringpointId = "abc1", TariffKey = "private_tou_rush" },
-                new MeteringPointProduct() { MeteringpointId = "abc21", TariffKey = "private_tou_daynight" },
-                new MeteringPointProduct() { MeteringpointId = "abc22", TariffKey = "private_tou_daynight" },
-                new MeteringPointProduct() { MeteringpointId = "abc23", TariffKey = "private_tou_daynight" },
-                new MeteringPointProduct() { MeteringpointId = "abc3", TariffKey = "private_tou_rush" }
+                new MeteringPointProduct() { MeteringpointId = "test1", TariffKey = "test1", Product = String.Empty },
+                new MeteringPointProduct() { MeteringpointId = "abc1", TariffKey = "private_tou_rush", Product = String.Empty },
+                new MeteringPointProduct() { MeteringpointId = "abc21", TariffKey = "private_tou_daynight", Product = String.Empty },
+                new MeteringPointProduct() { MeteringpointId = "abc22", TariffKey = "private_tou_daynight", Product = String.Empty },
+                new MeteringPointProduct() { MeteringpointId = "abc23", TariffKey = "private_tou_daynight", Product = String.Empty },
+                new MeteringPointProduct() { MeteringpointId = "abc3", TariffKey = "private_tou_rush", Product = String.Empty }
             };
             return result;
         }

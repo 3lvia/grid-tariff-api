@@ -232,23 +232,22 @@ namespace GridTariffApi.Lib.Tests.Services
         }
 
         [Theory]
-        [InlineData(104, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 104, 26, 130)]
-        [InlineData(152, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 152, 38, 190)]
-        [InlineData(224, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 224, 56, 280)]
-        [InlineData(300, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 300, 75, 375)]
-        [InlineData(376, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 376, 94, 470)]
-        [InlineData(452, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 452, 113, 565)]
-        [InlineData(1000, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 1000, 250, 1250)]
-        [InlineData(1376, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 1376, 344, 1720)]
-        [InlineData(1752, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 1752, 438, 2190)]
-        [InlineData(3344, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", "5", "6", "7", "8", 3344, 836, 4180)]
+        [InlineData(104, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3",  2, "2", "3", "4", "5", "6", "7", "8", 104, 26, 130)]
+        [InlineData(152, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", 2, "2", "3", "4", "5", "6", "7", "8", 152, 38, 190)]
+        [InlineData(224, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", 2, "2", "3", "4", "5", "6", "7", "8", 224, 56, 280)]
+        [InlineData(300, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", 2, "2", "3", "4", "5", "6", "7", "8", 300, 75, 375)]
+        [InlineData(376, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", 2, "2", "3", "4", "5", "6", "7", "8", 376, 94, 470)]
+        [InlineData(452, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", 2, "2", "3", "4", "5", "6", "7", "8", 452, 113, 565)]
+        [InlineData(1000, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", 2, "2", "3", "4", "5", "6", "7", "8", 1000, 250, 1250)]
+        [InlineData(1376, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", 2, "2", "3", "4", "5", "6", "7", "8", 1376, 344, 1720)]
+        [InlineData(1752, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", 2, "2", "3", "4", "5", "6", "7", "8", 1752, 438, 2190)]
+        [InlineData(3344, 25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", 2, "2", "3", "4", "5", "6", "7", "8", 3344, 836, 4180)]
 
         public void PriceLevelPriceToFixedPriceLevelTest(
             int monthlyPriceExAllTaxes,
             int vatPercent,
             string id,
-            double? valueMin,
-            double? valueMax,
+            double valueMax,
             string nextIdDown,
             string nextIdUp,
             string valueUnitOfMeasure,
@@ -269,7 +268,7 @@ namespace GridTariffApi.Lib.Tests.Services
             };
             var fixedPricePriceLevel = new FixedPriceLevel(
                 id,
-                valueMin,
+                null,
                 valueMax,
                 nextIdDown,
                 nextIdUp,
@@ -284,7 +283,8 @@ namespace GridTariffApi.Lib.Tests.Services
             var fixedPriceLevel = _tariffQueryService.PriceLevelPriceToFixedPriceLevel(fixedPricePriceLevel, taxes);
             Assert.Equal(id, fixedPriceLevel.Id);
             Assert.True(Guid.TryParse(fixedPriceLevel.Id, out guid));
-            Assert.Equal(valueMin, fixedPriceLevel.ValueMin);
+            Assert.Null(fixedPriceLevel.ValueMin);
+
             Assert.Equal(valueMax, fixedPriceLevel.ValueMax);
             Assert.Equal(nextIdDown, fixedPriceLevel.NextIdDown);
             Assert.Equal(nextIdUp, fixedPriceLevel.NextIdUp);
@@ -302,12 +302,12 @@ namespace GridTariffApi.Lib.Tests.Services
         }
 
         [Theory]
-        [InlineData(25, "b8b16d89-6436-4133-bc98-d3c86a8187e3", null, 2, "2", "3", "4", 11, 5.61, "5", "6", "7", "8", 11, 11, 13.75, 2.75, 5.61, 5.61, 7.0125, 1.4025)]
+        [InlineData(25, "b8b16d89-6436-4133-bc98-d3c86a8187e3",  2, "2", "3", "4", 11, 5.61, "5", "6", "7", "8", 11, 11, 13.75, 2.75, 5.61, 5.61, 7.0125, 1.4025)]
         public void PriceLevelPriceToPowerPriceLevelTest(
             int vatPercent,
             string id,
-            double? valueMin,
-            double? valueMax,
+//            double? valueMin,
+            double valueMax,
             string nextIdDown,
             string nextIdUp,
             string valueUnitOfMeasure,
@@ -336,13 +336,13 @@ namespace GridTariffApi.Lib.Tests.Services
             {
                 vatTax
             };
-            var powerPricePriceLevel = new PowerPriceLevel(id, valueMin, valueMax, nextIdDown, nextIdUp, valueUnitOfMeasure, (double)monthlyActivePowerExTaxes, (double)monthlyReactivePowerExTaxes, monthlyUnitOfMeasure, levelInfo, currency, monetaryUnitOfMeasure);
+            var powerPricePriceLevel = new PowerPriceLevel(id, null, valueMax, nextIdDown, nextIdUp, valueUnitOfMeasure, (double)monthlyActivePowerExTaxes, (double)monthlyReactivePowerExTaxes, monthlyUnitOfMeasure, levelInfo, currency, monetaryUnitOfMeasure);
 
             var guid = Guid.NewGuid();
             var powerPriceLevel = _tariffQueryService.PriceLevelPowerPriceToPowerPriceLevel(powerPricePriceLevel, taxes);
             Assert.Equal(id, powerPriceLevel.Id);
             Assert.True(Guid.TryParse(powerPriceLevel.Id, out guid));
-            Assert.Equal(valueMin, powerPriceLevel.ValueMin);
+            Assert.Null(powerPriceLevel.ValueMin);
             Assert.Equal(valueMax, powerPriceLevel.ValueMax);
             Assert.Equal(nextIdDown, powerPriceLevel.NextIdDown);
             Assert.Equal(nextIdUp, powerPriceLevel.NextIdUp);
@@ -933,7 +933,11 @@ namespace GridTariffApi.Lib.Tests.Services
         [InlineData(3, 30, false, 2)]
         [InlineData(30, 3, true, 0)]
 
-        public void CheckPriceLevelForMeteringPointsTests(double? fixedPriceLevelValueMin, double? fixedPriceLevelValueMax, bool expectingRetValNull, int numExpected)
+        public void CheckPriceLevelForMeteringPointsTests(
+            Int32? fixedPriceLevelValueMin,
+            Int32? fixedPriceLevelValueMax, 
+            bool expectingRetValNull, 
+            int numExpected)
         {
             Setup();
 
@@ -1336,5 +1340,41 @@ namespace GridTariffApi.Lib.Tests.Services
             tariffQueryServiceMock.Verify(x => x.QueryTariffUsingProductKeyAsync(productKey, utcNow, utcNow), Times.Once);
             Assert.NotNull(retVal);
         }
+
+        [Fact()]
+        public void GetNextMonthEndDateTestDSTEnd()
+        {
+            Setup();
+
+            var input = new DateTimeOffset(2022, 10, 10, 0, 0, 0, new TimeSpan(2, 0, 0));
+            var expected = new DateTimeOffset(2022, 11, 1, 0, 0, 0, new TimeSpan(1, 0, 0));
+
+            var result = _tariffQueryService.GetNextMonthEndDate(input, DateTimeOffset.MaxValue);
+            Assert.Equal(expected,result);
+        }
+
+        [Fact()]
+        public void GetNextMonthEndDateTestDSTBegin()
+        {
+            Setup();
+
+            var input = new DateTimeOffset(2022, 3, 10, 0, 0, 0, new TimeSpan(1, 0, 0));
+            var expected = new DateTimeOffset(2022,4, 1, 0, 0, 0, new TimeSpan(2, 0, 0));
+            var result = _tariffQueryService.GetNextMonthEndDate(input, DateTimeOffset.MaxValue);
+            Assert.Equal(expected, result);
+        }
+
+        [Fact()]
+        public void GetNextMonthEndDateReturnPeriod()
+        {
+            Setup();
+
+            var input = new DateTimeOffset(2022, 10, 10, 0, 0, 0, new TimeSpan(2, 0, 0));
+            var expected = new DateTimeOffset(2022, 10, 20, 0, 0, 0, new TimeSpan(2, 0, 0));
+
+            var result = _tariffQueryService.GetNextMonthEndDate(input, expected);
+            Assert.Equal(expected, result);
+        }
+
     }
 }

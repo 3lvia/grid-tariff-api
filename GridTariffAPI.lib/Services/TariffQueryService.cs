@@ -598,10 +598,13 @@ namespace GridTariffApi.Lib.Services
             {
                 bool isPublicHoliday = IsPublicHoliday(holidays, fromDate);
                 bool isWeekend = IsWeekend(fromDate);
-                var toDate = fromDate.AddDays(1) < paramToDate ? fromDate.AddDays(1) : paramToDate;
-                dataAccumulator = await ProcessDayAsync(dataAccumulator, fromDate, toDate, hourSeasonIndex, tariffResolutionMinutes, isPublicHoliday, isWeekend);
-                fromDate = fromDate.AddDays(1);
 
+//next day and correct for DST change
+                var toDate = fromDate.AddDays(1) < paramToDate ? fromDate.AddDays(1) : paramToDate;
+                toDate = _serviceHelper.CreateLocaledDateTimeOffset(toDate.Year, toDate.Month, toDate.Day, 0, 0, 0);
+
+                dataAccumulator = await ProcessDayAsync(dataAccumulator, fromDate, toDate, hourSeasonIndex, tariffResolutionMinutes, isPublicHoliday, isWeekend);
+                fromDate = toDate;
             }
             return dataAccumulator;
         }
@@ -973,14 +976,13 @@ namespace GridTariffApi.Lib.Services
 
         public DateTimeOffset GetNextMonthEndDate(DateTimeOffset fromDate, DateTimeOffset toDate)
         {
-            var localedFromDate = _serviceHelper.ToConfiguredTimeZone(fromDate.UtcDateTime);
-            var monthEndDate = localedFromDate.AddMonths(1);
-            monthEndDate = new DateTimeOffset(monthEndDate.Year, monthEndDate.Month, 1, 0, 0, 0, monthEndDate.Offset).UtcDateTime;
-            if (monthEndDate < toDate)
+            var localedToDate = _serviceHelper.GetStartOfNextMonth(fromDate);
+            if (localedToDate < toDate)
             {
-                return monthEndDate;
+                return localedToDate;
             }
             return toDate;
         }
+
     }
 }
