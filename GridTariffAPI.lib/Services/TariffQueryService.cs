@@ -598,13 +598,13 @@ namespace GridTariffApi.Lib.Services
             {
                 bool isPublicHoliday = IsPublicHoliday(holidays, fromDate);
                 bool isWeekend = IsWeekend(fromDate);
-                var toDate = fromDate.AddDays(1) < paramToDate ? fromDate.AddDays(1) : paramToDate;
-                dataAccumulator = await ProcessDayAsync(dataAccumulator, fromDate, toDate, hourSeasonIndex, tariffResolutionMinutes, isPublicHoliday, isWeekend);
 
 //next day and correct for DST change
-                fromDate = fromDate.AddDays(1);
-                fromDate = _serviceHelper.CreateLocaledDateTimeOffset(fromDate.Year,fromDate.Month,fromDate.Day, 0,0,0);
+                var toDate = fromDate.AddDays(1) < paramToDate ? fromDate.AddDays(1) : paramToDate;
+                toDate = _serviceHelper.CreateLocaledDateTimeOffset(toDate.Year, toDate.Month, toDate.Day, 0, 0, 0);
 
+                dataAccumulator = await ProcessDayAsync(dataAccumulator, fromDate, toDate, hourSeasonIndex, tariffResolutionMinutes, isPublicHoliday, isWeekend);
+                fromDate = toDate;
             }
             return dataAccumulator;
         }
