@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 LABEL maintainer="elvia@elvia.no"
 WORKDIR /app
 COPY . .
@@ -8,7 +8,7 @@ RUN dotnet restore \
     GridTariffAPI/GridTariffApi.csproj \
     --output ./out \
     --configuration Release
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine AS runtime
+FROM mcr.microsoft.com/dotnet/nightly/aspnet:6.0-alpine AS runtime
 LABEL maintainer="elvia@elvia.no"
 
 # Workaround
