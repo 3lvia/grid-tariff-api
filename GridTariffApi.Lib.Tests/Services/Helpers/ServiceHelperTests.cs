@@ -334,5 +334,44 @@ namespace GridTariffApi.Lib.Tests.Services.Helpers
             toDate = DateTimeOffset.UtcNow.AddDays(2);
             Assert.False(_serviceHelper.TimePeriodIsIncludingLocaleToday(fromDate, toDate));
         }
+        [Fact]
+        public void DecideEndOfDayTests()
+        {
+            Setup();
+            //no DST change, before mid day
+            var currentDateTime1 = new DateTimeOffset(2022, 06, 01, 1, 0, 0, new TimeSpan(2, 0, 0));
+            var paramToDate1 = new DateTimeOffset(2022, 12, 01, 1, 0, 0, new TimeSpan(1, 0, 0));
+            var expected1 = new DateTimeOffset(2022, 06, 02, 0, 0, 0, new TimeSpan(2, 0, 0));
+            var retVal1 = _serviceHelper.DecideEndOfDay(paramToDate1, currentDateTime1);
+            Assert.Equal(expected1,retVal1);
+
+            //no DST change, after mid dat
+            var currentDateTime2 = new DateTimeOffset(2022, 06, 01, 18, 0, 0, new TimeSpan(2, 0, 0));
+            var retVal2= _serviceHelper.DecideEndOfDay(paramToDate1, currentDateTime2);
+            Assert.Equal(expected1, retVal2);
+
+            //no DST change, at midnight
+            var currentDateTime3 = new DateTimeOffset(2022, 06, 01, 0, 0, 0, new TimeSpan(2, 0, 0));
+            var retVal3 = _serviceHelper.DecideEndOfDay(paramToDate1, currentDateTime3);
+            Assert.Equal(expected1, retVal3);
+
+            //picking least of next day and todate
+            var paramToDate4 = new DateTimeOffset(2022, 6, 01, 18, 0, 0, new TimeSpan(2, 0, 0));
+            var retVal4 = _serviceHelper.DecideEndOfDay(paramToDate4, currentDateTime3);
+            Assert.Equal(paramToDate4, retVal4);
+
+            //to DST within timeperiod
+            var currentDateTime5 = new DateTimeOffset(2022, 03, 27, 00, 0, 0, new TimeSpan(1, 0, 0));
+            var expected5 = new DateTimeOffset(2022, 03, 28, 0, 0, 0, new TimeSpan(2, 0, 0));
+            var retVal5 = _serviceHelper.DecideEndOfDay(paramToDate4, currentDateTime5);
+            Assert.Equal(expected5, retVal5);
+
+            //to no DST within timperiod
+            var currentDateTime6 = new DateTimeOffset(2022, 10, 30, 00, 0, 0, new TimeSpan(2, 0, 0));
+            var expected6 = new DateTimeOffset(2022, 10, 31, 0, 0, 0, new TimeSpan(1, 0, 0));
+            var retVal6 = _serviceHelper.DecideEndOfDay(paramToDate1, currentDateTime6);
+            Assert.Equal(expected6, retVal6);
+
+        }
     }
 }

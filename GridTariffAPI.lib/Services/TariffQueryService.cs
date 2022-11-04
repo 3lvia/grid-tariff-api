@@ -592,18 +592,16 @@ namespace GridTariffApi.Lib.Services
             List<Holiday> holidays,
             int tariffResolutionMinutes)
 
-        {
+        { 
             var fromDate = paramFromDate;
             while (fromDate.Ticks < paramToDate.Ticks)
             {
                 bool isPublicHoliday = IsPublicHoliday(holidays, fromDate);
                 bool isWeekend = IsWeekend(fromDate);
 
-//next day and correct for DST change
-                var toDate = fromDate.AddDays(1) < paramToDate ? fromDate.AddDays(1) : paramToDate;
-                toDate = _serviceHelper.CreateLocaledDateTimeOffset(toDate.Year, toDate.Month, toDate.Day, 0, 0, 0);
-
+                DateTimeOffset toDate = _serviceHelper.DecideEndOfDay(paramToDate, fromDate);
                 dataAccumulator = await ProcessDayAsync(dataAccumulator, fromDate, toDate, hourSeasonIndex, tariffResolutionMinutes, isPublicHoliday, isWeekend);
+
                 fromDate = toDate;
             }
             return dataAccumulator;
