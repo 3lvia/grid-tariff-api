@@ -215,5 +215,15 @@ namespace GridTariffApi.Lib.Services.Helpers
             }
             return true;
         }
+        public DateTimeOffset DecideEndOfDay(DateTimeOffset paramToDate, DateTimeOffset currentDateTime)
+        {
+            //middle of next day
+            var middleOfNextDay = currentDateTime.Date.AddHours(12).AddDays(1);
+
+            //next midnight and correct for DST change
+            var nextMidnight = CreateLocaledDateTimeOffset(middleOfNextDay.Year, middleOfNextDay.Month, middleOfNextDay.Day, 0, 0, 0);
+
+            return nextMidnight < paramToDate ? nextMidnight : paramToDate;
+        }
     }
 }
