@@ -601,7 +601,7 @@ namespace GridTariffApi.Lib.Services
 
 //next day and correct for DST change
                 var toDate = fromDate.AddDays(1) < paramToDate ? fromDate.AddDays(1) : paramToDate;
-                toDate = _serviceHelper.CreateLocaledDateTimeOffset(toDate.Year, toDate.Month, toDate.Day, 0, 0, 0);
+                toDate = _serviceHelper.CreateLocaledDateTimeOffset(toDate.Year, toDate.Month, toDate.Day, toDate.Hour, 0, 0);
 
                 dataAccumulator = await ProcessDayAsync(dataAccumulator, fromDate, toDate, hourSeasonIndex, tariffResolutionMinutes, isPublicHoliday, isWeekend);
                 fromDate = toDate;
