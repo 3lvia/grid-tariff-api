@@ -8,7 +8,7 @@ RUN dotnet restore \
     GridTariffAPI/GridTariffApi.csproj \
     --output ./out \
     --configuration Release
-FROM mcr.microsoft.com/dotnet/nightly/aspnet:6.0-alpine AS runtime
+FROM mcr.microsoft.com/dotnet/nightly/aspnet:7.0-alpine AS runtime
 LABEL maintainer="elvia@elvia.no"
 
 # Workaround
